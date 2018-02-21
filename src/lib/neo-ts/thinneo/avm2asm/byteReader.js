@@ -1,66 +1,59 @@
-"use strict";
-exports.__esModule = true;
-var ByteReader = /** @class */ (function () {
-    function ByteReader(data) {
+export class ByteReader {
+    constructor(data) {
         this.addr = 0;
         this.data = data;
     }
-    ByteReader.prototype.ReadOP = function () {
+    ReadOP() {
         var op = this.data[this.addr];
         this.addr++;
         return op;
-    };
-    ByteReader.prototype.ReadBytes = function (count) {
+    }
+    ReadBytes(count) {
         var _data = new Uint8Array(count);
         for (var i = 0; i < count; i++)
             _data[i] = this.data[this.addr + i];
         this.addr += count;
         return _data;
-    };
-    ByteReader.prototype.ReadByte = function () {
+    }
+    ReadByte() {
         var b = this.data[this.addr];
         this.addr++;
         return b;
-    };
-    ByteReader.prototype.ReadUInt16 = function () {
+    }
+    ReadUInt16() {
         var d = new DataView(this.data.buffer);
         var u16 = d.getUint16(this.addr, true);
         this.addr += 2;
         return u16;
-    };
-    ByteReader.prototype.ReadInt16 = function () {
+    }
+    ReadInt16() {
         var d = new DataView(this.data.buffer);
         var u16 = d.getInt16(this.addr, true);
         this.addr += 2;
         return u16;
-    };
-    ByteReader.prototype.ReadUInt32 = function () {
+    }
+    ReadUInt32() {
         var d = new DataView(this.data.buffer);
         var u16 = d.getUint32(this.addr, true);
         this.addr += 4;
         return u16;
-    };
-    ByteReader.prototype.ReadInt32 = function () {
+    }
+    ReadInt32() {
         var d = new DataView(this.data.buffer);
         var u16 = d.getInt32(this.addr, true);
         this.addr += 4;
         return u16;
-    };
-    ByteReader.prototype.ReadUInt64 = function () {
+    }
+    ReadUInt64() {
         var u1 = this.ReadUInt32();
         var u2 = this.ReadUInt32();
         return u2 * 0x100000000 + u1;
-    };
-    //public ReadInt64(): number {
-    //    var u16 = BitConverter.ToInt64(data, addr);
-    //    addr += 8;
-    //    return u16;
-    //}
-    ByteReader.prototype.ReadVarBytes = function () {
+    }
+    ReadVarBytes() {
         var count = this.ReadVarInt();
         return this.ReadBytes(count);
-    };
-    ByteReader.prototype.ReadVarInt = function () {
+    }
+    ReadVarInt() {
         var fb = this.ReadByte();
         var value;
         if (fb == 0xFD)
@@ -72,14 +65,9 @@ var ByteReader = /** @class */ (function () {
         else
             value = fb;
         return value;
-    };
-    Object.defineProperty(ByteReader.prototype, "End", {
-        get: function () {
-            return this.addr >= this.data.length;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return ByteReader;
-}());
-exports.ByteReader = ByteReader;
+    }
+    get End() {
+        return this.addr >= this.data.length;
+    }
+}
+//# sourceMappingURL=byteReader.js.map

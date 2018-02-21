@@ -1,5 +1,4 @@
-﻿
-export enum OpCode {
+﻿export enum OpCode {
     // Constants
     PUSH0 = 0x00, // An empty array of bytes is pushed onto the stack.
     PUSHF = PUSH0,

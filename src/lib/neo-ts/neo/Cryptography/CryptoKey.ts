@@ -1,4 +1,4 @@
-﻿import { ECPoint } from '../../index'
+﻿import { ECPoint } from './ECPoint'
 export class CryptoKey {
     constructor(public type: string, public extractable: boolean, public algorithm: Algorithm, public usages: string[]) {
     }

@@ -1,0 +1,33 @@
+import { Stream, SeekOrigin, ISerializable } from './index';
+import { Uint64, UintVariable } from '../index';
+export declare class BinaryWriter {
+    private output;
+    private _buffer;
+    private array_uint8;
+    private array_int8;
+    private array_uint16;
+    private array_int16;
+    private array_uint32;
+    private array_int32;
+    private array_float32;
+    private array_float64;
+    constructor(output: Stream);
+    close(): void;
+    seek(offset: number, origin: SeekOrigin): number;
+    write(buffer: ArrayBuffer, index?: number, count?: number): void;
+    writeBoolean(value: boolean): void;
+    writeByte(value: number): void;
+    writeDouble(value: number): void;
+    writeInt16(value: number): void;
+    writeInt32(value: number): void;
+    writeSByte(value: number): void;
+    writeSerializableArray(array: ISerializable[]): void;
+    writeSingle(value: number): void;
+    writeUint16(value: number): void;
+    writeUint32(value: number): void;
+    writeUint64(value: Uint64): void;
+    writeUintVariable(value: UintVariable): void;
+    writeVarBytes(value: ArrayBuffer): void;
+    writeVarInt(value: number): void;
+    writeVarString(value: string): void;
+}

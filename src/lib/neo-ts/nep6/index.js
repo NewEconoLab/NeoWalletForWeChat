@@ -1,6 +1,2 @@
-"use strict";
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
-exports.__esModule = true;
-__export(require("./nep6wallet"));
+export * from './nep6wallet';
+//# sourceMappingURL=index.js.map

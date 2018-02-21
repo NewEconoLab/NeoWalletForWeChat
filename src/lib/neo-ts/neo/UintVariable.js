@@ -1,7 +1,8 @@
-"use strict";
-exports.__esModule = true;
-var UintVariable = /** @class */ (function () {
-    function UintVariable(bits) {
+class UintVariable {
+    get bits() {
+        return this._bits;
+    }
+    constructor(bits) {
         if (typeof bits === "number") {
             if (bits <= 0 || bits % 32 != 0)
                 throw new RangeError();
@@ -14,7 +15,7 @@ var UintVariable = /** @class */ (function () {
                 this._bits = new Uint32Array(bits.buffer, bits.byteOffset, bits.length / 4);
             }
             else {
-                var bits_new = new Uint8Array(bits);
+                let bits_new = new Uint8Array(bits);
                 this._bits = new Uint32Array(bits_new.buffer);
             }
         }
@@ -27,35 +28,28 @@ var UintVariable = /** @class */ (function () {
             this._bits = new Uint32Array(bits);
         }
     }
-    Object.defineProperty(UintVariable.prototype, "bits", {
-        get: function () {
-            return this._bits;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    UintVariable.prototype.compareTo = function (other) {
-        var max = Math.max(this._bits.length, other._bits.length);
-        for (var i = max - 1; i >= 0; i--)
+    compareTo(other) {
+        let max = Math.max(this._bits.length, other._bits.length);
+        for (let i = max - 1; i >= 0; i--)
             if ((this._bits[i] || 0) > (other._bits[i] || 0))
                 return 1;
             else if ((this._bits[i] || 0) < (other._bits[i] || 0))
                 return -1;
         return 0;
-    };
-    UintVariable.prototype.equals = function (other) {
-        var max = Math.max(this._bits.length, other._bits.length);
-        for (var i = 0; i < max; i++)
+    }
+    equals(other) {
+        let max = Math.max(this._bits.length, other._bits.length);
+        for (let i = 0; i < max; i++)
             if ((this._bits[i] || 0) != (other._bits[i] || 0))
                 return false;
         return true;
-    };
-    UintVariable.prototype.toString = function () {
-        var s = "";
-        for (var i = this._bits.length * 32 - 4; i >= 0; i -= 4)
+    }
+    toString() {
+        let s = "";
+        for (let i = this._bits.length * 32 - 4; i >= 0; i -= 4)
             s += ((this._bits[i >>> 5] >>> (i % 32)) & 0xf).toString(16);
         return s;
-    };
-    return UintVariable;
-}());
-exports.UintVariable = UintVariable;
+    }
+}
+export { UintVariable };
+//# sourceMappingURL=UintVariable.js.map

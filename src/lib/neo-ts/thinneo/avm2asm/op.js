@@ -1,17 +1,13 @@
-"use strict";
-exports.__esModule = true;
-var index_1 = require("../../index");
-var ParamType;
+import { OpCode } from '../../index';
+export var ParamType;
 (function (ParamType) {
     ParamType[ParamType["None"] = 0] = "None";
     ParamType[ParamType["ByteArray"] = 1] = "ByteArray";
     ParamType[ParamType["String"] = 2] = "String";
     ParamType[ParamType["Addr"] = 3] = "Addr";
-})(ParamType = exports.ParamType || (exports.ParamType = {}));
-var Op = /** @class */ (function () {
-    function Op() {
-    }
-    Op.prototype.toString = function () {
+})(ParamType || (ParamType = {}));
+export class Op {
+    toString() {
         var name = this.getCodeName();
         if (this.paramType == ParamType.None) {
         }
@@ -25,8 +21,8 @@ var Op = /** @class */ (function () {
             name += "[" + this.AsAddr() + "]";
         }
         return this.addr.toString(16) + ":" + name;
-    };
-    Op.prototype.AsHexString = function () {
+    }
+    AsHexString() {
         var str = "0x";
         for (var i = 0; i < this.paramData.length; i++) {
             var s = this.paramData[i].toString(16);
@@ -35,31 +31,30 @@ var Op = /** @class */ (function () {
             str += s;
         }
         return str;
-    };
-    Op.prototype.AsString = function () {
+    }
+    AsString() {
         var str = "";
         for (var i = 0; i < this.paramData.length; i++) {
             str += this.paramData[i].toLocaleString();
         }
         return str;
-    };
-    Op.prototype.AsAddr = function () {
+    }
+    AsAddr() {
         var dview = new DataView(this.paramData.buffer);
         return dview.getInt16(0, true);
-    };
-    Op.prototype.getCodeName = function () {
+    }
+    getCodeName() {
         var name = "";
         if (this.error)
             name = "[E]";
-        if (this.code == index_1.OpCode.PUSHT)
+        if (this.code == OpCode.PUSHT)
             return "PUSH1(true)";
-        if (this.code == index_1.OpCode.PUSHF)
+        if (this.code == OpCode.PUSHF)
             return "PUSH0(false)";
-        if (this.code > index_1.OpCode.PUSHBYTES1 && this.code < index_1.OpCode.PUSHBYTES75)
-            return name + "PUSHBYTES" + (this.code - index_1.OpCode.PUSHBYTES1 + 1);
+        if (this.code > OpCode.PUSHBYTES1 && this.code < OpCode.PUSHBYTES75)
+            return name + "PUSHBYTES" + (this.code - OpCode.PUSHBYTES1 + 1);
         else
-            return name + index_1.OpCode[this.code].toString();
-    };
-    return Op;
-}());
-exports.Op = Op;
+            return name + OpCode[this.code].toString();
+    }
+}
+//# sourceMappingURL=op.js.map

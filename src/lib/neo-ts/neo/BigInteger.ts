@@ -1,7 +1,6 @@
 ﻿///<reference path="UintVariable.ts"/>
 ///<reference path="Uint64.ts"/>
-import {Uint64} from '../index'
-import * as NEO from '../index'
+import {Uint64} from './index'
 const DB = 26;
 const DM = (1 << DB) - 1;
 const DV = DM + 1;
@@ -20,7 +19,7 @@ export class BigInteger {
         if (typeof value === "number") {
             if (!isFinite(value) || isNaN(value)) throw new RangeError();
             let parts = BigInteger.getDoubleParts(value);
-            if (parts.man.equals(NEO.Uint64.Zero) || parts.exp <= -64) return;
+            if (parts.man.equals(Uint64.Zero) || parts.exp <= -64) return;
             if (parts.exp <= 0) {
                 this.fromUint64(parts.man.rightShift(-parts.exp), parts.sign);
             }
@@ -281,7 +280,7 @@ export class BigInteger {
         this.clamp();
     }
 
-    private fromUint64(i: NEO.Uint64, sign: number): void {
+    private fromUint64(i: Uint64, sign: number): void {
         while (i.bits[0] != 0 || i.bits[1] != 0) {
             this._bits.push(i.toUint32() & DM);
             i = i.rightShift(DB);

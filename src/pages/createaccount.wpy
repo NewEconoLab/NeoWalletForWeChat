@@ -83,7 +83,7 @@
 import wepy from 'wepy';
 import Neon from 'wechatneon';
 // import {neo, nep6, thinneo} from '../lib/neo-ts.js'
-let neo = require('../lib/test')
+let neo = require('../lib/neo-ts/index')
 import Toast from 'wepy-com-toast';
 import { LOCAL_WALLET } from '../utils/constant';
 import tip from '../utils/tip';

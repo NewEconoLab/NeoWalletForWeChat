@@ -1,4 +1,4 @@
-﻿import {BigInteger} from '../../index'
+﻿import {BigInteger} from '../BigInteger'
 export class Base58
     {
         public static Alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";

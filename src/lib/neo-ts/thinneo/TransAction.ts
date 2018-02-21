@@ -1,5 +1,6 @@
 ﻿///<reference path="helper.ts"/>
-import {Fixed8,IO,Helper,ScriptBuilder,Sha256} from '../index'
+import { Helper, ScriptBuilder } from './index'
+import { Fixed8, IO, Sha256 } from '../neo/index'
 export enum TransactionType {
     /// <summary>
     /// 用于分配字节费的特殊交易
@@ -98,7 +99,7 @@ export class Attribute {
 }
 export class TransactionOutput {
     public assetId: Uint8Array;
-    public value:   Fixed8;
+    public value: Fixed8;
     public toAddress: Uint8Array;
 }
 export class TransactionInput {
@@ -118,24 +119,24 @@ export class Witness {
 
 
 export interface IExtData {
-    Serialize(trans: Transaction, writer:   IO.BinaryWriter): void;
-    Deserialize(trans: Transaction, reader:   IO.BinaryReader): void;
+    Serialize(trans: Transaction, writer: IO.BinaryWriter): void;
+    Deserialize(trans: Transaction, reader: IO.BinaryReader): void;
 }
 
 export class InvokeTransData implements IExtData {
     public script: Uint8Array;
-    public gas:   Fixed8;
-    public Serialize(trans: Transaction, writer:   IO.BinaryWriter): void {
+    public gas: Fixed8;
+    public Serialize(trans: Transaction, writer: IO.BinaryWriter): void {
         writer.writeVarBytes(this.script.buffer);
         if (trans.version >= 1) {
             writer.writeUint64(this.gas.getData());
         }
     }
-    public Deserialize(trans: Transaction, reader:   IO.BinaryReader): void {
+    public Deserialize(trans: Transaction, reader: IO.BinaryReader): void {
         var buf = reader.readVarBytes(10000000);
         this.script = new Uint8Array(buf, 0, buf.byteLength);
         if (trans.version >= 1) {
-            this.gas = new   Fixed8(reader.readUint64());
+            this.gas = new Fixed8(reader.readUint64());
         }
     }
 
@@ -148,7 +149,7 @@ export class Transaction {
     public inputs: TransactionInput[];
     public outputs: TransactionOutput[];
     public witnesses: Witness[];//见证人
-    public SerializeUnsigned(writer:   IO.BinaryWriter): void {
+    public SerializeUnsigned(writer: IO.BinaryWriter): void {
         //write type
         writer.writeByte(this.type as number);
         //write version
@@ -208,7 +209,7 @@ export class Transaction {
         var countInputs = this.inputs.length;
         writer.writeVarInt(countInputs);
         for (var i = 0; i < countInputs; i++) {
-            writer.write(this.inputs[i].hash, 0, 32);
+            writer.write(this.inputs[i].hash.buffer, 0, 32);
             writer.writeUint16(this.inputs[i].index);
         }
         //#endregion
@@ -227,7 +228,7 @@ export class Transaction {
         }
         //#endregion
     }
-    public Serialize(writer:   IO.BinaryWriter): void {
+    public Serialize(writer: IO.BinaryWriter): void {
         this.SerializeUnsigned(writer);
 
         var witnesscount = this.witnesses.length;
@@ -240,7 +241,7 @@ export class Transaction {
     }
     public extdata: IExtData;
 
-    public Deserialize(ms:   IO.BinaryReader): void {
+    public Deserialize(ms: IO.BinaryReader): void {
         //参考源码来自
         //      https://github.com/neo-project/neo
         //      Transaction.cs
@@ -330,7 +331,7 @@ export class Transaction {
             //资产种类
             var arr = ms.readBytes(32);
             var assetid = new Uint8Array(arr, 0, arr.byteLength);
-            var value = new   Fixed8(ms.readUint64());
+            var value = new Fixed8(ms.readUint64());
             //资产数量
 
             var arr = ms.readBytes(20);
@@ -347,16 +348,16 @@ export class Transaction {
 
     public GetMessage(): Uint8Array {
 
-        var ms = new   IO.MemoryStream();
-        var writer = new   IO.BinaryWriter(ms);
+        var ms = new IO.MemoryStream();
+        var writer = new IO.BinaryWriter(ms);
         this.SerializeUnsigned(writer);
         var arr = ms.toArray();
         var msg = new Uint8Array(arr, 0, arr.byteLength);
         return msg;
     }
     public GetRawData(): Uint8Array {
-        var ms = new   IO.MemoryStream();
-        var writer = new   IO.BinaryWriter(ms);
+        var ms = new IO.MemoryStream();
+        var writer = new IO.BinaryWriter(ms);
         this.Serialize(writer);
         var arr = ms.toArray();
         var msg = new Uint8Array(arr, 0, arr.byteLength);
@@ -409,8 +410,8 @@ export class Transaction {
     //TXID
     public GetHash(): Uint8Array {
         var msg = this.GetMessage();
-        var data =  Sha256.computeHash(msg);
-        data =   Sha256.computeHash(data);
+        var data = Sha256.computeHash(msg);
+        data = Sha256.computeHash(data);
         return new Uint8Array(data, 0, data.byteLength);
 
     }

@@ -1,38 +1,36 @@
-"use strict";
-exports.__esModule = true;
-var index_1 = require("../../index");
-var ECFieldElement = /** @class */ (function () {
-    function ECFieldElement(value, curve) {
+import { BigInteger } from '../BigInteger';
+export class ECFieldElement {
+    constructor(value, curve) {
         this.value = value;
         this.curve = curve;
-        if (index_1.BigInteger.compare(value, curve.Q) >= 0)
+        if (BigInteger.compare(value, curve.Q) >= 0)
             throw new RangeError("x value too large in field element");
     }
-    ECFieldElement.prototype.add = function (other) {
+    add(other) {
         return new ECFieldElement(this.value.add(other.value).mod(this.curve.Q), this.curve);
-    };
-    ECFieldElement.prototype.compareTo = function (other) {
+    }
+    compareTo(other) {
         if (this === other)
             return 0;
         return this.value.compareTo(other.value);
-    };
-    ECFieldElement.prototype.divide = function (other) {
+    }
+    divide(other) {
         return new ECFieldElement(this.value.multiply(other.value.modInverse(this.curve.Q)).mod(this.curve.Q), this.curve);
-    };
-    ECFieldElement.prototype.equals = function (other) {
+    }
+    equals(other) {
         return this.value.equals(other.value);
-    };
-    ECFieldElement.fastLucasSequence = function (p, P, Q, k) {
-        var n = k.bitLength();
-        var s = k.getLowestSetBit();
+    }
+    static fastLucasSequence(p, P, Q, k) {
+        let n = k.bitLength();
+        let s = k.getLowestSetBit();
         console.assert(k.testBit(s));
-        var Uh = index_1.BigInteger.One;
-        var Vl = new index_1.BigInteger(2);
-        var Vh = P;
-        var Ql = index_1.BigInteger.One;
-        var Qh = index_1.BigInteger.One;
-        for (var j = n - 1; j >= s + 1; --j) {
-            Ql = index_1.BigInteger.mod(index_1.BigInteger.multiply(Ql, Qh), p);
+        let Uh = BigInteger.One;
+        let Vl = new BigInteger(2);
+        let Vh = P;
+        let Ql = BigInteger.One;
+        let Qh = BigInteger.One;
+        for (let j = n - 1; j >= s + 1; --j) {
+            Ql = BigInteger.mod(BigInteger.multiply(Ql, Qh), p);
             if (k.testBit(j)) {
                 Qh = Ql.multiply(Q).mod(p);
                 Uh = Uh.multiply(Vh).mod(p);
@@ -51,39 +49,39 @@ var ECFieldElement = /** @class */ (function () {
         Uh = Uh.multiply(Vl).subtract(Ql).mod(p);
         Vl = Vh.multiply(Vl).subtract(P.multiply(Ql)).mod(p);
         Ql = Ql.multiply(Qh).mod(p);
-        for (var j = 1; j <= s; ++j) {
+        for (let j = 1; j <= s; ++j) {
             Uh = Uh.multiply(Vl).multiply(p);
             Vl = Vl.multiply(Vl).subtract(Ql.leftShift(1)).mod(p);
             Ql = Ql.multiply(Ql).mod(p);
         }
         return [Uh, Vl];
-    };
-    ECFieldElement.prototype.multiply = function (other) {
+    }
+    multiply(other) {
         return new ECFieldElement(this.value.multiply(other.value).mod(this.curve.Q), this.curve);
-    };
-    ECFieldElement.prototype.negate = function () {
+    }
+    negate() {
         return new ECFieldElement(this.value.negate().mod(this.curve.Q), this.curve);
-    };
-    ECFieldElement.prototype.sqrt = function () {
+    }
+    sqrt() {
         if (this.curve.Q.testBit(1)) {
-            var z = new ECFieldElement(index_1.BigInteger.modPow(this.value, this.curve.Q.rightShift(2).add(1), this.curve.Q), this.curve);
+            let z = new ECFieldElement(BigInteger.modPow(this.value, this.curve.Q.rightShift(2).add(1), this.curve.Q), this.curve);
             return z.square().equals(this) ? z : null;
         }
-        var qMinusOne = this.curve.Q.subtract(1);
-        var legendreExponent = qMinusOne.rightShift(1);
-        if (index_1.BigInteger.modPow(this.value, legendreExponent, this.curve.Q).equals(1))
+        let qMinusOne = this.curve.Q.subtract(1);
+        let legendreExponent = qMinusOne.rightShift(1);
+        if (BigInteger.modPow(this.value, legendreExponent, this.curve.Q).equals(1))
             return null;
-        var u = qMinusOne.rightShift(2);
-        var k = u.leftShift(1).add(1);
-        var Q = this.value;
-        var fourQ = Q.leftShift(2).mod(this.curve.Q);
-        var U, V;
+        let u = qMinusOne.rightShift(2);
+        let k = u.leftShift(1).add(1);
+        let Q = this.value;
+        let fourQ = Q.leftShift(2).mod(this.curve.Q);
+        let U, V;
         do {
-            var P = void 0;
+            let P;
             do {
-                P = index_1.BigInteger.random(this.curve.Q.bitLength());
-            } while (P.compareTo(this.curve.Q) >= 0 || !index_1.BigInteger.modPow(P.multiply(P).subtract(fourQ), legendreExponent, this.curve.Q).equals(qMinusOne));
-            var result = ECFieldElement.fastLucasSequence(this.curve.Q, P, Q, k);
+                P = BigInteger.random(this.curve.Q.bitLength());
+            } while (P.compareTo(this.curve.Q) >= 0 || !BigInteger.modPow(P.multiply(P).subtract(fourQ), legendreExponent, this.curve.Q).equals(qMinusOne));
+            let result = ECFieldElement.fastLucasSequence(this.curve.Q, P, Q, k);
             U = result[0];
             V = result[1];
             if (V.multiply(V).mod(this.curve.Q).equals(fourQ)) {
@@ -94,15 +92,14 @@ var ECFieldElement = /** @class */ (function () {
                 console.assert(V.multiply(V).mod(this.curve.Q).equals(this.value));
                 return new ECFieldElement(V, this.curve);
             }
-        } while (U.equals(index_1.BigInteger.One) || U.equals(qMinusOne));
+        } while (U.equals(BigInteger.One) || U.equals(qMinusOne));
         return null;
-    };
-    ECFieldElement.prototype.square = function () {
+    }
+    square() {
         return new ECFieldElement(this.value.multiply(this.value).mod(this.curve.Q), this.curve);
-    };
-    ECFieldElement.prototype.subtract = function (other) {
+    }
+    subtract(other) {
         return new ECFieldElement(this.value.subtract(other.value).mod(this.curve.Q), this.curve);
-    };
-    return ECFieldElement;
-}());
-exports.ECFieldElement = ECFieldElement;
+    }
+}
+//# sourceMappingURL=ECFieldElement.js.map

@@ -1,4 +1,4 @@
-﻿import {Aes,Sha256} from '../../index'
+﻿import {Aes,Sha256} from './index'
 export class RandomNumberGenerator {
     private static _entropy: number[] = [];
     private static _strength = 0;

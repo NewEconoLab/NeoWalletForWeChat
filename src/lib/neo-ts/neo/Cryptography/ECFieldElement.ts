@@ -1,4 +1,5 @@
-﻿import { ECCurve, BigInteger } from '../../index'
+﻿import { ECCurve } from './index'
+import {BigInteger} from '../BigInteger'
  export class ECFieldElement
     {
         constructor(public value: BigInteger, private curve: ECCurve)

@@ -1,4 +1,5 @@
-﻿import { BigInteger, ECFieldElement, ECPoint } from '../../index'
+﻿import { ECFieldElement, ECPoint } from './index'
+import {BigInteger} from '../BigInteger'
 let _secp256k1: ECCurve;
 let _secp256r1: ECCurve;
 

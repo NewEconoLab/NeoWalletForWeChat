@@ -1,0 +1,37 @@
+import { Stream, ISerializable } from './index';
+import { Fixed8, Uint64, Uint160, Uint256 } from '../index';
+export declare class BinaryReader {
+    private input;
+    private _buffer;
+    private array_uint8;
+    private array_int8;
+    private array_uint16;
+    private array_int16;
+    private array_uint32;
+    private array_int32;
+    private array_float32;
+    private array_float64;
+    constructor(input: Stream);
+    close(): void;
+    private fillBuffer(buffer, count);
+    read(buffer: ArrayBuffer, index: number, count: number): number;
+    readBoolean(): boolean;
+    readByte(): number;
+    readBytes(count: number): ArrayBuffer;
+    readDouble(): number;
+    readFixed8(): Fixed8;
+    readInt16(): number;
+    readInt32(): number;
+    readSByte(): number;
+    readSerializable(T: Function): ISerializable;
+    readSerializableArray(T: Function): ISerializable[];
+    readSingle(): number;
+    readUint16(): number;
+    readUint160(): Uint160;
+    readUint256(): Uint256;
+    readUint32(): number;
+    readUint64(): Uint64;
+    readVarBytes(max?: number): ArrayBuffer;
+    readVarInt(max?: number): number;
+    readVarString(): string;
+}

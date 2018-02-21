@@ -1,8 +1,4 @@
-"use strict";
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
-exports.__esModule = true;
-__export(require("./avm2asm"));
-__export(require("./byteReader"));
-__export(require("./op"));
+export * from './avm2asm';
+export * from './byteReader';
+export * from './op';
+//# sourceMappingURL=index.js.map

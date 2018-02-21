@@ -1,4 +1,5 @@
-﻿import { Base58, Sha256, ECPoint, ECCurve, RIPEMD160, ECDsaCryptoKey, ECDsa, Base64 } from '../index'
+﻿import { Base64 } from './index'
+import { Base58, Sha256, ECPoint, ECCurve, RIPEMD160, ECDsaCryptoKey, ECDsa } from '../neo/Cryptography/index'
 declare var scrypt: any;
 declare var CryptoJS: any;
 var scrypt_loaded: boolean = false;

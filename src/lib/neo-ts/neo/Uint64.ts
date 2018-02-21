@@ -1,6 +1,5 @@
 ///<reference path="UintVariable.ts"/>
-import { UintVariable } from './UintVariable'
-import * as NEO from '../index'
+import { UintVariable, BigInteger } from './index'
 let _max: Uint64, _min: Uint64;
 
 export class Uint64 extends UintVariable {
@@ -63,7 +62,7 @@ export class Uint64 extends UintVariable {
     }
 
     public static parse(str: string): Uint64 {
-        let bi = NEO.BigInteger.parse(str);
+        let bi = BigInteger.parse(str);
         if (bi.bitLength() > 64) throw new RangeError();
         let array = new Uint32Array(bi.toUint8Array(true, 8).buffer);
         return new Uint64(array[0], array[1]);
@@ -97,7 +96,7 @@ export class Uint64 extends UintVariable {
     }
 
     public toString(): string {
-        return (new NEO.BigInteger(this._bits.buffer)).toString();
+        return (new BigInteger(this._bits.buffer)).toString();
     }
 
     public toUint32(): number {

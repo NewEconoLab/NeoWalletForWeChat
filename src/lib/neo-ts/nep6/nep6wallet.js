@@ -1,17 +1,12 @@
-"use strict";
-exports.__esModule = true;
-var index_1 = require("../index");
-var nep6account = /** @class */ (function () {
-    function nep6account() {
-    }
-    nep6account.prototype.getPrivateKey = function (scrypt, password, callback) {
-        var _this = this;
-        var cb = function (i, r) {
+import { Helper } from '../thinneo/helper';
+export class nep6account {
+    getPrivateKey(scrypt, password, callback) {
+        var cb = (i, r) => {
             if (i == "finish") {
                 var bytes = r;
-                var pkey = index_1.Helper.GetPublicKeyFromPrivateKey(bytes);
-                var address = index_1.Helper.GetAddressFromPublicKey(pkey);
-                if (address == _this.address) {
+                var pkey = Helper.GetPublicKeyFromPrivateKey(bytes);
+                var address = Helper.GetAddressFromPublicKey(pkey);
+                if (address == this.address) {
                     callback(i, r);
                 }
                 else {
@@ -22,21 +17,13 @@ var nep6account = /** @class */ (function () {
                 callback(i, r);
             }
         };
-        index_1.Helper.GetPrivateKeyFromNep2(this.nep2key, password, scrypt.N, scrypt.r, scrypt.p, cb);
-    };
-    return nep6account;
-}());
-exports.nep6account = nep6account;
-var nep6ScryptParameters = /** @class */ (function () {
-    function nep6ScryptParameters() {
+        Helper.GetPrivateKeyFromNep2(this.nep2key, password, scrypt.N, scrypt.r, scrypt.p, cb);
     }
-    return nep6ScryptParameters;
-}());
-exports.nep6ScryptParameters = nep6ScryptParameters;
-var nep6wallet = /** @class */ (function () {
-    function nep6wallet() {
-    }
-    nep6wallet.prototype.fromJsonStr = function (jsonstr) {
+}
+export class nep6ScryptParameters {
+}
+export class nep6wallet {
+    fromJsonStr(jsonstr) {
         var json = JSON.parse(jsonstr);
         this.scrypt = new nep6ScryptParameters();
         this.scrypt.N = json.scrypt.n;
@@ -52,8 +39,8 @@ var nep6wallet = /** @class */ (function () {
                 localacc.nep2key = null;
             this.accounts.push(localacc);
         }
-    };
-    nep6wallet.prototype.toJson = function () {
+    }
+    toJson() {
         var obj = {};
         obj["name"] = null;
         obj["version"] = "1.0";
@@ -77,7 +64,6 @@ var nep6wallet = /** @class */ (function () {
         obj["accounts"] = accounts;
         obj["extra"] = null;
         return obj;
-    };
-    return nep6wallet;
-}());
-exports.nep6wallet = nep6wallet;
+    }
+}
+//# sourceMappingURL=nep6wallet.js.map

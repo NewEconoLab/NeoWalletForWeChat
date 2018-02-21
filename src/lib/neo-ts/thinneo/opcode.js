@@ -1,8 +1,5 @@
-"use strict";
-exports.__esModule = true;
-var OpCode;
+export var OpCode;
 (function (OpCode) {
-    // Constants
     OpCode[OpCode["PUSH0"] = 0] = "PUSH0";
     OpCode[OpCode["PUSHF"] = 0] = "PUSHF";
     OpCode[OpCode["PUSHBYTES1"] = 1] = "PUSHBYTES1";
@@ -28,7 +25,6 @@ var OpCode;
     OpCode[OpCode["PUSH14"] = 94] = "PUSH14";
     OpCode[OpCode["PUSH15"] = 95] = "PUSH15";
     OpCode[OpCode["PUSH16"] = 96] = "PUSH16";
-    // Flow control
     OpCode[OpCode["NOP"] = 97] = "NOP";
     OpCode[OpCode["JMP"] = 98] = "JMP";
     OpCode[OpCode["JMPIF"] = 99] = "JMPIF";
@@ -38,7 +34,6 @@ var OpCode;
     OpCode[OpCode["APPCALL"] = 103] = "APPCALL";
     OpCode[OpCode["SYSCALL"] = 104] = "SYSCALL";
     OpCode[OpCode["TAILCALL"] = 105] = "TAILCALL";
-    // Stack
     OpCode[OpCode["DUPFROMALTSTACK"] = 106] = "DUPFROMALTSTACK";
     OpCode[OpCode["TOALTSTACK"] = 107] = "TOALTSTACK";
     OpCode[OpCode["FROMALTSTACK"] = 108] = "FROMALTSTACK";
@@ -55,23 +50,16 @@ var OpCode;
     OpCode[OpCode["ROT"] = 123] = "ROT";
     OpCode[OpCode["SWAP"] = 124] = "SWAP";
     OpCode[OpCode["TUCK"] = 125] = "TUCK";
-    // Splice
     OpCode[OpCode["CAT"] = 126] = "CAT";
     OpCode[OpCode["SUBSTR"] = 127] = "SUBSTR";
     OpCode[OpCode["LEFT"] = 128] = "LEFT";
     OpCode[OpCode["RIGHT"] = 129] = "RIGHT";
     OpCode[OpCode["SIZE"] = 130] = "SIZE";
-    // Bitwise logic
     OpCode[OpCode["INVERT"] = 131] = "INVERT";
     OpCode[OpCode["AND"] = 132] = "AND";
     OpCode[OpCode["OR"] = 133] = "OR";
     OpCode[OpCode["XOR"] = 134] = "XOR";
     OpCode[OpCode["EQUAL"] = 135] = "EQUAL";
-    //OP_EQUALVERIFY = 0x88, // Same as OP_EQUAL, but runs OP_VERIFY afterward.
-    //OP_RESERVED1 = 0x89, // Transaction is invalid unless occuring in an unexecuted OP_IF branch
-    //OP_RESERVED2 = 0x8A, // Transaction is invalid unless occuring in an unexecuted OP_IF branch
-    // Arithmetic
-    // Note: Arithmetic inputs are limited to signed 32-bit integers, but may overflow their output.
     OpCode[OpCode["INC"] = 139] = "INC";
     OpCode[OpCode["DEC"] = 140] = "DEC";
     OpCode[OpCode["SIGN"] = 141] = "SIGN";
@@ -97,19 +85,14 @@ var OpCode;
     OpCode[OpCode["MIN"] = 163] = "MIN";
     OpCode[OpCode["MAX"] = 164] = "MAX";
     OpCode[OpCode["WITHIN"] = 165] = "WITHIN";
-    // Crypto
-    //RIPEMD160 = 0xA6, // The input is hashed using RIPEMD-160.
     OpCode[OpCode["SHA1"] = 167] = "SHA1";
     OpCode[OpCode["SHA256"] = 168] = "SHA256";
     OpCode[OpCode["HASH160"] = 169] = "HASH160";
     OpCode[OpCode["HASH256"] = 170] = "HASH256";
-    //因为这个hash函数可能仅仅是csharp 编译时专用的
     OpCode[OpCode["CSHARPSTRHASH32"] = 171] = "CSHARPSTRHASH32";
-    //这个是JAVA专用的
     OpCode[OpCode["JAVAHASH32"] = 173] = "JAVAHASH32";
     OpCode[OpCode["CHECKSIG"] = 172] = "CHECKSIG";
     OpCode[OpCode["CHECKMULTISIG"] = 174] = "CHECKMULTISIG";
-    // Array
     OpCode[OpCode["ARRAYSIZE"] = 192] = "ARRAYSIZE";
     OpCode[OpCode["PACK"] = 193] = "PACK";
     OpCode[OpCode["UNPACK"] = 194] = "UNPACK";
@@ -118,7 +101,7 @@ var OpCode;
     OpCode[OpCode["NEWARRAY"] = 197] = "NEWARRAY";
     OpCode[OpCode["NEWSTRUCT"] = 198] = "NEWSTRUCT";
     OpCode[OpCode["SWITCH"] = 208] = "SWITCH";
-    // Exceptions
     OpCode[OpCode["THROW"] = 240] = "THROW";
     OpCode[OpCode["THROWIFNOT"] = 241] = "THROWIFNOT";
-})(OpCode = exports.OpCode || (exports.OpCode = {}));
+})(OpCode || (OpCode = {}));
+//# sourceMappingURL=opcode.js.map

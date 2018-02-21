@@ -1,9 +1,5 @@
-"use strict";
-exports.__esModule = true;
-var Base64 = /** @class */ (function () {
-    function Base64() {
-    }
-    Base64.init = function () {
+export class Base64 {
+    static init() {
         if (Base64.binited)
             return;
         Base64.lookup = [];
@@ -15,30 +11,23 @@ var Base64 = /** @class */ (function () {
         Base64.revLookup['-'.charCodeAt(0)] = 62;
         Base64.revLookup['_'.charCodeAt(0)] = 63;
         Base64.binited = true;
-    };
-    Base64.placeHoldersCount = function (b64) {
+    }
+    static placeHoldersCount(b64) {
         var len = b64.length;
         if (len % 4 > 0) {
             throw new Error('Invalid string. Length must be a multiple of 4');
         }
-        // the number of equal signs (place holders)
-        // if there are two placeholders, than the two characters before it
-        // represent one byte
-        // if there is only one, then the three characters before it represent 2 bytes
-        // this is just a cheap hack to not do indexOf twice
         return b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0;
-    };
-    Base64.byteLength = function (b64) {
-        // base64 is 4/3 + up to two characters of the original data
+    }
+    static byteLength(b64) {
         return (b64.length * 3 / 4) - Base64.placeHoldersCount(b64);
-    };
-    Base64.toByteArray = function (b64) {
+    }
+    static toByteArray(b64) {
         Base64.init();
         var i, l, tmp, placeHolders, arr;
         var len = b64.length;
         placeHolders = Base64.placeHoldersCount(b64);
         arr = new Uint8Array((len * 3 / 4) - placeHolders);
-        // if there are placeholders, only get up to the last complete 4 chars
         l = placeHolders > 0 ? len - 4 : len;
         var L = 0;
         for (i = 0; i < l; i += 4) {
@@ -57,11 +46,11 @@ var Base64 = /** @class */ (function () {
             arr[L++] = tmp & 0xFF;
         }
         return arr;
-    };
-    Base64.tripletToBase64 = function (num) {
+    }
+    static tripletToBase64(num) {
         return Base64.lookup[num >> 18 & 0x3F] + Base64.lookup[num >> 12 & 0x3F] + Base64.lookup[num >> 6 & 0x3F] + Base64.lookup[num & 0x3F];
-    };
-    Base64.encodeChunk = function (uint8, start, end) {
+    }
+    static encodeChunk(uint8, start, end) {
         var tmp;
         var output = [];
         for (var i = start; i < end; i += 3) {
@@ -69,20 +58,18 @@ var Base64 = /** @class */ (function () {
             output.push(Base64.tripletToBase64(tmp));
         }
         return output.join('');
-    };
-    Base64.fromByteArray = function (uint8) {
+    }
+    static fromByteArray(uint8) {
         Base64.init();
         var tmp;
         var len = uint8.length;
-        var extraBytes = len % 3; // if we have 1 byte left, pad 2 bytes
+        var extraBytes = len % 3;
         var output = '';
         var parts = [];
-        var maxChunkLength = 16383; // must be multiple of 3
-        // go through the array every three bytes, we'll deal with trailing stuff later
+        var maxChunkLength = 16383;
         for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
             parts.push(Base64.encodeChunk(uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)));
         }
-        // pad the end with zeros, but make sure to not forget the extra bytes
         if (extraBytes === 1) {
             tmp = uint8[len - 1];
             output += Base64.lookup[tmp >> 2];
@@ -98,11 +85,10 @@ var Base64 = /** @class */ (function () {
         }
         parts.push(output);
         return parts.join('');
-    };
-    Base64.lookup = [];
-    Base64.revLookup = [];
-    Base64.code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-    Base64.binited = false;
-    return Base64;
-}());
-exports.Base64 = Base64;
+    }
+}
+Base64.lookup = [];
+Base64.revLookup = [];
+Base64.code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+Base64.binited = false;
+//# sourceMappingURL=Base64.js.map

@@ -1,53 +1,51 @@
-"use strict";
-exports.__esModule = true;
-var PromiseState;
+export var PromiseState;
 (function (PromiseState) {
     PromiseState[PromiseState["pending"] = 0] = "pending";
     PromiseState[PromiseState["fulfilled"] = 1] = "fulfilled";
     PromiseState[PromiseState["rejected"] = 2] = "rejected";
-})(PromiseState = exports.PromiseState || (exports.PromiseState = {}));
-var NeoPromise = /** @class */ (function () {
-    function NeoPromise(executor) {
+})(PromiseState || (PromiseState = {}));
+export class NeoPromise {
+    constructor(executor) {
         this._state = PromiseState.pending;
         this._callback_attached = false;
         if (executor != null)
             executor(this.resolve.bind(this), this.reject.bind(this));
     }
-    NeoPromise.all = function (iterable) {
-        return new NeoPromise(function (resolve, reject) {
+    static all(iterable) {
+        return new NeoPromise((resolve, reject) => {
             if (iterable.length == 0) {
                 resolve([]);
                 return;
             }
-            var results = new Array(iterable.length);
-            var rejected = false;
-            var onFulfilled = function (result) {
+            let results = new Array(iterable.length);
+            let rejected = false;
+            let onFulfilled = function (result) {
                 results[this._tag] = result;
-                for (var i = 0; i < iterable.length; i++)
+                for (let i = 0; i < iterable.length; i++)
                     if (iterable[i]._state != PromiseState.fulfilled)
                         return;
                 resolve(results);
             };
-            var onRejected = function (reason) {
+            let onRejected = reason => {
                 if (!rejected) {
                     rejected = true;
                     reject(reason);
                 }
             };
-            for (var i = 0; i < iterable.length; i++) {
+            for (let i = 0; i < iterable.length; i++) {
                 iterable[i]._tag = i;
                 iterable[i].then(onFulfilled, onRejected);
             }
         });
-    };
-    NeoPromise.prototype["catch"] = function (onRejected) {
+    }
+    catch(onRejected) {
         return this.then(null, onRejected);
-    };
-    NeoPromise.prototype.checkState = function () {
+    }
+    checkState() {
         if (this._state != PromiseState.pending && this._callback_attached) {
-            var callback = this._state == PromiseState.fulfilled ? this._onFulfilled : this._onRejected;
-            var arg = this._state == PromiseState.fulfilled ? this._value : this._reason;
-            var value = void 0, reason = void 0;
+            let callback = this._state == PromiseState.fulfilled ? this._onFulfilled : this._onRejected;
+            let arg = this._state == PromiseState.fulfilled ? this._value : this._reason;
+            let value, reason;
             try {
                 value = callback == null ? this : callback.call(this, arg);
             }
@@ -71,26 +69,26 @@ var NeoPromise = /** @class */ (function () {
                     this._next_promise.resolve(value);
             }
         }
-    };
-    NeoPromise.prototype.reject = function (reason) {
+    }
+    reject(reason) {
         this._state = PromiseState.rejected;
         this._reason = reason;
         this.checkState();
-    };
-    NeoPromise.reject = function (reason) {
-        return new NeoPromise(function (resolve, reject) { return reject(reason); });
-    };
-    NeoPromise.prototype.resolve = function (value) {
+    }
+    static reject(reason) {
+        return new NeoPromise((resolve, reject) => reject(reason));
+    }
+    resolve(value) {
         this._state = PromiseState.fulfilled;
         this._value = value;
         this.checkState();
-    };
-    NeoPromise.resolve = function (value) {
+    }
+    static resolve(value) {
         if (value instanceof NeoPromise)
             return value;
-        return new NeoPromise(function (resolve, reject) { return resolve(value); });
-    };
-    NeoPromise.prototype.then = function (onFulfilled, onRejected) {
+        return new NeoPromise((resolve, reject) => resolve(value));
+    }
+    then(onFulfilled, onRejected) {
         this._onFulfilled = onFulfilled;
         this._onRejected = onRejected;
         this._callback_attached = true;
@@ -101,7 +99,6 @@ var NeoPromise = /** @class */ (function () {
         else {
             return this.checkState();
         }
-    };
-    return NeoPromise;
-}());
-exports.NeoPromise = NeoPromise;
+    }
+}
+//# sourceMappingURL=Promise.js.map

@@ -1,4 +1,6 @@
-﻿import { ECCurve, BigInteger ,ECFieldElement,IO} from '../../index'
+﻿import { ECCurve ,ECFieldElement} from './index'
+import {BigInteger} from '../BigInteger'
+import * as IO from '../IO/index'
 export class ECPoint
     {
         constructor(public x: ECFieldElement, public y: ECFieldElement, public curve: ECCurve)

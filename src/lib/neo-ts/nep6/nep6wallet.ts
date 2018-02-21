@@ -1,4 +1,4 @@
-﻿import {Helper} from '../index'
+﻿import {Helper} from '../thinneo/helper'
 export class nep6account {
     public address: string;
     public nep2key: string;

@@ -1,4 +1,5 @@
-﻿import {OpCode,BigInteger,Helper} from '../index'
+﻿import { OpCode, Helper } from './index'
+import { BigInteger } from '../neo/BigInteger'
 export class ScriptBuilder {
     writer: number[];
     Offset: number = 0;
@@ -132,96 +133,96 @@ export class ScriptBuilder {
     //(int256) or (hex256) 开头,表示是一个定长的256位 16进制大整数
     //(int160) or (hex160) 开头,表示是一个定长的160位 16进制大整数
     public EmitParamJson(param: any): ScriptBuilder {
-        if (typeof param === "number")//bool 或小整数
-        {
-            this.EmitPushNumber(new BigInteger(param as number));
-        }
-        else if (typeof param === "boolean") {
-            this.EmitPushBool(param as boolean);
-        }
-        else if (typeof param === "object") {
-            var list = param as any[];
-            for (var i = list.length - 1; i >= 0; i--) {
-                this.EmitParamJson(list[i]);
-            }
-            this.EmitPushNumber(new BigInteger(list.length));
-            this.Emit(OpCode.PACK);
-        }
+        // if (typeof param === "number")//bool 或小整数
+        // {
+        //     this.EmitPushNumber(new BigInteger(param as number));
+        // }
+        // else if (typeof param === "boolean") {
+        //     this.EmitPushBool(param as boolean);
+        // }
+        // else if (typeof param === "object") {
+        //     var list = param as any[];
+        //     for (var i = list.length - 1; i >= 0; i--) {
+        //         this.EmitParamJson(list[i]);
+        //     }
+        //     this.EmitPushNumber(new BigInteger(list.length));
+        //     this.Emit(OpCode.PACK);
+        // }
 
-        else if (typeof param === "string")//复杂格式
-        {
-            var str = param as string;
-            if (str[0] != '(')
-                throw new Error("must start with:(str) or (hex) or (hexrev) or (addr)or(int)");
-            //(string) or(str) 开头，表示是个字符串，utf8编码为bytes
-            if (str.indexOf("(string)") == 0) {
-                this.EmitPushString(str.substr(8));
-            }
-            if (str.indexOf("(str)") == 0) {
-                this.EmitPushString(str.substr(5));
-            }
-            //(bytes) or([])开头，表示就是一个bytearray
-            else if (str.indexOf("(bytes)") == 0) {
-                var hex = str.substr(7).hexToBytes();
-                this.EmitPushBytes(hex);
-            }
-            else if (str.indexOf("([])") == 0) {
-                var hex = str.substr(4).hexToBytes();
-                this.EmitPushBytes(hex);
-            }
-            //(address) or(addr)开头，表示是一个地址，转换为脚本hash
-            else if (str.indexOf("(address)") == 0) {
-                var addr = (str.substr(9));
-                var hex = Helper.GetPublicKeyScriptHash_FromAddress(addr);
-                this.EmitPushBytes(hex);
-            }
-            else if (str.indexOf("(addr)") == 0) {
-                var addr = (str.substr(6));
-                var hex = Helper.GetPublicKeyScriptHash_FromAddress(addr);
-                this.EmitPushBytes(hex);
-            }
-            //(integer) or(int) 开头，表示是一个大整数
-            else if (str.indexOf("(integer)") == 0) {
-                var num = new BigInteger(str.substr(9));
-                this.EmitPushNumber(num);
-            }
-            else if (str.indexOf("(int)") == 0) {
-                var num = new BigInteger(str.substr(5));
-                this.EmitPushNumber(num);
-            }
-            //(hexinteger) or (hexint) or (hex) 开头，表示是一个16进制表示的大整数，转换为bytes就是反序
-            else if (str.indexOf("(hexinteger)") == 0) {
-                var hex = str.substr(12).hexToBytes();
-                this.EmitPushBytes(hex.reverse());
-            }
-            else if (str.indexOf("(hexint)") == 0) {
-                var hex = str.substr(8).hexToBytes();
-                this.EmitPushBytes(hex.reverse());
-            }
-            else if (str.indexOf("(hex)") == 0) {
-                var hex = str.substr(5).hexToBytes();
-                this.EmitPushBytes(hex.reverse());
-            }
-            //(int256) or (hex256) 开头,表示是一个定长的256位 16进制大整数
-            else if (str.indexOf("(int256)") == 0 || str.indexOf("(hex256)") == 0) {
-                var hex = str.substr(8).hexToBytes();
-                if (hex.length != 32)
-                    throw new Error("not a int256");
-                this.EmitPushBytes(hex.reverse());
-            }
-            //(int160) or (hex160) 开头,表示是一个定长的160位 16进制大整数
-            else if (str.indexOf("(int160)") == 0 || str.indexOf("(hex160)") == 0) {
-                var hex = str.substr(8).hexToBytes();
-                if (hex.length != 20)
-                    throw new Error("not a int160");
-                this.EmitPushBytes(hex.reverse());
-            }
-            else
-                throw new Error("must start with:(str) or (hex) or (hexbig) or (addr) or(int)");
-        }
-        else {
-            throw new Error("error type:" + typeof param);
-        }
+        // else if (typeof param === "string")//复杂格式
+        // {
+        //     var str = param as string;
+        //     if (str[0] != '(')
+        //         throw new Error("must start with:(str) or (hex) or (hexrev) or (addr)or(int)");
+        //     //(string) or(str) 开头，表示是个字符串，utf8编码为bytes
+        //     if (str.indexOf("(string)") == 0) {
+        //         this.EmitPushString(str.substr(8));
+        //     }
+        //     if (str.indexOf("(str)") == 0) {
+        //         this.EmitPushString(str.substr(5));
+        //     }
+        //     //(bytes) or([])开头，表示就是一个bytearray
+        //     else if (str.indexOf("(bytes)") == 0) {
+        //         var hex = str.substr(7).hexToBytes();
+        //         this.EmitPushBytes(hex);
+        //     }
+        //     else if (str.indexOf("([])") == 0) {
+        //         var hex = str.substr(4).hexToBytes();
+        //         this.EmitPushBytes(hex);
+        //     }
+        //     //(address) or(addr)开头，表示是一个地址，转换为脚本hash
+        //     else if (str.indexOf("(address)") == 0) {
+        //         var addr = (str.substr(9));
+        //         var hex = Helper.GetPublicKeyScriptHash_FromAddress(addr);
+        //         this.EmitPushBytes(hex);
+        //     }
+        //     else if (str.indexOf("(addr)") == 0) {
+        //         var addr = (str.substr(6));
+        //         var hex = Helper.GetPublicKeyScriptHash_FromAddress(addr);
+        //         this.EmitPushBytes(hex);
+        //     }
+        //     //(integer) or(int) 开头，表示是一个大整数
+        //     else if (str.indexOf("(integer)") == 0) {
+        //         var num = new BigInteger(str.substr(9));
+        //         this.EmitPushNumber(num);
+        //     }
+        //     else if (str.indexOf("(int)") == 0) {
+        //         var num = new BigInteger(str.substr(5));
+        //         this.EmitPushNumber(num);
+        //     }
+        //     //(hexinteger) or (hexint) or (hex) 开头，表示是一个16进制表示的大整数，转换为bytes就是反序
+        //     else if (str.indexOf("(hexinteger)") == 0) {
+        //         var hex = str.substr(12).hexToBytes();
+        //         this.EmitPushBytes(hex.reverse());
+        //     }
+        //     else if (str.indexOf("(hexint)") == 0) {
+        //         var hex = str.substr(8).hexToBytes();
+        //         this.EmitPushBytes(hex.reverse());
+        //     }
+        //     else if (str.indexOf("(hex)") == 0) {
+        //         var hex = str.substr(5).hexToBytes();
+        //         this.EmitPushBytes(hex.reverse());
+        //     }
+        //     //(int256) or (hex256) 开头,表示是一个定长的256位 16进制大整数
+        //     else if (str.indexOf("(int256)") == 0 || str.indexOf("(hex256)") == 0) {
+        //         var hex = str.substr(8).hexToBytes();
+        //         if (hex.length != 32)
+        //             throw new Error("not a int256");
+        //         this.EmitPushBytes(hex.reverse());
+        //     }
+        //     //(int160) or (hex160) 开头,表示是一个定长的160位 16进制大整数
+        //     else if (str.indexOf("(int160)") == 0 || str.indexOf("(hex160)") == 0) {
+        //         var hex = str.substr(8).hexToBytes();
+        //         if (hex.length != 20)
+        //             throw new Error("not a int160");
+        //         this.EmitPushBytes(hex.reverse());
+        //     }
+        //     else
+        //         throw new Error("must start with:(str) or (hex) or (hexbig) or (addr) or(int)");
+        // }
+        // else {
+        //     throw new Error("error type:" + typeof param);
+        // }
         return this;
     }
 }

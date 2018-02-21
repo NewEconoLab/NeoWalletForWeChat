@@ -1,76 +1,61 @@
-"use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-exports.__esModule = true;
-/// <reference path="Stream.ts"/>
-var index_1 = require("../../index");
-var BufferSize = 1024;
-var MemoryStream = /** @class */ (function (_super) {
-    __extends(MemoryStream, _super);
-    function MemoryStream() {
-        var _this = _super.call(this) || this;
-        _this._buffers = new Array();
-        _this._origin = 0;
-        _this._position = 0;
+import { Stream, SeekOrigin } from './index';
+const BufferSize = 1024;
+export class MemoryStream extends Stream {
+    constructor() {
+        super();
+        this._buffers = new Array();
+        this._origin = 0;
+        this._position = 0;
         if (arguments.length == 0) {
-            _this._length = 0;
-            _this._capacity = 0;
-            _this._expandable = true;
-            _this._writable = true;
+            this._length = 0;
+            this._capacity = 0;
+            this._expandable = true;
+            this._writable = true;
         }
         else if (arguments.length == 1 && typeof arguments[0] === "number") {
-            _this._length = 0;
-            _this._capacity = arguments[0];
-            _this._expandable = true;
-            _this._writable = true;
-            _this._buffers.push(new ArrayBuffer(_this._capacity));
+            this._length = 0;
+            this._capacity = arguments[0];
+            this._expandable = true;
+            this._writable = true;
+            this._buffers.push(new ArrayBuffer(this._capacity));
         }
         else {
-            var buffer = arguments[0];
-            _this._buffers.push(buffer);
-            _this._expandable = false;
+            let buffer = arguments[0];
+            this._buffers.push(buffer);
+            this._expandable = false;
             if (arguments.length == 1) {
-                _this._writable = false;
-                _this._length = buffer.byteLength;
+                this._writable = false;
+                this._length = buffer.byteLength;
             }
             else if (typeof arguments[1] === "boolean") {
-                _this._writable = arguments[1];
-                _this._length = buffer.byteLength;
+                this._writable = arguments[1];
+                this._length = buffer.byteLength;
             }
             else {
-                _this._origin = arguments[1];
-                _this._length = arguments[2];
-                _this._writable = arguments.length == 4 ? arguments[3] : false;
-                if (_this._origin < 0 || _this._origin + _this._length > buffer.byteLength)
+                this._origin = arguments[1];
+                this._length = arguments[2];
+                this._writable = arguments.length == 4 ? arguments[3] : false;
+                if (this._origin < 0 || this._origin + this._length > buffer.byteLength)
                     throw new RangeError();
             }
-            _this._capacity = _this._length;
+            this._capacity = this._length;
         }
-        return _this;
     }
-    MemoryStream.prototype.canRead = function () {
+    canRead() {
         return true;
-    };
-    MemoryStream.prototype.canSeek = function () {
+    }
+    canSeek() {
         return true;
-    };
-    MemoryStream.prototype.canWrite = function () {
+    }
+    canWrite() {
         return this._writable;
-    };
-    MemoryStream.prototype.capacity = function () {
+    }
+    capacity() {
         return this._capacity;
-    };
-    MemoryStream.prototype.findBuffer = function (position) {
-        var iBuff, pBuff;
-        var firstSize = this._buffers[0] == null ? BufferSize : this._buffers[0].byteLength;
+    }
+    findBuffer(position) {
+        let iBuff, pBuff;
+        let firstSize = this._buffers[0] == null ? BufferSize : this._buffers[0].byteLength;
         if (position < firstSize) {
             iBuff = 0;
             pBuff = position;
@@ -79,34 +64,34 @@ var MemoryStream = /** @class */ (function (_super) {
             iBuff = Math.floor((position - firstSize) / BufferSize) + 1;
             pBuff = (position - firstSize) % BufferSize;
         }
-        return { iBuff: iBuff, pBuff: pBuff };
-    };
-    MemoryStream.prototype.length = function () {
+        return { iBuff, pBuff };
+    }
+    length() {
         return this._length;
-    };
-    MemoryStream.prototype.position = function () {
+    }
+    position() {
         return this._position;
-    };
-    MemoryStream.prototype.read = function (buffer, offset, count) {
+    }
+    read(buffer, offset, count) {
         if (this._position + count > this._length)
             count = this._length - this._position;
         this.readInternal(new Uint8Array(buffer, offset, count), this._position);
         this._position += count;
         return count;
-    };
-    MemoryStream.prototype.readInternal = function (dst, srcPos) {
+    }
+    readInternal(dst, srcPos) {
         if (this._expandable) {
-            var i = 0, count = dst.length;
-            var d = this.findBuffer(srcPos);
+            let i = 0, count = dst.length;
+            let d = this.findBuffer(srcPos);
             while (count > 0) {
-                var actual_count = void 0;
+                let actual_count;
                 if (this._buffers[d.iBuff] == null) {
                     actual_count = Math.min(count, BufferSize - d.pBuff);
                     dst.fill(0, i, i + actual_count);
                 }
                 else {
                     actual_count = Math.min(count, this._buffers[d.iBuff].byteLength - d.pBuff);
-                    var src = new Uint8Array(this._buffers[d.iBuff]);
+                    let src = new Uint8Array(this._buffers[d.iBuff]);
                     Array.copy(src, d.pBuff, dst, i, actual_count);
                 }
                 i += actual_count;
@@ -116,18 +101,18 @@ var MemoryStream = /** @class */ (function (_super) {
             }
         }
         else {
-            var src = new Uint8Array(this._buffers[0], this._origin, this._length);
+            let src = new Uint8Array(this._buffers[0], this._origin, this._length);
             Array.copy(src, srcPos, dst, 0, dst.length);
         }
-    };
-    MemoryStream.prototype.seek = function (offset, origin) {
+    }
+    seek(offset, origin) {
         switch (origin) {
-            case index_1.SeekOrigin.Begin:
+            case SeekOrigin.Begin:
                 break;
-            case index_1.SeekOrigin.Current:
+            case SeekOrigin.Current:
                 offset += this._position;
                 break;
-            case index_1.SeekOrigin.End:
+            case SeekOrigin.End:
                 offset += this._length;
                 break;
             default:
@@ -137,8 +122,8 @@ var MemoryStream = /** @class */ (function (_super) {
             throw new RangeError();
         this._position = offset;
         return offset;
-    };
-    MemoryStream.prototype.setLength = function (value) {
+    }
+    setLength(value) {
         if (value < 0 || (value != this._length && !this._writable) || (value > this._capacity && !this._expandable))
             throw new RangeError();
         this._length = value;
@@ -146,25 +131,25 @@ var MemoryStream = /** @class */ (function (_super) {
             this._position = this._length;
         if (this._capacity < this._length)
             this._capacity = this._length;
-    };
-    MemoryStream.prototype.toArray = function () {
+    }
+    toArray() {
         if (this._buffers.length == 1 && this._origin == 0 && this._length == this._buffers[0].byteLength)
             return this._buffers[0];
-        var bw = new Uint8Array(this._length);
+        let bw = new Uint8Array(this._length);
         this.readInternal(bw, 0);
         return bw.buffer;
-    };
-    MemoryStream.prototype.write = function (buffer, offset, count) {
+    }
+    write(buffer, offset, count) {
         if (!this._writable || (!this._expandable && this._capacity - this._position < count))
             throw new Error();
         if (this._expandable) {
-            var src = new Uint8Array(buffer);
-            var d = this.findBuffer(this._position);
+            let src = new Uint8Array(buffer);
+            let d = this.findBuffer(this._position);
             while (count > 0) {
                 if (this._buffers[d.iBuff] == null)
                     this._buffers[d.iBuff] = new ArrayBuffer(BufferSize);
-                var actual_count = Math.min(count, this._buffers[d.iBuff].byteLength - d.pBuff);
-                var dst = new Uint8Array(this._buffers[d.iBuff]);
+                let actual_count = Math.min(count, this._buffers[d.iBuff].byteLength - d.pBuff);
+                let dst = new Uint8Array(this._buffers[d.iBuff]);
                 Array.copy(src, offset, dst, d.pBuff, actual_count);
                 this._position += actual_count;
                 offset += actual_count;
@@ -174,8 +159,8 @@ var MemoryStream = /** @class */ (function (_super) {
             }
         }
         else {
-            var src = new Uint8Array(buffer, offset, count);
-            var dst = new Uint8Array(this._buffers[0], this._origin, this._capacity);
+            let src = new Uint8Array(buffer, offset, count);
+            let dst = new Uint8Array(this._buffers[0], this._origin, this._capacity);
             Array.copy(src, 0, dst, this._position, count);
             this._position += count;
         }
@@ -183,7 +168,6 @@ var MemoryStream = /** @class */ (function (_super) {
             this._length = this._position;
         if (this._capacity < this._length)
             this._capacity = this._length;
-    };
-    return MemoryStream;
-}(index_1.Stream));
-exports.MemoryStream = MemoryStream;
+    }
+}
+//# sourceMappingURL=MemoryStream.js.map
