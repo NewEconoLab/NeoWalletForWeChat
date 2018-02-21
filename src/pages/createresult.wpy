@@ -1,0 +1,184 @@
+<style lang="less">
+.area-qrcode {
+  display: flex;
+  flex-direction: row;
+  width: 100%; // 750rpx
+  height: 395rpx; //  (750-20*3)/2 + 40+10
+  margin-top: 20rpx;
+}
+.qrcode-item {
+  width: 345rpx;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  margin-left: 10px;
+}
+.qrcode-label {
+  font-size: 13px;
+  width: 100%;
+  text-align: center;
+}
+.area-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 15px;
+}
+.area-text-item {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  width: 100%;
+  margin: 2px 15px 0 15px;
+  background-color: white;
+}
+.text-label {
+  margin-top: 5px;
+  font-size: 12px;
+  font-family: normal;
+  font-weight: 900;
+  padding-left: 5px;
+}
+.text-content {
+  margin-top: 9rpx;
+  font-size: 12px;
+  font-family: italic;
+  font-weight: 400;
+  word-break: break-all;
+  color: #777;
+  padding: 0 10px 5px 10px;
+}
+.area-btn {
+  display: block;
+  margin-top: 100rpx;
+  width: 80%;
+}
+.warnning {
+  position: fixed;
+  bottom: 0;
+  margin-bottom: 10px;
+  color: red;
+}
+</style>
+
+<template>
+  <view class="container">
+    <view class="area-qrcode">
+      <view class="qrcode-item">
+        <canvas style="width: {{qrcodeWH}}px; height: {{qrcodeWH}}px;" canvas-id="publicKeyCanvas"></canvas>
+        <text>Public Address</text>
+      </view>
+      <view class="qrcode-item">
+        <canvas style="width: {{qrcodeWH}}px; height: {{qrcodeWH}}px;" canvas-id="privateKeyCanvas"></canvas>
+        <text>Private Key</text>
+      </view>
+    </view>
+    <view class="area-text">
+      <view class="area-text-item"  @tap="copyToClip({{wallet.repassphrase}})">
+        <text class="text-label">Passphrase:</text>
+        <text class="text-content" >{{wallet.repassphrase}}</text>
+      </view>
+      <view class="area-text-item"  @tap="copyToClip({{wallet.publicKey}})">
+        <text class="text-label">Public Address:</text>
+        <text class="text-content">{{wallet.publicKey}}</text>
+      </view>
+      <view class="area-text-item"  @tap="copyToClip({{wallet.encryptedkey}})">
+        <text class="text-label">Encrypted Key:</text>
+        <text class="text-content" >{{wallet.encryptedkey}}</text>
+      </view>
+       <view class="area-text-item"  @tap="copyToClip({{wallet.privateKey}})">
+        <text class="text-label">Private Key:</text>
+        <text class="text-content" >{{wallet.privateKey}}</text>
+      </view>
+    </view>
+    <view class="area-btn">
+      <button type="primary">登陆</button>
+    </view>
+    <text class="warnning">非常重要，请截图保存！！</text>
+     <toast />
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import Neon from 'wechatneon';
+import drawQrcode from 'weapp-qrcode';
+import Toast from 'wepy-com-toast';
+import { SYSTEM_INFO } from '../utils/constant';
+export default class CreateResult extends wepy.page {
+  customData = {}; // 自定义数据
+
+  customFunction() {} // 自定义方法
+
+  onLoad(option) {
+    let that = this;
+    let systemInfo = wepy.getStorageSync(SYSTEM_INFO);
+    if (systemInfo == null) {
+      wepy.showModal({
+        title: '警告',
+        content: '获取系统信息失败，请重新打开小程序',
+        success: function(res) {
+          this.$redirect('./login');
+        }
+      });
+    }
+    console.log(systemInfo);
+    var width = systemInfo.windowWidth;
+    console.log(width);
+    this.qrcodeWH = (width - 10 * 3) / 2;
+    console.log(this.qrcodeWH);
+    this.wallet = JSON.parse(option.wallet);
+
+    drawQrcode({
+      width: this.qrcodeWH,
+      height: this.qrcodeWH,
+      canvasId: 'publicKeyCanvas',
+      text: this.wallet.publicKey
+    });
+    drawQrcode({
+      width: this.qrcodeWH,
+      height: this.qrcodeWH,
+      canvasId: 'privateKeyCanvas',
+      text: this.wallet.privateKey
+    });
+    this.$apply();
+  } // 在Page和Component共用的生命周期函数
+
+  onShow() {} // 只在Page中存在的页面生命周期函数
+
+  config = {}; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
+
+  data = {
+    sysInfo: {},
+    qrcodeWH: 0,
+    wallet: {}
+  }; // 页面所需数据均需在这里声明，可用于模板数据绑定
+
+  components = {
+    toast: Toast
+  }; // 声明页面中所引用的组件，或声明组件中所引用的子组件
+
+  mixins = []; // 声明页面所引用的Mixin实例
+
+  computed = {}; // 声明计算属性（详见后文介绍）
+
+  watch = {}; // 声明数据watcher（详见后文介绍）
+
+  methods = {
+    copyToClip(str) {
+      let promise = this.$invoke('toast', 'show', {
+        title: '复制成功',
+        duration: 450
+      });
+      promise.then(d => {
+        console.log('toast done');
+      });
+    }
+  }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
+
+  events = {}; // 声明组件之间的事件处理函数
+}
+</script>
