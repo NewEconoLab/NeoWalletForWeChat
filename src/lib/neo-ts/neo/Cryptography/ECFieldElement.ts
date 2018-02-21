@@ -1,6 +1,4 @@
-﻿namespace Neo.Cryptography
-{
-    export class ECFieldElement
+﻿ export class ECFieldElement
     {
         constructor(public value: BigInteger, private curve: ECCurve)
         {
@@ -140,4 +138,3 @@
             return new ECFieldElement(this.value.subtract(other.value).mod(this.curve.Q), this.curve);
         }
     }
-}

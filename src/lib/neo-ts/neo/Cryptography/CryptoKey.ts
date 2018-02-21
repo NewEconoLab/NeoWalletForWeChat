@@ -1,6 +1,5 @@
-﻿namespace Neo.Cryptography
-{
-    export class CryptoKey
+﻿import * as NEO
+export class CryptoKey
     {
         constructor(public type: string, public extractable: boolean, public algorithm: Algorithm, public usages: string[])
         {
@@ -43,4 +42,3 @@
             super(privateKey == null ? "public" : "private", true, { name: "ECDSA", namedCurve: "P-256" } as any, [privateKey == null ? "verify" : "sign"]);
         }
     }
-}

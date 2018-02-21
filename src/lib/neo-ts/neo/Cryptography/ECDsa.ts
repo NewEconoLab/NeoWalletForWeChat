@@ -1,7 +1,4 @@
-﻿
-namespace Neo.Cryptography
-{
-    export class ECDsa
+﻿export class ECDsa
     {
         constructor(private key: ECDsaCryptoKey)
         {
@@ -97,4 +94,3 @@ namespace Neo.Cryptography
             return v.equals(r);
         }
     }
-}

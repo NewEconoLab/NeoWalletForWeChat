@@ -1,4 +1,4 @@
-class NeoMap<TKey, TValue>
+export class NeoMap<TKey, TValue>
 {
     private _map = new Object();
     private _size = 0;

@@ -1,8 +1,4 @@
-namespace Neo.IO.Caching
-{
-    export interface ITrackable<TKey>
-    {
-        key: TKey;
-        trackState: TrackState;
-    }
+export interface ITrackable<TKey> {
+    key: TKey;
+    trackState: TrackState;
 }

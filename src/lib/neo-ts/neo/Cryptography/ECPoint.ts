@@ -1,6 +1,4 @@
-﻿namespace Neo.Cryptography
-{
-    export class ECPoint
+﻿export class ECPoint
     {
         constructor(public x: ECFieldElement, public y: ECFieldElement, public curve: ECCurve)
         {
@@ -353,4 +351,3 @@
             return wnaf;
         }
     }
-}

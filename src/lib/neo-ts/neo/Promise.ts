@@ -1,12 +1,12 @@
 ﻿type PromiseExecutor<T> = (resolve: Action<T | PromiseLike<T>>, reject: Action<any>) => void;
 
 
-enum PromiseState {
+export enum PromiseState {
     pending,
     fulfilled,
     rejected
 }
-class NeoPromise<T> implements PromiseLike<T>
+export class NeoPromise<T> implements PromiseLike<T>
 {
     private _state = PromiseState.pending;
     private _callback_attached = false;

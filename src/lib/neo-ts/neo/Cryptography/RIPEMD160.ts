@@ -1,6 +1,4 @@
-﻿namespace Neo.Cryptography
-{
-    export class RIPEMD160
+﻿export class RIPEMD160
     {
         // constants table
         private static zl = [
@@ -191,4 +189,3 @@
             return new Uint8Array(digestbytes).buffer;
         }
     }
-}
