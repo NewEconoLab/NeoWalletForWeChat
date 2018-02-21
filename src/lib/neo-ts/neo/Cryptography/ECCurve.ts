@@ -1,10 +1,10 @@
-﻿
+﻿import * as NEO from '../../index'
     let _secp256k1: ECCurve;
     let _secp256r1: ECCurve;
 
     export class ECCurve
     {
-        public Q: BigInteger;
+        public Q: NEO.BigInteger;
         public A: ECFieldElement;
         public B: ECFieldElement;
         public N: BigInteger;

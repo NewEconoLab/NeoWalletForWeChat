@@ -1,4 +1,4 @@
-﻿import * as NEO
+﻿import * as NEO from '../../index'
 export class CryptoKey
     {
         constructor(public type: string, public extractable: boolean, public algorithm: Algorithm, public usages: string[])
@@ -6,8 +6,8 @@ export class CryptoKey
         }
     }
 
-    export class AesCryptoKey extends Neo.Cryptography.CryptoKey
-    {
+    export class AesCryptoKey extends NEO.CryptoKey
+    { 
         constructor(private _key_bytes: Uint8Array)
         {
             super("secret", true, { name: "AES-CBC", length: _key_bytes.length * 8 } as any, ["encrypt", "decrypt"]);
@@ -37,7 +37,7 @@ export class CryptoKey
 
     export class ECDsaCryptoKey extends CryptoKey
     {
-        constructor(public publicKey: ECPoint, public privateKey?: Uint8Array)
+        constructor(public publicKey: NEO.ECPoint, public privateKey?: Uint8Array)
         {
             super(privateKey == null ? "public" : "private", true, { name: "ECDSA", namedCurve: "P-256" } as any, [privateKey == null ? "verify" : "sign"]);
         }

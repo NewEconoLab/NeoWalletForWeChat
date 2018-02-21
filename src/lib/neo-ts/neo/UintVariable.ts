@@ -1,4 +1,4 @@
-﻿export abstract class UintVariable {
+﻿ abstract class UintVariable {
     protected _bits: Uint32Array;
 
     public get bits(): Uint32Array {
@@ -54,3 +54,5 @@
         return s;
     }
 }
+
+export { UintVariable};

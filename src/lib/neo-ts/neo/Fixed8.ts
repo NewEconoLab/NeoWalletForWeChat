@@ -1,3 +1,4 @@
+
 const D = 100000000;
 
 let _max: Fixed8, _minus: Fixed8, _min: Fixed8, _one: Fixed8, _satoshi: Fixed8;

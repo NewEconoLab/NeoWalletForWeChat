@@ -1,4 +1,6 @@
 ///<reference path="UintVariable.ts"/>
+import { UintVariable } from './UintVariable'
+
 let _zero: Uint160;
 
 export class Uint160 extends UintVariable {

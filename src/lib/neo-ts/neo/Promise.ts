@@ -1,4 +1,4 @@
-﻿type PromiseExecutor<T> = (resolve: Action<T | PromiseLike<T>>, reject: Action<any>) => void;
+﻿export type PromiseExecutor<T> = (resolve: Action<T | PromiseLike<T>>, reject: Action<any>) => void;
 
 
 export enum PromiseState {
