@@ -1,4 +1,5 @@
-﻿export class BinaryWriter {
+﻿import { Stream, SeekOrigin, ISerializable, Uint64, UintVariable } from '../../index'
+export class BinaryWriter {
     private _buffer = new ArrayBuffer(8);
     private array_uint8: Uint8Array;
     private array_int8: Int8Array;

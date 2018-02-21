@@ -1,4 +1,5 @@
-﻿export class ECPoint
+﻿import { ECCurve, BigInteger ,ECFieldElement,IO} from '../../index'
+export class ECPoint
     {
         constructor(public x: ECFieldElement, public y: ECFieldElement, public curve: ECCurve)
         {

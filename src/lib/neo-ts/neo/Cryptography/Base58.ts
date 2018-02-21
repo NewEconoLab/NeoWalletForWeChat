@@ -1,17 +1,17 @@
-﻿import * as NEO from '../../index'
+﻿import {BigInteger} from '../../index'
 export class Base58
     {
         public static Alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 
         public static decode(input: string): Uint8Array
         {
-            let bi = NEO.BigInteger.Zero;
+            let bi = BigInteger.Zero;
             for (let i = input.length - 1; i >= 0; i--)
             {
                 let index = Base58.Alphabet.indexOf(input[i]);
                 if (index == -1)
                     throw new RangeError();
-                bi = NEO.BigInteger.add(bi, NEO.BigInteger.multiply(NEO.BigInteger.pow(Base58.Alphabet.length, input.length - 1 - i), index));
+                bi = BigInteger.add(bi, BigInteger.multiply(BigInteger.pow(Base58.Alphabet.length, input.length - 1 - i), index));
             }
             let bytes: Uint8Array = bi.toUint8Array();
             let leadingZeros = 0;
@@ -27,11 +27,11 @@ export class Base58
 
         public static encode(input: Uint8Array): string
         {
-            let value = NEO.BigInteger.fromUint8Array(input, 1, false);
+            let value = BigInteger.fromUint8Array(input, 1, false);
             let s = "";
             while (!value.isZero())
             {
-                let r = NEO.BigInteger.divRem(value, Base58.Alphabet.length);
+                let r = BigInteger.divRem(value, Base58.Alphabet.length);
                 s = Base58.Alphabet[r.remainder.toInt32()] + s;
                 value = r.result;
             }

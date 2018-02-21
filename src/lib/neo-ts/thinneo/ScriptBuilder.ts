@@ -1,4 +1,5 @@
-﻿export class ScriptBuilder {
+﻿import {OpCode,BigInteger,Helper} from '../index'
+export class ScriptBuilder {
     writer: number[];
     Offset: number = 0;
 
@@ -58,7 +59,7 @@
         return this.Emit(op, this._ConvertInt16ToBytes(offset));
     }
 
-    public EmitPushNumber(number: Neo.BigInteger): ScriptBuilder {
+    public EmitPushNumber(number: BigInteger): ScriptBuilder {
         var i32 = number.toInt32();
         if (i32 == -1) return this.Emit(OpCode.PUSHM1);
         if (i32 == 0) return this.Emit(OpCode.PUSH0);
@@ -97,13 +98,13 @@
     }
 
     public EmitPushString(data: string): ScriptBuilder {
-        return this.EmitPushBytes(ThinNeo.Helper.String2Bytes(data));
+        return this.EmitPushBytes(Helper.String2Bytes(data));
     }
 
     public EmitSysCall(api: string): ScriptBuilder {
         if (api == null)
             throw new Error("ArgumentNullException");
-        var api_bytes = ThinNeo.Helper.String2Bytes(api);
+        var api_bytes = Helper.String2Bytes(api);
         if (api_bytes.length == 0 || api_bytes.length > 252)
             throw new Error("ArgumentException");
         var arg: Uint8Array = new Uint8Array(api_bytes.length + 1);
@@ -133,7 +134,7 @@
     public EmitParamJson(param: any): ScriptBuilder {
         if (typeof param === "number")//bool 或小整数
         {
-            this.EmitPushNumber(new Neo.BigInteger(param as number));
+            this.EmitPushNumber(new BigInteger(param as number));
         }
         else if (typeof param === "boolean") {
             this.EmitPushBool(param as boolean);
@@ -143,8 +144,8 @@
             for (var i = list.length - 1; i >= 0; i--) {
                 this.EmitParamJson(list[i]);
             }
-            this.EmitPushNumber(new Neo.BigInteger(list.length));
-            this.Emit(ThinNeo.OpCode.PACK);
+            this.EmitPushNumber(new BigInteger(list.length));
+            this.Emit(OpCode.PACK);
         }
 
         else if (typeof param === "string")//复杂格式
@@ -171,21 +172,21 @@
             //(address) or(addr)开头，表示是一个地址，转换为脚本hash
             else if (str.indexOf("(address)") == 0) {
                 var addr = (str.substr(9));
-                var hex = ThinNeo.Helper.GetPublicKeyScriptHash_FromAddress(addr);
+                var hex = Helper.GetPublicKeyScriptHash_FromAddress(addr);
                 this.EmitPushBytes(hex);
             }
             else if (str.indexOf("(addr)") == 0) {
                 var addr = (str.substr(6));
-                var hex = ThinNeo.Helper.GetPublicKeyScriptHash_FromAddress(addr);
+                var hex = Helper.GetPublicKeyScriptHash_FromAddress(addr);
                 this.EmitPushBytes(hex);
             }
             //(integer) or(int) 开头，表示是一个大整数
             else if (str.indexOf("(integer)") == 0) {
-                var num = new Neo.BigInteger(str.substr(9));
+                var num = new BigInteger(str.substr(9));
                 this.EmitPushNumber(num);
             }
             else if (str.indexOf("(int)") == 0) {
-                var num = new Neo.BigInteger(str.substr(5));
+                var num = new BigInteger(str.substr(5));
                 this.EmitPushNumber(num);
             }
             //(hexinteger) or (hexint) or (hex) 开头，表示是一个16进制表示的大整数，转换为bytes就是反序

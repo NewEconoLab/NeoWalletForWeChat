@@ -1,4 +1,5 @@
-﻿export class nep6account {
+﻿import {Helper} from '../index'
+export class nep6account {
     public address: string;
     public nep2key: string;
     public getPrivateKey(scrypt: nep6ScryptParameters, password: string, callback: (info: string, result: string | Uint8Array) => void): void {
@@ -6,8 +7,8 @@
         var cb = (i, r) => {
             if (i == "finish") {
                 var bytes = r as Uint8Array;
-                var pkey = ThinNeo.Helper.GetPublicKeyFromPrivateKey(bytes);
-                var address = ThinNeo.Helper.GetAddressFromPublicKey(pkey);
+                var pkey = Helper.GetPublicKeyFromPrivateKey(bytes);
+                var address = Helper.GetAddressFromPublicKey(pkey);
                 if (address == this.address) {
                     callback(i, r);
                 }
@@ -19,7 +20,7 @@
                 callback(i, r);
             }
         }
-        ThinNeo.Helper.GetPrivateKeyFromNep2(this.nep2key, password, scrypt.N, scrypt.r, scrypt.p, cb);
+        Helper.GetPrivateKeyFromNep2(this.nep2key, password, scrypt.N, scrypt.r, scrypt.p, cb);
     }
 }
 export class nep6ScryptParameters {
