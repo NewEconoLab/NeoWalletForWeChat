@@ -1,5 +1,3 @@
-/// <reference path="UintVariable.d.ts" />
-/// <reference path="Uint64.d.ts" />
 export declare class BigInteger {
     private _sign;
     private _bits;

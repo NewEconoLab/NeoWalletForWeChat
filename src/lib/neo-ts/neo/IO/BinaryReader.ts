@@ -1,5 +1,9 @@
-﻿import { Stream, ISerializable } from './index'
-import { Fixed8, Uint64, Uint160, Uint256 } from '../index'
+﻿import { Stream } from './Stream'
+import { ISerializable } from './ISerializable'
+import { Fixed8 } from '../Fixed8'
+import { Uint64 } from '../Uint64'
+import { Uint160 } from '../Uint160'
+import { Uint256 } from '../Uint256'
 export class BinaryReader {
     private _buffer = new ArrayBuffer(8);
     private array_uint8: Uint8Array;

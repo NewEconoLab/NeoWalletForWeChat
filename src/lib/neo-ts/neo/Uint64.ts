@@ -1,5 +1,5 @@
 ///<reference path="UintVariable.ts"/>
-import { UintVariable, BigInteger } from './index'
+import { UintVariable } from './UintVariable'
 let _max: Uint64, _min: Uint64;
 
 export class Uint64 extends UintVariable {
@@ -61,10 +61,11 @@ export class Uint64 extends UintVariable {
         }
     }
 
-    public static parse(str: string): Uint64 {
-        let bi = BigInteger.parse(str);
-        if (bi.bitLength() > 64) throw new RangeError();
-        let array = new Uint32Array(bi.toUint8Array(true, 8).buffer);
+    public static parse(buffer: ArrayBuffer): Uint64 {
+        // let bi = BigInteger.parse(str);
+        // if (bi.bitLength() > 64) throw new RangeError();
+        // let array = new Uint32Array(bi.toUint8Array(true, 8).buffer);
+        let array = new Uint32Array(buffer);
         return new Uint64(array[0], array[1]);
     }
 
@@ -95,9 +96,9 @@ export class Uint64 extends UintVariable {
         return this._bits[0] + this._bits[1] * Math.pow(2, 32);
     }
 
-    public toString(): string {
-        return (new BigInteger(this._bits.buffer)).toString();
-    }
+    // public toString(): string {
+    //     return (new BigInteger(this._bits.buffer)).toString();
+    // }
 
     public toUint32(): number {
         return this._bits[0];

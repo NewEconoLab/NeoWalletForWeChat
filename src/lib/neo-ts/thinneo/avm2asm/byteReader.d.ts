@@ -1,4 +1,4 @@
-import { OpCode } from '../../index';
+import { OpCode } from '../opcode';
 export declare class ByteReader {
     constructor(data: Uint8Array);
     data: Uint8Array;

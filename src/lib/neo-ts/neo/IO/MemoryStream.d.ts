@@ -1,5 +1,5 @@
 /// <reference path="Stream.d.ts" />
-import { Stream, SeekOrigin } from './index';
+import { Stream, SeekOrigin } from './Stream';
 export declare class MemoryStream extends Stream {
     private _buffers;
     private _origin;

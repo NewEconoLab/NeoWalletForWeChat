@@ -1,5 +1,6 @@
 ﻿///<reference path="helper.ts"/>
-import { Helper, ScriptBuilder } from './index'
+import { Helper  } from './helper'
+import {ScriptBuilder} from './ScriptBuilder'
 import { Fixed8, IO, Sha256 } from '../neo/index'
 export enum TransactionType {
     /// <summary>

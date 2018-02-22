@@ -1,4 +1,4 @@
-import { ECFieldElement } from './index';
+import { ECFieldElement } from './ECFieldElement';
 import { BigInteger } from '../BigInteger';
 export class ECPoint {
     constructor(x, y, curve) {

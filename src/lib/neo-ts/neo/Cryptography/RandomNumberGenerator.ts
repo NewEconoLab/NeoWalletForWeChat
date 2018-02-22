@@ -1,4 +1,5 @@
-﻿import {Aes,Sha256} from './index'
+﻿import {Aes} from './Aes'
+import {Sha256} from './Sha256'
 export class RandomNumberGenerator {
     private static _entropy: number[] = [];
     private static _strength = 0;
@@ -19,19 +20,31 @@ export class RandomNumberGenerator {
     }
 
     public static getRandomValues<T extends Int8Array | Uint8ClampedArray | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array>(array: T): T {
-        if (RandomNumberGenerator._strength < 256) throw new Error();
-        if (RandomNumberGenerator._key == null) {
-            let data = new Float64Array(RandomNumberGenerator._entropy);
-            RandomNumberGenerator._key = new Uint8Array(Sha256.computeHash(data));
-        }
-        let aes = new Aes(RandomNumberGenerator._key, RandomNumberGenerator.getWeakRandomValues(16));
-        let src = new Uint8Array(16);
-        let dst = new Uint8Array(array.buffer, array.byteOffset, array.byteLength);
-        for (let i = 0; i < dst.length; i += 16) {
-            aes.encryptBlock(RandomNumberGenerator.getWeakRandomValues(16), src);
-            Array.copy(src, 0, dst, i, Math.min(dst.length - i, 16));
-        }
-        return array;
+       return crypto.getRandomValues(array);
+        // console.log('1111');
+        // if (RandomNumberGenerator._strength < 256) throw new Error();
+        // console.log('2222');
+        // if (RandomNumberGenerator._key == null) {
+        //     let data = new Float64Array(RandomNumberGenerator._entropy);
+        //     RandomNumberGenerator._key = new Uint8Array(Sha256.computeHash(data));
+        // }
+        // console.log('3333');
+        // let aes = new Aes(RandomNumberGenerator._key, RandomNumberGenerator.getWeakRandomValues(16));
+        // console.log('4444');
+        // let src = new Uint8Array(16);
+        // console.log('5555');
+        // let dst = new Uint8Array(array.buffer, array.byteOffset, array.byteLength);
+        // console.log('6666');
+        // console.log(dst);
+        
+        // for (let i = 0; i < dst.length; i += 16) {
+        //     aes.encryptBlock(RandomNumberGenerator.getWeakRandomValues(16), src);
+        //     console.log(src);
+            
+        //     Array.copy(src, 0, dst, i, Math.min(dst.length - i, 16));
+        // }
+
+        // return array;
     }
 
     private static getWeakRandomValues(array: number | Uint8Array): Uint8Array {

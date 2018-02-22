@@ -1,4 +1,7 @@
-﻿import { ECCurve, ECDsaCryptoKey, Sha256, ECPoint } from './index'
+﻿import { ECCurve,  } from './ECCurve'
+import {ECDsaCryptoKey} from './CryptoKey'
+import {Sha256} from './Sha256'
+import {ECPoint} from './ECPoint'
 import {BigInteger} from '../BigInteger'
 export class ECDsa {
     constructor(private key: ECDsaCryptoKey) {

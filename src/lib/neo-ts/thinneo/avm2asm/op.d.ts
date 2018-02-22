@@ -1,4 +1,4 @@
-import { OpCode } from '../../index';
+import { OpCode } from '../opcode';
 export declare enum ParamType {
     None = 0,
     ByteArray = 1,

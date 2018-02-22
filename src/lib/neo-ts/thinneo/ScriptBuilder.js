@@ -1,4 +1,5 @@
-import { OpCode, Helper } from './index';
+import { OpCode } from './opcode';
+import { Helper } from './helper';
 export class ScriptBuilder {
     constructor() {
         this.Offset = 0;

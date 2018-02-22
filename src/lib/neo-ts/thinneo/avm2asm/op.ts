@@ -1,4 +1,4 @@
-﻿import {OpCode} from '../../index'
+﻿import {OpCode} from '../opcode'
 export enum ParamType {
     None,
     ByteArray,

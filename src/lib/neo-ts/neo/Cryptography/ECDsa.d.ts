@@ -1,4 +1,5 @@
-import { ECCurve, ECDsaCryptoKey } from './index';
+import { ECCurve } from './ECCurve';
+import { ECDsaCryptoKey } from './CryptoKey';
 export declare class ECDsa {
     private key;
     constructor(key: ECDsaCryptoKey);

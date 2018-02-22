@@ -1,4 +1,4 @@
-import { OpCode } from '../../index';
+import { OpCode } from '../opcode';
 export var ParamType;
 (function (ParamType) {
     ParamType[ParamType["None"] = 0] = "None";

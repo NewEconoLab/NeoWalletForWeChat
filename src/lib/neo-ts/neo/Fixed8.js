@@ -1,4 +1,5 @@
-import { Uint64, BigInteger } from './index';
+import { Uint64 } from './Uint64';
+import { BigInteger } from './BigInteger';
 const D = 100000000;
 let _max, _minus, _min, _one, _satoshi;
 export class Fixed8 {
@@ -58,7 +59,10 @@ export class Fixed8 {
         else if (digits < 8)
             for (let i = digits; i < 8; i++)
                 str += '0';
-        return new Fixed8(Uint64.parse(str));
+        let bi = BigInteger.parse(str);
+        if (bi.bitLength() > 64)
+            throw new RangeError();
+        return new Fixed8(Uint64.parse(bi.toUint8Array(true, 8).buffer));
     }
     subtract(other) {
         if (this.data.compareTo(other.data) < 0)

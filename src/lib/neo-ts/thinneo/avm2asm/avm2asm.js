@@ -1,4 +1,6 @@
-import { ByteReader, OpCode, ParamType, Op } from '../../index';
+import { Op, ParamType } from './op';
+import { ByteReader } from './byteReader';
+import { OpCode } from '../opcode';
 export class Avm2Asm {
     static Trans(script) {
         var breader = new ByteReader(script);

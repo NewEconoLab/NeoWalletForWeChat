@@ -1,12 +1,10 @@
 {
   "compilerOptions": {
-    // "module": "amd",
     "target": "es6",
     "declaration": true,
     "sourceMap": true,
     "removeComments": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    // "outFile": "../index.js"
+    "emitDecoratorMetadata": true
   }
 }

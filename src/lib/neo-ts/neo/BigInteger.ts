@@ -1,6 +1,4 @@
-﻿///<reference path="UintVariable.ts"/>
-///<reference path="Uint64.ts"/>
-import {Uint64} from './index'
+﻿import {Uint64} from './Uint64'
 const DB = 26;
 const DM = (1 << DB) - 1;
 const DV = DM + 1;

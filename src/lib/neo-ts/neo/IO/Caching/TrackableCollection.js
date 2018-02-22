@@ -1,4 +1,4 @@
-import { TrackState } from './index';
+import { TrackState } from './TrackState';
 import { NeoMap } from '../../Map';
 export class TrackableCollection {
     constructor(items) {

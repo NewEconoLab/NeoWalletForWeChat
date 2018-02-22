@@ -1,4 +1,5 @@
-import { Uint64, IO } from './index';
+import { Uint64 } from './Uint64';
+import * as IO from './IO/index';
 export declare class Fixed8 implements IO.ISerializable {
     private data;
     static readonly MaxValue: Fixed8;

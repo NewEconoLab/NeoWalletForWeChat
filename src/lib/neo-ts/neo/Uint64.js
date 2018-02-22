@@ -1,4 +1,4 @@
-import { UintVariable, BigInteger } from './index';
+import { UintVariable } from './UintVariable';
 let _max, _min;
 export class Uint64 extends UintVariable {
     static get MaxValue() { return _max || (_max = new Uint64(0xffffffff, 0xffffffff)); }
@@ -53,11 +53,8 @@ export class Uint64 extends UintVariable {
             return new Uint64(bits[0], bits[1]);
         }
     }
-    static parse(str) {
-        let bi = BigInteger.parse(str);
-        if (bi.bitLength() > 64)
-            throw new RangeError();
-        let array = new Uint32Array(bi.toUint8Array(true, 8).buffer);
+    static parse(buffer) {
+        let array = new Uint32Array(buffer);
         return new Uint64(array[0], array[1]);
     }
     rightShift(shift) {
@@ -83,9 +80,6 @@ export class Uint64 extends UintVariable {
     }
     toNumber() {
         return this._bits[0] + this._bits[1] * Math.pow(2, 32);
-    }
-    toString() {
-        return (new BigInteger(this._bits.buffer)).toString();
     }
     toUint32() {
         return this._bits[0];

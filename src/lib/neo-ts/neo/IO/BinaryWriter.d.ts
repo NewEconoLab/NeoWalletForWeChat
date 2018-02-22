@@ -1,5 +1,7 @@
-import { Stream, SeekOrigin, ISerializable } from './index';
-import { Uint64, UintVariable } from '../index';
+import { Stream, SeekOrigin } from './Stream';
+import { ISerializable } from './ISerializable';
+import { Uint64 } from '../Uint64';
+import { UintVariable } from '../UintVariable';
 export declare class BinaryWriter {
     private output;
     private _buffer;

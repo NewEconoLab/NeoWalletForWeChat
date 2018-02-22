@@ -1,4 +1,5 @@
-import { ECCurve, ECFieldElement } from './index';
+import { ECCurve } from './ECCurve';
+import { ECFieldElement } from './ECFieldElement';
 import { BigInteger } from '../BigInteger';
 import * as IO from '../IO/index';
 export declare class ECPoint {

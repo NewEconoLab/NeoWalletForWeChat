@@ -1,4 +1,6 @@
-import {Uint64,IO,BigInteger} from './index'
+import { Uint64 } from './Uint64'
+import { BigInteger } from './BigInteger'
+import * as IO from './IO/index'
 const D = 100000000;
 
 let _max: Fixed8, _minus: Fixed8, _min: Fixed8, _one: Fixed8, _satoshi: Fixed8;
@@ -67,7 +69,10 @@ export class Fixed8 implements IO.ISerializable {
         else if (digits < 8)
             for (let i = digits; i < 8; i++)
                 str += '0';
-        return new Fixed8(Uint64.parse(str));
+        let bi = BigInteger.parse(str);
+        if (bi.bitLength() > 64) throw new RangeError();
+        // let array = new Uint32Array(bi.toUint8Array(true, 8).buffer);
+        return new Fixed8(Uint64.parse(bi.toUint8Array(true, 8).buffer));
     }
 
     public subtract(other: Fixed8): Fixed8 {

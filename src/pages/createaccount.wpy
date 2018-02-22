@@ -83,7 +83,7 @@
 import wepy from 'wepy';
 import Neon from 'wechatneon';
 // import {neo, nep6, thinneo} from '../lib/neo-ts.js'
-let neo = require('../lib/neo-ts/index')
+import * as NEL from '../lib/neo-ts/index';
 import Toast from 'wepy-com-toast';
 import { LOCAL_WALLET } from '../utils/constant';
 import tip from '../utils/tip';
@@ -93,8 +93,13 @@ export default class CreateAccount extends wepy.page {
   customFunction() {} // 自定义方法
 
   onLoad() {
-    console.log(neo);
+    var array = new Uint8Array(32);
+    let key = NEL.neo.Cryptography.RandomNumberGenerator.getRandomValues(array);
     
+    console.log(String.fromCharCode.apply(null, key));
+    var pubkey = NEL.thinneo.Helper.GetPublicKeyFromPrivateKey(key);
+    // let addr = NEL.ThinNeo.Helper.GetAddressFromPublicKey(pubkey);
+    // console.log(addr);
   } // 在Page和Component共用的生命周期函数
 
   onShow() {} // 只在Page中存在的页面生命周期函数
@@ -178,8 +183,8 @@ export default class CreateAccount extends wepy.page {
         address: address
       };
       // wallets.push(wallet);
-      wepy.showLoading({title: '钱包创建完成'});
-      wepy.showLoading({title: '数据存储中'});
+      wepy.showLoading({ title: '钱包创建完成' });
+      wepy.showLoading({ title: '数据存储中' });
       wepy.setStorageSync(LOCAL_WALLET, wallets);
       wepy.hideLoading();
       let str = JSON.stringify(wallet);

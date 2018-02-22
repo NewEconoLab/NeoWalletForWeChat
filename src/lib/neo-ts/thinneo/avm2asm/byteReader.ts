@@ -1,4 +1,4 @@
-﻿import { OpCode } from '../../index'
+﻿import { OpCode } from '../opcode'
 export class ByteReader {
     public constructor(data: Uint8Array) {
         this.data = data;

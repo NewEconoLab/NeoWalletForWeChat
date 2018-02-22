@@ -1,4 +1,4 @@
-import { Stream, SeekOrigin } from './index';
+import { Stream, SeekOrigin } from './Stream';
 const BufferSize = 1024;
 export class MemoryStream extends Stream {
     constructor() {

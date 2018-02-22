@@ -1,4 +1,3 @@
-/// <reference path="helper.d.ts" />
 import { Fixed8, IO } from '../neo/index';
 export declare enum TransactionType {
     MinerTransaction = 0,

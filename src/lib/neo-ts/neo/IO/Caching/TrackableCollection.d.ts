@@ -1,4 +1,4 @@
-import { ITrackable } from './index';
+import { ITrackable } from './ITrackable';
 export declare class TrackableCollection<TKey, TItem extends ITrackable<TKey>> {
     private _map;
     constructor(items?: ArrayLike<TItem>);

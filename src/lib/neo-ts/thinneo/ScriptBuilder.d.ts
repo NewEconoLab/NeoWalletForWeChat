@@ -1,4 +1,4 @@
-import { OpCode } from './index';
+import { OpCode } from './opcode';
 import { BigInteger } from '../neo/BigInteger';
 export declare class ScriptBuilder {
     writer: number[];
