@@ -1,5 +1,5 @@
 import { OpCode } from './opcode';
-import { Helper } from './helper';
+import { Helper } from '../Helper/AccountHelper';
 export class ScriptBuilder {
     constructor() {
         this.Offset = 0;

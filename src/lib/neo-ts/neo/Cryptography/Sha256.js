@@ -1,3 +1,4 @@
+import * as UintHelper from '../../Helper/UintHelper';
 export class Sha256 {
     static computeHash(data) {
         let H = new Uint32Array([
@@ -6,7 +7,7 @@ export class Sha256 {
         let l = data.byteLength / 4 + 2;
         let N = Math.ceil(l / 16);
         let M = new Array(N);
-        let view = Uint8Array.fromArrayBuffer(data);
+        let view = UintHelper.fromArrayBuffer(data);
         for (let i = 0; i < N; i++) {
             M[i] = new Uint32Array(16);
             for (let j = 0; j < 16; j++) {

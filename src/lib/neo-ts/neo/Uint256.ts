@@ -1,5 +1,6 @@
 ///<reference path="UintVariable.ts"/>
 import { UintVariable } from './UintVariable'
+import  * as UintHelper from '../Helper/UintHelper'
 let _zero: Uint256;
 
 export class Uint256 extends UintVariable {
@@ -13,7 +14,7 @@ export class Uint256 extends UintVariable {
 
     public static parse(str: string): Uint256 {
         if (str.length != 64) throw new RangeError();
-        let x = str.hexToBytes();
+        let x = UintHelper.hexToBytes(str);
         let y = new Uint8Array(x.length);
         for (let i = 0; i < y.length; i++)
             y[i] = x[x.length - i - 1];

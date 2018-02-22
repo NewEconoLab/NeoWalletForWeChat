@@ -1,4 +1,5 @@
-﻿export class Sha256 {
+﻿import * as UintHelper from '../../Helper/UintHelper'
+export class Sha256 {
     // constants [§4.2.2]
     private static K = [
         0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
@@ -21,7 +22,7 @@
         let l = data.byteLength / 4 + 2; // length (in 32-bit integers) of data + ‘1’ + appended length
         let N = Math.ceil(l / 16);  // number of 16-integer-blocks required to hold 'l' ints
         let M = new Array<Uint32Array>(N);
-        let view = Uint8Array.fromArrayBuffer(data);
+        let view = UintHelper.fromArrayBuffer(data);
 
         for (let i = 0; i < N; i++) {
             M[i] = new Uint32Array(16);

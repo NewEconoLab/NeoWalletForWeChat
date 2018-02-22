@@ -1,3 +1,4 @@
+import * as UintHelper from '../../Helper/UintHelper';
 export class CryptoKey {
     constructor(type, extractable, algorithm, usages) {
         this.type = type;
@@ -24,7 +25,7 @@ export class AesCryptoKey extends CryptoKey {
     static import(keyData) {
         if (keyData.byteLength != 16 && keyData.byteLength != 24 && keyData.byteLength != 32)
             throw new RangeError();
-        return new AesCryptoKey(Uint8Array.fromArrayBuffer(keyData));
+        return new AesCryptoKey(UintHelper.fromArrayBuffer(keyData));
     }
 }
 export class ECDsaCryptoKey extends CryptoKey {

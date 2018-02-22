@@ -2,6 +2,8 @@ import { ECDsaCryptoKey } from './CryptoKey';
 import { Sha256 } from './Sha256';
 import { ECPoint } from './ECPoint';
 import { BigInteger } from '../BigInteger';
+import * as Arrayhelper from '../../Helper/Arrayhelper';
+import * as UintHelper from '../../Helper/UintHelper';
 export class ECDsa {
     constructor(key) {
         this.key = key;
@@ -40,8 +42,8 @@ export class ECDsa {
             }
         } while (s.sign() == 0);
         let arr = new Uint8Array(64);
-        Array.copy(r.toUint8Array(false, 32), 0, arr, 0, 32);
-        Array.copy(s.toUint8Array(false, 32), 0, arr, 32, 32);
+        Arrayhelper.copy(r.toUint8Array(false, 32), 0, arr, 0, 32);
+        Arrayhelper.copy(s.toUint8Array(false, 32), 0, arr, 32, 32);
         return arr.buffer;
     }
     static sumOfTwoMultiplies(P, k, Q, l) {
@@ -64,7 +66,7 @@ export class ECDsa {
         return R;
     }
     verify(message, signature) {
-        let arr = Uint8Array.fromArrayBuffer(signature);
+        let arr = UintHelper.fromArrayBuffer(signature);
         let r = BigInteger.fromUint8Array(arr.subarray(0, 32), 1, false);
         let s = BigInteger.fromUint8Array(arr.subarray(32, 64), 1, false);
         if (r.compareTo(this.key.publicKey.curve.N) >= 0 || s.compareTo(this.key.publicKey.curve.N) >= 0)

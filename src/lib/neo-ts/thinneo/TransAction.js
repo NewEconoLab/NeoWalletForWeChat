@@ -1,6 +1,9 @@
-import { Helper } from './helper';
+import { Helper } from '../Helper/AccountHelper';
 import { ScriptBuilder } from './ScriptBuilder';
-import { Fixed8, IO, Sha256 } from '../neo/index';
+import { Fixed8 } from '../neo/Fixed8';
+import { BinaryWriter } from '../neo/IO/BinaryWriter';
+import { Sha256 } from '../neo/Cryptography/Sha256';
+import { MemoryStream } from '../neo/IO/MemoryStream';
 export var TransactionType;
 (function (TransactionType) {
     TransactionType[TransactionType["MinerTransaction"] = 0] = "MinerTransaction";
@@ -220,16 +223,16 @@ export class Transaction {
         }
     }
     GetMessage() {
-        var ms = new IO.MemoryStream();
-        var writer = new IO.BinaryWriter(ms);
+        var ms = new MemoryStream();
+        var writer = new BinaryWriter(ms);
         this.SerializeUnsigned(writer);
         var arr = ms.toArray();
         var msg = new Uint8Array(arr, 0, arr.byteLength);
         return msg;
     }
     GetRawData() {
-        var ms = new IO.MemoryStream();
-        var writer = new IO.BinaryWriter(ms);
+        var ms = new MemoryStream();
+        var writer = new BinaryWriter(ms);
         this.Serialize(writer);
         var arr = ms.toArray();
         var msg = new Uint8Array(arr, 0, arr.byteLength);

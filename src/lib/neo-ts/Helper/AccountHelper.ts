@@ -1,5 +1,11 @@
 import { Base64 } from '../thinneo/Base64'
-import { Base58, Sha256, ECPoint, ECCurve, RIPEMD160, ECDsaCryptoKey, ECDsa } from '../neo/Cryptography/index'
+import { Base58 } from '../neo/Cryptography/Base58'
+import { Sha256 } from '../neo/Cryptography/Sha256'
+import { ECPoint } from '../neo/Cryptography/ECPoint'
+import { ECCurve } from '../neo/Cryptography/ECCurve'
+import { RIPEMD160 } from '../neo/Cryptography/RIPEMD160'
+import * as  CryptoKey from '../neo/Cryptography/CryptoKey'
+import { ECDsa } from '../neo/Cryptography/ECDsa'
 import * as UintHelper from './UintHelper'
 declare var scrypt: any;
 declare var CryptoJS: any;
@@ -47,6 +53,7 @@ export class Helper {
         return wif;
     }
     public static GetPublicKeyFromPrivateKey(privateKey: Uint8Array): Uint8Array {
+        
         var pkey = ECPoint.multiply(ECCurve.secp256r1.G, privateKey);
         return pkey.encodePoint(true);
     }
@@ -130,7 +137,7 @@ export class Helper {
         //var PublicKey = Thin ECC.ECCurve.Secp256r1.G * prikey;
         //var pubkey = PublicKey.EncodePoint(false).Skip(1).ToArray();
 
-        var key = new ECDsaCryptoKey(PublicKey, privateKey);
+        var key = new CryptoKey.ECDsaCryptoKey(PublicKey, privateKey);
         var ecdsa = new ECDsa(key);
         ////using(var ecdsa = System.Security.Cryptography.ECDsa.Create(new System.Security.Cryptography.ECParameters
         //{
@@ -150,7 +157,7 @@ export class Helper {
     public static VerifySignature(message: Uint8Array, signature: Uint8Array, pubkey: Uint8Array) {
         var PublicKey = ECPoint.decodePoint(pubkey, ECCurve.secp256r1);
         var usepk = PublicKey.encodePoint(false).subarray(1, 64);
-        var key = new ECDsaCryptoKey(PublicKey);
+        var key = new CryptoKey.ECDsaCryptoKey(PublicKey);
         var ecdsa = new ECDsa(key);
 
         //byte[] first = { 0x45, 0x43, 0x53, 0x31, 0x20, 0x00, 0x00, 0x00 };
@@ -249,7 +256,7 @@ export class Helper {
             padding: CryptoJS.pad.NoPadding
         });
         var str: string = encryptedkey.ciphertext.toString();
-        return str.hexToBytes();
+        return UintHelper.hexToBytes(str);
     }
     public static Aes256Decrypt_u8(encryptedkey: Uint8Array, key: Uint8Array): Uint8Array {
 
@@ -267,7 +274,7 @@ export class Helper {
             padding: CryptoJS.pad.NoPadding
         });
         var str: string = srcs.toString();
-        return str.hexToBytes();
+        return UintHelper.hexToBytes(str);
 
     }
     public static GetNep2FromPrivateKey(prikey: Uint8Array, passphrase: string, n = 16384, r = 8, p = 8, callback: (info: string, result: string) => void): void {

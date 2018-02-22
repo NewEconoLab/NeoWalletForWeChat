@@ -8,3 +8,7 @@ cd ../../nep6
 rm *.js *.map *.d.ts
 cd ../thinneo
 rm *.js *.map *.d.ts
+cd ../Helper
+rm *.js *.map *.d.ts
+cd ../
+

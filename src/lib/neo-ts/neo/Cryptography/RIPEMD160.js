@@ -1,3 +1,4 @@
+import * as UintHelper from '../../Helper/UintHelper';
 export class RIPEMD160 {
     static bytesToWords(bytes) {
         let words = [];
@@ -93,7 +94,7 @@ export class RIPEMD160 {
     static rotl(x, n) { return (x << n) | (x >>> (32 - n)); }
     static computeHash(data) {
         let H = [0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0];
-        let m = RIPEMD160.bytesToWords(Uint8Array.fromArrayBuffer(data));
+        let m = RIPEMD160.bytesToWords(UintHelper.fromArrayBuffer(data));
         let nBitsLeft = data.byteLength * 8;
         let nBitsTotal = data.byteLength * 8;
         m[nBitsLeft >>> 5] |= 0x80 << (24 - nBitsLeft % 32);

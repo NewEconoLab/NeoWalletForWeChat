@@ -1,4 +1,6 @@
-import { Fixed8, IO } from '../neo/index';
+import { Fixed8 } from '../neo/Fixed8';
+import { BinaryWriter } from '../neo/IO/BinaryWriter';
+import { BinaryReader } from '../neo/IO/BinaryReader';
 export declare enum TransactionType {
     MinerTransaction = 0,
     IssueTransaction = 1,
@@ -68,14 +70,14 @@ export declare class Witness {
     readonly Address: string;
 }
 export interface IExtData {
-    Serialize(trans: Transaction, writer: IO.BinaryWriter): void;
-    Deserialize(trans: Transaction, reader: IO.BinaryReader): void;
+    Serialize(trans: Transaction, writer: BinaryWriter): void;
+    Deserialize(trans: Transaction, reader: BinaryReader): void;
 }
 export declare class InvokeTransData implements IExtData {
     script: Uint8Array;
     gas: Fixed8;
-    Serialize(trans: Transaction, writer: IO.BinaryWriter): void;
-    Deserialize(trans: Transaction, reader: IO.BinaryReader): void;
+    Serialize(trans: Transaction, writer: BinaryWriter): void;
+    Deserialize(trans: Transaction, reader: BinaryReader): void;
 }
 export declare class Transaction {
     type: TransactionType;
@@ -84,10 +86,10 @@ export declare class Transaction {
     inputs: TransactionInput[];
     outputs: TransactionOutput[];
     witnesses: Witness[];
-    SerializeUnsigned(writer: IO.BinaryWriter): void;
-    Serialize(writer: IO.BinaryWriter): void;
+    SerializeUnsigned(writer: BinaryWriter): void;
+    Serialize(writer: BinaryWriter): void;
     extdata: IExtData;
-    Deserialize(ms: IO.BinaryReader): void;
+    Deserialize(ms: BinaryReader): void;
     GetMessage(): Uint8Array;
     GetRawData(): Uint8Array;
     AddWitness(signdata: Uint8Array, pubkey: Uint8Array, addrs: string): void;

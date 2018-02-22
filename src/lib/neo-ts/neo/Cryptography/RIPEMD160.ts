@@ -1,4 +1,5 @@
-﻿export class RIPEMD160
+﻿import * as UintHelper from '../../Helper/UintHelper'
+export class RIPEMD160
     {
         // constants table
         private static zl = [
@@ -158,7 +159,7 @@
         public static computeHash(data: ArrayBuffer | ArrayBufferView): ArrayBuffer
         {
             let H = [0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0];
-            let m = RIPEMD160.bytesToWords(Uint8Array.fromArrayBuffer(data));
+            let m = RIPEMD160.bytesToWords(UintHelper.fromArrayBuffer(data));
             let nBitsLeft = data.byteLength * 8;
             let nBitsTotal = data.byteLength * 8;
 

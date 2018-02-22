@@ -1,4 +1,4 @@
-import { ECCurve } from './index';
+import { ECCurve } from './ECCurve';
 import { BigInteger } from '../BigInteger';
 export declare class ECFieldElement {
     value: BigInteger;

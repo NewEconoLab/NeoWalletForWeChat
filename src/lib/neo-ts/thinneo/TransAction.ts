@@ -1,7 +1,10 @@
-﻿///<reference path="helper.ts"/>
-import { Helper  } from './helper'
-import {ScriptBuilder} from './ScriptBuilder'
-import { Fixed8, IO, Sha256 } from '../neo/index'
+﻿import { Helper } from '../Helper/AccountHelper'
+import { ScriptBuilder } from './ScriptBuilder'
+import { Fixed8 } from '../neo/Fixed8'
+import { BinaryWriter } from '../neo/IO/BinaryWriter'
+import { BinaryReader } from '../neo/IO/BinaryReader'
+import { Sha256 } from '../neo/Cryptography/Sha256'
+import { MemoryStream } from '../neo/IO/MemoryStream'
 export enum TransactionType {
     /// <summary>
     /// 用于分配字节费的特殊交易
@@ -120,20 +123,20 @@ export class Witness {
 
 
 export interface IExtData {
-    Serialize(trans: Transaction, writer: IO.BinaryWriter): void;
-    Deserialize(trans: Transaction, reader: IO.BinaryReader): void;
+    Serialize(trans: Transaction, writer: BinaryWriter): void;
+    Deserialize(trans: Transaction, reader: BinaryReader): void;
 }
 
 export class InvokeTransData implements IExtData {
     public script: Uint8Array;
     public gas: Fixed8;
-    public Serialize(trans: Transaction, writer: IO.BinaryWriter): void {
+    public Serialize(trans: Transaction, writer: BinaryWriter): void {
         writer.writeVarBytes(this.script.buffer);
         if (trans.version >= 1) {
             writer.writeUint64(this.gas.getData());
         }
     }
-    public Deserialize(trans: Transaction, reader: IO.BinaryReader): void {
+    public Deserialize(trans: Transaction, reader: BinaryReader): void {
         var buf = reader.readVarBytes(10000000);
         this.script = new Uint8Array(buf, 0, buf.byteLength);
         if (trans.version >= 1) {
@@ -150,7 +153,7 @@ export class Transaction {
     public inputs: TransactionInput[];
     public outputs: TransactionOutput[];
     public witnesses: Witness[];//见证人
-    public SerializeUnsigned(writer: IO.BinaryWriter): void {
+    public SerializeUnsigned(writer: BinaryWriter): void {
         //write type
         writer.writeByte(this.type as number);
         //write version
@@ -229,7 +232,7 @@ export class Transaction {
         }
         //#endregion
     }
-    public Serialize(writer: IO.BinaryWriter): void {
+    public Serialize(writer: BinaryWriter): void {
         this.SerializeUnsigned(writer);
 
         var witnesscount = this.witnesses.length;
@@ -242,7 +245,7 @@ export class Transaction {
     }
     public extdata: IExtData;
 
-    public Deserialize(ms: IO.BinaryReader): void {
+    public Deserialize(ms: BinaryReader): void {
         //参考源码来自
         //      https://github.com/neo-project/neo
         //      Transaction.cs
@@ -349,16 +352,16 @@ export class Transaction {
 
     public GetMessage(): Uint8Array {
 
-        var ms = new IO.MemoryStream();
-        var writer = new IO.BinaryWriter(ms);
+        var ms = new MemoryStream();
+        var writer = new BinaryWriter(ms);
         this.SerializeUnsigned(writer);
         var arr = ms.toArray();
         var msg = new Uint8Array(arr, 0, arr.byteLength);
         return msg;
     }
     public GetRawData(): Uint8Array {
-        var ms = new IO.MemoryStream();
-        var writer = new IO.BinaryWriter(ms);
+        var ms = new MemoryStream();
+        var writer = new BinaryWriter(ms);
         this.Serialize(writer);
         var arr = ms.toArray();
         var msg = new Uint8Array(arr, 0, arr.byteLength);

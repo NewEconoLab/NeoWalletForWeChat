@@ -1,4 +1,5 @@
-﻿import {Uint64} from './Uint64'
+﻿import { Uint64 } from './Uint64'
+import * as Arrayhelper from '../Helper/Arrayhelper'
 const DB = 26;
 const DM = (1 << DB) - 1;
 const DV = DM + 1;
@@ -177,7 +178,7 @@ export class BigInteger {
         if (c < 0) return { result: BigInteger.Zero, remainder: bi_x };
         let bits_result = new Array<number>();
         let bits_rem = new Array<number>();
-        Array.copy(bi_x._bits, 0, bits_rem, 0, bi_x._bits.length);
+        Arrayhelper.copy(bi_x._bits, 0, bits_rem, 0, bi_x._bits.length);
         let df = bi_y._bits[bi_y._bits.length - 1];
         for (let i = bi_x._bits.length - 1; i >= bi_y._bits.length - 1; i--) {
             let offset = i - bi_y._bits.length + 1;

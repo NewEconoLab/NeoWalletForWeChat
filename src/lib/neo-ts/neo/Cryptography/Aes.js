@@ -1,3 +1,5 @@
+import * as UintHelper from '../../Helper/UintHelper';
+import * as Arrayhelper from '../../Helper/Arrayhelper';
 export class Aes {
     constructor(key, iv) {
         this._Ke = [];
@@ -16,7 +18,7 @@ export class Aes {
         }
         var roundKeyCount = (rounds + 1) * 4;
         var KC = key.byteLength / 4;
-        var tk = Aes.convertToInt32(Uint8Array.fromArrayBuffer(key));
+        var tk = Aes.convertToInt32(UintHelper.fromArrayBuffer(key));
         var index;
         for (var i = 0; i < KC; i++) {
             index = i >> 2;
@@ -69,7 +71,7 @@ export class Aes {
                     Aes.U4[tt & 0xFF]);
             }
         }
-        this._lastCipherblock.set(Uint8Array.fromArrayBuffer(iv));
+        this._lastCipherblock.set(UintHelper.fromArrayBuffer(iv));
     }
     get mode() {
         return "CBC";
@@ -88,7 +90,7 @@ export class Aes {
         if (ciphertext.byteLength == 0 || ciphertext.byteLength % 16 != 0)
             throw new RangeError();
         let plaintext = new Uint8Array(ciphertext.byteLength);
-        let ciphertext_view = Uint8Array.fromArrayBuffer(ciphertext);
+        let ciphertext_view = UintHelper.fromArrayBuffer(ciphertext);
         for (let i = 0; i < ciphertext_view.length; i += 16)
             this.decryptBlock(ciphertext_view.subarray(i, i + 16), plaintext.subarray(i, i + 16));
         return plaintext.buffer.slice(0, plaintext.length - plaintext[plaintext.length - 1]);
@@ -122,19 +124,19 @@ export class Aes {
         for (var i = 0; i < 16; i++) {
             plaintext[i] ^= this._lastCipherblock[i];
         }
-        Array.copy(ciphertext, 0, this._lastCipherblock, 0, ciphertext.length);
+        Arrayhelper.copy(ciphertext, 0, this._lastCipherblock, 0, ciphertext.length);
     }
     encrypt(plaintext) {
         let block_count = Math.ceil((plaintext.byteLength + 1) / 16);
         let ciphertext = new Uint8Array(block_count * 16);
-        let plaintext_view = Uint8Array.fromArrayBuffer(plaintext);
+        let plaintext_view = UintHelper.fromArrayBuffer(plaintext);
         for (let i = 0; i < block_count - 1; i++)
             this.encryptBlock(plaintext_view.subarray(i * 16, (i + 1) * 16), ciphertext.subarray(i * 16, (i + 1) * 16));
         let padding = ciphertext.length - plaintext.byteLength;
         let final_block = new Uint8Array(16);
         final_block.fill(padding);
         if (padding < 16)
-            Array.copy(plaintext_view, ciphertext.length - 16, final_block, 0, 16 - padding);
+            Arrayhelper.copy(plaintext_view, ciphertext.length - 16, final_block, 0, 16 - padding);
         this.encryptBlock(final_block, ciphertext.subarray(ciphertext.length - 16));
         return ciphertext.buffer;
     }
@@ -168,7 +170,7 @@ export class Aes {
             ciphertext[4 * i + 2] = (Aes.S[(t[(i + 2) % 4] >> 8) & 0xff] ^ (tt >> 8)) & 0xff;
             ciphertext[4 * i + 3] = (Aes.S[t[(i + 3) % 4] & 0xff] ^ tt) & 0xff;
         }
-        Array.copy(ciphertext, 0, this._lastCipherblock, 0, ciphertext.length);
+        Arrayhelper.copy(ciphertext, 0, this._lastCipherblock, 0, ciphertext.length);
     }
 }
 Aes.numberOfRounds = { 16: 10, 24: 12, 32: 14 };

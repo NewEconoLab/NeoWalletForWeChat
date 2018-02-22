@@ -1,4 +1,5 @@
 ﻿import { ECPoint } from './ECPoint'
+import * as UintHelper from '../../Helper/UintHelper'
 export class CryptoKey {
     constructor(public type: string, public extractable: boolean, public algorithm: Algorithm, public usages: string[]) {
     }
@@ -24,7 +25,7 @@ export class AesCryptoKey extends CryptoKey {
     public static import(keyData: ArrayBuffer | ArrayBufferView): AesCryptoKey {
         if (keyData.byteLength != 16 && keyData.byteLength != 24 && keyData.byteLength != 32)
             throw new RangeError();
-        return new AesCryptoKey(Uint8Array.fromArrayBuffer(keyData));
+        return new AesCryptoKey(UintHelper.fromArrayBuffer(keyData));
     }
 }
 

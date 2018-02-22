@@ -1,4 +1,6 @@
-import { MemoryStream, BinaryReader, BinaryWriter } from '../index';
+import { MemoryStream } from '../neo/IO/MemoryStream';
+import { BinaryReader } from '../neo/IO/BinaryReader';
+import { BinaryWriter } from '../neo/IO/BinaryWriter';
 export function asSerializable(arr, T) {
     let ms = new MemoryStream(arr.buffer, false);
     let reader = new BinaryReader(ms);

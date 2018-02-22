@@ -1,5 +1,7 @@
 import { ECFieldElement } from './ECFieldElement';
 import { BigInteger } from '../BigInteger';
+import * as UintHelper from '../../Helper/UintHelper';
+import * as StringHelper from '../../Helper/StringHelper';
 export class ECPoint {
     constructor(x, y, curve) {
         this.x = x;
@@ -229,7 +231,7 @@ export class ECPoint {
         return new ECPoint(this.x, this.y.negate(), this.curve);
     }
     static parse(str, curve) {
-        return ECPoint.decodePoint(str.hexToBytes(), curve);
+        return ECPoint.decodePoint(UintHelper.hexToBytes(str), curve);
     }
     static subtract(x, y) {
         if (y.isInfinity())
@@ -237,7 +239,7 @@ export class ECPoint {
         return ECPoint.add(x, y.negate());
     }
     toString() {
-        return this.encodePoint(true).toHexString();
+        return StringHelper.toHexString(this.encodePoint(true));
     }
     twice() {
         if (this.isInfinity())

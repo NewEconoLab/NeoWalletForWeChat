@@ -1,4 +1,7 @@
-﻿export type PromiseExecutor<T> = (resolve: Action<T | PromiseLike<T>>, reject: Action<any>) => void;
+﻿export type Func<T, TResult> = (arg: T) => TResult;
+export type Action<T> = Func<T, void>;
+
+export type PromiseExecutor<T> = (resolve: Action<T | PromiseLike<T>>, reject: Action<any>) => void;
 
 
 export enum PromiseState {

@@ -1,4 +1,5 @@
 import { Stream, SeekOrigin } from './Stream';
+import * as Arrayhelper from '../../Helper/Arrayhelper';
 const BufferSize = 1024;
 export class MemoryStream extends Stream {
     constructor() {
@@ -92,7 +93,7 @@ export class MemoryStream extends Stream {
                 else {
                     actual_count = Math.min(count, this._buffers[d.iBuff].byteLength - d.pBuff);
                     let src = new Uint8Array(this._buffers[d.iBuff]);
-                    Array.copy(src, d.pBuff, dst, i, actual_count);
+                    Arrayhelper.copy(src, d.pBuff, dst, i, actual_count);
                 }
                 i += actual_count;
                 count -= actual_count;
@@ -102,7 +103,7 @@ export class MemoryStream extends Stream {
         }
         else {
             let src = new Uint8Array(this._buffers[0], this._origin, this._length);
-            Array.copy(src, srcPos, dst, 0, dst.length);
+            Arrayhelper.copy(src, srcPos, dst, 0, dst.length);
         }
     }
     seek(offset, origin) {
@@ -150,7 +151,7 @@ export class MemoryStream extends Stream {
                     this._buffers[d.iBuff] = new ArrayBuffer(BufferSize);
                 let actual_count = Math.min(count, this._buffers[d.iBuff].byteLength - d.pBuff);
                 let dst = new Uint8Array(this._buffers[d.iBuff]);
-                Array.copy(src, offset, dst, d.pBuff, actual_count);
+                Arrayhelper.copy(src, offset, dst, d.pBuff, actual_count);
                 this._position += actual_count;
                 offset += actual_count;
                 count -= actual_count;
@@ -161,7 +162,7 @@ export class MemoryStream extends Stream {
         else {
             let src = new Uint8Array(buffer, offset, count);
             let dst = new Uint8Array(this._buffers[0], this._origin, this._capacity);
-            Array.copy(src, 0, dst, this._position, count);
+            Arrayhelper.copy(src, 0, dst, this._position, count);
             this._position += count;
         }
         if (this._length < this._position)

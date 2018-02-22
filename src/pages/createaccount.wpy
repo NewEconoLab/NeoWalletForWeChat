@@ -95,11 +95,12 @@ export default class CreateAccount extends wepy.page {
   onLoad() {
     var array = new Uint8Array(32);
     let key = NEL.neo.Cryptography.RandomNumberGenerator.getRandomValues(array);
-    
-    console.log(String.fromCharCode.apply(null, key));
-    var pubkey = NEL.thinneo.Helper.GetPublicKeyFromPrivateKey(key);
-    // let addr = NEL.ThinNeo.Helper.GetAddressFromPublicKey(pubkey);
-    // console.log(addr);
+    console.log(NEL.helper.StringHelper.toHexString(key));
+    console.log(String.fromCharCode.apply(null, key).toString('hex'));
+    var pubkey = NEL.helper.Helper.GetPublicKeyFromPrivateKey(key);
+    console.log(pubkey);
+    let addr = NEL.helper.Helper.GetAddressFromPublicKey(pubkey);
+    console.log(addr);
   } // 在Page和Component共用的生命周期函数
 
   onShow() {} // 只在Page中存在的页面生命周期函数

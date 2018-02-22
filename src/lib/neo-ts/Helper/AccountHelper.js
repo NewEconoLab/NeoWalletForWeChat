@@ -1,5 +1,11 @@
 import { Base64 } from '../thinneo/Base64';
-import { Base58, Sha256, ECPoint, ECCurve, RIPEMD160, ECDsaCryptoKey, ECDsa } from '../neo/Cryptography/index';
+import { Base58 } from '../neo/Cryptography/Base58';
+import { Sha256 } from '../neo/Cryptography/Sha256';
+import { ECPoint } from '../neo/Cryptography/ECPoint';
+import { ECCurve } from '../neo/Cryptography/ECCurve';
+import { RIPEMD160 } from '../neo/Cryptography/RIPEMD160';
+import * as CryptoKey from '../neo/Cryptography/CryptoKey';
+import { ECDsa } from '../neo/Cryptography/ECDsa';
 import * as UintHelper from './UintHelper';
 var scrypt_loaded = false;
 export class Helper {
@@ -109,7 +115,7 @@ export class Helper {
     static Sign(message, privateKey) {
         var PublicKey = ECPoint.multiply(ECCurve.secp256r1.G, privateKey);
         var pubkey = PublicKey.encodePoint(false).subarray(1, 64);
-        var key = new ECDsaCryptoKey(PublicKey, privateKey);
+        var key = new CryptoKey.ECDsaCryptoKey(PublicKey, privateKey);
         var ecdsa = new ECDsa(key);
         {
             return new Uint8Array(ecdsa.sign(message));
@@ -118,7 +124,7 @@ export class Helper {
     static VerifySignature(message, signature, pubkey) {
         var PublicKey = ECPoint.decodePoint(pubkey, ECCurve.secp256r1);
         var usepk = PublicKey.encodePoint(false).subarray(1, 64);
-        var key = new ECDsaCryptoKey(PublicKey);
+        var key = new CryptoKey.ECDsaCryptoKey(PublicKey);
         var ecdsa = new ECDsa(key);
         {
             return ecdsa.verify(message, signature);
@@ -198,7 +204,7 @@ export class Helper {
             padding: CryptoJS.pad.NoPadding
         });
         var str = encryptedkey.ciphertext.toString();
-        return str.hexToBytes();
+        return UintHelper.hexToBytes(str);
     }
     static Aes256Decrypt_u8(encryptedkey, key) {
         var keys = CryptoJS.enc.Utf8.parse("1234123412341234");
@@ -213,7 +219,7 @@ export class Helper {
             padding: CryptoJS.pad.NoPadding
         });
         var str = srcs.toString();
-        return str.hexToBytes();
+        return UintHelper.hexToBytes(str);
     }
     static GetNep2FromPrivateKey(prikey, passphrase, n = 16384, r = 8, p = 8, callback) {
         var pp = scrypt.getAvailableMod();
