@@ -72,7 +72,7 @@
         </view>
       </view>
       <view class="area-btn">
-        <button type="primary" formType="submit">生成钱包</button>
+        <button type="primary" formType="submit">创建新钱包</button>
       </view>
    
   </view>
@@ -81,7 +81,6 @@
 
 <script>
 import wepy from 'wepy';
-import Neon from 'wechatneon';
 // import {neo, nep6, thinneo} from '../lib/neo-ts.js'
 import * as NEL from '../lib/neo-ts/index';
 import Toast from 'wepy-com-toast';
@@ -92,16 +91,7 @@ export default class CreateAccount extends wepy.page {
 
   customFunction() {} // 自定义方法
 
-  onLoad() {
-    var array = new Uint8Array(32);
-    let key = NEL.neo.Cryptography.RandomNumberGenerator.getRandomValues(array);
-    console.log(NEL.helper.StringHelper.toHexString(key));
-    console.log(String.fromCharCode.apply(null, key).toString('hex'));
-    var pubkey = NEL.helper.Helper.GetPublicKeyFromPrivateKey(key);
-    console.log(pubkey);
-    let addr = NEL.helper.Helper.GetAddressFromPublicKey(pubkey);
-    console.log(addr);
-  } // 在Page和Component共用的生命周期函数
+  onLoad() {} // 在Page和Component共用的生命周期函数
 
   onShow() {} // 只在Page中存在的页面生命周期函数
 
@@ -147,40 +137,82 @@ export default class CreateAccount extends wepy.page {
         }
       }
 
+      //     console.log(NEL.helper.StringHelper.toHexString(key));
+      //     String.fromCharCode.apply(null, key);
+      //     var pubkey =
+      //     console.log(pubkey);
+      //     let addr = NEL.helper.Helper.GetAddressFromPublicKey(pubkey);
+      //     console.log(addr);
       wepy.showLoading({ title: '新钱包生成中' });
       // Key generation and conversion
       wepy.showLoading({ title: '私钥生成中' });
-      const privateKey = Neon.create.privateKey();
-      console.log('privatekey = ' + privateKey);
+      let array = new Uint8Array(32);
+      const privateKey = NEL.neo.Cryptography.RandomNumberGenerator.getRandomValues(
+        array
+      );
+      String.fromCharCode.apply(null, privateKey);
+      console.log(
+        'privatekey = ' + NEL.helper.StringHelper.toHexString(privateKey)
+      );
 
-      const wif = Neon.get.WIFFromPrivateKey(privateKey);
-      console.log('wif = ' + wif);
+      wepy.showLoading({ title: 'wif生成中' });
+      const wif = NEL.helper.Helper.GetWifFromPrivateKey(privateKey);
+      console.log(wif);
 
-      // // Encryption / Decryption
-      wepy.showLoading({ title: '钱包密码加密' });
-      const encrypted = await Neon.encrypt.privateKey(privateKey, passphrase);
-      console.log('encrypted = ' + encrypted);
-
-      // const decrypted = await Neon.decrypt.privateKey(encrypted, passphrase);
-      // console.log('decrypted = ' + decrypted);
-
-      wepy.showLoading({ title: '创建新钱包' });
-      const account = Neon.create.account(privateKey);
-      console.log('account = ' + account);
-
-      let publicKey = account.publicKey;
-      let address = account.address;
-
-      console.log(account);
-      console.log('address = ' + address);
+      wepy.showLoading({ title: '公钥生成中' });
+      const publicKey = NEL.helper.Helper.GetPublicKeyFromPrivateKey(
+        privateKey
+      );
       console.log('publickey = ' + publicKey);
+
+      wepy.showLoading({ title: '地址生成中' });
+      const address = NEL.helper.Helper.GetAddressFromPublicKey(publicKey);
+      console.log('address = ' + address);
+
+      wepy.showLoading({ title: '新钱包创建完成' });
+      setTimeout(function() {
+        wepy.hideLoading();
+      }, 1000);
+
+      // var wallet = new NEL.nep6.nep6wallet();
+      // wallet.scrypt = new NEL.nep6.nep6ScryptParameters();
+      // wallet.scrypt.N = 16384;
+      // wallet.scrypt.r = 8;
+      // wallet.scrypt.p = 8;
+      // wallet.accounts = [];
+      // wallet.accounts[0] = new NEL.nep6.nep6account();
+      // wallet.accounts[0].address = address;
+      // NEL.helper.Helper.GetNep2FromPrivateKey(
+      //   privateKey,
+      //   passphrase,
+      //   wallet.scrypt.N,
+      //   wallet.scrypt.r,
+      //   wallet.scrypt.p,
+      //   (info, result) => {
+      //     if (info == 'finish') {
+      //       wallet.accounts[0].nep2key = result;
+      //       var jsonstr = JSON.stringify(wallet.toJson());
+      //       console.log(jsonstr);
+
+      //       // var blob = new Blob([NEL.helper.Helper.String2Bytes(jsonstr)]);
+      //       // download.href = URL.createObjectURL(blob);
+      //       // download.text = 'download';
+      //     }
+      //   }
+      // );
+      // let publicKey = account.publicKey;
+      // let address = account.address;
+
+      // console.log(account);
+      // console.log('address = ' + address);
+      // console.log('publickey = ' + publicKey);
       const wallet = {
         accountlabel: accountlabel,
         repassphrase: repassphrase,
-        privateKey: privateKey,
+        privateKey: NEL.helper.StringHelper.toHexString(privateKey),
         wif: wif,
-        encryptedkey: encrypted,
-        publicKey: publicKey,
+        // encryptedkey: encrypted,
+        publicKey: NEL.helper.StringHelper.toHexString(publicKey),
         address: address
       };
       // wallets.push(wallet);
@@ -189,6 +221,8 @@ export default class CreateAccount extends wepy.page {
       wepy.setStorageSync(LOCAL_WALLET, wallets);
       wepy.hideLoading();
       let str = JSON.stringify(wallet);
+      console.log(str);
+
       this.$redirect('./createresult?wallet=' + str);
     }
   }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明

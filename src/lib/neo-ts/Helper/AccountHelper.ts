@@ -7,8 +7,11 @@ import { RIPEMD160 } from '../neo/Cryptography/RIPEMD160'
 import * as  CryptoKey from '../neo/Cryptography/CryptoKey'
 import { ECDsa } from '../neo/Cryptography/ECDsa'
 import * as UintHelper from './UintHelper'
-declare var scrypt: any;
-declare var CryptoJS: any;
+import * as CryptoJS from 'crypto-js'
+import * as scrypt from 'scrypt-async'
+import * as StringHelper from './StringHelper'
+// export declare var scrypt: any;
+// export declare var CryptoJS: any;
 var scrypt_loaded: boolean = false;
 export class Helper {
     public static GetPrivateKeyFromWIF(wif: string): Uint8Array {
@@ -53,7 +56,7 @@ export class Helper {
         return wif;
     }
     public static GetPublicKeyFromPrivateKey(privateKey: Uint8Array): Uint8Array {
-        
+
         var pkey = ECPoint.multiply(ECCurve.secp256r1.G, privateKey);
         return pkey.encodePoint(true);
     }
@@ -278,112 +281,139 @@ export class Helper {
 
     }
     public static GetNep2FromPrivateKey(prikey: Uint8Array, passphrase: string, n = 16384, r = 8, p = 8, callback: (info: string, result: string) => void): void {
+        console.log(scrypt)
 
-        var pp = scrypt.getAvailableMod();
-        scrypt.setResPath('lib/asset');
+        // password — password (string or Array of bytes or Uint8Array)
+        // salt — salt (string or Array of bytes or Uint8Array)
+        // logN — CPU/memory cost parameter (1 to 31)
+        // r — block size parameter
+        // dkLen — length of derived key
+        // interruptStep — (optional) steps to split calculation with timeouts (defaults to 1000)
+        // callback — callback function receiving result (function (Array|Uint8Array|string))
+        // encoding — (optional) result encoding ('base64', 'hex', 'binary' or undefined).
 
-        var addresshash: Uint8Array = null;
+        scrypt.default(prikey, passphrase, {
+            logN: 5,
+            r: r,
+            p: p,
+            dkLen: 32,
+            interruptStep: 1000,
+            encoding: 'hash'
+        },
+            function (res) {
+                console.log(res.length)
+                console.log(StringHelper.toHexString(res));
+                
+                //     var derivedhalf1 = u8dk.subarray(0, 32);
+                //     var derivedhalf2 = u8dk.subarray(32, 64);
+                //     var u8xor = new Uint8Array(32);
+                //     for (var i = 0; i < 32; i++) {
+                //         u8xor[i] = prikey[i] ^ derivedhalf1[i];
+                //     }
+                //     //var xorinfo = XOR(prikey, derivedhalf1);
 
-        var ready = () => {
-            var param = {
-                N: n,   // 时空成本
-                r: r,       // 块大小
-                P: p       // 并发维度
-            };
+                //     var encryptedkey = Helper.Aes256Encrypt_u8(u8xor, derivedhalf2);
+                //     //byte[] encryptedkey = AES256Encrypt(xorinfo, derivedhalf2);
+                //     //byte[] buffer = new byte[39];
+                //     var buffer = new Uint8Array(39);
+                //     buffer[0] = 0x01;
+                //     buffer[1] = 0x42;
+                //     buffer[2] = 0xe0;
+                //     for (var i = 3; i < 3 + 4; i++) {
+                //         buffer[i] = addresshash[i - 3];
+                //     }
+                //     for (var i = 7; i < 32 + 7; i++) {
+                //         buffer[i] = encryptedkey[i - 7];
+                //     }
+                //     //Buffer.BlockCopy(addresshash, 0, buffer, 3, addresshash.Length);
+                //     //Buffer.BlockCopy(encryptedkey, 0, buffer, 7, encryptedkey.Length);
+                //     //return Base58CheckEncode(buffer);
+                //     var b1 = Sha256.computeHash(buffer);
+                //     b1 = Sha256.computeHash(b1);
+                //     var u8hash = new Uint8Array(b1);
+                //     var outbuf = new Uint8Array(39 + 4);
+                //     for (var i = 0; i < 39; i++) {
+                //         outbuf[i] = buffer[i];
+                //     }
+                //     for (var i = 39; i < 39 + 4; i++) {
+                //         outbuf[i] = u8hash[i - 39];
+                //     }
 
-            var opt = {
-                maxPassLen: 32, // 缓冲区大小分配
-                maxSaltLen: 32,
-                maxDkLen: 64,
-                maxThread: 4    // 最多使用的线程数
-            };
-
-            try {
-                scrypt.config(param, opt);
-            } catch (err) {
-                console.warn('config err: ', err);
-            }
-            //scrypt.onready();
-        };
-
-        scrypt.onload = () => {
-
-            console.log("scrypt.onload");
-            scrypt_loaded = true;
-            ready();
-        }
-        scrypt.onerror = (err) => {
-            console.warn('scrypt err:', err);
-            callback("error", err);
-        }
-        scrypt.oncomplete = (dk) => {
-            console.log('done', scrypt.binToHex(dk));
-            var u8dk = new Uint8Array(dk);
-            var derivedhalf1 = u8dk.subarray(0, 32);
-            var derivedhalf2 = u8dk.subarray(32, 64);
-            var u8xor = new Uint8Array(32);
-            for (var i = 0; i < 32; i++) {
-                u8xor[i] = prikey[i] ^ derivedhalf1[i];
-            }
-            //var xorinfo = XOR(prikey, derivedhalf1);
-
-            var encryptedkey = Helper.Aes256Encrypt_u8(u8xor, derivedhalf2);
-            //byte[] encryptedkey = AES256Encrypt(xorinfo, derivedhalf2);
-            //byte[] buffer = new byte[39];
-            var buffer = new Uint8Array(39);
-            buffer[0] = 0x01;
-            buffer[1] = 0x42;
-            buffer[2] = 0xe0;
-            for (var i = 3; i < 3 + 4; i++) {
-                buffer[i] = addresshash[i - 3];
-            }
-            for (var i = 7; i < 32 + 7; i++) {
-                buffer[i] = encryptedkey[i - 7];
-            }
-            //Buffer.BlockCopy(addresshash, 0, buffer, 3, addresshash.Length);
-            //Buffer.BlockCopy(encryptedkey, 0, buffer, 7, encryptedkey.Length);
-            //return Base58CheckEncode(buffer);
-            var b1 = Sha256.computeHash(buffer);
-            b1 = Sha256.computeHash(b1);
-            var u8hash = new Uint8Array(b1);
-            var outbuf = new Uint8Array(39 + 4);
-            for (var i = 0; i < 39; i++) {
-                outbuf[i] = buffer[i];
-            }
-            for (var i = 39; i < 39 + 4; i++) {
-                outbuf[i] = u8hash[i - 39];
-            }
-
-            var base58str = Base58.encode(outbuf);
-            callback("finish", base58str);
-        };
-        scrypt.onprogress = (percent) => {
-            console.log('onprogress');
-        };
-        scrypt.onready = () => {
-            var pubkey = Helper.GetPublicKeyFromPrivateKey(prikey);
-            var script_hash = Helper.GetPublicKeyScriptHashFromPublicKey(pubkey);
-            var address = Helper.GetAddressFromScriptHash(script_hash);
-            var addrbin = scrypt.strToBin(address);
+                //     var base58str = Base58.encode(outbuf);
+                //     callback("finish", base58str);
+                // };
+                // scrypt.onprogress = (percent) => {
+                //     console.log('onprogress');
+                // };
+                // scrypt.onready = () => {
+                //     var pubkey = Helper.GetPublicKeyFromPrivateKey(prikey);
+                //     var script_hash = Helper.GetPublicKeyScriptHashFromPublicKey(pubkey);
+                //     var address = Helper.GetAddressFromScriptHash(script_hash);
+                //     var addrbin = scrypt.strToBin(address);
 
 
-            var b1 = Sha256.computeHash(addrbin);
-            b1 = Sha256.computeHash(b1);
-            var b2 = new Uint8Array(b1);
+                //     var b1 = Sha256.computeHash(addrbin);
+                //     b1 = Sha256.computeHash(b1);
+                //     var b2 = new Uint8Array(b1);
 
-            addresshash = b2.subarray(0, 4);
-            var passbin = scrypt.strToBin(passphrase);
-            //var passbin2 = Helper.String2Bytes(passphrase);
+                //     addresshash = b2.subarray(0, 4);
+                //     var passbin = scrypt.strToBin(passphrase);
+                //     //var passbin2 = Helper.String2Bytes(passphrase);
 
-            //var str = Helper.Bytes2String(passbin);
-            scrypt.hash(passbin, addresshash, 64);
-        }
-        if (scrypt_loaded == false) {
-            scrypt.load("asmjs");
-        }
-        else {
-            ready();
-        }
+                //     //var str = Helper.Bytes2String(passbin);
+                //     scrypt.hash(passbin, addresshash, 64);
+                // }
+                // if (scrypt_loaded == false) {
+                //     scrypt.load("asmjs");
+                // }
+                // else {
+                //     ready();
+                // }
+
+
+
+
+            });
+
+        // var pp = scrypt.getAvailableMod();
+        // scrypt.setResPath('lib/asset');
+
+        // var addresshash: Uint8Array = null;
+
+        // var ready = () => {
+        //     var param = {
+        //         N: n,   // 时空成本
+        //         r: r,       // 块大小
+        //         P: p       // 并发维度
+        //     };
+
+        //     var opt = {
+        //         maxPassLen: 32, // 缓冲区大小分配
+        //         maxSaltLen: 32,
+        //         maxDkLen: 64,
+        //         maxThread: 4    // 最多使用的线程数
+        //     };
+
+        //     try {
+        //         scrypt.config(param, opt);
+        //     } catch (err) {
+        //         console.warn('config err: ', err);
+        //     }
+        //     //scrypt.onready();
+        // };
+
+        // scrypt.onload = () => {
+
+        //     console.log("scrypt.onload");
+        //     scrypt_loaded = true;
+        //     ready();
+        // }
+        // scrypt.onerror = (err) => {
+        //     console.warn('scrypt err:', err);
+        //     callback("error", err);
+        // }
+        // scrypt.oncomplete = (dk) => {
+
 
         return;
 
@@ -417,84 +447,84 @@ export class Helper {
         var addresshash = buffer.subarray(3, 3 + 4);
         var encryptedkey = buffer.subarray(7, 7 + 32);
 
-        var pp = scrypt.getAvailableMod();
-        scrypt.setResPath('lib/asset');
+        // var pp = scrypt.getAvailableMod();
+        // scrypt.setResPath('lib/asset');
 
-        var ready = () => {
-            var param = {
-                N: n,   // 时空成本
-                r: r,       // 块大小
-                P: p       // 并发维度
-            };
+        // var ready = () => {
+        //     var param = {
+        //         N: n,   // 时空成本
+        //         r: r,       // 块大小
+        //         P: p       // 并发维度
+        //     };
 
-            var opt = {
-                maxPassLen: 32, // 缓冲区大小分配
-                maxSaltLen: 32,
-                maxDkLen: 64,
-                maxThread: 4    // 最多使用的线程数
-            };
+        //     var opt = {
+        //         maxPassLen: 32, // 缓冲区大小分配
+        //         maxSaltLen: 32,
+        //         maxDkLen: 64,
+        //         maxThread: 4    // 最多使用的线程数
+        //     };
 
-            try {
-                scrypt.config(param, opt);
-            } catch (err) {
-                console.warn('config err: ', err);
-            }
-            //scrypt.onready();
-        };
-        scrypt.onload = () => {
+        //     try {
+        //         scrypt.config(param, opt);
+        //     } catch (err) {
+        //         console.warn('config err: ', err);
+        //     }
+        //     //scrypt.onready();
+        // };
+        // scrypt.onload = () => {
 
-            console.log("scrypt.onload");
-            scrypt_loaded = true;
-            ready();
-        }
-        scrypt.oncomplete = (dk) => {
-            console.log('done', scrypt.binToHex(dk));
-            var u8dk = new Uint8Array(dk);
-            var derivedhalf1 = u8dk.subarray(0, 32);
-            var derivedhalf2 = u8dk.subarray(32, 64);
+        //     console.log("scrypt.onload");
+        //     scrypt_loaded = true;
+        //     ready();
+        // }
+        // scrypt.oncomplete = (dk) => {
+        //     console.log('done', scrypt.binToHex(dk));
+        //     var u8dk = new Uint8Array(dk);
+        //     var derivedhalf1 = u8dk.subarray(0, 32);
+        //     var derivedhalf2 = u8dk.subarray(32, 64);
 
-            var u8xor = Helper.Aes256Decrypt_u8(encryptedkey, derivedhalf2);
-            var prikey = new Uint8Array(u8xor.length);
-            for (var i = 0; i < 32; i++) {
-                prikey[i] = u8xor[i] ^ derivedhalf1[i];
-            }
+        //     var u8xor = Helper.Aes256Decrypt_u8(encryptedkey, derivedhalf2);
+        //     var prikey = new Uint8Array(u8xor.length);
+        //     for (var i = 0; i < 32; i++) {
+        //         prikey[i] = u8xor[i] ^ derivedhalf1[i];
+        //     }
 
-            var pubkey = Helper.GetPublicKeyFromPrivateKey(prikey);
-            var script_hash = Helper.GetPublicKeyScriptHashFromPublicKey(pubkey);
-            var address = Helper.GetAddressFromScriptHash(script_hash);
-            var addrbin = scrypt.strToBin(address);
+        //     var pubkey = Helper.GetPublicKeyFromPrivateKey(prikey);
+        //     var script_hash = Helper.GetPublicKeyScriptHashFromPublicKey(pubkey);
+        //     var address = Helper.GetAddressFromScriptHash(script_hash);
+        //     var addrbin = scrypt.strToBin(address);
 
-            var b1 = Sha256.computeHash(addrbin);
-            b1 = Sha256.computeHash(b1);
-            var b2 = new Uint8Array(b1);
+        //     var b1 = Sha256.computeHash(addrbin);
+        //     b1 = Sha256.computeHash(b1);
+        //     var b2 = new Uint8Array(b1);
 
-            var addresshashgot = b2.subarray(0, 4);
-            for (var i = 0; i < 4; i++) {
-                if (addresshash[i] != b2[i]) {
-                    callback("error", "nep2 hash not match.");
+        //     var addresshashgot = b2.subarray(0, 4);
+        //     for (var i = 0; i < 4; i++) {
+        //         if (addresshash[i] != b2[i]) {
+        //             callback("error", "nep2 hash not match.");
 
-                    return;
-                }
-            }
-            callback("finish", prikey);
+        //             return;
+        //         }
+        //     }
+        //     callback("finish", prikey);
 
-        };
-        scrypt.onerror = (err) => {
-            console.warn('scrypt err:', err);
-            callback("error", err);
-        }
-        scrypt.onprogress = (percent) => {
-            console.log('onprogress');
-        };
-        scrypt.onready = () => {
-            var passbin = scrypt.strToBin(passphrase);
-            scrypt.hash(passbin, addresshash, 64);
-        }
-        if (scrypt_loaded == false) {
-            scrypt.load("asmjs");
-        }
-        else {
-            ready();
-        }
+        // };
+        // scrypt.onerror = (err) => {
+        //     console.warn('scrypt err:', err);
+        //     callback("error", err);
+        // }
+        // scrypt.onprogress = (percent) => {
+        //     console.log('onprogress');
+        // };
+        // scrypt.onready = () => {
+        //     var passbin = scrypt.strToBin(passphrase);
+        //     scrypt.hash(passbin, addresshash, 64);
+        // }
+        // if (scrypt_loaded == false) {
+        //     scrypt.load("asmjs");
+        // }
+        // else {
+        //     ready();
+        // }
     }
 }
