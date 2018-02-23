@@ -167,6 +167,7 @@ export default class CreateAccount extends wepy.page {
 
       wepy.showLoading({ title: '地址生成中' });
       const address = NEL.helper.Helper.GetAddressFromPublicKey(publicKey);
+      console.log(address.length);
       console.log('address = ' + address);
 
       wepy.showLoading({ title: '新钱包创建完成' });
@@ -174,39 +175,59 @@ export default class CreateAccount extends wepy.page {
         wepy.hideLoading();
       }, 1000);
 
-      // var wallet = new NEL.nep6.nep6wallet();
-      // wallet.scrypt = new NEL.nep6.nep6ScryptParameters();
-      // wallet.scrypt.N = 16384;
-      // wallet.scrypt.r = 8;
-      // wallet.scrypt.p = 8;
-      // wallet.accounts = [];
-      // wallet.accounts[0] = new NEL.nep6.nep6account();
-      // wallet.accounts[0].address = address;
-      // NEL.helper.Helper.GetNep2FromPrivateKey(
-      //   privateKey,
-      //   passphrase,
-      //   wallet.scrypt.N,
-      //   wallet.scrypt.r,
-      //   wallet.scrypt.p,
-      //   (info, result) => {
-      //     if (info == 'finish') {
-      //       wallet.accounts[0].nep2key = result;
-      //       var jsonstr = JSON.stringify(wallet.toJson());
-      //       console.log(jsonstr);
-
-      //       // var blob = new Blob([NEL.helper.Helper.String2Bytes(jsonstr)]);
-      //       // download.href = URL.createObjectURL(blob);
-      //       // download.text = 'download';
-      //     }
-      //   }
-      // );
+      var wallet = new NEL.nep6.nep6wallet();
+      wallet.scrypt = new NEL.nep6.nep6ScryptParameters();
+      wallet.scrypt.N = 16384;
+      wallet.scrypt.r = 8;
+      wallet.scrypt.p = 8;
+      wallet.accounts = [];
+      wallet.accounts[0] = new NEL.nep6.nep6account();
+      wallet.accounts[0].address = address;
+      NEL.helper.Helper.GetNep2FromPrivateKey(
+        privateKey,
+        passphrase,
+        wallet.scrypt.N,
+        wallet.scrypt.r,
+        wallet.scrypt.p,
+        (info, result) => {
+          if (info == 'finish') {
+            wallet.accounts[0].nep2key = result;
+            var jsonstr = JSON.stringify(wallet.toJson());
+            console.log(jsonstr);
+            var n = 16384;
+            var r = 8;
+            var p = 8;
+            NEL.helper.Helper.GetPrivateKeyFromNep2(
+              result,
+              passphrase,
+              wallet.scrypt.N,
+              wallet.scrypt.r,
+              wallet.scrypt.p,
+              (info, result2) => {
+                //spanNep2.textContent = "info=" + info + " result=" + result;
+                console.log('result=' + 'info=' + info + ' result=' + result2);
+                // prikey = result;
+                // if (prikey != null) {
+                //     var pubkey = ThinNeo.Helper.GetPublicKeyFromPrivateKey(prikey);
+                //     var address = ThinNeo.Helper.GetAddressFromPublicKey(pubkey);
+                //     spanAddress.textContent = address;
+                //     spanWif.textContent = ThinNeo.Helper.GetWifFromPrivateKey(prikey);
+                // }
+                // else {
+                //     spanWif.textContent = "result=" + "info=" + info + " result=" + result;
+                // }
+              }
+            );
+          }
+        }
+      );
       // let publicKey = account.publicKey;
       // let address = account.address;
 
       // console.log(account);
       // console.log('address = ' + address);
       // console.log('publickey = ' + publicKey);
-      const wallet = {
+      const wallet2 = {
         accountlabel: accountlabel,
         repassphrase: repassphrase,
         privateKey: NEL.helper.StringHelper.toHexString(privateKey),
@@ -220,7 +241,7 @@ export default class CreateAccount extends wepy.page {
       wepy.showLoading({ title: '数据存储中' });
       wepy.setStorageSync(LOCAL_WALLET, wallets);
       wepy.hideLoading();
-      let str = JSON.stringify(wallet);
+      let str = JSON.stringify(wallet2);
       console.log(str);
 
       this.$redirect('./createresult?wallet=' + str);

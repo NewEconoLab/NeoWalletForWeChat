@@ -24,7 +24,19 @@ export function toHexString(uintarr:Uint8Array): string {
     }
     return s;
 }
-
+export function strToBinary(str){
+    let result = [];
+    var list = str.split("");
+    for(var i=0;i<list.length;i++){
+        if(i != 0){
+            result.push(" ");
+        }
+        var item = list[i];
+        var binaryStr = item.charCodeAt().toString(2);
+        result.push(binaryStr);
+    }   
+    return result.join("");
+}
 void function () {
     function fillArray<T>(value: T, start = 0, end = this.length) {
         if (start < 0) start += this.length;

@@ -7,9 +7,11 @@ import { RIPEMD160 } from '../neo/Cryptography/RIPEMD160'
 import * as  CryptoKey from '../neo/Cryptography/CryptoKey'
 import { ECDsa } from '../neo/Cryptography/ECDsa'
 import * as UintHelper from './UintHelper'
-import * as CryptoJS from 'crypto-js'
+import { SHA256, AES, enc, mode, pad } from 'crypto-js'
 import * as scrypt from 'scrypt-async'
 import * as StringHelper from './StringHelper'
+import { accessSync } from 'fs';
+import  {Buffer} from 'buffer'
 // export declare var scrypt: any;
 // export declare var CryptoJS: any;
 var scrypt_loaded: boolean = false;
@@ -231,32 +233,32 @@ export class Helper {
         return UTF;
     }
     public static Aes256Encrypt(src: string, key: string): string {
-        var srcs = CryptoJS.enc.Utf8.parse(src);
-        var keys = CryptoJS.enc.Utf8.parse(key);
-        var encryptedkey = CryptoJS.AES.encrypt(srcs, keys, {
-            mode: CryptoJS.mode.ECB,
-            padding: CryptoJS.pad.NoPadding
+        var srcs = enc.Utf8.parse(src);
+        var keys = enc.Utf8.parse(key);
+        var encryptedkey = AES.encrypt(srcs, keys, {
+            mode: mode.ECB,
+            padding: pad.NoPadding
         });
         return encryptedkey.ciphertext.toString();
     }
     public static Aes256Encrypt_u8(src: Uint8Array, key: Uint8Array): Uint8Array {
-        var srcs = CryptoJS.enc.Utf8.parse("1234123412341234");
+        var srcs = enc.Utf8.parse("1234123412341234");
         srcs.sigBytes = src.length;
         srcs.words = new Array<number>(src.length / 4);
         for (var i = 0; i < src.length / 4; i++) {
             srcs.words[i] = src[i * 4 + 3] + src[i * 4 + 2] * 256 + src[i * 4 + 1] * 256 * 256 + src[i * 4 + 0] * 256 * 256 * 256;
         }
 
-        var keys = CryptoJS.enc.Utf8.parse("1234123412341234");
+        var keys = enc.Utf8.parse("1234123412341234");
         keys.sigBytes = key.length;
         keys.words = new Array<number>(key.length / 4);
         for (var i = 0; i < key.length / 4; i++) {
             keys.words[i] = key[i * 4 + 3] + key[i * 4 + 2] * 256 + key[i * 4 + 1] * 256 * 256 + key[i * 4 + 0] * 256 * 256 * 256;
         }
 
-        var encryptedkey = CryptoJS.AES.encrypt(srcs, keys, {
-            mode: CryptoJS.mode.ECB,
-            padding: CryptoJS.pad.NoPadding
+        var encryptedkey = AES.encrypt(srcs, keys, {
+            mode: mode.ECB,
+            padding: pad.NoPadding
         });
         var str: string = encryptedkey.ciphertext.toString();
         return UintHelper.hexToBytes(str);
@@ -264,7 +266,7 @@ export class Helper {
     public static Aes256Decrypt_u8(encryptedkey: Uint8Array, key: Uint8Array): Uint8Array {
 
 
-        var keys = CryptoJS.enc.Utf8.parse("1234123412341234");
+        var keys = enc.Utf8.parse("1234123412341234");
         keys.sigBytes = key.length;
         keys.words = new Array<number>(key.length / 4);
         for (var i = 0; i < key.length / 4; i++) {
@@ -272,14 +274,23 @@ export class Helper {
         }
 
         var base64key = Base64.fromByteArray(encryptedkey);
-        var srcs = CryptoJS.AES.decrypt(base64key, keys, {
-            mode: CryptoJS.mode.ECB,
-            padding: CryptoJS.pad.NoPadding
+        var srcs = AES.decrypt(base64key, keys, {
+            mode: mode.ECB,
+            padding: pad.NoPadding
         });
         var str: string = srcs.toString();
         return UintHelper.hexToBytes(str);
-
     }
+
+    /**
+     * get nep2 key
+     * @param prikey  
+     * @param passphrase 
+     * @param n 
+     * @param r 
+     * @param p 
+     * @param callback 
+     */
     public static GetNep2FromPrivateKey(prikey: Uint8Array, passphrase: string, n = 16384, r = 8, p = 8, callback: (info: string, result: string) => void): void {
         console.log(scrypt)
 
@@ -296,83 +307,56 @@ export class Helper {
             logN: 5,
             r: r,
             p: p,
-            dkLen: 32,
+            dkLen: 64,
             interruptStep: 1000,
             encoding: 'hash'
         },
             function (res) {
                 console.log(res.length)
                 console.log(StringHelper.toHexString(res));
-                
-                //     var derivedhalf1 = u8dk.subarray(0, 32);
-                //     var derivedhalf2 = u8dk.subarray(32, 64);
-                //     var u8xor = new Uint8Array(32);
-                //     for (var i = 0; i < 32; i++) {
-                //         u8xor[i] = prikey[i] ^ derivedhalf1[i];
-                //     }
-                //     //var xorinfo = XOR(prikey, derivedhalf1);
+                var pubkey = Helper.GetPublicKeyFromPrivateKey(prikey);
+                let addr = Helper.GetAddressFromPublicKey(pubkey);
+                const addresshash = SHA256(SHA256(addr).toString()).toString().slice(0, 8)
+                console.log(addresshash)
+                var u8dk = new Uint8Array(res);
+                var derivedhalf1 = u8dk.subarray(0, 32);
+                var derivedhalf2 = u8dk.subarray(32, 64);
+                var u8xor = new Uint8Array(32);
+                for (var i = 0; i < 32; i++) {
+                    u8xor[i] = prikey[i] ^ derivedhalf1[i];
+                }
+                // var xorinfo = XOR(prikey, derivedhalf1);
 
-                //     var encryptedkey = Helper.Aes256Encrypt_u8(u8xor, derivedhalf2);
-                //     //byte[] encryptedkey = AES256Encrypt(xorinfo, derivedhalf2);
-                //     //byte[] buffer = new byte[39];
-                //     var buffer = new Uint8Array(39);
-                //     buffer[0] = 0x01;
-                //     buffer[1] = 0x42;
-                //     buffer[2] = 0xe0;
-                //     for (var i = 3; i < 3 + 4; i++) {
-                //         buffer[i] = addresshash[i - 3];
-                //     }
-                //     for (var i = 7; i < 32 + 7; i++) {
-                //         buffer[i] = encryptedkey[i - 7];
-                //     }
-                //     //Buffer.BlockCopy(addresshash, 0, buffer, 3, addresshash.Length);
-                //     //Buffer.BlockCopy(encryptedkey, 0, buffer, 7, encryptedkey.Length);
-                //     //return Base58CheckEncode(buffer);
-                //     var b1 = Sha256.computeHash(buffer);
-                //     b1 = Sha256.computeHash(b1);
-                //     var u8hash = new Uint8Array(b1);
-                //     var outbuf = new Uint8Array(39 + 4);
-                //     for (var i = 0; i < 39; i++) {
-                //         outbuf[i] = buffer[i];
-                //     }
-                //     for (var i = 39; i < 39 + 4; i++) {
-                //         outbuf[i] = u8hash[i - 39];
-                //     }
+                var encryptedkey = Helper.Aes256Encrypt_u8(u8xor, derivedhalf2);
+                //byte[] encryptedkey = AES256Encrypt(xorinfo, derivedhalf2);
+                //byte[] buffer = new byte[39];
+                let buffer = new Uint8Array(39);
+                buffer[0] = 0x01;
+                buffer[1] = 0x42;
+                buffer[2] = 0xe0;
+                for (var i = 3; i < 3 + 4; i++) {
+                    buffer[i] = addresshash[i - 3];
+                }
+                for (var i = 7; i < 32 + 7; i++) {
+                    buffer[i] = encryptedkey[i - 7];
+                }
+                //Buffer.BlockCopy(addresshash, 0, buffer, 3, addresshash.Length);
+                //Buffer.BlockCopy(encryptedkey, 0, buffer, 7, encryptedkey.Length);
+                //return Base58CheckEncode(buffer);
+                var b1 = Sha256.computeHash(buffer);
+                b1 = Sha256.computeHash(b1);
+                var u8hash = new Uint8Array(b1);
+                var outbuf = new Uint8Array(39 + 4);
+                for (var i = 0; i < 39; i++) {
+                    outbuf[i] = buffer[i];
+                }
+                for (var i = 39; i < 39 + 4; i++) {
+                    outbuf[i] = u8hash[i - 39];
+                }
 
-                //     var base58str = Base58.encode(outbuf);
-                //     callback("finish", base58str);
-                // };
-                // scrypt.onprogress = (percent) => {
-                //     console.log('onprogress');
-                // };
-                // scrypt.onready = () => {
-                //     var pubkey = Helper.GetPublicKeyFromPrivateKey(prikey);
-                //     var script_hash = Helper.GetPublicKeyScriptHashFromPublicKey(pubkey);
-                //     var address = Helper.GetAddressFromScriptHash(script_hash);
-                //     var addrbin = scrypt.strToBin(address);
-
-
-                //     var b1 = Sha256.computeHash(addrbin);
-                //     b1 = Sha256.computeHash(b1);
-                //     var b2 = new Uint8Array(b1);
-
-                //     addresshash = b2.subarray(0, 4);
-                //     var passbin = scrypt.strToBin(passphrase);
-                //     //var passbin2 = Helper.String2Bytes(passphrase);
-
-                //     //var str = Helper.Bytes2String(passbin);
-                //     scrypt.hash(passbin, addresshash, 64);
-                // }
-                // if (scrypt_loaded == false) {
-                //     scrypt.load("asmjs");
-                // }
-                // else {
-                //     ready();
-                // }
-
-
-
-
+                var base58str = Base58.encode(outbuf);
+                console.log('result = ' + base58str);
+                callback("finish", base58str);
             });
 
         // var pp = scrypt.getAvailableMod();
@@ -447,6 +431,48 @@ export class Helper {
         var addresshash = buffer.subarray(3, 3 + 4);
         var encryptedkey = buffer.subarray(7, 7 + 32);
 
+
+        scrypt.default(encryptedkey, StringHelper.toHexString(addresshash), {
+            logN: 5,
+            r: r,
+            p: p,
+            dkLen: 64,
+            interruptStep: 1000,
+            encoding: 'hash'
+        },
+            function (res) {
+                //   console.log('done', scrypt.binToHex(dk));
+            var u8dk = new Uint8Array(res);
+            var derivedhalf1 = u8dk.subarray(0, 32);
+            var derivedhalf2 = u8dk.subarray(32, 64);
+
+            var u8xor = Helper.Aes256Decrypt_u8(encryptedkey, derivedhalf2);
+            var prikey = new Uint8Array(u8xor.length);
+            for (var i = 0; i < 32; i++) {
+                prikey[i] = u8xor[i] ^ derivedhalf1[i];
+            }
+
+            // var pubkey = Helper.GetPublicKeyFromPrivateKey(prikey);
+            // var script_hash = Helper.GetPublicKeyScriptHashFromPublicKey(pubkey);
+            // var address = Helper.GetAddressFromScriptHash(script_hash);
+            // var addrbin = Buffer.from(address)// add//StringHelper.strToBinary(address)//.charCodeAt().toString(2) //scrypt.strToBin(address);
+
+            // var b1 = Sha256.computeHash(addrbin);
+            // b1 = Sha256.computeHash(b1);
+            // var b2 = new Uint8Array(b1);
+
+            // var addresshashgot = b2.subarray(0, 4);
+            // for (var i = 0; i < 4; i++) {
+            //     if (addresshash[i] != b2[i]) {
+            //         callback("error", "nep2 hash not match.");
+
+            //         return;
+            //     }
+            // }
+            console.log('prikey = ' + StringHelper.toHexString(prikey))
+        //     callback("finish", prikey);
+            });
+
         // var pp = scrypt.getAvailableMod();
         // scrypt.setResPath('lib/asset');
 
@@ -477,6 +503,8 @@ export class Helper {
         //     scrypt_loaded = true;
         //     ready();
         // }
+
+
         // scrypt.oncomplete = (dk) => {
         //     console.log('done', scrypt.binToHex(dk));
         //     var u8dk = new Uint8Array(dk);

@@ -6,6 +6,8 @@ export class Sha256 {
         ]);
         let l = data.byteLength / 4 + 2;
         let N = Math.ceil(l / 16);
+        if (N == NaN)
+            return;
         let M = new Array(N);
         let view = UintHelper.fromArrayBuffer(data);
         for (let i = 0; i < N; i++) {

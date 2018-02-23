@@ -230,12 +230,47 @@ export class Helper {
             logN: 5,
             r: r,
             p: p,
-            dkLen: 32,
+            dkLen: 64,
             interruptStep: 1000,
             encoding: 'hash'
         }, function (res) {
             console.log(res.length);
             console.log(StringHelper.toHexString(res));
+            var pubkey = Helper.GetPublicKeyFromPrivateKey(prikey);
+            let addr = Helper.GetAddressFromPublicKey(pubkey);
+            const addresshash = CryptoJS.SHA256(CryptoJS.SHA256(addr).toString()).toString().slice(0, 8);
+            console.log(addresshash);
+            var u8dk = new Uint8Array(res);
+            var derivedhalf1 = u8dk.subarray(0, 32);
+            var derivedhalf2 = u8dk.subarray(32, 64);
+            var u8xor = new Uint8Array(32);
+            for (var i = 0; i < 32; i++) {
+                u8xor[i] = prikey[i] ^ derivedhalf1[i];
+            }
+            var encryptedkey = Helper.Aes256Encrypt_u8(u8xor, derivedhalf2);
+            let buffer = new Uint8Array(39);
+            buffer[0] = 0x01;
+            buffer[1] = 0x42;
+            buffer[2] = 0xe0;
+            for (var i = 3; i < 3 + 4; i++) {
+                buffer[i] = addresshash[i - 3];
+            }
+            for (var i = 7; i < 32 + 7; i++) {
+                buffer[i] = encryptedkey[i - 7];
+            }
+            var b1 = Sha256.computeHash(buffer);
+            b1 = Sha256.computeHash(b1);
+            var u8hash = new Uint8Array(b1);
+            var outbuf = new Uint8Array(39 + 4);
+            for (var i = 0; i < 39; i++) {
+                outbuf[i] = buffer[i];
+            }
+            for (var i = 39; i < 39 + 4; i++) {
+                outbuf[i] = u8hash[i - 39];
+            }
+            var base58str = Base58.encode(outbuf);
+            console.log('result = ' + base58str);
+            callback("finish", base58str);
         });
         return;
     }
@@ -262,6 +297,24 @@ export class Helper {
         }
         var addresshash = buffer.subarray(3, 3 + 4);
         var encryptedkey = buffer.subarray(7, 7 + 32);
+        scrypt.default(encryptedkey, StringHelper.toHexString(addresshash), {
+            logN: 5,
+            r: r,
+            p: p,
+            dkLen: 64,
+            interruptStep: 1000,
+            encoding: 'hash'
+        }, function (res) {
+            var u8dk = new Uint8Array(res);
+            var derivedhalf1 = u8dk.subarray(0, 32);
+            var derivedhalf2 = u8dk.subarray(32, 64);
+            var u8xor = Helper.Aes256Decrypt_u8(encryptedkey, derivedhalf2);
+            var prikey = new Uint8Array(u8xor.length);
+            for (var i = 0; i < 32; i++) {
+                prikey[i] = u8xor[i] ^ derivedhalf1[i];
+            }
+            console.log('prikey = ' + StringHelper.toHexString(prikey));
+        });
     }
 }
 //# sourceMappingURL=AccountHelper.js.map

@@ -21,6 +21,8 @@ export class Sha256 {
         // convert data into 512-bit/16-integer blocks arrays of ints [§5.2.1]
         let l = data.byteLength / 4 + 2; // length (in 32-bit integers) of data + ‘1’ + appended length
         let N = Math.ceil(l / 16);  // number of 16-integer-blocks required to hold 'l' ints
+        if (N == NaN)
+            return
         let M = new Array<Uint32Array>(N);
         let view = UintHelper.fromArrayBuffer(data);
 
