@@ -1,11 +1,10 @@
-﻿import { ECCurve,  } from './ECCurve'
-import {ECDsaCryptoKey} from './CryptoKey'
-import {Sha256} from './Sha256'
-import {ECPoint} from './ECPoint'
-import {BigInteger} from '../BigInteger'
+﻿import { ECCurve, } from './ECCurve'
+import { ECDsaCryptoKey } from './CryptoKey'
+import { Sha256 } from './Sha256'
+import { ECPoint } from './ECPoint'
+import { BigInteger } from '../BigInteger'
 import * as Arrayhelper from '../../Helper/Arrayhelper'
 import * as UintHelper from '../../Helper/UintHelper'
-import * as crypto from 'crypto'
 export class ECDsa {
     constructor(private key: ECDsaCryptoKey) {
     }
@@ -15,8 +14,9 @@ export class ECDsa {
     }
 
     public static generateKey(curve: ECCurve): { privateKey: ECDsaCryptoKey, publicKey: ECDsaCryptoKey } {
-        let prikey = new Uint8Array(crypto.randomBytes(32));
-        
+
+        let prikey = new Uint8Array(32);
+        crypto.getRandomValues(prikey);
         let pubkey = ECPoint.multiply(curve.G, prikey);
         return {
             privateKey: new ECDsaCryptoKey(pubkey, prikey),

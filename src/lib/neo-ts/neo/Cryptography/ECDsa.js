@@ -4,7 +4,6 @@ import { ECPoint } from './ECPoint';
 import { BigInteger } from '../BigInteger';
 import * as Arrayhelper from '../../Helper/Arrayhelper';
 import * as UintHelper from '../../Helper/UintHelper';
-import * as crypto from 'crypto';
 export class ECDsa {
     constructor(key) {
         this.key = key;
@@ -13,7 +12,8 @@ export class ECDsa {
         return BigInteger.fromUint8Array(new Uint8Array(Sha256.computeHash(message)), 1, false);
     }
     static generateKey(curve) {
-        let prikey = new Uint8Array(crypto.randomBytes(32));
+        let prikey = new Uint8Array(32);
+        crypto.getRandomValues(prikey);
         let pubkey = ECPoint.multiply(curve.G, prikey);
         return {
             privateKey: new ECDsaCryptoKey(pubkey, prikey),

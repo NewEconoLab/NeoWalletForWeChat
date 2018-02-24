@@ -24,6 +24,8 @@ import {
 } from './utils/constant';
 import { setStore } from 'wepy-redux';
 import configStore from './store';
+import tip from './utils/tip';
+import { SHA256 } from 'crypto-js';
 
 const store = configStore();
 setStore(store);

@@ -1,4 +1,6 @@
-import * as crypto from 'crypto';
+import { Aes } from './Aes';
+import { Sha256 } from './Sha256';
+import { Arrayhelper } from '../../Helper/index';
 export class RandomNumberGenerator {
     static addEntropy(data, strength) {
         if (RandomNumberGenerator._stopped)
@@ -12,8 +14,21 @@ export class RandomNumberGenerator {
         if (RandomNumberGenerator._strength >= 512)
             RandomNumberGenerator.stopCollectors();
     }
-    static getRandomValues(len) {
-        return new Uint8Array(crypto.randomBytes(len));
+    static getRandomValues(array) {
+        if (RandomNumberGenerator._strength < 256)
+            throw new Error();
+        if (RandomNumberGenerator._key == null) {
+            let data = new Float64Array(RandomNumberGenerator._entropy);
+            RandomNumberGenerator._key = new Uint8Array(Sha256.computeHash(data));
+        }
+        let aes = new Aes(RandomNumberGenerator._key, RandomNumberGenerator.getWeakRandomValues(16));
+        let src = new Uint8Array(16);
+        let dst = new Uint8Array(array.buffer, array.byteOffset, array.byteLength);
+        for (let i = 0; i < dst.length; i += 16) {
+            aes.encryptBlock(RandomNumberGenerator.getWeakRandomValues(16), src);
+            Arrayhelper.copy(src, 0, dst, i, Math.min(dst.length - i, 16));
+        }
+        return array;
     }
     static getWeakRandomValues(array) {
         let buffer = typeof array === "number" ? new Uint8Array(array) : array;
