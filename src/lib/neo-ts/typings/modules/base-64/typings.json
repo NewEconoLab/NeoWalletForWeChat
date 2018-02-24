@@ -1,9 +1,0 @@
-{
-  "resolution": "main",
-  "tree": {
-    "src": "https://raw.githubusercontent.com/twaldecker/typings-base64/0fb737f7a79318637cae974d816a6c2a8d7f560f/typings.json",
-    "raw": "registry:npm/base-64#0.1.0+20160522191830",
-    "main": "index.d.ts",
-    "name": "base-64"
-  }
-}

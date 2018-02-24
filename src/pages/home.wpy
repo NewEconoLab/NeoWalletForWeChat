@@ -1,1 +1,134 @@
- 
+ <style lang="less">
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.userinfo-avatar {
+  width: 150rpx;
+  height: 150rpx;
+  border-radius: 50%;
+  margin-top: 50rpx;
+}
+
+.userinfo-nickname {
+  color: #aaa;
+  margin-top: 50rpx;
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 100rpx;
+  width: 90%;
+  background-color: red;
+}
+
+.login-item {
+  width: 100%;
+  height: 100rpx;
+}
+
+.login-local {
+  width: 100%;
+  background-color: salmon;
+}
+
+.login-scan {
+  width: 100%;
+  background-color: seagreen;
+}
+
+.login-new {
+  width: 100%;
+  background-color: slategray;
+}
+
+.foot {
+  display: inline-block;
+  position: fixed;
+  bottom: 0;
+  margin-bottom: 30rpx;
+  font-size: 10px;
+  color: slategray;
+}
+</style>
+<template>
+  <view class="container">
+    <view class="userinfo" @tap="handleViewTap">
+      <image class="userinfo-avatar" src="{{ userInfo.avatarUrl }}" background-size="cover"/>
+      <view class="userinfo-nickname">{{ userInfo.nickName }}</view>
+    </view>
+    <view class="login">
+      <view class="login-item">
+        
+        本地账户登陆
+      </view>
+       <view class="login-item">
+        扫码登陆
+      </view>
+       <view class="login-item" @tap="login('create')">
+        新建账户登陆
+      </view>
+    </view>
+    <text class="foot">
+      敬告：账户数据只保存在本地，请做好备份
+    </text>
+   
+  </view>
+
+</template>
+
+<script>
+import wepy from 'wepy';
+import { connect } from 'wepy-redux';
+import List from '../components/list'; // aliasFields example
+import testMixin from '../mixins/test';
+
+@connect({})
+export default class Index extends wepy.page {
+  config = {
+    navigationBarTitleText: '登陆'
+  };
+
+  components = {
+    list: List
+  };
+
+  mixins = [testMixin];
+
+  data = {
+    userInfo: {
+      nickName: '加载中...'
+    }
+  };
+
+  computed = {};
+
+  methods = {
+    login(str) {
+      switch (str) {
+        case 'create':
+          this.$redirect('./createaccount');
+          break;
+        default:
+          break;
+      }
+    }
+  };
+
+  events = {};
+
+  onLoad() {
+    let self = this;
+    this.$parent.getUserInfo(function(userInfo) {
+      if (userInfo) {
+        self.userInfo = userInfo;
+      }
+      self.$apply();
+    });
+  }
+}
+</script>

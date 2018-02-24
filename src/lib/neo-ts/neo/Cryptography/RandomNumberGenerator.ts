@@ -1,5 +1,6 @@
-﻿import {Aes} from './Aes'
-import {Sha256} from './Sha256'
+﻿import { Aes } from './Aes'
+import { Sha256 } from './Sha256'
+import * as crypto from 'crypto'
 export class RandomNumberGenerator {
     private static _entropy: number[] = [];
     private static _strength = 0;
@@ -19,8 +20,8 @@ export class RandomNumberGenerator {
             RandomNumberGenerator.stopCollectors();
     }
 
-    public static getRandomValues<T extends Int8Array | Uint8ClampedArray | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array>(array: T): T {
-       return crypto.getRandomValues(array);
+    public static getRandomValues(len: number): Uint8Array {
+        return new Uint8Array(crypto.randomBytes(len))
         // console.log('1111');
         // if (RandomNumberGenerator._strength < 256) throw new Error();
         // console.log('2222');
@@ -36,11 +37,11 @@ export class RandomNumberGenerator {
         // let dst = new Uint8Array(array.buffer, array.byteOffset, array.byteLength);
         // console.log('6666');
         // console.log(dst);
-        
+
         // for (let i = 0; i < dst.length; i += 16) {
         //     aes.encryptBlock(RandomNumberGenerator.getWeakRandomValues(16), src);
         //     console.log(src);
-            
+
         //     Array.copy(src, 0, dst, i, Math.min(dst.length - i, 16));
         // }
 

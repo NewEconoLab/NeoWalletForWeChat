@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "base-64": "registry:npm/base-64#0.1.0+20160522191830",
-    "scrypt-async": "registry:dt/scrypt-async#1.2.0+20160620211513"
-  }
-}

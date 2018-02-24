@@ -1,4 +1,5 @@
 import * as UintHelper from '../../Helper/UintHelper';
+import * as crypto from 'crypto';
 export class CryptoKey {
     constructor(type, extractable, algorithm, usages) {
         this.type = type;
@@ -15,9 +16,8 @@ export class AesCryptoKey extends CryptoKey {
     static create(length) {
         if (length != 128 && length != 192 && length != 256)
             throw new RangeError();
-        let key = new AesCryptoKey(new Uint8Array(length / 8));
-        crypto.getRandomValues(key._key_bytes);
-        return key;
+        let rand = crypto.randomBytes(length / 8);
+        return new AesCryptoKey(rand);
     }
     export() {
         return this._key_bytes;

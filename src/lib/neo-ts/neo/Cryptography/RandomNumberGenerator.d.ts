@@ -5,7 +5,7 @@ export declare class RandomNumberGenerator {
     private static _stopped;
     private static _key;
     private static addEntropy(data, strength);
-    static getRandomValues<T extends Int8Array | Uint8ClampedArray | Uint8Array | Int16Array | Uint16Array | Int32Array | Uint32Array>(array: T): T;
+    static getRandomValues(len: number): Uint8Array;
     private static getWeakRandomValues(array);
     private static processDeviceMotionEvent(event);
     private static processEvent(event);

@@ -30,7 +30,12 @@ setStore(store);
 
 export default class extends wepy.app {
   config = {
-    pages: ['pages/index', 'pages/login', 'pages/createaccount','pages/createresult'],
+    pages: [
+      'pages/login',
+      'pages/createaccount',
+      'pages/createresult',
+      'pages/home'
+    ],
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#fff',
@@ -45,30 +50,30 @@ export default class extends wepy.app {
 
   constructor() {
     super();
-    this.use('requestfix')
+    this.use('requestfix');
   }
 
   async onLaunch() {
-    this.testAsync()
-    const that = this
+    this.testAsync();
+    const that = this;
 
     if (this.globalData.userInfo) {
-      return
+      return;
     }
-    await wepy.login()
+    await wepy.login();
 
     wepy.getUserInfo({
       success(res) {
-        console.log(res)
+        console.log(res);
         // 存储userInfo
         that.globalData.userInfo = res.userInfo;
         wepy.setStorageSync(USER_INFO, res.userInfo);
         // 存储系统信息
         let systemInfo = wepy.getSystemInfoSync();
-        console.log(systemInfo)
+        console.log(systemInfo);
         wepy.setStorageSync(SYSTEM_INFO, systemInfo);
       }
-    })
+    });
   }
 
   sleep(s) {

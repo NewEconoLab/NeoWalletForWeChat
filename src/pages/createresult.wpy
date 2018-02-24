@@ -71,15 +71,15 @@
       </view>
     </view>
     <view class="area-text">
-      <view class="area-text-item"  @tap="copyToClip({{wallet.name}})">
+      <view class="area-text-item"  @tap="copyToClip(name = {{wallet.name}})">
         <text class="text-label">Name:</text>
         <text class="text-content" >{{wallet.name}}</text>
       </view>
-      <view class="area-text-item"  @tap="copyToClip({{wallet.address}})">
+      <view class="area-text-item"  @tap="copyToClip(address = {{wallet.address}})">
         <text class="text-label">Address:</text>
         <text class="text-content">{{wallet.address}}</text>
       </view>
-      <view class="area-text-item"  @tap="copyToClip({{wallet.key}})">
+      <view class="area-text-item"  @tap="copyToClip(nep2Key = {{wallet.key}})">
         <text class="text-label">Nep2 Key:</text>
         <text class="text-content" >{{wallet.key}}</text>
       </view>
@@ -94,7 +94,6 @@
 
 <script>
 import wepy from 'wepy';
-import Neon from 'wechatneon';
 import drawQrcode from 'weapp-qrcode';
 import Toast from 'wepy-com-toast';
 import { SYSTEM_INFO } from '../utils/constant';
@@ -105,41 +104,21 @@ export default class CreateResult extends wepy.page {
 
   onLoad(option) {
     let that = this;
-    let systemInfo = wepy.getStorageSync(SYSTEM_INFO);
-    if (systemInfo == null) {
-      wepy.showModal({
-        title: '警告',
-        content: '获取系统信息失败，请重新打开小程序',
-        success: function(res) {
-          this.$redirect('./login');
-        }
-      });
-    }
-    console.log(systemInfo);
-    var width = systemInfo.windowWidth;
-    console.log(width);
-    this.qrcodeWH = 200;
-    console.log(this.qrcodeWH);
     this.wallet = JSON.parse(option.wallet)['accounts'][0];
 
     drawQrcode({
-      width: this.qrcodeWH,
-      height: this.qrcodeWH,
+      width: 200,
+      height: 200,
       canvasId: 'nep2Key',
       text: this.wallet.key
     });
-    console.log(this.wallet.key)
-    // drawQrcode({
-    //   width: this.qrcodeWH,
-    //   height: this.qrcodeWH,
-    //   canvasId: 'privateKeyCanvas',
-    //   text: this.wallet.privateKey
-    // });
-    this.$apply();
+    wx.onUserCaptureScreen(function(res) {
+      console.log('用户截屏了');
+      that.captureScreen = true;
+      that.$apply();
+    });
 
-    console.log('==============================');
-    console.log(this.wallet);
-    console.log('==============================');
+    this.$apply();
   } // 在Page和Component共用的生命周期函数
 
   onShow() {} // 只在Page中存在的页面生命周期函数
@@ -147,9 +126,8 @@ export default class CreateResult extends wepy.page {
   config = {}; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
 
   data = {
-    sysInfo: {},
-    qrcodeWH: 0,
-    wallet: {}
+    wallet: {},
+    captureScreen: false
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
   components = {
@@ -164,13 +142,32 @@ export default class CreateResult extends wepy.page {
 
   methods = {
     copyToClip(str) {
-      let promise = this.$invoke('toast', 'show', {
-        title: '复制成功',
-        duration: 450
+      let that = this;
+      wepy.setClipboardData({
+        data: str,
+        success: function(res) {
+          wepy.getClipboardData({
+            success: function(res) {
+              console.log(res.data); // data
+            }
+          });
+
+          let promise = that.$invoke('toast', 'show', {
+            title: '复制成功',
+            duration: 450
+          });
+          promise.then(d => {
+            console.log('toast done');
+          });
+        }
       });
-      promise.then(d => {
-        console.log('toast done');
-      });
+    },
+
+    login() {
+      if(!this.captureScreen){
+        tip.alert('请截图保存账户信息')
+      }
+      this.$redirect('./home');
     }
   }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
 

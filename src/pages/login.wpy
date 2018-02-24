@@ -23,12 +23,12 @@
   align-items: center;
   margin-top: 100rpx;
   width: 90%;
-  background-color: red;
 }
 
 .login-item {
   width: 100%;
   height: 100rpx;
+  margin-top: 30rpx;
 }
 
 .login-local {
@@ -63,18 +63,19 @@
     </view>
     <view class="login">
       <view class="login-item">
-        
-        本地账户登陆
+        <button type="primary" @tap="loginLocal()">本地账户</button>
       </view>
        <view class="login-item">
-        扫码登陆
+        
+        <button type="primary" @tap="loginScan()">扫码登陆</button>
       </view>
        <view class="login-item" @tap="login('create')">
-        新建账户登陆
+        
+        <button type="primary" @tap="loginCreate()">新建账户</button>
       </view>
     </view>
     <text class="foot">
-      敬告：账户数据只保存在本地，请做好备份
+      敬告：账户数据不上传服务器，请做好备份
     </text>
    
   </view>
@@ -82,11 +83,11 @@
 </template>
 
 <script>
-import wepy from 'wepy'
-import { connect } from 'wepy-redux'
-import List from '../components/list' // aliasFields example
-import testMixin from '../mixins/test'
-
+import wepy from 'wepy';
+import { connect } from 'wepy-redux';
+import List from '../components/list'; // aliasFields example
+import testMixin from '../mixins/test';
+import { USER_INFO } from '../utils/constant';
 @connect({})
 export default class Index extends wepy.page {
   config = {
@@ -105,30 +106,37 @@ export default class Index extends wepy.page {
     }
   };
 
-  computed = { }
+  computed = {};
 
   methods = {
-    login(str) {
-      switch(str) {
+    loginCreate(str) {
+      switch (str) {
         case 'create':
-        this.$redirect('./createaccount');
-        break
+          this.$redirect('./createaccount');
+          break;
         default:
-        break
+          break;
       }
+    },
+    loginScan() {
+      let that = this;
+      wepy.scanCode({
+        success: res => {
+          console.log(res);
+          that.onScanLogin(res.result);
+        }
+      });
     }
   };
 
-  events = {}
+  events = {};
 
   onLoad() {
-    let self = this;
-    this.$parent.getUserInfo(function(userInfo) {
-      if (userInfo) {
-        self.userInfo = userInfo
-      }
-      self.$apply()
-    });
+    this.userInfo = wepy.getStorageSync(USER_INFO) || {};
+    this.$apply();
+  }
+  onScanLogin(nep2key) {
+    
   }
 }
 </script>

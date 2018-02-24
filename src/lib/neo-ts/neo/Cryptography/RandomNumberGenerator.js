@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 export class RandomNumberGenerator {
     static addEntropy(data, strength) {
         if (RandomNumberGenerator._stopped)
@@ -11,8 +12,8 @@ export class RandomNumberGenerator {
         if (RandomNumberGenerator._strength >= 512)
             RandomNumberGenerator.stopCollectors();
     }
-    static getRandomValues(array) {
-        return crypto.getRandomValues(array);
+    static getRandomValues(len) {
+        return new Uint8Array(crypto.randomBytes(len));
     }
     static getWeakRandomValues(array) {
         let buffer = typeof array === "number" ? new Uint8Array(array) : array;

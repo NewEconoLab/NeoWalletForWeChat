@@ -495,7 +495,7 @@ export class BigInteger {
                 bytes[i] = Math.random() * 256;
         }
         else {
-            rng.getRandomValues(bytes);
+            bytes = new Uint8Array(rng.getRandomValues(Math.ceil(bitLength / 8)));
         }
         bytes[bytes.length - 1] &= 0xff >>> (8 - bitLength % 8);
         return new BigInteger(bytes);
