@@ -88,14 +88,13 @@
       <button type="primary" @tap="login()">登陆</button>
     </view>
     <text class="warnning">非常重要，请截图保存！！</text>
-     <toast />
   </view>
 </template>
 
 <script>
 import wepy from 'wepy';
 import drawQrcode from 'weapp-qrcode';
-import Toast from 'wepy-com-toast';
+import tip from '../utils/tip';
 import { SYSTEM_INFO } from '../utils/constant';
 export default class CreateResult extends wepy.page {
   customData = {}; // 自定义数据
@@ -130,9 +129,7 @@ export default class CreateResult extends wepy.page {
     captureScreen: false
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
-  components = {
-    toast: Toast
-  }; // 声明页面中所引用的组件，或声明组件中所引用的子组件
+  components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
 
   mixins = []; // 声明页面所引用的Mixin实例
 
@@ -149,23 +146,17 @@ export default class CreateResult extends wepy.page {
           wepy.getClipboardData({
             success: function(res) {
               console.log(res.data); // data
+              tip.alert('复制成功');
             }
-          });
-
-          let promise = that.$invoke('toast', 'show', {
-            title: '复制成功',
-            duration: 450
-          });
-          promise.then(d => {
-            console.log('toast done');
           });
         }
       });
     },
 
     login() {
-      if(!this.captureScreen){
-        tip.alert('请截图保存账户信息')
+      if (!this.captureScreen) {
+        tip.alert('请截图保存账户信息');
+        return;
       }
       this.$redirect('./home');
     }
