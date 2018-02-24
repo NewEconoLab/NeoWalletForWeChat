@@ -1,19 +1,17 @@
 <style lang="less">
 .area-qrcode {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  align-items: center;
   width: 100%; // 750rpx
-  height: 395rpx; //  (750-20*3)/2 + 40+10
   margin-top: 20rpx;
 }
 .qrcode-item {
-  width: 345rpx;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-content: center;
   align-items: center;
-  margin-left: 10px;
 }
 .qrcode-label {
   font-size: 13px;
@@ -68,30 +66,22 @@
   <view class="container">
     <view class="area-qrcode">
       <view class="qrcode-item">
-        <canvas style="width: {{qrcodeWH}}px; height: {{qrcodeWH}}px;" canvas-id="publicKeyCanvas"></canvas>
-        <text>Public Address</text>
-      </view>
-      <view class="qrcode-item">
-        <canvas style="width: {{qrcodeWH}}px; height: {{qrcodeWH}}px;" canvas-id="privateKeyCanvas"></canvas>
-        <text>Private Key</text>
+        <canvas style="width: 200px; height: 200px;" canvas-id="nep2Key"></canvas>
+        <text>Nep2 Key</text>
       </view>
     </view>
     <view class="area-text">
-      <view class="area-text-item"  @tap="copyToClip({{wallet.repassphrase}})">
-        <text class="text-label">Passphrase:</text>
-        <text class="text-content" >{{wallet.repassphrase}}</text>
+      <view class="area-text-item"  @tap="copyToClip({{wallet.name}})">
+        <text class="text-label">Name:</text>
+        <text class="text-content" >{{wallet.name}}</text>
       </view>
-      <view class="area-text-item"  @tap="copyToClip({{wallet.publicKey}})">
-        <text class="text-label">Public Address:</text>
-        <text class="text-content">{{wallet.publicKey}}</text>
+      <view class="area-text-item"  @tap="copyToClip({{wallet.address}})">
+        <text class="text-label">Address:</text>
+        <text class="text-content">{{wallet.address}}</text>
       </view>
-      <view class="area-text-item"  @tap="copyToClip({{wallet.encryptedkey}})">
-        <text class="text-label">Encrypted Key:</text>
-        <text class="text-content" >{{wallet.encryptedkey}}</text>
-      </view>
-       <view class="area-text-item"  @tap="copyToClip({{wallet.privateKey}})">
-        <text class="text-label">Private Key:</text>
-        <text class="text-content" >{{wallet.privateKey}}</text>
+      <view class="area-text-item"  @tap="copyToClip({{wallet.key}})">
+        <text class="text-label">Nep2 Key:</text>
+        <text class="text-content" >{{wallet.key}}</text>
       </view>
     </view>
     <view class="area-btn">
@@ -128,23 +118,28 @@ export default class CreateResult extends wepy.page {
     console.log(systemInfo);
     var width = systemInfo.windowWidth;
     console.log(width);
-    this.qrcodeWH = (width - 10 * 3) / 2;
+    this.qrcodeWH = 200;
     console.log(this.qrcodeWH);
-    this.wallet = JSON.parse(option.wallet);
+    this.wallet = JSON.parse(option.wallet)['accounts'][0];
 
     drawQrcode({
       width: this.qrcodeWH,
       height: this.qrcodeWH,
-      canvasId: 'publicKeyCanvas',
-      text: this.wallet.publicKey
+      canvasId: 'nep2Key',
+      text: this.wallet.key
     });
-    drawQrcode({
-      width: this.qrcodeWH,
-      height: this.qrcodeWH,
-      canvasId: 'privateKeyCanvas',
-      text: this.wallet.privateKey
-    });
+    console.log(this.wallet.key)
+    // drawQrcode({
+    //   width: this.qrcodeWH,
+    //   height: this.qrcodeWH,
+    //   canvasId: 'privateKeyCanvas',
+    //   text: this.wallet.privateKey
+    // });
     this.$apply();
+
+    console.log('==============================');
+    console.log(this.wallet);
+    console.log('==============================');
   } // 在Page和Component共用的生命周期函数
 
   onShow() {} // 只在Page中存在的页面生命周期函数
@@ -177,8 +172,6 @@ export default class CreateResult extends wepy.page {
         console.log('toast done');
       });
     }
-
-
   }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
 
   events = {}; // 声明组件之间的事件处理函数

@@ -1,7 +1,8 @@
-﻿import{Helper} from '../Helper/AccountHelper'
+﻿import { Helper } from '../Helper/AccountHelper'
 export class nep6account {
     public address: string;
     public nep2key: string;
+    public name: string;
     public getPrivateKey(scrypt: nep6ScryptParameters, password: string, callback: (info: string, result: string | Uint8Array) => void): void {
 
         var cb = (i, r) => {
@@ -44,6 +45,7 @@ export class nep6wallet {
             var localacc = new nep6account();
             localacc.address = acc.address;
             localacc.nep2key = acc.key;
+
             if (acc.key == undefined)
                 localacc.nep2key = null;
             this.accounts.push(localacc);
@@ -65,6 +67,7 @@ export class nep6wallet {
 
             var jsonacc = {};
             jsonacc["address"] = acc.address;
+            jsonacc["name"] = acc.name;
             jsonacc["label"] = null;
             jsonacc["isDefault"] = false;
             jsonacc["lock"] = false;

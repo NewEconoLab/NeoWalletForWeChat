@@ -54,6 +54,7 @@ export class nep6wallet {
             var acc = this.accounts[0];
             var jsonacc = {};
             jsonacc["address"] = acc.address;
+            jsonacc["name"] = acc.name;
             jsonacc["label"] = null;
             jsonacc["isDefault"] = false;
             jsonacc["lock"] = false;
