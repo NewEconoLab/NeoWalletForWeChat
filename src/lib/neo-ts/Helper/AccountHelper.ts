@@ -292,11 +292,14 @@ export class Helper {
      * @param callback 
      */
     public static GetNep2FromPrivateKey(prikey: Uint8Array, passphrase: string, n = 16384, r = 8, p = 8, callback: (info: string, result: string) => void): void {
+        let that = this
         var pubkey = Helper.GetPublicKeyFromPrivateKey(prikey);
         let addr = Helper.GetAddressFromPublicKey(pubkey);
-        const addresshash = SHA256(SHA256(addr).toString()).toString().slice(0, 4)
-        let uint8pass = new TextEncoder("utf-8").encode(passphrase);
-        let strkey = addresshash
+        const strkey = SHA256(SHA256(addr).toString()).toString().slice(0, 4)
+        let uint8pass = this.String2Bytes(passphrase);   //new TextEncoder("utf-8").encode(passphrase);
+        // console.log('strkey = ' + strkey)
+        // console.log('strkey = '+ uint8pass)
+        console.log('strkey = ' + prikey)
         scrypt.default(uint8pass, strkey, {
             logN: 5,
             r: r,
@@ -318,7 +321,7 @@ export class Helper {
                 buffer[0] = 0x01;
                 buffer[1] = 0x42;
                 buffer[2] = 0xe0;
-                let u8addr = new TextEncoder("utf-8").encode(addresshash);
+                let u8addr = that.String2Bytes(strkey)//UintHelper.hexToBytes(strkey)//new TextEncoder("utf-8").encode(addresshash);
                 for (var i = 3; i < 3 + 4; i++) {
                     buffer[i] = u8addr[i - 3];
                 }
@@ -368,9 +371,10 @@ export class Helper {
         }
         var addresshash = buffer.subarray(3, 3 + 4);
         var encryptedkey = buffer.subarray(7, 7 + 32);
-        let uint8pass = new TextEncoder("utf-8").encode(passphrase);
-        let strkey = new TextDecoder("utf-8").decode(addresshash);
-
+        let uint8pass = this.String2Bytes(passphrase);
+        let strkey = this.Bytes2String(addresshash);
+        // console.log('strkey = ' + strkey)
+        // console.log('strkey = '+ uint8pass)
         scrypt.default(uint8pass, strkey, {
             logN: 5,
             r: r,
@@ -388,7 +392,7 @@ export class Helper {
                 for (var i = 0; i < 32; i++) {
                     prikey[i] = u8xor[i] ^ derivedhalf1[i];
                 }
-
+                console.log('strkey = ' + prikey)
                 var pubkey = Helper.GetPublicKeyFromPrivateKey(prikey);
                 var script_hash = Helper.GetPublicKeyScriptHashFromPublicKey(pubkey);
                 var address = Helper.GetAddressFromScriptHash(script_hash);
