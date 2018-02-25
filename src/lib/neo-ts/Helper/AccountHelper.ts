@@ -346,7 +346,8 @@ export class Helper {
 
     }
     public static GetPrivateKeyFromNep2(nep2: string, passphrase: string, n = 16384, r = 8, p = 8, callback: (info: string, result: string | Uint8Array) => void) {
-        var data = Base58.decode(nep2);
+        let that = this
+        let data = Base58.decode(nep2);
         if (data.length != 39 + 4) {
             callback("error", "data.length error");
             return;
@@ -373,8 +374,6 @@ export class Helper {
         var encryptedkey = buffer.subarray(7, 7 + 32);
         let uint8pass = this.String2Bytes(passphrase);
         let strkey = this.Bytes2String(addresshash);
-        // console.log('strkey = ' + strkey)
-        // console.log('strkey = '+ uint8pass)
         scrypt.default(uint8pass, strkey, {
             logN: 5,
             r: r,
@@ -392,19 +391,16 @@ export class Helper {
                 for (var i = 0; i < 32; i++) {
                     prikey[i] = u8xor[i] ^ derivedhalf1[i];
                 }
-                console.log('strkey = ' + prikey)
+
                 var pubkey = Helper.GetPublicKeyFromPrivateKey(prikey);
                 var script_hash = Helper.GetPublicKeyScriptHashFromPublicKey(pubkey);
                 var address = Helper.GetAddressFromScriptHash(script_hash);
-                var addrbin = Buffer.from(address)
-
-                var b1 = Sha256.computeHash(addrbin);
-                b1 = Sha256.computeHash(b1);
+                const addrhash = SHA256(SHA256(address).toString()).toString().slice(0, 4)
                 var b2 = new Uint8Array(b1);
 
-                var addresshashgot = b2.subarray(0, 4);
+                var addresshashgot = that.String2Bytes(addrhash)
                 for (var i = 0; i < 4; i++) {
-                    if (addresshash[i] != b2[i]) {
+                    if (addresshash[i] != addresshashgot[i]) {
                         callback("error", "nep2 hash not match.");
 
                         return;
