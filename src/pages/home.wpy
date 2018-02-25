@@ -83,21 +83,13 @@
 
 <script>
 import wepy from 'wepy';
-import { connect } from 'wepy-redux';
-import List from '../components/list'; // aliasFields example
-import testMixin from '../mixins/test';
 
-@connect({})
-export default class Index extends wepy.page {
+export default class Home extends wepy.page {
   config = {
-    navigationBarTitleText: '登陆'
+    navigationBarTitleText: '首页'
   };
 
-  components = {
-    list: List
-  };
-
-  mixins = [testMixin];
+  components = {};
 
   data = {
     userInfo: {
