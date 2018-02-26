@@ -2,6 +2,7 @@ import * as Request from './wxRequest';
 
 export class WWW {
     static api = "http://47.96.168.8:81/api/testnet";
+    static priceHost = "https://api.coinmarketcap.com/v1/ticker/";
     static rpc = "";
     static rpcName = "";
 
@@ -72,6 +73,23 @@ export class WWW {
 
     }
 
+    static async api_getCoinPrice() {
+        // https://api.coinmarketcap.com/v1/ticker/gas/
+        // https://api.coinmarketcap.com/v1/ticker/neo/ bitcoin/ ethereum/
+        // https://api.coinmarketcap.com/v1/ticker/?limit=2
+
+        let gas = await Request.wxRequest({ "method": "get" }, WWW.priceHost + 'gas/?convert=CNY');
+        let neo = await Request.wxRequest({ "method": "get" }, WWW.priceHost + 'neo/?convert=CNY');
+        let bitCoin = await Request.wxRequest({ "method": "get" }, WWW.priceHost + 'bitcoin/?convert=CNY')
+        console.log(gas)
+        console.log(neo)
+        console.log(bitCoin)
+        return {
+            GAS: gas,
+            NEO: neo,
+            BitCoin: bitCoin
+        }
+    }
 
 
     static async rpc_getURL() {

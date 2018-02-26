@@ -1,38 +1,188 @@
  <style lang="less">
+.area-chain {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 20rpx;
+}
+.chain-height {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 10rpx;
+  .label {
+    font-size: 13px;
+    color: gray;
+  }
+  .height {
+    color: forestgreen;
+  }
+}
+.chain-net {
+  background-color: green;
+  border-radius: 0px;
+  border-bottom-left-radius: 15px;
+  border-top-left-radius: 15px;
+  align-items: center;
+  padding:5px 15px 5px 15px;
+  display: flex;
+  flex-direction: row;
+  text {
+    color: white;
+    font-size: 11px;
+  }
+}
+.area-asset {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: white;
+  margin: 20rpx 0 0 0;
+}
+.asset-item {
+  width: 375rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .title {
+    margin-top: 30rpx;
+    font-size: 15px;
+  }
+  .number {
+    font-size: 35px;
+    margin-top: 20rpx;
+  }
+  .totle {
+    color: gray;
+    font-size: 12px;
+    margin: 10rpx 0 30rpx 0;
+  }
+}
+.line {
+  width: 1rpx;
+  height: 50px;
+  background-color: blue;
+}
 .area-block {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 20px;
+}
+.block-title {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: flex-start;
+  background-color: white;
+  padding: 12px 0 13px 10px;
+  text {
+    font-size: 14px;
+  }
 }
 .block-column {
   display: flex;
   flex-direction: row;
+  width: 100%;
   align-items: center;
   border: thin solid rgb(214, 214, 214);
-}
-.block-item {
   background-color: white;
+}
+
+.block-item {
   display: flex;
+  width: 250rpx;
   flex-direction: column;
   align-items: center;
+  .icon {
+    margin-top: 10px;
+    width: 70rpx;
+    height: 70rpx;
+  }
+  .name {
+    margin-top: 20rpx;
+  }
+  .price-rise {
+    margin: 20rpx 0 10rpx 0;
+    font-size: 14px;
+    color: rgb(107, 179, 0);
+  }
+  .price-decrease {
+    margin: 20rpx 0 10rpx 0;
+    font-size: 14px;
+    color: red;
+  }
 }
 </style>
 <template>
   <view class="container">
+    <view class="area-chain">
+      <view class="chain-height">
+        <text class="label">区块高度：</text>
+        <text class="height">{{Block}}</text>
+      </view>
+      <view class="chain-net">
+        <text>测试网</text>
+      </view>
+    </view>
+    <view class="area-asset">
+      <view class="asset-item">
+        <text class = "title">NEO</text>
+        <text class="number">{{NEO}}</text>
+        <text class="totle">￥{{NEOValue}} RMB</text>
+      </view>
+      <view class="line"></view>
+      <view class="asset-item">
+        <text class = "title">GAS</text>
+        <text class="number">{{GAS}}</text>
+        <text class="totle">￥{{GASValue}} RMB</text>
+      </view>
+    </view>
     <view class="area-block">
+      <view class="block-title">
+        <text>币市价格</text>
+      </view>
       <view class="block-column">
         <view class="block-item" style="width:{{blockWH}}px;height:{{blockWH}}px;border-right:thin solid rgb(214, 214, 214);">
-          <text>NEO</text>
-          <text>{{NEO}}</text>
+          <image src="../images/logo.jpg" class="icon"></image>
+          <text class="name">NEO</text>
+          <text class="price-{{PN?'rise':'decrease'}}">￥{{NEOPrice}}</text>
         </view>
         <view class="block-item" style="width:{{blockWH}}px;height:{{blockWH}}px">
-          <text>GAS</text>
-          <text>{{GAS}}</text>
+            <image src="../images/logo.jpg" class="icon"></image>
+          <text class="name">GAS</text>
+          <text class="price-{{PG?'rise':'decrease'}}">￥{{GASPrice}}</text>
         </view>
         <view class="block-item" style="width:{{blockWH}}px;height:{{blockWH}}px; border-left:thin solid rgb(214, 214, 214);">
-          <text>Block</text>
-          <text>{{Block}}</text>
+          <image src="../images/bitcoin.png" class="icon"></image>
+          <text class="name">BitCoin</text>
+          <text class="price-{{PB?'rise':'decrease'}}">￥{{BitCoinPrice}}</text>
+        </view>
+      </view>
+    </view>
+
+      <view class="area-block">
+      <view class="block-title">
+        <text>功能</text>
+      </view>
+      <view class="block-column">
+        <view class="block-item" style="width:{{blockWH}}px;height:{{blockWH}}px;border-right:thin solid rgb(214, 214, 214);">
+          <image src="../images/logo.jpg" class="icon"></image>
+          <text class="name">NEO</text>
+          <text class="price-{{PN?'rise':'decrease'}}">￥{{NEOPrice}}</text>
+        </view>
+        <view class="block-item" style="width:{{blockWH}}px;height:{{blockWH}}px">
+            <image src="../images/logo.jpg" class="icon"></image>
+          <text class="name">GAS</text>
+          <text class="price-{{PG?'rise':'decrease'}}">￥{{GASPrice}}</text>
+        </view>
+        <view class="block-item" style="width:{{blockWH}}px;height:{{blockWH}}px; border-left:thin solid rgb(214, 214, 214);">
+          <image src="../images/bitcoin.png" class="icon"></image>
+          <text class="name">BitCoin</text>
+          <text class="price-{{PB?'rise':'decrease'}}">￥{{BitCoinPrice}}</text>
         </view>
       </view>
     </view>
@@ -57,7 +207,15 @@ export default class Home extends wepy.page {
     wallet: {},
     NEO: '',
     GAS: '',
-    Block:''
+    NEOPrice: 0.0,
+    GASPrice: 0.0,
+    BitCoinPrice: 0.0,
+    NEOValue: '0',
+    GASValue: '0',
+    Block: '1',
+    PN: true,
+    PG: true,
+    PB: true
   };
 
   computed = {};
@@ -72,11 +230,11 @@ export default class Home extends wepy.page {
     this.blockWH = systemInfo.windowWidth / 3;
     this.wallet = wepy.getStorageSync(CURR_WALLET) || {};
     this.wallet = this.wallet['accounts'][0];
-
     this.$apply();
+
     const address = this.wallet.address;
     await this.OnTimeOut(address);
-
+    await this.OnGetPrice();
     setTimeout(async address => {
       await that.OnTimeOut(address);
     }, 15000);
@@ -85,7 +243,6 @@ export default class Home extends wepy.page {
     if (WWW.rpc === '') {
       WWW.rpc = await WWW.rpc_getURL();
     }
-
     this.OnGetHeight();
     this.OnGetUTXO(addr);
   }
@@ -93,7 +250,7 @@ export default class Home extends wepy.page {
     const height = await WWW.api_getHeight();
     console.log(height);
     this.Block = height;
-    this.$apply()
+    this.$apply();
   }
   async OnGetAssets() {}
   async OnGetUTXO(addr) {
@@ -102,10 +259,42 @@ export default class Home extends wepy.page {
       if (utxo['asset'] === CoinTool.id_NEO) {
         this.NEO = utxo.value;
       } else if (utxo['asset'] === CoinTool.id_GAS) {
-        this.GAS = utxo.value;
+        let gas = parseFloat(utxo.value).toFixed(4);
+        this.GAS = gas;
       }
     }
     this.$apply();
+  }
+  async OnGetPrice() {
+    const coins = await WWW.api_getCoinPrice();
+    // price_btc:"0.0038997"
+    // price_usd:"37.4167"
+    console.log(coins);
+    this.NEOPrice = parseFloat(coins['NEO'][0]['price_cny']).toFixed(2);
+    this.GASPrice = parseFloat(coins['GAS'][0]['price_cny']).toFixed(2);
+    this.BitCoinPrice = parseFloat(coins['BitCoin'][0]['price_cny']).toFixed(2);
+    let priceChange = {};
+    if (coins['NEO'][0]['percent_change_1h'][0] !== '-') this.PN = true;
+    else this.PN = false;
+
+    if (coins['GAS'][0]['percent_change_1h'][0] !== '-') this.PG = true;
+    else this.PG = false;
+
+    if (coins['BitCoin'][0]['percent_change_1h'][0] !== '-') this.PB = true;
+    else this.PB = false;
+    this.$apply();
+    this.OnTotalValue();
+  }
+
+  OnTotalValue() {
+    console.log('===============');
+    console.log(parseFloat(this.NEOPrice));
+    let gasAsset = parseFloat(this.GASPrice) * parseFloat(this.GAS);
+    let neoAsset = parseFloat(this.NEOPrice) * parseFloat(this.NEO);
+    this.NEOValue = neoAsset.toFixed(2);
+    this.GASValue = gasAsset.toFixed(2);
+    this.$apply();
+    console.log(neoAsset.toFixed(2));
   }
 }
 </script>
