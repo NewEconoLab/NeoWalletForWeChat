@@ -1,0 +1,178 @@
+<style lang="less">
+.logo {
+  position: relative;
+  width: 200rpx;
+  height: 200rpx;
+  margin-top: 90px;
+  border-radius: 7%;
+}
+.area-passphrase {
+  width: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.passphrase-item {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  border-top: 1px solid #efefef;
+  padding: 20rpx 20rpx;
+  width: 96%;
+  justify-content: center;
+  .title {
+    flex: 2;
+    margin-right: 20rpx;
+    font-size: 14px;
+  }
+  .input {
+    flex: 9;
+    input {
+      font-size: 13px;
+      color: #333;
+    }
+  }
+  .text {
+    flex: 9;
+    text {
+      color: red;
+      font-size: 13px;
+    }
+  }
+}
+.area-btn {
+  margin-top: 100rpx;
+  width: 80%;
+}
+.form {
+  width: 100%;
+  align-items: center;
+}
+</style>
+
+<template>
+<form bindsubmit="formSubmit" class="form">
+  <view class="container">
+    <image src="../images/logo.jpg" class="logo"></image>
+    
+      <view class="area-passphrase">
+        <view class="passphrase-item"  @tap="select()" >
+          <text class="title">选择钱包:</text>
+          <view class="text">
+            <text>{{accountlable}}</text>
+          </view>
+        </view>
+        <view class="passphrase-item">
+          <view class="title">密码:</view>
+            <view class="input">
+            <input type="text" name="passphrase" password placeholder="请输入密码" value='1234561'/>
+          </view>
+        </view>
+      </view>
+      <view class="area-btn">
+        <button type="primary" formType="submit">创建新钱包</button>
+      </view>
+   
+  </view>
+   </form>
+</template>
+
+<script>
+import wepy from 'wepy';
+import * as NEL from '../lib/neo-ts/index';
+import Toast from 'wepy-com-toast';
+import { LOCAL_WALLET, CURR_WALLET } from '../utils/constant';
+import tip from '../utils/tip';
+import * as Random from '../utils/random';
+export default class LoginLocal extends wepy.page {
+  customData = {}; // 自定义数据
+
+  customFunction() {} // 自定义方法
+
+  onLoad() {} // 在Page和Component共用的生命周期函数
+
+  onShow() {} // 只在Page中存在的页面生命周期函数
+
+  config = {}; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
+
+  data = {
+    accountlable: '点击选择钱包',
+    wallets: {}
+  }; // 页面所需数据均需在这里声明，可用于模板数据绑定
+
+  components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
+
+  mixins = []; // 声明页面所引用的Mixin实例
+
+  computed = {}; // 声明计算属性（详见后文介绍）
+
+  watch = {}; // 声明数据watcher（详见后文介绍）
+
+  methods = {
+    select() {
+      let that = this;
+      let accountList = [];
+      this.wallets = wepy.getStorageSync(LOCAL_WALLET) || {};
+      this.$apply();
+      for (const key in this.wallets) {
+        accountList.push(key);
+        console.log('属性：' + key + ',值：' + this.wallets[key]);
+      }
+      wepy.showActionSheet({
+        itemList: accountList,
+        success: function(res) {
+          console.log(res.tapIndex);
+          that.accountlable = accountList[res.tapIndex];
+          that.$apply();
+        },
+        fail: function(res) {
+          console.log(res.errMsg);
+        }
+      });
+    },
+    async formSubmit(e) {
+      let that = this;
+      let accountlable = this.accountlable;
+      let passphrase = e.detail.value.passphrase;
+
+      if (passphrase === '') {
+        tip.alert('密码不能为空');
+        return;
+      }
+      if (accountlable === '点击选择钱包') {
+        tip.alert('请先选择钱包');
+        return;
+      }
+      console.log(this.accountlable);
+
+      const wallet = this.wallets[accountlable];
+      console.log('=============================');
+      console.log(wallet);
+      wepy.showLoading({ title: '密码验证中' });
+
+      NEL.helper.Helper.GetPrivateKeyFromNep2(
+        wallet['accounts'][0].key,
+        passphrase,
+        wallet['scrypt'].N,
+        wallet['scrypt'].r,
+        wallet['scrypt'].p,
+        (info, result) => {
+          if (info === 'error') {
+            tip.alert('密码错误');
+            return;
+          }
+          console.log('result=' + 'info=' + info + ' result=' + result);
+          wepy.setStorageSync(CURR_WALLET, wallet);
+          wepy.hideLoading();
+          that.$redirect('./home');
+        }
+      );
+    }
+  }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
+
+  events = {}; // 声明组件之间的事件处理函数
+}
+</script>

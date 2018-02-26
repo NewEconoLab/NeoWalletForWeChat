@@ -1,89 +1,50 @@
  <style lang="less">
-.userinfo {
+.area-block {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-
-.userinfo-avatar {
-  width: 150rpx;
-  height: 150rpx;
-  border-radius: 50%;
-  margin-top: 50rpx;
+.block-column {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border: thin solid rgb(214, 214, 214);
 }
-
-.userinfo-nickname {
-  color: #aaa;
-  margin-top: 50rpx;
-}
-
-.login {
+.block-item {
+  background-color: white;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 100rpx;
-  width: 90%;
-  background-color: red;
-}
-
-.login-item {
-  width: 100%;
-  height: 100rpx;
-}
-
-.login-local {
-  width: 100%;
-  background-color: salmon;
-}
-
-.login-scan {
-  width: 100%;
-  background-color: seagreen;
-}
-
-.login-new {
-  width: 100%;
-  background-color: slategray;
-}
-
-.foot {
-  display: inline-block;
-  position: fixed;
-  bottom: 0;
-  margin-bottom: 30rpx;
-  font-size: 10px;
-  color: slategray;
 }
 </style>
 <template>
   <view class="container">
-    <view class="userinfo" @tap="handleViewTap">
-      <image class="userinfo-avatar" src="{{ userInfo.avatarUrl }}" background-size="cover"/>
-      <view class="userinfo-nickname">{{ userInfo.nickName }}</view>
+    <view class="area-block">
+      <view class="block-column">
+        <view class="block-item" style="width:{{blockWH}}px;height:{{blockWH}}px;border-right:thin solid rgb(214, 214, 214);">
+          <text>NEO</text>
+          <text>{{NEO}}</text>
+        </view>
+        <view class="block-item" style="width:{{blockWH}}px;height:{{blockWH}}px">
+          <text>GAS</text>
+          <text>{{GAS}}</text>
+        </view>
+        <view class="block-item" style="width:{{blockWH}}px;height:{{blockWH}}px; border-left:thin solid rgb(214, 214, 214);">
+          <text>Block</text>
+          <text>{{Block}}</text>
+        </view>
+      </view>
     </view>
-    <view class="login">
-      <view class="login-item">
-        
-        本地账户登陆
-      </view>
-       <view class="login-item">
-        扫码登陆
-      </view>
-       <view class="login-item" @tap="login('create')">
-        新建账户登陆
-      </view>
-    </view>
-    <text class="foot">
-      敬告：账户数据只保存在本地，请做好备份
-    </text>
-   
   </view>
 
 </template>
 
 <script>
 import wepy from 'wepy';
-
+import { SYSTEM_INFO, CURR_WALLET } from '../utils/constant';
+import { WWW } from '../utils/API';
+import { CoinTool } from '../utils/Coin';
 export default class Home extends wepy.page {
   config = {
     navigationBarTitleText: '首页'
@@ -92,35 +53,60 @@ export default class Home extends wepy.page {
   components = {};
 
   data = {
-    userInfo: {
-      nickName: '加载中...'
-    }
+    blockWH: -1,
+    wallet: {},
+    NEO: '',
+    GAS: '',
+    Block:''
   };
 
   computed = {};
 
-  methods = {
-    login(str) {
-      switch (str) {
-        case 'create':
-          this.$redirect('./createaccount');
-          break;
-        default:
-          break;
-      }
-    }
-  };
+  methods = {};
 
   events = {};
 
-  onLoad() {
-    let self = this;
-    this.$parent.getUserInfo(function(userInfo) {
-      if (userInfo) {
-        self.userInfo = userInfo;
+  async onLoad() {
+    const that = this;
+    let systemInfo = wepy.getStorageSync(SYSTEM_INFO) || {};
+    this.blockWH = systemInfo.windowWidth / 3;
+    this.wallet = wepy.getStorageSync(CURR_WALLET) || {};
+    this.wallet = this.wallet['accounts'][0];
+
+    this.$apply();
+    const address = this.wallet.address;
+    await this.OnTimeOut(address);
+
+    setTimeout(async address => {
+      await that.OnTimeOut(address);
+    }, 15000);
+  }
+  async OnTimeOut(addr) {
+    if (WWW.rpc === '') {
+      WWW.rpc = await WWW.rpc_getURL();
+    }
+
+    this.OnGetHeight();
+    this.OnGetUTXO(addr);
+  }
+  async OnGetHeight() {
+    const height = await WWW.api_getHeight();
+    console.log(height);
+    this.Block = height;
+    this.$apply()
+  }
+  async OnGetAssets() {}
+  async OnGetUTXO(addr) {
+    const utxos = await WWW.api_getUTXO(addr);
+    for (const utxo of utxos) {
+      if (utxo['asset'] === CoinTool.id_NEO) {
+        this.NEO = utxo.value;
+      } else if (utxo['asset'] === CoinTool.id_GAS) {
+        this.GAS = utxo.value;
       }
-      self.$apply();
-    });
+    }
+    this.$apply();
   }
 }
 </script>
+ 

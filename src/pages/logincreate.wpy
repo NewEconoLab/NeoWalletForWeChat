@@ -1,0 +1,201 @@
+<style lang="less">
+.logo {
+  position: relative;
+  width: 200rpx;
+  height: 200rpx;
+  margin-top: 90px;
+  border-radius: 7%;
+}
+.area-passphrase {
+  width: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.passphrase-item {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  border-top: 1px solid #efefef;
+  padding: 20rpx 20rpx;
+  width: 96%;
+  justify-content: center;
+  .title {
+    flex: 2;
+    margin-right: 20rpx;
+    font-size: 14px;
+  }
+  .input {
+    flex: 9;
+    input {
+      font-size: 13px;
+      color: #333;
+    }
+  }
+}
+.area-btn {
+  margin-top: 100rpx;
+  width: 80%;
+}
+.form {
+  width: 100%;
+  align-items: center;
+}
+</style>
+
+<template>
+<form bindsubmit="formSubmit" class="form">
+  <view class="container">
+    <image src="../images/logo.jpg" class="logo"></image>
+    
+      <view class="area-passphrase">
+        <view class="passphrase-item">
+          <text class="title">钱包名:</text>
+          <view class="input">
+            <input type="text" name="accountlabel" placeholder="请输入账户名" value='nuanbing1'/>
+          </view>
+        </view>
+        <view class="passphrase-item">
+          <view class="title">密码:</view>
+            <view class="input">
+            <input type="text" name="passphrase" password placeholder="请输入密码" value='1234561'/>
+          </view>
+        </view>
+        <view class="passphrase-item">
+          <view class="title">密码验证:</view>
+            <view class="input">
+            <input type="text" name="repassphrase" password placeholder="请再次输入密码" value='1234561'/>
+          </view>
+        </view>
+      </view>
+      <view class="area-btn">
+        <button type="primary" formType="submit">创建新钱包</button>
+      </view>
+   
+  </view>
+   </form>
+</template>
+
+<script>
+import wepy from 'wepy';
+import * as NEL from '../lib/neo-ts/index';
+import Toast from 'wepy-com-toast';
+import { LOCAL_WALLET, CURR_WALLET } from '../utils/constant';
+import tip from '../utils/tip';
+import * as Random from '../utils/random';
+export default class LoginCreate extends wepy.page {
+  customData = {}; // 自定义数据
+
+  customFunction() {} // 自定义方法
+
+  onLoad() {} // 在Page和Component共用的生命周期函数
+
+  onShow() {} // 只在Page中存在的页面生命周期函数
+
+  config = {}; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
+
+  data = {}; // 页面所需数据均需在这里声明，可用于模板数据绑定
+
+  components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
+
+  mixins = []; // 声明页面所引用的Mixin实例
+
+  computed = {}; // 声明计算属性（详见后文介绍）
+
+  watch = {}; // 声明数据watcher（详见后文介绍）
+
+  methods = {
+    async formSubmit(e) {
+      let that = this;
+      let accountlabel = e.detail.value.accountlabel;
+      let passphrase = e.detail.value.passphrase;
+      let repassphrase = e.detail.value.repassphrase;
+
+      if (passphrase === '' || passphrase !== repassphrase) {
+        tip.alert('两次密码不同');
+        return;
+      }
+      if (accountlabel === '') {
+        tip.alert('账户名不能为空');
+        return;
+      }
+      console.log('form发生了submit事件，携带数据为：', e.detail.value);
+      console.log(LOCAL_WALLET);
+
+      let wallets = wepy.getStorageSync(LOCAL_WALLET) || {};
+      console.log(wallets);
+      console.log(wallets[accountlabel]);
+      if (wallets[accountlabel] !== undefined) {
+        tip.alert('账户名已存在');
+        return;
+      }
+
+      wepy.showLoading({ title: '新钱包生成中' });
+
+      wepy.showLoading({ title: '私钥生成中' });
+
+      let privateKey = await Random.getSecureRandom(64);
+      console.log('privateKey = ' + privateKey);
+      privateKey = NEL.helper.UintHelper.hexToBytes(privateKey);
+
+      wepy.showLoading({ title: '公钥生成中' });
+      const publicKey = NEL.helper.Helper.GetPublicKeyFromPrivateKey(
+        privateKey
+      );
+      console.log('publickey = ' + publicKey);
+
+      wepy.showLoading({ title: '地址生成中' });
+      const address = NEL.helper.Helper.GetAddressFromPublicKey(publicKey);
+      console.log(address.length);
+      console.log('address = ' + address);
+
+      wepy.showLoading({ title: '新钱包创建完成' });
+      setTimeout(function() {
+        wepy.hideLoading();
+      }, 1000);
+
+      var wallet = new NEL.nep6.nep6wallet();
+      wallet.scrypt = new NEL.nep6.nep6ScryptParameters();
+      wallet.scrypt.N = 16384;
+      wallet.scrypt.r = 8;
+      wallet.scrypt.p = 8;
+      wallet.accounts = [];
+      wallet.accounts[0] = new NEL.nep6.nep6account();
+      wallet.accounts[0].address = address;
+      wallet.accounts[0].name = accountlabel;
+      NEL.helper.Helper.GetNep2FromPrivateKey(
+        privateKey,
+        passphrase,
+        wallet.scrypt.N,
+        wallet.scrypt.r,
+        wallet.scrypt.p,
+        (info, result) => {
+          if (info == 'finish') {
+            wallet.accounts[0].nep2key = result;
+            const wallet_json = wallet.toJson();
+            wallets[accountlabel] = wallet_json;
+            wepy.showLoading({ title: '钱包创建完成' });
+            wepy.showLoading({ title: '数据存储中' });
+            wepy.setStorageSync(LOCAL_WALLET, wallets);
+            wepy.setStorageSync(CURR_WALLET, wallet);
+
+            wepy.showLoading({ title: '登陆中' });
+            var jsonstr = JSON.stringify(wallet_json);
+            console.log(jsonstr);
+            wepy.hideLoading();
+            that.$redirect('./createresult?wallet=' + jsonstr);
+          } else {
+            //TODO: alert for encoding error
+            tip.alert('nep2 key encoding error');
+          }
+        }
+      );
+    }
+  }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
+
+  events = {}; // 声明组件之间的事件处理函数
+}
+</script>
