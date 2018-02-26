@@ -7,6 +7,7 @@ import { Uint160 } from './Uint160'
 import { Uint256 } from './Uint256'
 import { Uint64 } from './Uint64'
 import { UintVariable } from './UintVariable'
+import {Fixed8} from './Fixed8'
 // export * from './BigInteger'
 // export * from './Cryptography/index'
 // export * from './IO/index'
@@ -27,5 +28,6 @@ export {
     Uint160,
     Uint256,
     Uint64,
-    UintVariable
+    UintVariable,
+    Fixed8
 }

@@ -314,16 +314,12 @@ export class Helper {
             for (var i = 0; i < 32; i++) {
                 prikey[i] = u8xor[i] ^ derivedhalf1[i];
             }
-            console.log('strkey = ' + prikey);
             var pubkey = Helper.GetPublicKeyFromPrivateKey(prikey);
             var script_hash = Helper.GetPublicKeyScriptHashFromPublicKey(pubkey);
             var address = Helper.GetAddressFromScriptHash(script_hash);
-            console.log('address = ' + address);
             const addrhash = SHA256(SHA256(address).toString()).toString().slice(0, 4);
             var b2 = new Uint8Array(b1);
             var addresshashgot = that.String2Bytes(addrhash);
-            console.log('addresshashgot = ' + addresshashgot);
-            console.log('addresshash = ' + addresshash);
             for (var i = 0; i < 4; i++) {
                 if (addresshash[i] != addresshashgot[i]) {
                     callback("error", "nep2 hash not match.");

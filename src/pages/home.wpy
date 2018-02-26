@@ -26,7 +26,7 @@
   border-bottom-left-radius: 15px;
   border-top-left-radius: 15px;
   align-items: center;
-  padding:5px 15px 5px 15px;
+  padding: 5px 15px 5px 15px;
   display: flex;
   flex-direction: row;
   text {
@@ -92,7 +92,7 @@
   background-color: white;
 }
 
-.block-item {
+.block-price-item {
   display: flex;
   width: 250rpx;
   flex-direction: column;
@@ -114,6 +114,22 @@
     margin: 20rpx 0 10rpx 0;
     font-size: 14px;
     color: red;
+  }
+}
+
+.block-function-item {
+  display: flex;
+  width: 187.5rpx;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .icon {
+    width: 50rpx;
+    height: 50rpx;
+  }
+  .name {
+    margin-top: 20rpx;
+    font-size: 13px;
   }
 }
 </style>
@@ -146,43 +162,43 @@
         <text>币市价格</text>
       </view>
       <view class="block-column">
-        <view class="block-item" style="width:{{blockWH}}px;height:{{blockWH}}px;border-right:thin solid rgb(214, 214, 214);">
+        <view class="block-price-item" style="width:{{blockWH}}px;height:{{blockWH}}px;border-right:thin solid rgb(214, 214, 214);">
           <image src="../images/logo.jpg" class="icon"></image>
           <text class="name">NEO</text>
           <text class="price-{{PN?'rise':'decrease'}}">￥{{NEOPrice}}</text>
         </view>
-        <view class="block-item" style="width:{{blockWH}}px;height:{{blockWH}}px">
+        <view class="block-price-item" style="width:{{blockWH}}px;height:{{blockWH}}px">
             <image src="../images/logo.jpg" class="icon"></image>
           <text class="name">GAS</text>
           <text class="price-{{PG?'rise':'decrease'}}">￥{{GASPrice}}</text>
         </view>
-        <view class="block-item" style="width:{{blockWH}}px;height:{{blockWH}}px; border-left:thin solid rgb(214, 214, 214);">
+        <view class="block-price-item" style="width:{{blockWH}}px;height:{{blockWH}}px; border-left:thin solid rgb(214, 214, 214);">
           <image src="../images/bitcoin.png" class="icon"></image>
           <text class="name">BitCoin</text>
           <text class="price-{{PB?'rise':'decrease'}}">￥{{BitCoinPrice}}</text>
         </view>
       </view>
     </view>
-
       <view class="area-block">
       <view class="block-title">
         <text>功能</text>
       </view>
       <view class="block-column">
-        <view class="block-item" style="width:{{blockWH}}px;height:{{blockWH}}px;border-right:thin solid rgb(214, 214, 214);">
-          <image src="../images/logo.jpg" class="icon"></image>
-          <text class="name">NEO</text>
-          <text class="price-{{PN?'rise':'decrease'}}">￥{{NEOPrice}}</text>
+        <view class="block-function-item" style="width:{{fblockWH}}px;height:{{fblockWH}}px;border-right:thin solid rgb(214, 214, 214);" @tap="navigate('receive')">
+          <image src="../images/receive.png" class="icon"></image>
+          <text class="name">Receive</text>
         </view>
-        <view class="block-item" style="width:{{blockWH}}px;height:{{blockWH}}px">
-            <image src="../images/logo.jpg" class="icon"></image>
-          <text class="name">GAS</text>
-          <text class="price-{{PG?'rise':'decrease'}}">￥{{GASPrice}}</text>
+        <view class="block-function-item" style="width:{{fblockWH}}px;height:{{fblockWH}}px;border-right:thin solid rgb(214, 214, 214);" @tap="navigate('send')">
+            <image src="../images/send.png" class="icon"></image>
+          <text class="name">Send</text>
         </view>
-        <view class="block-item" style="width:{{blockWH}}px;height:{{blockWH}}px; border-left:thin solid rgb(214, 214, 214);">
-          <image src="../images/bitcoin.png" class="icon"></image>
-          <text class="name">BitCoin</text>
-          <text class="price-{{PB?'rise':'decrease'}}">￥{{BitCoinPrice}}</text>
+        <view class="block-function-item" style="width:{{fblockWH}}px;height:{{fblockWH}}px;border-right:thin solid rgb(214, 214, 214);" @tap="navigate('send')">
+          <image src="../images/account.png" class="icon"></image>
+          <text class="name">Mine</text>
+        </view>
+        <view class="block-function-item" style="width:{{fblockWH}}px;height:{{fblockWH}}px;" @tap="navigate('history')">
+          <image src="../images/history.png" class="icon"></image>
+          <text class="name">History</text>
         </view>
       </view>
     </view>
@@ -195,6 +211,7 @@ import wepy from 'wepy';
 import { SYSTEM_INFO, CURR_WALLET } from '../utils/constant';
 import { WWW } from '../utils/API';
 import { CoinTool } from '../utils/Coin';
+import {UTXO} from '../utils/UTXO'
 export default class Home extends wepy.page {
   config = {
     navigationBarTitleText: '首页'
@@ -204,6 +221,7 @@ export default class Home extends wepy.page {
 
   data = {
     blockWH: -1,
+    fblockWH: -1,
     wallet: {},
     NEO: '',
     GAS: '',
@@ -220,7 +238,21 @@ export default class Home extends wepy.page {
 
   computed = {};
 
-  methods = {};
+  methods = {
+    navigate(page) {
+        // var targetaddr = this.main.panelLoadKey.address;//给自己转账
+        //             var assetid = CoinTool.id_GAS;
+        //             var _count = Neo.Fixed8.Zero;//有数就行，是个gas以内都是不要钱的
+        //             var tran = CoinTool.makeTran(this.main.panelUTXO.assets, targetaddr, assetid, _count);
+
+      // wepy.navigateTo({
+      //   url: '/pages/' + page
+      // });
+     var  targetaddr = "AXYHBtqpFqTdGs3TmTcocoQqmmd2XMmf8B"
+
+       var tran = CoinTool.makeTran(k, targetaddr, CoinTool.id_GAS, 1);
+    }
+  };
 
   events = {};
 
@@ -228,6 +260,7 @@ export default class Home extends wepy.page {
     const that = this;
     let systemInfo = wepy.getStorageSync(SYSTEM_INFO) || {};
     this.blockWH = systemInfo.windowWidth / 3;
+    this.fblockWH = systemInfo.windowWidth / 4;
     this.wallet = wepy.getStorageSync(CURR_WALLET) || {};
     this.wallet = this.wallet['accounts'][0];
     this.$apply();
@@ -254,16 +287,18 @@ export default class Home extends wepy.page {
   }
   async OnGetAssets() {}
   async OnGetUTXO(addr) {
-    const utxos = await WWW.api_getUTXO(addr);
-    for (const utxo of utxos) {
-      if (utxo['asset'] === CoinTool.id_NEO) {
-        this.NEO = utxo.value;
-      } else if (utxo['asset'] === CoinTool.id_GAS) {
-        let gas = parseFloat(utxo.value).toFixed(4);
-        this.GAS = gas;
-      }
-    }
-    this.$apply();
+    // const utxos = await WWW.api_getUTXO(addr);
+    // for (const utxo of utxos) {
+    //   if (utxo['asset'] === CoinTool.id_NEO) {
+    //     this.NEO = utxo.value;
+    //   } else if (utxo['asset'] === CoinTool.id_GAS) {
+    //     let gas = parseFloat(utxo.value).toFixed(4);
+    //     this.GAS = gas;
+    //   }
+    // }
+    // this.$apply();
+    await UTXO.GetAssets(addr);
+    console.log(UTXO.assets)
   }
   async OnGetPrice() {
     const coins = await WWW.api_getCoinPrice();
@@ -287,8 +322,6 @@ export default class Home extends wepy.page {
   }
 
   OnTotalValue() {
-    console.log('===============');
-    console.log(parseFloat(this.NEOPrice));
     let gasAsset = parseFloat(this.GASPrice) * parseFloat(this.GAS);
     let neoAsset = parseFloat(this.NEOPrice) * parseFloat(this.NEO);
     this.NEOValue = neoAsset.toFixed(2);
