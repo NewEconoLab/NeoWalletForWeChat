@@ -41,8 +41,8 @@ export class CoinTool {
     static makeTran(utxos, targetaddr, assetid, sendcount) {
         //if (sendcount.compareTo(Neo.Fixed8.Zero) <= 0)
         //    throw new Error("can not send zero.");
-        var tran = new NEL.thinneo.Transaction();
-        tran.type = ThinNeo.TransactionType.ContractTransaction;
+        var tran = new NEL.thinneo.TransAction.Transaction();
+        tran.type = NEL.thinneo.TransAction.TransactionType.ContractTransaction;
         tran.version = 0;//0 or 1
         tran.extdata = null;
 
@@ -50,14 +50,16 @@ export class CoinTool {
 
         tran.inputs = [];
         var scraddr = "";
-        utxos[assetid].sort((a, b) => {
+        let asset = utxos[assetid];
+        
+        asset.sort((a, b) => {
             return a.count.compareTo(b.count);
         });
         var us = utxos[assetid];
-        var count = Neo.Fixed8.Zero;
+        var count = NEL.neo.Fixed8.Zero;
         for (var i = 0; i < us.length; i++) {
-            var input = new NEL.thinneo.TransactionInput();
-            input.hash = us[i].txid.hexToBytes().reverse();
+            var input = new NEL.thinneo.TransAction.TransactionInput();
+            input.hash = NEL.helper.UintHelper.hexToBytes(us[i].txid).reverse();
             input.index = us[i].n;
             input["_addr"] = us[i].addr;//利用js的隨意性，臨時傳個值
             tran.inputs.push(input);
@@ -71,21 +73,21 @@ export class CoinTool {
         {
             tran.outputs = [];
             //输出
-            if (sendcount.compareTo(Neo.Fixed8.Zero) > 0) {
-                var output = new NEL.thinneo.TransactionOutput();
-                output.assetId = assetid.hexToBytes().reverse();
+            if (sendcount.compareTo(NEL.neo.Fixed8.Zero) > 0) {
+                var output = new NEL.thinneo.TransAction.TransactionOutput();
+                output.assetId = NEL.helper.UintHelper.hexToBytes(assetid).reverse();
                 output.value = sendcount;
-                output.toAddress = ThinNeo.Helper.GetPublicKeyScriptHash_FromAddress(targetaddr);
+                output.toAddress = NEL.helper.Helper.GetPublicKeyScriptHash_FromAddress(targetaddr);
                 tran.outputs.push(output);
             }
 
             //找零
             var change = count.subtract(sendcount);
-            if (change.compareTo(Neo.Fixed8.Zero) > 0) {
-                var outputchange = new NEL.thinneo.TransactionOutput();
-                outputchange.toAddress = ThinNeo.Helper.GetPublicKeyScriptHash_FromAddress(scraddr);
+            if (change.compareTo(NEL.neo.Fixed8.Zero) > 0) {
+                var outputchange = new NEL.thinneo.TransAction.TransactionOutput();
+                outputchange.toAddress = NEL.helper.Helper.GetPublicKeyScriptHash_FromAddress(scraddr);
                 outputchange.value = change;
-                outputchange.assetId = assetid.hexToBytes().reverse();
+                outputchange.assetId = NEL.helper.UintHelper.hexToBytes(assetid).reverse();
                 tran.outputs.push(outputchange);
 
             }

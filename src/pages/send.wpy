@@ -1,136 +1,97 @@
 <style lang="less">
-.userinfo {
+.area-input {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 }
-
-.userinfo-avatar {
-  width: 150rpx;
-  height: 150rpx;
-  border-radius: 50%;
-  margin-top: 50rpx;
-}
-
-.userinfo-nickname {
-  color: #aaa;
-  margin-top: 50rpx;
-}
-
-.login {
+.input-addr {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  margin-top: 100rpx;
-  width: 90%;
-}
-
-.login-item {
-  width: 100%;
-  height: 100rpx;
-  margin-top: 30rpx;
-}
-
-.login-local {
-  width: 100%;
-  background-color: salmon;
-}
-
-.login-scan {
-  width: 100%;
-  background-color: seagreen;
-}
-
-.login-new {
-  width: 100%;
-  background-color: slategray;
-}
-
-.foot {
-  display: inline-block;
-  position: fixed;
-  bottom: 0;
-  margin-bottom: 30rpx;
-  font-size: 10px;
-  color: slategray;
+  background-color: white;
+  justify-content: space-between;
+  padding: 10px 10px 10px 10px;
+  border-bottom: thin gray solid;
+  width: 96%;
+  .address {
+    flex: 17;
+    font-size: 14px;
+    .placeholder {
+      font-size: 14px;
+    }
+  }
+  .icon {
+    flex: 1;
+    width: 40rpx;
+    height: 40rpx;
+  }
 }
 </style>
 <template>
-  <view class="container">
-    <view class="userinfo" @tap="handleViewTap">
-      <image class="userinfo-avatar" src="{{ userInfo.avatarUrl }}" background-size="cover"/>
-      <view class="userinfo-nickname">{{ userInfo.nickName }}</view>
-    </view>
-    <view class="login">
-      <view class="login-item">
-        <button type="primary" disabled="{{disabled}}" @tap="loginLocal()" >本地账户</button>
-      </view>
-       <view class="login-item">
-        <button type="primary" @tap="loginScan()">NEP2扫码登陆</button>
-      </view>
-       <view class="login-item" >
-        <button type="primary" @tap="loginCreate()">新建账户</button>
+  <form bindsubmit="formSubmit" class="form">
+    <view class="container">
+      <view class="area-input">
+        <view class="input-addr">
+          <input class="address" name="address" placeholder-class="placeholder" placeholder="Target Address" value='{{targetAddr}}'/>
+          <image src="../images/scan.png" class="icon" @tap="OnScan()"></image>
+        </view>
       </view>
     </view>
-    <text class="foot">
-      敬告：账户数据不上传服务器，请做好备份
-    </text>
-   
-  </view>
-
+  </form>
 </template>
 
 <script>
 import wepy from 'wepy';
-import { USER_INFO, LOCAL_WALLET } from '../utils/constant';
+import { UTXO } from '../utils/UTXO';
+import { CoinTool } from '../utils/Coin';
+import * as NEL from '../lib/neo-ts/index';
 export default class Send extends wepy.page {
   config = {
-    navigationBarTitleText: '登陆'
+    navigationBarTitleText: 'Send'
   };
 
   components = {};
 
   data = {
-    userInfo: {
-      nickName: '加载中...'
-    },
-    disabled: true
+    targetAddr: ''
   };
 
   computed = {};
 
   methods = {
-    loginCreate() {
-      this.$redirect('./logincreate');
-    },
-    loginScan() {
+    OnScan() {
       let that = this;
-      console.log('loginScan');
+      console.log('Scan');
       wepy.scanCode({
         success: res => {
           console.log(res);
-          that.onScanLogin(res.result);
+          that.targetAddr = res.result;
+          that.$apply();
         },
         fail: res => {
           console.log(res);
         }
       });
-    },
-    loginLocal() {
-      this.$redirect('./loginlocal');
     }
   };
 
   events = {};
 
   onLoad() {
-    this.userInfo = wepy.getStorageSync(USER_INFO) || {};
-    const wallets = wepy.getStorageSync(LOCAL_WALLET) || {};
-
-    if (wallets !== {} && wallets !== undefined) {
-      this.disabled = false;
-    }
-    this.$apply();
+    // var targetaddr = this.main.panelLoadKey.address;//给自己转账
+    //             var assetid = CoinTool.id_GAS;
+    // var _count = Neo.Fixed8.Zero;//有数就行，是个gas以内都是不要钱的
+    //             var tran = CoinTool.makeTran(this.main.panelUTXO.assets, targetaddr, assetid, _count);
+    var count = NEL.neo.Fixed8.parse('2.1');
+    var targetaddr = 'AXYHBtqpFqTdGs3TmTcocoQqmmd2XMmf8B';
+    var tran = CoinTool.makeTran(
+      UTXO.assets,
+      targetaddr,
+      CoinTool.id_GAS,
+      count
+    );
+    console.log(tran);
   }
   onScanLogin(nep2key) {
     this.$redirect('./loginnep2?nep2=' + nep2key);

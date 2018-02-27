@@ -1,7 +1,7 @@
 <style lang="less">
 .history-block {
   width: 90%;
-  display: flex;
+  display: block;
   flex-direction: column;
   border-radius: 5px;
   margin-top: 10rpx;
@@ -13,14 +13,16 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: wrap;
   border-bottom: thin gray dashed;
   .label {
-    font-size: 15px;
+    font-size: 13px;
   }
   .txid {
+    display: block;
     color: gray;
     word-break: break-all;
-    font-size: 15px;
+    font-size: 13px;
     margin: 5px 0 5px 5px;
   }
 }
@@ -33,30 +35,27 @@
   margin-top: 5px;
   width: 100%;
   .label {
-    font-size: 15px;
+    font-size: 13px;
     color: rgb(13, 107, 13);
   }
   .count {
-    font-size: 17px;
+    font-size: 15px;
     padding-right: 5px;
   }
 }
 </style>
 <template>
   <view class="container">
-  
    <view class="history-block" wx:for="{{utxos}}" >
-       <!-- {{index}}: {{item.message}} -->
-       <!-- asset:type,txid:txid,count:count -->
-       <view class ="area-txid">
-           <text class="label">交易编号</text>
-           <text class="txid">{{item.txid}}</text>
-       </view>
-       <view class="area-count">
-           <text class="label"> {{item.asset}}：</text>
-           <text class="count">{{item.count}}</text>
-       </view>
-   </view>
+      <view class ="area-txid">
+        <text class="label">交易编号</text>
+        <text class="txid">{{item.txid}}</text>
+      </view>
+      <view class="area-count">
+        <text class="label"> {{item.asset}}：</text>
+        <text class="count">{{item.count}}</text>
+      </view>
+    </view>
   </view>
 
 </template>
@@ -83,10 +82,10 @@ export default class History extends wepy.page {
   events = {};
 
   onLoad() {
-    this.utxos = UTXO.history.reverse();
+    this.utxos = UTXO.history;
     this.$apply();
-    console.log('>>>>>');
-    console.log(this.utxos);
+    // console.log('>>>>>');
+    // console.log(this.utxos);
   }
 }
 </script>

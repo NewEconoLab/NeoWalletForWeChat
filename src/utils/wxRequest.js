@@ -1,10 +1,7 @@
 import tip from './tip'
 
 export async function  wxRequest(params = {}, url) {
-    tip.loading();
     let res = await this.Request(params,url);
-    console.log(res)
-    tip.loaded();
     return res;
 };
 

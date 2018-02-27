@@ -68,6 +68,7 @@ export class WWW {
     static async api_getUTXO(address) {
         var str = WWW.makeRpcUrl(WWW.api, "getutxo", address);
         var result = await Request.wxRequest({ "method": "get" }, str);
+        console.log(result)
         var r = result["result"];
         return r;
 
@@ -105,19 +106,22 @@ export class WWW {
 
     static async  rpc_getHeight() {
         var str = WWW.makeRpcUrl(WWW.rpc, "getblockcount");
-        var result = await fetch(str, { "method": "get" });
-        var json = JSON.parse(result)
-        var r = json["result"];
+        var result = await Request.wxRequest({ "method": "get" },str);
+        var r = result["result"];
         var height = parseInt(str(r)) - 1;
         return height;
     }
+    /**
+     *  发送交易
+     * @param {uint8array} data 
+     */
     static async rpc_postRawTransaction(data) {
         var postdata = WWW.makeRpcPostBody("sendrawtransaction", data.toHexString());
-        var result = await fetch(WWW.rpc, { "method": "post", "body": JSON.stringify(postdata) });
-        var json = JSON.parse(result)
-        var r = json["result"];
+        var result = await Request.wxRequest( { "method": "post", "body": JSON.stringify(postdata) },WWW.rpc);
+        var r = result["result"];
         return r;
     }
+
     static async  rpc_getStorage(scripthash, key) {
         var str = WWW.makeRpcUrl(WWW.rpc, "getstorage", scripthash.toHexString(), key.toHexString());
         var result = await fetch(str, { "method": "get" });

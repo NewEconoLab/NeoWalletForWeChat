@@ -1,12 +1,14 @@
 import { WWW } from './API';
 import * as NEL from '../lib/neo-ts/index';
 export class UTXO {
-    static assets = {}
+    static assets = {}  //{ [id: string]: UTXO[] }
     static history=[]
+    static wallet=null
     constructor() {
 
     }
     static async GetAssets(addr) {
+        console.log(addr)
         var utxos = await WWW.api_getUTXO(addr);
         console.log(utxos)
         this.assets = {};
@@ -29,8 +31,8 @@ export class UTXO {
             this.history.push({asset:type,txid:txid,count:count})
             this.assets[asset].push(utxo);
         }
-        console.log(this.assets);
-        console.log(this.history)
+        // console.log(this.assets);
+        // console.log(this.history)
     }
 }
 

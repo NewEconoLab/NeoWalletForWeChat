@@ -51,12 +51,13 @@
     font-size: 15px;
   }
   .number {
-    font-size: 35px;
-    margin-top: 20rpx;
+    font-size: 30px;
+    margin-top: 15rpx;
   }
   .totle {
     color: gray;
     font-size: 12px;
+    font-weight: lighter;
     margin: 10rpx 0 30rpx 0;
   }
 }
@@ -233,24 +234,17 @@ export default class Home extends wepy.page {
     Block: '1',
     PN: true,
     PG: true,
-    PB: true
+    PB: true,
+    isLogin: false
   };
 
   computed = {};
 
   methods = {
     navigate(page) {
-      // var targetaddr = this.main.panelLoadKey.address;//给自己转账
-      //             var assetid = CoinTool.id_GAS;
-      //             var _count = Neo.Fixed8.Zero;//有数就行，是个gas以内都是不要钱的
-      //             var tran = CoinTool.makeTran(this.main.panelUTXO.assets, targetaddr, assetid, _count);
-
       wepy.navigateTo({
         url: '/pages/' + page
       });
-      //  var  targetaddr = "AXYHBtqpFqTdGs3TmTcocoQqmmd2XMmf8B"
-
-      //    var tran = CoinTool.makeTran(k, targetaddr, CoinTool.id_GAS, 1);
     }
   };
 
@@ -261,58 +255,80 @@ export default class Home extends wepy.page {
     let systemInfo = wepy.getStorageSync(SYSTEM_INFO) || {};
     this.blockWH = systemInfo.windowWidth / 3;
     this.fblockWH = systemInfo.windowWidth / 4;
+    console.log('<><><><><><>');
+    
+    console.log(systemInfo.windowWidth);
+    console.log(this.fblockWH);
+
+    this.OnGetPrice();
+    this.OnLogin();
+  }
+
+  async OnLogin() {
+    let that = this;
     this.wallet = wepy.getStorageSync(CURR_WALLET) || {};
     this.wallet = this.wallet['accounts'][0];
     this.$apply();
-
-    const address = this.wallet.address;
-    await this.OnTimeOut(address);
-    await this.OnGetPrice();
-    setTimeout(async address => {
-      await that.OnTimeOut(address);
-    }, 15000);
+    //本地缓存有账户 则直接加载本地账户信息
+    if (this.wallet !== null && this.wallet !== undefined) {
+      this.isLogin = true;
+      UTXO.wallet = this.wallet;
+      this.$apply();
+      // const address = this.wallet.address;
+      await this.OnTimeOut();
+      //循环执行代码
+      setInterval(async () => {
+        await that.OnTimeOut();
+      }, 15000); //循环时间 这里是15秒
+    } else {
+    }
   }
-  async OnTimeOut(addr) {
+  /**
+   * 定时触发
+   */
+  async OnTimeOut() {
     if (WWW.rpc === '') {
       WWW.rpc = await WWW.rpc_getURL();
     }
+    const addr = UTXO.wallet.address;
     this.OnGetHeight();
-    this.OnGetUTXO(addr);
+    this.OnGetAssets(addr);
   }
+
+  /**
+   * 加载区块链高度
+   */
   async OnGetHeight() {
     const height = await WWW.api_getHeight();
     console.log(height);
     this.Block = height;
     this.$apply();
   }
-  async OnGetAssets() {}
-  async OnGetUTXO(addr) {
-    // const utxos = await WWW.api_getUTXO(addr);
-    // for (const utxo of utxos) {
-    //   if (utxo['asset'] === CoinTool.id_NEO) {
-    //     this.NEO = utxo.value;
-    //   } else if (utxo['asset'] === CoinTool.id_GAS) {
-    //     let gas = parseFloat(utxo.value).toFixed(4);
-    //     this.GAS = gas;
-    //   }
-    // }
-    // this.$apply();
+  /**
+   * 获取账户资产信息 UTXO
+   */
+  async OnGetAssets(addr) {
+    console.log(addr);
     await UTXO.GetAssets(addr);
     let neo = 0;
     let gas = 0;
+
     for (let item of UTXO.history) {
       if (item.asset === 'NEO') neo = parseInt(item.count) + parseInt(neo);
-      else gas += parseFloat(item.count) + parseFloat(gas);
+      else gas = parseFloat(item.count) + parseFloat(gas);
     }
     this.NEO = neo;
     this.GAS = gas.toFixed(4);
+    UTXO.history.reverse();
     this.$apply();
     console.log(UTXO.assets);
+    this.OnTotalValue();
   }
+  /**
+   * 获取市场价格
+   */
   async OnGetPrice() {
     const coins = await WWW.api_getCoinPrice();
-    // price_btc:"0.0038997"
-    // price_usd:"37.4167"
     console.log(coins);
     this.NEOPrice = parseFloat(coins['NEO'][0]['price_cny']).toFixed(2);
     this.GASPrice = parseFloat(coins['GAS'][0]['price_cny']).toFixed(2);
@@ -329,7 +345,9 @@ export default class Home extends wepy.page {
     this.$apply();
     this.OnTotalValue();
   }
-
+  /**
+   * 计算等价法币资产
+   */
   OnTotalValue() {
     let gasAsset = parseFloat(this.GASPrice) * parseFloat(this.GAS);
     let neoAsset = parseFloat(this.NEOPrice) * parseFloat(this.NEO);

@@ -82,7 +82,7 @@ export default class Receive extends wepy.page {
       width: 200,
       height: 200,
       canvasId: 'address',
-      text: this.wallet.key
+      text: this.wallet.address
     });
   } // 在Page和Component共用的生命周期函数
 
