@@ -211,7 +211,7 @@ import wepy from 'wepy';
 import { SYSTEM_INFO, CURR_WALLET } from '../utils/constant';
 import { WWW } from '../utils/API';
 import { CoinTool } from '../utils/Coin';
-import {UTXO} from '../utils/UTXO'
+import { UTXO } from '../utils/UTXO';
 export default class Home extends wepy.page {
   config = {
     navigationBarTitleText: '首页'
@@ -240,17 +240,17 @@ export default class Home extends wepy.page {
 
   methods = {
     navigate(page) {
-        // var targetaddr = this.main.panelLoadKey.address;//给自己转账
-        //             var assetid = CoinTool.id_GAS;
-        //             var _count = Neo.Fixed8.Zero;//有数就行，是个gas以内都是不要钱的
-        //             var tran = CoinTool.makeTran(this.main.panelUTXO.assets, targetaddr, assetid, _count);
+      // var targetaddr = this.main.panelLoadKey.address;//给自己转账
+      //             var assetid = CoinTool.id_GAS;
+      //             var _count = Neo.Fixed8.Zero;//有数就行，是个gas以内都是不要钱的
+      //             var tran = CoinTool.makeTran(this.main.panelUTXO.assets, targetaddr, assetid, _count);
 
       wepy.navigateTo({
         url: '/pages/' + page
       });
-    //  var  targetaddr = "AXYHBtqpFqTdGs3TmTcocoQqmmd2XMmf8B"
+      //  var  targetaddr = "AXYHBtqpFqTdGs3TmTcocoQqmmd2XMmf8B"
 
-    //    var tran = CoinTool.makeTran(k, targetaddr, CoinTool.id_GAS, 1);
+      //    var tran = CoinTool.makeTran(k, targetaddr, CoinTool.id_GAS, 1);
     }
   };
 
@@ -298,7 +298,16 @@ export default class Home extends wepy.page {
     // }
     // this.$apply();
     await UTXO.GetAssets(addr);
-    console.log(UTXO.assets)
+    let neo = 0;
+    let gas = 0;
+    for (let item of UTXO.history) {
+      if (item.asset === 'NEO') neo = parseInt(item.count) + parseInt(neo);
+      else gas += parseFloat(item.count) + parseFloat(gas);
+    }
+    this.NEO = neo;
+    this.GAS = gas.toFixed(4);
+    this.$apply();
+    console.log(UTXO.assets);
   }
   async OnGetPrice() {
     const coins = await WWW.api_getCoinPrice();

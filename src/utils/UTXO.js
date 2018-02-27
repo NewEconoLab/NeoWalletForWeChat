@@ -24,7 +24,7 @@ export class UTXO {
             utxo.asset = asset;
             utxo.n = n;
             utxo.txid = txid;
-            utxo.count = NEL.neo.Fixed8.parse(count);
+            utxo.count = NEL.neo.Fixed8.parse(count); 
             let type = asset[2]==='6'?'GAS':'NEO'
             this.history.push({asset:type,txid:txid,count:count})
             this.assets[asset].push(utxo);
