@@ -253,12 +253,8 @@ export default class Home extends wepy.page {
   async onLoad() {
     const that = this;
     let systemInfo = wepy.getStorageSync(SYSTEM_INFO) || {};
-    this.blockWH = systemInfo.windowWidth / 3;
-    this.fblockWH = systemInfo.windowWidth / 4;
-    console.log('<><><><><><>');
-    
-    console.log(systemInfo.windowWidth);
-    console.log(this.fblockWH);
+    this.blockWH = systemInfo.windowWidth  / 3;
+    this.fblockWH = systemInfo.windowWidth  / 4;
 
     this.OnGetPrice();
     this.OnLogin();
@@ -274,7 +270,7 @@ export default class Home extends wepy.page {
       this.isLogin = true;
       UTXO.wallet = this.wallet;
       this.$apply();
-      // const address = this.wallet.address;
+
       await this.OnTimeOut();
       //循环执行代码
       setInterval(async () => {
@@ -319,6 +315,10 @@ export default class Home extends wepy.page {
     }
     this.NEO = neo;
     this.GAS = gas.toFixed(4);
+    UTXO.balance = {
+      NEO: neo,
+      GAS: gas
+    };
     UTXO.history.reverse();
     this.$apply();
     console.log(UTXO.assets);

@@ -2,15 +2,18 @@ import { WWW } from './API';
 import * as NEL from '../lib/neo-ts/index';
 export class UTXO {
     static assets = {}  //{ [id: string]: UTXO[] }
-    static history=[]
-    static wallet=null
+    static history = []
+    static wallet = null
+    static balance = {}
     constructor() {
-
     }
     static async GetAssets(addr) {
-        console.log(addr)
+        this.history = []
+        this.assets = {}
+        this.balance = {}
+        // console.log(addr)
         var utxos = await WWW.api_getUTXO(addr);
-        console.log(utxos)
+        // console.log(utxos)
         this.assets = {};
         for (var i in utxos) {
             var item = utxos[i];
@@ -26,9 +29,9 @@ export class UTXO {
             utxo.asset = asset;
             utxo.n = n;
             utxo.txid = txid;
-            utxo.count = NEL.neo.Fixed8.parse(count); 
-            let type = asset[2]==='6'?'GAS':'NEO'
-            this.history.push({asset:type,txid:txid,count:count})
+            utxo.count = NEL.neo.Fixed8.parse(count);
+            let type = asset[2] === '6' ? 'GAS' : 'NEO'
+            this.history.push({ asset: type, txid: txid, count: count })
             this.assets[asset].push(utxo);
         }
         // console.log(this.assets);

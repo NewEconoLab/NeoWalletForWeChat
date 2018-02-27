@@ -6,26 +6,82 @@
   width: 100%;
 }
 .input-addr {
+  margin-top: 20px;
   display: flex;
   flex-direction: row;
   align-items: center;
   background-color: white;
   justify-content: space-between;
-  padding: 10px 10px 10px 10px;
+  padding: 15px 10px 15px 10px;
   border-bottom: thin gray solid;
   width: 96%;
   .address {
-    flex: 17;
-    font-size: 14px;
+    flex: 16;
+    font-size: 15px;
     .placeholder {
-      font-size: 14px;
+      font-size: 15px;
     }
   }
   .icon {
     flex: 1;
-    width: 40rpx;
-    height: 40rpx;
+    width: 50rpx;
+    height: 50rpx;
   }
+}
+
+.area-balance {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+.radio-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  .radio {
+    margin-left: 5px;
+    text {
+      color: blue;
+      font-size: 15px;
+    }
+  }
+}
+
+.balance {
+  margin-left: 10px;
+  font-size: 14px;
+}
+.balance-label {
+  margin-left: 20px;
+  color: gray;
+  font-size: 14px;
+}
+
+.area-count {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  .count {
+    background-color: white;
+    padding: 10px 5px 10px 5px;
+    width: 100%;
+    .amount {
+      font-size: 17px;
+      .placeholder {
+        font-size: 15px;
+      }
+    }
+  }
+}
+.area-btn {
+  margin-top: 100rpx;
+  width: 80%;
 }
 </style>
 <template>
@@ -36,6 +92,24 @@
           <input class="address" name="address" placeholder-class="placeholder" placeholder="Target Address" value='{{targetAddr}}'/>
           <image src="../images/scan.png" class="icon" @tap="OnScan()"></image>
         </view>
+        <view class="area-balance">
+          <radio-group class="radio-group" bindchange="radioChange">
+            <label class="radio" wx:for="{{assets}}">
+              <radio value="{{item.name}}" checked="{{item.checked}}"/>
+              <text>{{item.value}}</text>
+            </label>
+          </radio-group>
+          <text class="balance-label">余额：</text>
+          <text class="balance">{{balance}}</text>
+        </view>
+        <view class="area-count">
+          <view class="count">
+            <input name="amount" placeholder="Amount" class="amount" placeholder-class="placeholder" type="{{checked==='GAS'?'digit':'number'}}" value='{{amount}}'/>
+          </view>
+        </view>
+      </view>
+            <view class="area-btn">
+        <button type="primary" formType="submit">Send</button>
       </view>
     </view>
   </form>
@@ -46,6 +120,7 @@ import wepy from 'wepy';
 import { UTXO } from '../utils/UTXO';
 import { CoinTool } from '../utils/Coin';
 import * as NEL from '../lib/neo-ts/index';
+import tip from '../utils/tip';
 export default class Send extends wepy.page {
   config = {
     navigationBarTitleText: 'Send'
@@ -54,7 +129,14 @@ export default class Send extends wepy.page {
   components = {};
 
   data = {
-    targetAddr: ''
+    targetAddr: '',
+    assets: [
+      { name: 'NEO', value: 'NEO' },
+      { name: 'GAS', value: 'GAS', checked: 'true' }
+    ],
+    balance: '0',
+    checked: 'GAS',
+    amount: ''
   };
 
   computed = {};
@@ -73,6 +155,27 @@ export default class Send extends wepy.page {
           console.log(res);
         }
       });
+    },
+    radioChange(e) {
+      console.log('radio发生change事件，携带value值为：', e.detail.value);
+      this.checked = e.detail.value;
+      this.balance = UTXO.balance[e.detail.value];
+      this.amount = '';
+      this.$apply();
+    },
+    async formSubmit(e) {
+      let that = this;
+      let target = e.detail.value.address;
+      let amount = e.detail.value.amount;
+      console.log(e);
+      if (parseFloat(amount) > parseFloat(UTXO.balance[this.checked])) {
+        tip.alert('余额不足');
+        retun;
+      }
+      var count = NEL.neo.Fixed8.parse(amount + '');
+      let coin = checked === 'GAS' ? CoinTool.id_GAS : CoinTool.id_NEO;
+      var tran = CoinTool.makeTran(UTXO.assets, target, coin, count);
+      console.log(tran);
     }
   };
 
@@ -83,18 +186,18 @@ export default class Send extends wepy.page {
     //             var assetid = CoinTool.id_GAS;
     // var _count = Neo.Fixed8.Zero;//有数就行，是个gas以内都是不要钱的
     //             var tran = CoinTool.makeTran(this.main.panelUTXO.assets, targetaddr, assetid, _count);
-    var count = NEL.neo.Fixed8.parse('2.1');
-    var targetaddr = 'AXYHBtqpFqTdGs3TmTcocoQqmmd2XMmf8B';
-    var tran = CoinTool.makeTran(
-      UTXO.assets,
-      targetaddr,
-      CoinTool.id_GAS,
-      count
-    );
-    console.log(tran);
+    this.balance = UTXO.balance['GAS'];
+    this.$apply();
   }
   onScanLogin(nep2key) {
     this.$redirect('./loginnep2?nep2=' + nep2key);
+  }
+  OnSendTran(tran) {
+    // var msg = tran.GetMessage();
+    // var pubkey = this.app.loadKey.pubkey;
+    // var signdata = ThinNeo.Helper.Sign(msg, this.app.loadKey.prikey);
+    // tran.AddWitness(signdata, pubkey, this.app.loadKey.address);
+    // this.setTran(tran, inputaddr);
   }
 }
 </script>
