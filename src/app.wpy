@@ -40,7 +40,8 @@ export default class extends wepy.app {
       'pages/receive',
       'pages/createresult',
       'pages/home',
-      'pages/send'
+      'pages/send',
+      'pages/history'
     ],
     window: {
       backgroundTextStyle: 'light',

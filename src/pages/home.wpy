@@ -159,7 +159,7 @@
     </view>
     <view class="area-block">
       <view class="block-title">
-        <text>币市价格</text>
+        <text>NEO生态</text>
       </view>
       <view class="block-column">
         <view class="block-price-item" style="width:{{blockWH}}px;height:{{blockWH}}px;border-right:thin solid rgb(214, 214, 214);">
@@ -223,8 +223,8 @@ export default class Home extends wepy.page {
     blockWH: -1,
     fblockWH: -1,
     wallet: {},
-    NEO: '',
-    GAS: '',
+    NEO: '0',
+    GAS: '0',
     NEOPrice: 0.0,
     GASPrice: 0.0,
     BitCoinPrice: 0.0,
@@ -245,12 +245,12 @@ export default class Home extends wepy.page {
         //             var _count = Neo.Fixed8.Zero;//有数就行，是个gas以内都是不要钱的
         //             var tran = CoinTool.makeTran(this.main.panelUTXO.assets, targetaddr, assetid, _count);
 
-      // wepy.navigateTo({
-      //   url: '/pages/' + page
-      // });
-     var  targetaddr = "AXYHBtqpFqTdGs3TmTcocoQqmmd2XMmf8B"
+      wepy.navigateTo({
+        url: '/pages/' + page
+      });
+    //  var  targetaddr = "AXYHBtqpFqTdGs3TmTcocoQqmmd2XMmf8B"
 
-       var tran = CoinTool.makeTran(k, targetaddr, CoinTool.id_GAS, 1);
+    //    var tran = CoinTool.makeTran(k, targetaddr, CoinTool.id_GAS, 1);
     }
   };
 

@@ -1,0 +1,92 @@
+<style lang="less">
+.history-block {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 5px;
+  margin-top: 10rpx;
+  background-color: white;
+  padding: 5px 10px 5px 10px;
+}
+
+.area-txid {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-bottom: thin gray dashed;
+  .label {
+    font-size: 15px;
+  }
+  .txid {
+    color: gray;
+    word-break: break-all;
+    font-size: 15px;
+    margin: 5px 0 5px 5px;
+  }
+}
+
+.area-count {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 5px;
+  width: 100%;
+  .label {
+    font-size: 15px;
+    color: rgb(13, 107, 13);
+  }
+  .count {
+    font-size: 17px;
+    padding-right: 5px;
+  }
+}
+</style>
+<template>
+  <view class="container">
+  
+   <view class="history-block" wx:for="{{utxos}}" >
+       <!-- {{index}}: {{item.message}} -->
+       <!-- asset:type,txid:txid,count:count -->
+       <view class ="area-txid">
+           <text class="label">交易编号</text>
+           <text class="txid">{{item.txid}}</text>
+       </view>
+       <view class="area-count">
+           <text class="label"> {{item.asset}}：</text>
+           <text class="count">{{item.count}}</text>
+       </view>
+   </view>
+  </view>
+
+</template>
+
+<script>
+import wepy from 'wepy';
+import { USER_INFO, LOCAL_WALLET } from '../utils/constant';
+import { UTXO } from '../utils/UTXO';
+export default class History extends wepy.page {
+  config = {
+    navigationBarTitleText: 'History'
+  };
+
+  components = {};
+
+  data = {
+    utxos: []
+  };
+
+  computed = {};
+
+  methods = {};
+
+  events = {};
+
+  onLoad() {
+    this.utxos = UTXO.history.reverse();
+    this.$apply();
+    console.log('>>>>>');
+    console.log(this.utxos);
+  }
+}
+</script>
