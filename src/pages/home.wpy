@@ -213,6 +213,7 @@ import { SYSTEM_INFO, CURR_WALLET } from '../utils/constant';
 import { WWW } from '../utils/API';
 import { CoinTool } from '../utils/Coin';
 import { UTXO } from '../utils/UTXO';
+import {WalletHelper} from '../utils/wallet'
 export default class Home extends wepy.page {
   config = {
     navigationBarTitleText: '首页'
@@ -268,7 +269,7 @@ export default class Home extends wepy.page {
     //本地缓存有账户 则直接加载本地账户信息
     if (this.wallet !== null && this.wallet !== undefined) {
       this.isLogin = true;
-      UTXO.wallet = this.wallet;
+      WalletHelper.wallet = this.wallet;
       this.$apply();
 
       await this.OnTimeOut();
@@ -286,7 +287,7 @@ export default class Home extends wepy.page {
     if (WWW.rpc === '') {
       WWW.rpc = await WWW.rpc_getURL();
     }
-    const addr = UTXO.wallet.address;
+    const addr = WalletHelper.wallet.address;
     this.OnGetHeight();
     this.OnGetAssets(addr);
   }
@@ -304,7 +305,7 @@ export default class Home extends wepy.page {
    * 获取账户资产信息 UTXO
    */
   async OnGetAssets(addr) {
-    console.log(addr);
+    // console.log(addr);
     await UTXO.GetAssets(addr);
     let neo = 0;
     let gas = 0;

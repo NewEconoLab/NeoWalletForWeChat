@@ -7,7 +7,7 @@ export async function wxRequest(params = {}, url) {
 
 export function Request(params = {}, url) {
   let body = params.body
-  console.log(body)
+  // console.log(body)
   return new Promise((resolve, reject) => {
     let type = ''
     if (params.method === 'get')

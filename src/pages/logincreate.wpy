@@ -138,19 +138,19 @@ export default class LoginCreate extends wepy.page {
       wepy.showLoading({ title: '私钥生成中' });
 
       let privateKey = await Random.getSecureRandom(64);
-      console.log('privateKey = ' + privateKey);
+      // console.log('privateKey = ' + privateKey);
       privateKey = NEL.helper.UintHelper.hexToBytes(privateKey);
 
       wepy.showLoading({ title: '公钥生成中' });
       const publicKey = NEL.helper.Helper.GetPublicKeyFromPrivateKey(
         privateKey
       );
-      console.log('publickey = ' + publicKey);
+      // console.log('publickey = ' + publicKey);
 
       wepy.showLoading({ title: '地址生成中' });
       const address = NEL.helper.Helper.GetAddressFromPublicKey(publicKey);
-      console.log(address.length);
-      console.log('address = ' + address);
+      // console.log(address.length);
+      // console.log('address = ' + address);
 
       wepy.showLoading({ title: '新钱包创建完成' });
       setTimeout(function() {
@@ -184,7 +184,7 @@ export default class LoginCreate extends wepy.page {
 
             wepy.showLoading({ title: '登陆中' });
             var jsonstr = JSON.stringify(wallet_json);
-            console.log(jsonstr);
+            // console.log(jsonstr);
             wepy.hideLoading();
             that.$redirect('./createresult?wallet=' + jsonstr);
           } else {

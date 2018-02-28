@@ -3,7 +3,6 @@ import * as NEL from '../lib/neo-ts/index';
 export class UTXO {
     static assets = {}  //{ [id: string]: UTXO[] }
     static history = []
-    static wallet = null
     static balance = {}
     constructor() {
     }
@@ -11,9 +10,7 @@ export class UTXO {
         this.history = []
         this.assets = {}
         this.balance = {}
-        // console.log(addr)
         var utxos = await WWW.api_getUTXO(addr);
-        // console.log(utxos)
         this.assets = {};
         for (var i in utxos) {
             var item = utxos[i];

@@ -2,7 +2,7 @@ import * as NEL from '../lib/neo-ts/index';
 import { SCRYPT_CONFIG } from './constant'
 import tip from '../utils/tip';
 export class WalletHelper {
-    // static wallet = null
+    static wallet = null
     constructor() {
     }
 

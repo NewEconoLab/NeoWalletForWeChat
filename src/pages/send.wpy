@@ -122,7 +122,7 @@ import { CoinTool } from '../utils/Coin';
 import * as NEL from '../lib/neo-ts/index';
 import tip from '../utils/tip';
 import { TransactionTool } from '../utils/transaction';
-import * as Random from '../utils/random'
+import * as Random from '../utils/random';
 export default class Send extends wepy.page {
   config = {
     navigationBarTitleText: 'Send'
@@ -146,7 +146,6 @@ export default class Send extends wepy.page {
   methods = {
     OnScan() {
       let that = this;
-      console.log('Scan');
       wepy.scanCode({
         success: res => {
           console.log(res);
@@ -159,7 +158,6 @@ export default class Send extends wepy.page {
       });
     },
     radioChange(e) {
-      console.log('radio发生change事件，携带value值为：', e.detail.value);
       this.checked = e.detail.value;
       this.balance = UTXO.balance[e.detail.value];
       this.amount = '';
@@ -168,8 +166,7 @@ export default class Send extends wepy.page {
     async formSubmit(e) {
       let that = this;
       let target = e.detail.value.address;
-      let amount = '0.01'//e.detail.value.amount;
-      console.log(e);
+      let amount = e.detail.value.amount;
       if (parseFloat(amount) > parseFloat(UTXO.balance[this.checked])) {
         tip.alert('余额不足');
         retun;
@@ -177,31 +174,29 @@ export default class Send extends wepy.page {
       var count = NEL.neo.Fixed8.parse(amount + '');
       let coin = this.checked === 'GAS' ? CoinTool.id_GAS : CoinTool.id_NEO;
       var tran = CoinTool.makeTran(UTXO.assets, target, coin, count);
-      console.log(tran);
+      // console.log(tran);
       let randomStr = await Random.getSecureRandom(256);
-      TransactionTool.setTran(tran,randomStr);
+      const txid = await TransactionTool.setTran(tran, randomStr);
+      wepy.hideLoading();
+      if (txid !== 'failed') {
+        wx.showToast({
+          title: '转账成功',
+          content: txid,
+          success: function(res) {
+            if (res.confirm) {
+              console.log('用户点击确定');
+            }
+          }
+        });
+      }
     }
   };
 
   events = {};
 
   onLoad() {
-    // var targetaddr = this.main.panelLoadKey.address;//给自己转账
-    //             var assetid = CoinTool.id_GAS;
-    // var _count = Neo.Fixed8.Zero;//有数就行，是个gas以内都是不要钱的
-    //             var tran = CoinTool.makeTran(this.main.panelUTXO.assets, targetaddr, assetid, _count);
     this.balance = UTXO.balance['GAS'];
     this.$apply();
-  }
-  onScanLogin(nep2key) {
-    this.$redirect('./loginnep2?nep2=' + nep2key);
-  }
-  OnSendTran(tran) {
-    // var msg = tran.GetMessage();
-    // var pubkey = this.app.loadKey.pubkey;
-    // var signdata = ThinNeo.Helper.Sign(msg, this.app.loadKey.prikey);
-    // tran.AddWitness(signdata, pubkey, this.app.loadKey.address);
-    // this.setTran(tran, inputaddr);
   }
 }
 </script>

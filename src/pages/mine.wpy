@@ -1,0 +1,154 @@
+<style lang="less">
+.area-user {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .logo {
+    position: relative;
+    width: 130rpx;
+    height: 130rpx;
+    margin-top: 50px;
+    border-radius: 50%;
+    background-color: white;
+    .name {
+    }
+    .address {
+    }
+  }
+}
+
+.area-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 15px;
+}
+.area-text-item {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  width: 100%;
+  margin: 2px 15px 0 15px;
+  background-color: white;
+}
+.text-label {
+  margin-top: 5px;
+  font-size: 12px;
+  font-family: normal;
+  font-weight: 900;
+  padding-left: 5px;
+}
+.text-content {
+  margin-top: 9rpx;
+  font-size: 12px;
+  font-family: italic;
+  font-weight: 400;
+  word-break: break-all;
+  color: #777;
+  padding: 0 10px 5px 10px;
+}
+.area-btn {
+  display: block;
+  margin-top: 100rpx;
+  width: 80%;
+}
+.warnning {
+  position: fixed;
+  bottom: 0;
+  margin-bottom: 10px;
+  color: red;
+}
+</style>
+
+<template>
+  <view class="container">
+    <view class= "area-user">
+      <image src="../images/icon.png" class="logo"></image>
+      <text class="name"></text>
+      <text class="address"></text>
+    </view>
+    
+    <view class="area-text">
+      <view class="area-text-item"  @tap="copyToClip(name = {{wallet.name}})">
+        <text class="text-label">Name:</text>
+        <text class="text-content" >{{wallet.name}}</text>
+      </view>
+      <view class="area-text-item"  @tap="copyToClip(address = {{wallet.address}})">
+        <text class="text-label">Address:</text>
+        <text class="text-content">{{wallet.address}}</text>
+      </view>
+      <view class="area-text-item"  @tap="copyToClip(nep2Key = {{wallet.key}})">
+        <text class="text-label">Nep2 Key:</text>
+        <text class="text-content" >{{wallet.key}}</text>
+      </view>
+    </view>
+    <view class="area-btn">
+      <button type="primary" @tap="login()">登陆</button>
+    </view>
+    <text class="warnning">非常重要，请截图保存！！</text>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import {WalletHelper}  from '../utils/wallet'
+import tip from '../utils/tip';
+
+export default class Mine extends wepy.page {
+  customData = {}; // 自定义数据
+
+  customFunction() {} // 自定义方法
+
+  onLoad(option) {
+    let that = this;
+    this.wallet = JSON.parse(option.wallet)['accounts'][0];
+
+    this.$apply();
+  } // 在Page和Component共用的生命周期函数
+
+  onShow() {} // 只在Page中存在的页面生命周期函数
+
+  config = {}; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
+
+  data = {
+    wallet: {},
+    captureScreen: false
+  }; // 页面所需数据均需在这里声明，可用于模板数据绑定
+
+  components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
+
+  mixins = []; // 声明页面所引用的Mixin实例
+
+  computed = {}; // 声明计算属性（详见后文介绍）
+
+  watch = {}; // 声明数据watcher（详见后文介绍）
+
+  methods = {
+    copyToClip(str) {
+      let that = this;
+      wepy.setClipboardData({
+        data: str,
+        success: function(res) {
+          wepy.getClipboardData({
+            success: function(res) {
+              console.log(res.data); // data
+              tip.alert('复制成功');
+            }
+          });
+        }
+      });
+    },
+
+    login() {
+      if (!this.captureScreen) {
+        tip.alert('请截图保存账户信息');
+        return;
+      }
+      this.$redirect('./home');
+    }
+  }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
+
+  events = {}; // 声明组件之间的事件处理函数
+}
+</script>

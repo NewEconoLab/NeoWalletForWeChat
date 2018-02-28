@@ -40,7 +40,8 @@ export default class extends wepy.app {
       'pages/createresult',
       'pages/home',
       'pages/send',
-      'pages/history'
+      'pages/history',
+      'pages/mine'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -76,23 +77,10 @@ export default class extends wepy.app {
         wepy.setStorageSync(USER_INFO, res.userInfo);
         // 存储系统信息
         let systemInfo = wepy.getSystemInfoSync();
-        console.log(systemInfo);
+        // console.log(systemInfo);
         wepy.setStorageSync(SYSTEM_INFO, systemInfo);
       }
     });
-  }
-
-  sleep(s) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve('promise resolved');
-      }, s * 1000);
-    });
-  }
-
-  async testAsync() {
-    const data = await this.sleep(3);
-    console.log(data);
   }
 }
 </script>
