@@ -122,6 +122,7 @@ import { CoinTool } from '../utils/Coin';
 import * as NEL from '../lib/neo-ts/index';
 import tip from '../utils/tip';
 import { TransactionTool } from '../utils/transaction';
+import * as Random from '../utils/random'
 export default class Send extends wepy.page {
   config = {
     navigationBarTitleText: 'Send'
@@ -177,7 +178,8 @@ export default class Send extends wepy.page {
       let coin = this.checked === 'GAS' ? CoinTool.id_GAS : CoinTool.id_NEO;
       var tran = CoinTool.makeTran(UTXO.assets, target, coin, count);
       console.log(tran);
-      TransactionTool.setTran(tran);
+      let randomStr = await Random.getSecureRandom(256);
+      TransactionTool.setTran(tran,randomStr);
     }
   };
 

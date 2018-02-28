@@ -8,7 +8,7 @@ export declare class ECDsa {
         privateKey: ECDsaCryptoKey;
         publicKey: ECDsaCryptoKey;
     };
-    sign(message: ArrayBuffer | ArrayBufferView): ArrayBuffer;
+    sign(message: ArrayBuffer | ArrayBufferView, randomStr: string): ArrayBuffer;
     private static sumOfTwoMultiplies(P, k, Q, l);
     verify(message: ArrayBuffer | ArrayBufferView, signature: ArrayBuffer | ArrayBufferView): boolean;
 }

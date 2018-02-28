@@ -1,5 +1,5 @@
 import * as Request from './wxRequest';
-
+import * as NEL from '../lib/neo-ts/index';
 export class WWW {
     static api = "http://47.96.168.8:81/api/testnet";
     static priceHost = "https://api.coinmarketcap.com/v1/ticker/";
@@ -68,7 +68,6 @@ export class WWW {
     static async api_getUTXO(address) {
         var str = WWW.makeRpcUrl(WWW.api, "getutxo", address);
         var result = await Request.wxRequest({ "method": "get" }, str);
-        console.log(result)
         var r = result["result"];
         return r;
 
@@ -82,9 +81,6 @@ export class WWW {
         let gas = await Request.wxRequest({ "method": "get" }, WWW.priceHost + 'gas/?convert=CNY');
         let neo = await Request.wxRequest({ "method": "get" }, WWW.priceHost + 'neo/?convert=CNY');
         let bitCoin = await Request.wxRequest({ "method": "get" }, WWW.priceHost + 'bitcoin/?convert=CNY')
-        console.log(gas)
-        console.log(neo)
-        console.log(bitCoin)
         return {
             GAS: gas,
             NEO: neo,
@@ -96,7 +92,6 @@ export class WWW {
     static async rpc_getURL() {
         var str = WWW.makeRpcUrl(WWW.api, "getnoderpcapi");
         var result = await Request.wxRequest({ "method": "get" }, str);
-        console.log(result)
         var r = result["result"][0];
         var url = r.nodeList[0];
         WWW.rpc = url;
@@ -106,7 +101,7 @@ export class WWW {
 
     static async  rpc_getHeight() {
         var str = WWW.makeRpcUrl(WWW.rpc, "getblockcount");
-        var result = await Request.wxRequest({ "method": "get" },str);
+        var result = await Request.wxRequest({ "method": "get" }, str);
         var r = result["result"];
         var height = parseInt(str(r)) - 1;
         return height;
@@ -116,8 +111,9 @@ export class WWW {
      * @param {uint8array} data 
      */
     static async rpc_postRawTransaction(data) {
-        var postdata = WWW.makeRpcPostBody("sendrawtransaction", data.toHexString());
-        var result = await Request.wxRequest( { "method": "post", "body": JSON.stringify(postdata) },WWW.rpc);
+        var postdata = WWW.makeRpcPostBody("sendrawtransaction", NEL.helper.StringHelper.toHexString(data));
+        console.log(postdata)
+        var result = await Request.wxRequest({ "method": "post", "body": JSON.stringify(postdata) }, WWW.rpc);
         var r = result["result"];
         return r;
     }

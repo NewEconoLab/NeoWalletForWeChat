@@ -134,7 +134,7 @@ export class Helper {
     }
 
 
-    public static Sign(message: Uint8Array, privateKey: Uint8Array): Uint8Array {
+    public static Sign(message: Uint8Array, privateKey: Uint8Array,randomStr:string): Uint8Array {
 
         var PublicKey = ECPoint.multiply(ECCurve.secp256r1.G, privateKey);
         var pubkey = PublicKey.encodePoint(false).subarray(1, 64);
@@ -156,7 +156,7 @@ export class Helper {
         //}))
         {
             //var hash =  Sha256.computeHash(message);
-            return new Uint8Array(ecdsa.sign(message));
+            return new Uint8Array(ecdsa.sign(message,randomStr));
         }
     }
     public static VerifySignature(message: Uint8Array, signature: Uint8Array, pubkey: Uint8Array) {

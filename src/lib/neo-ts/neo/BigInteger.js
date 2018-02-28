@@ -1,5 +1,6 @@
 import { Uint64 } from './Uint64';
 import * as Arrayhelper from '../Helper/Arrayhelper';
+import * as UintHelper from '../Helper/UintHelper';
 const DB = 26;
 const DM = (1 << DB) - 1;
 const DV = DM + 1;
@@ -486,7 +487,7 @@ export class BigInteger {
     pow(exponent) {
         return BigInteger.pow(this, exponent);
     }
-    static random(bitLength, rng) {
+    static random(bitLength, rng, randomStr) {
         if (bitLength == 0)
             return BigInteger.Zero;
         let bytes = new Uint8Array(Math.ceil(bitLength / 8));
@@ -495,7 +496,7 @@ export class BigInteger {
                 bytes[i] = Math.random() * 256;
         }
         else {
-            bytes = new Uint8Array(rng.getRandomValues(Math.ceil(bitLength / 8)));
+            bytes = UintHelper.hexToBytes(randomStr.slice(0, bitLength));
         }
         bytes[bytes.length - 1] &= 0xff >>> (8 - bitLength % 8);
         return new BigInteger(bytes);

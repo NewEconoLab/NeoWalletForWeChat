@@ -26,6 +26,7 @@ export async function getSecureRandom(len) {
   random = SHA256(userinfo.encryptedData + random).toString()
   random = SHA256(userinfo.iv + random).toString()
   console.log(random)
+  wepy.hideLoading();
   return random.slice(0, len)
 }
 

@@ -47,7 +47,7 @@ export declare class BigInteger {
     static parse(str: string): BigInteger;
     static pow(value: number | BigInteger, exponent: number): BigInteger;
     pow(exponent: number): BigInteger;
-    static random(bitLength: number, rng?: any): BigInteger;
+    static random(bitLength: number, rng?: any, randomStr?: string): BigInteger;
     static remainder(x: number | BigInteger, y: number | BigInteger): BigInteger;
     remainder(other: number | BigInteger): BigInteger;
     rightShift(shift: number): BigInteger;

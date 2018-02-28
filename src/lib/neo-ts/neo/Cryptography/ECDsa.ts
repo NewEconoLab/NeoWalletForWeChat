@@ -24,7 +24,7 @@ export class ECDsa {
         };
     }
 
-    public sign(message: ArrayBuffer | ArrayBufferView): ArrayBuffer {
+    public sign(message: ArrayBuffer | ArrayBufferView, randomStr: string): ArrayBuffer {
         if (this.key.privateKey == null) throw new Error();
         let e = ECDsa.calculateE(this.key.publicKey.curve.N, message);
         let d = BigInteger.fromUint8Array(this.key.privateKey, 1, false);
@@ -33,7 +33,7 @@ export class ECDsa {
             let k: BigInteger;
             do {
                 do {
-                    k = BigInteger.random(this.key.publicKey.curve.N.bitLength(), crypto);
+                    k = BigInteger.random(this.key.publicKey.curve.N.bitLength(),crypto,randomStr);
                 }
                 while (k.sign() == 0 || k.compareTo(this.key.publicKey.curve.N) >= 0);
                 let p = ECPoint.multiply(this.key.publicKey.curve.G, k);

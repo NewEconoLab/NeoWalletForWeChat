@@ -9,7 +9,7 @@ export declare class Helper {
     static GetAddressFromScriptHash(scripthash: Uint8Array): string;
     static GetAddressFromPublicKey(publicKey: Uint8Array): string;
     static GetPublicKeyScriptHash_FromAddress(address: string): Uint8Array;
-    static Sign(message: Uint8Array, privateKey: Uint8Array): Uint8Array;
+    static Sign(message: Uint8Array, privateKey: Uint8Array, randomStr: string): Uint8Array;
     static VerifySignature(message: Uint8Array, signature: Uint8Array, pubkey: Uint8Array): boolean;
     static String2Bytes(str: any): Uint8Array;
     static Bytes2String(_arr: Uint8Array): string;

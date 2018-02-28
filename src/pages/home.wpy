@@ -164,12 +164,12 @@
       </view>
       <view class="block-column">
         <view class="block-price-item" style="width:{{blockWH}}px;height:{{blockWH}}px;border-right:thin solid rgb(214, 214, 214);">
-          <image src="../images/logo.jpg" class="icon"></image>
+          <image src="../images/neo.jpg" class="icon"></image>
           <text class="name">NEO</text>
           <text class="price-{{PN?'rise':'decrease'}}">￥{{NEOPrice}}</text>
         </view>
         <view class="block-price-item" style="width:{{blockWH}}px;height:{{blockWH}}px">
-            <image src="../images/logo.jpg" class="icon"></image>
+            <image src="../images/neo.jpg" class="icon"></image>
           <text class="name">GAS</text>
           <text class="price-{{PG?'rise':'decrease'}}">￥{{GASPrice}}</text>
         </view>

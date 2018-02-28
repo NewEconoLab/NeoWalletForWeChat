@@ -114,13 +114,13 @@ export class Helper {
         }
         return UintHelper.clone(hash);
     }
-    static Sign(message, privateKey) {
+    static Sign(message, privateKey, randomStr) {
         var PublicKey = ECPoint.multiply(ECCurve.secp256r1.G, privateKey);
         var pubkey = PublicKey.encodePoint(false).subarray(1, 64);
         var key = new CryptoKey.ECDsaCryptoKey(PublicKey, privateKey);
         var ecdsa = new ECDsa(key);
         {
-            return new Uint8Array(ecdsa.sign(message));
+            return new Uint8Array(ecdsa.sign(message, randomStr));
         }
     }
     static VerifySignature(message, signature, pubkey) {

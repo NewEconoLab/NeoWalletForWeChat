@@ -20,7 +20,7 @@ export class ECDsa {
             publicKey: new ECDsaCryptoKey(pubkey)
         };
     }
-    sign(message) {
+    sign(message, randomStr) {
         if (this.key.privateKey == null)
             throw new Error();
         let e = ECDsa.calculateE(this.key.publicKey.curve.N, message);
@@ -30,7 +30,7 @@ export class ECDsa {
             let k;
             do {
                 do {
-                    k = BigInteger.random(this.key.publicKey.curve.N.bitLength(), crypto);
+                    k = BigInteger.random(this.key.publicKey.curve.N.bitLength(), crypto, randomStr);
                 } while (k.sign() == 0 || k.compareTo(this.key.publicKey.curve.N) >= 0);
                 let p = ECPoint.multiply(this.key.publicKey.curve.G, k);
                 let x = p.x.value;
