@@ -49,7 +49,7 @@
 <template>
 <form bindsubmit="formSubmit" class="form">
   <view class="container">
-    <image src="../images/logo.jpg" class="logo"></image>
+    <image src="../images/logo.png" class="logo"></image>
     
       <view class="area-passphrase">
         <view class="passphrase-item">
