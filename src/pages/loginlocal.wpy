@@ -1,83 +1,50 @@
 <style lang="less">
-.logo {
-  position: relative;
-  width: 200rpx;
-  height: 200rpx;
-  margin-top: 90px;
-  border-radius: 7%;
-}
-.area-passphrase {
-  width: 100%;
+.wallet-block {
+  width: 90%;
+  display: block;
+  flex-direction: row;
+  border-radius: 5px;
+  margin-top: 10rpx;
   background-color: white;
+  justify-content: flex-start;
+  padding: 5px 10px 5px 10px;
+}
+
+.area-icon {
+  width: 60rpx;
+  height: 60rpx;
+}
+
+.area-info {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
+  // margin-top: 5px;
+  // width: 100%;
+  // height: 100%;
 }
-
-.passphrase-item {
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  border-top: 1px solid #efefef;
-  padding: 20rpx 20rpx;
-  width: 96%;
-  justify-content: center;
-  .title {
-    flex: 2;
-    margin-right: 20rpx;
-    font-size: 14px;
-  }
-  .input {
-    flex: 9;
-    input {
-      font-size: 13px;
-      color: #333;
-    }
-  }
-  .text {
-    flex: 9;
-    text {
-      color: red;
-      font-size: 13px;
-    }
-  }
+.info-name {
+  font-size: 13px;
+  color: rgb(13, 107, 13);
 }
-.area-btn {
-  margin-top: 100rpx;
-  width: 80%;
-}
-.form {
-  width: 100%;
-  align-items: center;
+.info-addr {
+  font-size: 13px;
+  color: rgb(13, 107, 13);
 }
 </style>
 
 <template>
-<form bindsubmit="formSubmit" class="form">
   <view class="container">
-    <image src="../images/logo.jpg" class="logo"></image>
-    
-      <view class="area-passphrase">
-        <view class="passphrase-item"  @tap="select()" >
-          <text class="title">选择钱包:</text>
-          <view class="text">
-            <text>{{accountlable}}</text>
-          </view>
-        </view>
-        <view class="passphrase-item">
-          <view class="title">密码:</view>
-            <view class="input">
-            <input type="text" name="passphrase" password placeholder="请输入密码" value='1234561'/>
-          </view>
-        </view>
+  <view class="container">
+   <view class="wallet-block" wx:for="{{wallets}}" >
+      <image class="area-icon" src="../images/icon.png" />
+      <view class="area-info">
+        <text class="info-name"> {{item.name}}：</text>
+        <text class="info-addr">{{item.address}}</text>
       </view>
-      <view class="area-btn">
-        <button type="primary" formType="submit">创建新钱包</button>
-      </view>
-   
+    </view>
   </view>
-   </form>
+  </view>
 </template>
 
 <script>
@@ -99,8 +66,7 @@ export default class LoginLocal extends wepy.page {
   config = {}; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
 
   data = {
-    accountlable: '点击选择钱包',
-    wallets: {}
+    wallets: []
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
   components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
@@ -115,23 +81,14 @@ export default class LoginLocal extends wepy.page {
     select() {
       let that = this;
       let accountList = [];
-      this.wallets = wepy.getStorageSync(LOCAL_WALLET) || {};
-      this.$apply();
-      for (const key in this.wallets) {
-        accountList.push(key);
-        console.log('属性：' + key + ',值：' + this.wallets[key]);
+      let wals = wepy.getStorageSync(LOCAL_WALLET) || {};
+      let temp_wal = [];
+      for (const key in wals) {
+        temp_wal.push(wals[key]['accounts'][0]);
       }
-      wepy.showActionSheet({
-        itemList: accountList,
-        success: function(res) {
-          console.log(res.tapIndex);
-          that.accountlable = accountList[res.tapIndex];
-          that.$apply();
-        },
-        fail: function(res) {
-          console.log(res.errMsg);
-        }
-      });
+
+      this.wallets = temp_wal;
+      this.$apply();
     },
     async formSubmit(e) {
       let that = this;

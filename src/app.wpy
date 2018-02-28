@@ -61,7 +61,6 @@ export default class extends wepy.app {
   }
 
   async onLaunch() {
-    this.testAsync();
     const that = this;
 
     if (this.globalData.userInfo) {
