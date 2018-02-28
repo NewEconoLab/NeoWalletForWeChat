@@ -214,6 +214,7 @@ import { WWW } from '../utils/API';
 import { CoinTool } from '../utils/Coin';
 import { UTXO } from '../utils/UTXO';
 import { WalletHelper } from '../utils/wallet';
+import tip from '../utils/tip';
 export default class Home extends wepy.page {
   config = {
     navigationBarTitleText: '首页'
@@ -243,9 +244,18 @@ export default class Home extends wepy.page {
 
   methods = {
     navigate(page) {
-      wepy.navigateTo({
-        url: '/pages/' + page
-      });
+      if (WalletHelper.wallet === null) {
+        if (page === 'mine') {
+          wepy.navigateTo({
+            url: '/pages/index'
+          });
+        } else tip.error('您尚未登陆钱包账户');
+        return;
+      } else {
+        wepy.navigateTo({
+          url: '/pages/' + page
+        });
+      }
     }
   };
 
@@ -253,7 +263,7 @@ export default class Home extends wepy.page {
 
   async onLoad() {
     const that = this;
-    let systemInfo = await wepy.getStorageSync(SYSTEM_INFO) || {};
+    let systemInfo = (await wepy.getStorageSync(SYSTEM_INFO)) || {};
     this.blockWH = systemInfo.windowWidth / 3;
     this.fblockWH = systemInfo.windowWidth / 4;
   }
@@ -264,21 +274,24 @@ export default class Home extends wepy.page {
   async OnLogin() {
     let that = this;
     this.wallet = wepy.getStorageSync(CURR_WALLET);
-    this.wallet = this.wallet['accounts'][0];
     this.$apply();
+    console.log(this.wallet);
     //本地缓存有账户 则直接加载本地账户信息
-    if (this.wallet !== null && this.wallet !== undefined) {
+    if (
+      this.wallet !== null &&
+      this.wallet !== undefined &&
+      this.wallet !== ''
+    ) {
       this.isLogin = true;
+      this.wallet = this.wallet['accounts'][0];
       WalletHelper.wallet = this.wallet;
       this.$apply();
-
-      await this.OnTimeOut();
-      //循环执行代码
-      setInterval(async () => {
-        await that.OnTimeOut();
-      }, 15000); //循环时间 这里是15秒
-    } else {
     }
+    await this.OnTimeOut();
+    //循环执行代码
+    setInterval(async () => {
+      await that.OnTimeOut();
+    }, 15000); //循环时间 这里是15秒
   }
   /**
    * 定时触发
@@ -287,9 +300,12 @@ export default class Home extends wepy.page {
     if (WWW.rpc === '') {
       WWW.rpc = await WWW.rpc_getURL();
     }
-    const addr = WalletHelper.wallet.address;
+    if (WalletHelper.wallet !== null) {
+      const addr = WalletHelper.wallet.address;
+      this.OnGetAssets(addr);
+    }
+
     this.OnGetHeight();
-    this.OnGetAssets(addr);
   }
 
   /**

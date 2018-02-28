@@ -11,7 +11,7 @@ export class TransactionTool {
      * @param {ThinNeo.Transaction} tran 
      * @param {string} randomStr
      */
-    static async setTran(tran, randomStr) {
+    static async setTran(tran,passphrase, randomStr) {
         let type = NEL.thinneo.TransAction.TransactionType[tran.type].toString();
         let version = tran.version.toString();
 
@@ -19,7 +19,7 @@ export class TransactionTool {
         wepy.showLoading({ title: '获取交易哈希' });
         let txid = NEL.helper.StringHelper.toHexString(NEL.helper.UintHelper.clone(tran.GetHash()).reverse())
         var msg = tran.GetMessage();
-        WalletHelper.decode('1234561', WalletHelper.wallet, async (prikey, pubkey) => {
+        WalletHelper.decode(passphrase, WalletHelper.wallet, async (prikey, pubkey) => {
             wepy.showLoading({ title: '签名中' });
             var signdata = NEL.helper.Helper.Sign(msg, prikey, randomStr);
             // console.log('signdata= ' + signdata)

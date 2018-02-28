@@ -49,19 +49,19 @@
 <template>
 <form bindsubmit="formSubmit" class="form">
   <view class="container">
-    <image src="../images/logo.jpg" class="logo"></image>
+    <image src="../images/icon.png" class="logo"></image>
     
       <view class="area-passphrase">
         <view class="passphrase-item">
           <text class="title">钱包名:</text>
           <view class="input">
-            <input type="text" name="accountlabel" placeholder="设置钱包名" value='nuanbing2'/>
+            <input type="text" name="accountlabel" placeholder="设置钱包名" value=''/>
           </view>
         </view>
         <view class="passphrase-item">
           <view class="title">密码:</view>
             <view class="input">
-            <input type="text" name="passphrase" password placeholder="输入密码" value='1234561'/>
+            <input type="text" name="passphrase" password placeholder="输入密码" value=''/>
           </view>
         </view>
       </view>

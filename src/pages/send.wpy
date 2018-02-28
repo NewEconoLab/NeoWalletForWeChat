@@ -79,6 +79,23 @@
     }
   }
 }
+.area-pass {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: white;
+  margin-top: 10px;
+  width: 96%;
+  padding: 15px 10px 15px 10px;
+   border-bottom: thin gray solid;
+  text {
+     font-size: 15px;
+  }
+  .placeholder {
+    font-size: 15px;
+  }
+}
 .area-btn {
   margin-top: 100rpx;
   width: 80%;
@@ -108,13 +125,13 @@
           </view>
         </view>
       </view>
-            <view class="area-btn">
+      <view class="area-pass">
+        <input placeholder="Passphrase" password='true' placeholder-class="placeholder" name="passphrase"/>
+      </view>
+      <view class="area-btn">
         <button type="primary" formType="submit">确认</button>
       </view> 
     </view>
-    <modal hidden="{{hiddenmodalput}}" title="请输入密码" confirm-text="发送" cancel-text="取消" bindcancel="cancel" bindconfirm="confirm">  
-      <input type='text' name="passphrase" placeholder="password" auto-focus value="jjj"/>  
-    </modal> 
   </form>
 </template>
 
@@ -141,8 +158,8 @@ export default class Send extends wepy.page {
     ],
     balance: '0',
     checked: 'GAS',
-    amount: '1',
-    hiddenmodalput: true
+    amount: '',
+    password:''
   };
 
   computed = {};
@@ -168,42 +185,17 @@ export default class Send extends wepy.page {
       this.$apply();
     },
     async formSubmit(e) {
-      let that = this;
       let target = e.detail.value.address;
       let amount = e.detail.value.amount;
+      let password = e.detail.value.passphrase;
       if (parseFloat(amount) > parseFloat(UTXO.balance[this.checked])) {
         tip.alert('余额不足');
-        retun;
+        return;
       }
       this.amount = amount;
       this.hiddenmodalput = false;
+      this.password = password;
       this.$apply();
-     
-    },
-    cancel() {
-      this.hiddenmodalput=true;
-    },
-    async confirm(e) {
-      console.log(e)
-       var count = NEL.neo.Fixed8.parse(this.amount + '');
-      let coin = this.checked === 'GAS' ? CoinTool.id_GAS : CoinTool.id_NEO;
-      wepy.showLoading({ title: '交易生成中' });
-      var tran = CoinTool.makeTran(UTXO.assets, this.targetAddr, coin, count);
-      // console.log(tran);
-      let randomStr = await Random.getSecureRandom(256);
-      const txid = await TransactionTool.setTran(tran, randomStr);
-      wepy.hideLoading();
-      if (txid !== 'failed') {
-        wx.showToast({
-          title: '转账成功',
-          content: txid,
-          success: function(res) {
-            if (res.confirm) {
-              console.log('用户点击确定');
-            }
-          }
-        });
-      }
     }
   };
 
@@ -212,6 +204,28 @@ export default class Send extends wepy.page {
   onLoad() {
     this.balance = UTXO.balance['GAS'];
     this.$apply();
+  }
+  async OnSend() {
+    console.log(e);
+    var count = NEL.neo.Fixed8.parse(this.amount + '');
+    let coin = this.checked === 'GAS' ? CoinTool.id_GAS : CoinTool.id_NEO;
+    wepy.showLoading({ title: '交易生成中' });
+    var tran = CoinTool.makeTran(UTXO.assets, this.targetAddr, coin, count);
+    // console.log(tran);
+    let randomStr = await Random.getSecureRandom(256);
+    const txid = await TransactionTool.setTran(tran, this.password,randomStr);
+    wepy.hideLoading();
+    if (txid !== 'failed') {
+      wx.showToast({
+        title: '转账成功',
+        content: txid,
+        success: function(res) {
+          if (res.confirm) {
+            console.log('用户点击确定');
+          }
+        }
+      });
+    }
   }
 }
 </script>

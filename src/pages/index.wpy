@@ -51,7 +51,7 @@
   position: fixed;
   bottom: 0;
   margin-bottom: 30rpx;
-  font-size: 10px;
+  font-size: 14px;
   color: slategray;
 }
 </style>
@@ -92,7 +92,7 @@ export default class Index extends wepy.page {
 
   data = {
     userInfo: {
-      nickName: '加载中...'
+      nickName: ''
     },
     disabled: true
   };
@@ -105,18 +105,21 @@ export default class Index extends wepy.page {
     },
     loginScan() {
       let that = this;
-      console.log('loginScan');
+      // console.log('loginScan');
       wepy.scanCode({
         success: res => {
-          console.log(res);
+          // console.log(res);
           that.onScanLogin(res.result);
         },
         fail: res => {
-          console.log(res);
+          // console.log(res);
         }
       });
     },
     loginLocal() {
+      console.log(this.disabled)
+      if (this.disabled) return;
+      else
       this.$redirect('./loginlocal');
     }
   };
@@ -125,11 +128,12 @@ export default class Index extends wepy.page {
 
   onLoad() {
     this.userInfo = wepy.getStorageSync(USER_INFO) || {};
-    const wallets = wepy.getStorageSync(LOCAL_WALLET) || {};
-
-    if (wallets !== {} && wallets !== undefined) {
-      this.disabled = false;
-    }
+    this.disabled = true;
+    this.$apply();
+  }
+  onShow() {
+    const wallets = wepy.getStorageSync(LOCAL_WALLET);
+    if (wallets !== {} && wallets !== undefined && wallets !=='') this.disabled = false;
     this.$apply();
   }
   onScanLogin(nep2key) {

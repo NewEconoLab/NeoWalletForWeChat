@@ -55,19 +55,19 @@
         <view class="passphrase-item">
           <text class="title">钱包名:</text>
           <view class="input">
-            <input type="text" name="accountlabel" placeholder="请输入账户名" value='nuanbing1'/>
+            <input type="text" name="accountlabel" placeholder="请输入账户名" value=''/>
           </view>
         </view>
         <view class="passphrase-item">
           <view class="title">密码:</view>
             <view class="input">
-            <input type="text" name="passphrase" password placeholder="请输入密码" value='1234561'/>
+            <input type="text" name="passphrase" password placeholder="请输入密码" value=''/>
           </view>
         </view>
         <view class="passphrase-item">
           <view class="title">密码验证:</view>
             <view class="input">
-            <input type="text" name="repassphrase" password placeholder="请再次输入密码" value='1234561'/>
+            <input type="text" name="repassphrase" password placeholder="请再次输入密码" value=''/>
           </view>
         </view>
       </view>
