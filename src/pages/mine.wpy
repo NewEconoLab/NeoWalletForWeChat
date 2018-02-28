@@ -4,16 +4,24 @@
   flex-direction: column;
   align-items: center;
   .logo {
-    position: relative;
-    width: 130rpx;
-    height: 130rpx;
+    width: 150rpx;
+    height: 150rpx;
     margin-top: 50px;
     border-radius: 50%;
     background-color: white;
-    .name {
-    }
-    .address {
-    }
+  }
+  .name {
+    color: gray;
+    margin-top: 20px;
+  }
+  .address {
+    margin-top: 9px;
+    font-size: 12px;
+    font-family: italic;
+    font-weight: 400;
+    word-break: break-all;
+    color: #1e90ff;
+    padding: 0 10px 5px 10px;
   }
 }
 
@@ -65,8 +73,8 @@
   <view class="container">
     <view class= "area-user">
       <image src="../images/icon.png" class="logo"></image>
-      <text class="name"></text>
-      <text class="address"></text>
+      <text class="name">{{wallet.name}}</text>
+      <text class="address">{{wallet.address}}</text>
     </view>
     
     <view class="area-text">
@@ -84,7 +92,7 @@
       </view>
     </view>
     <view class="area-btn">
-      <button type="primary" @tap="login()">登陆</button>
+      <button type="warn" @tap="logout()">退出当前账号</button>
     </view>
     <text class="warnning">非常重要，请截图保存！！</text>
   </view>
@@ -92,7 +100,7 @@
 
 <script>
 import wepy from 'wepy';
-import {WalletHelper}  from '../utils/wallet'
+import { WalletHelper } from '../utils/wallet';
 import tip from '../utils/tip';
 
 export default class Mine extends wepy.page {
@@ -102,8 +110,8 @@ export default class Mine extends wepy.page {
 
   onLoad(option) {
     let that = this;
-    this.wallet = JSON.parse(option.wallet)['accounts'][0];
-
+    this.wallet = WalletHelper.wallet;
+    console.log(WalletHelper.wallet);
     this.$apply();
   } // 在Page和Component共用的生命周期函数
 
@@ -112,8 +120,7 @@ export default class Mine extends wepy.page {
   config = {}; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
 
   data = {
-    wallet: {},
-    captureScreen: false
+    wallet: {}
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
   components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
@@ -140,12 +147,8 @@ export default class Mine extends wepy.page {
       });
     },
 
-    login() {
-      if (!this.captureScreen) {
-        tip.alert('请截图保存账户信息');
-        return;
-      }
-      this.$redirect('./home');
+    logout() {
+      this.$redirect('./index');
     }
   }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
 

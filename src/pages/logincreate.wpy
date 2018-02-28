@@ -3,7 +3,7 @@
   position: relative;
   width: 200rpx;
   height: 200rpx;
-  margin-top: 90px;
+  margin-top: 80px;
   border-radius: 7%;
 }
 .area-passphrase {
@@ -12,7 +12,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 40px;
 }
 
 .passphrase-item {
@@ -49,7 +49,7 @@
 <template>
 <form bindsubmit="formSubmit" class="form">
   <view class="container">
-    <image src="../images/logo.png" class="logo"></image>
+    <image src="../images/icon.png" class="logo"></image>
     
       <view class="area-passphrase">
         <view class="passphrase-item">

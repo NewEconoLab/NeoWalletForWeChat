@@ -193,7 +193,7 @@
             <image src="../images/send.png" class="icon"></image>
           <text class="name">Send</text>
         </view>
-        <view class="block-function-item" style="width:{{fblockWH}}px;height:{{fblockWH}}px;border-right:thin solid rgb(214, 214, 214);" @tap="navigate('send')">
+        <view class="block-function-item" style="width:{{fblockWH}}px;height:{{fblockWH}}px;border-right:thin solid rgb(214, 214, 214);" @tap="navigate('mine')">
           <image src="../images/account.png" class="icon"></image>
           <text class="name">Mine</text>
         </view>
