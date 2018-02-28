@@ -121,6 +121,7 @@ import { UTXO } from '../utils/UTXO';
 import { CoinTool } from '../utils/Coin';
 import * as NEL from '../lib/neo-ts/index';
 import tip from '../utils/tip';
+import { TransactionTool } from '../utils/transaction';
 export default class Send extends wepy.page {
   config = {
     navigationBarTitleText: 'Send'
@@ -166,16 +167,17 @@ export default class Send extends wepy.page {
     async formSubmit(e) {
       let that = this;
       let target = e.detail.value.address;
-      let amount = e.detail.value.amount;
+      let amount = '0.01'//e.detail.value.amount;
       console.log(e);
       if (parseFloat(amount) > parseFloat(UTXO.balance[this.checked])) {
         tip.alert('余额不足');
         retun;
       }
       var count = NEL.neo.Fixed8.parse(amount + '');
-      let coin = checked === 'GAS' ? CoinTool.id_GAS : CoinTool.id_NEO;
+      let coin = this.checked === 'GAS' ? CoinTool.id_GAS : CoinTool.id_NEO;
       var tran = CoinTool.makeTran(UTXO.assets, target, coin, count);
       console.log(tran);
+      TransactionTool.setTran(tran);
     }
   };
 

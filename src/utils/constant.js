@@ -28,3 +28,9 @@ export const LOCAL_WALLET = "localWallets";
  * 当前登陆账户
 */
 export const CURR_WALLET = "currentWallet";
+
+export const SCRYPT_CONFIG = {
+    N: 16384,
+    r: 8,
+    p: 8
+};
