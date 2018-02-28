@@ -253,7 +253,7 @@ export default class Home extends wepy.page {
 
   async onLoad() {
     const that = this;
-    let systemInfo = wepy.getStorageSync(SYSTEM_INFO) || {};
+    let systemInfo = await wepy.getStorageSync(SYSTEM_INFO) || {};
     this.blockWH = systemInfo.windowWidth / 3;
     this.fblockWH = systemInfo.windowWidth / 4;
   }

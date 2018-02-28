@@ -109,9 +109,12 @@
         </view>
       </view>
             <view class="area-btn">
-        <button type="primary" formType="submit">Send</button>
-      </view>
+        <button type="primary" formType="submit">确认</button>
+      </view> 
     </view>
+    <modal hidden="{{hiddenmodalput}}" title="请输入密码" confirm-text="发送" cancel-text="取消" bindcancel="cancel" bindconfirm="confirm">  
+      <input type='text' name="passphrase" placeholder="password" auto-focus value="jjj"/>  
+    </modal> 
   </form>
 </template>
 
@@ -138,7 +141,8 @@ export default class Send extends wepy.page {
     ],
     balance: '0',
     checked: 'GAS',
-    amount: ''
+    amount: '1',
+    hiddenmodalput: true
   };
 
   computed = {};
@@ -171,9 +175,20 @@ export default class Send extends wepy.page {
         tip.alert('余额不足');
         retun;
       }
-      var count = NEL.neo.Fixed8.parse(amount + '');
+      this.amount = amount;
+      this.hiddenmodalput = false;
+      this.$apply();
+     
+    },
+    cancel() {
+      this.hiddenmodalput=true;
+    },
+    async confirm(e) {
+      console.log(e)
+       var count = NEL.neo.Fixed8.parse(this.amount + '');
       let coin = this.checked === 'GAS' ? CoinTool.id_GAS : CoinTool.id_NEO;
-      var tran = CoinTool.makeTran(UTXO.assets, target, coin, count);
+      wepy.showLoading({ title: '交易生成中' });
+      var tran = CoinTool.makeTran(UTXO.assets, this.targetAddr, coin, count);
       // console.log(tran);
       let randomStr = await Random.getSecureRandom(256);
       const txid = await TransactionTool.setTran(tran, randomStr);
