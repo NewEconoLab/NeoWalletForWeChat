@@ -1,59 +1,68 @@
 <style lang="less">
 .wallet-block {
-  width: 90%;
-  display: block;
+  width: 96%;
+  display: flex;
   flex-direction: row;
-  border-radius: 5px;
-  margin-top: 10rpx;
+  border-radius: 2px;
+  margin: 10px 10px 0 10px;
   background-color: white;
-  justify-content: flex-start;
-  padding: 5px 10px 5px 10px;
 }
 
 .area-icon {
-  width: 60rpx;
-  height: 60rpx;
+  width: 40px;
+  height: 40px;
+  margin: 13px 5px 13px 5px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  image {
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 50%;
+  }
 }
 
 .area-info {
   display: flex;
   flex-direction: column;
   align-items: center;
-  // margin-top: 5px;
-  // width: 100%;
-  // height: 100%;
+  justify-content: flex-start;
+  margin-top: 10px;
 }
 .info-name {
-  font-size: 13px;
-  color: rgb(13, 107, 13);
+  font-size: 17px;
+  width: 100%;
+  color: gray;
 }
 .info-addr {
+  margin-top: 10px;
   font-size: 13px;
+  width: 100%;
   color: rgb(13, 107, 13);
 }
 </style>
 
 <template>
   <view class="container">
-  <view class="container">
    <view class="wallet-block" wx:for="{{wallets}}" >
-      <image class="area-icon" src="../images/icon.png" />
-      <view class="area-info">
-        <text class="info-name"> {{item.name}}：</text>
+      <view class="area-icon">
+        <image  src="../images/icon.png" />
+      </view>
+      <view class="area-info" @tap="OnSelect({{item.name}})">
+        <text class="info-name"> {{item.name}}</text>
         <text class="info-addr">{{item.address}}</text>
       </view>
     </view>
-  </view>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy';
-import * as NEL from '../lib/neo-ts/index';
-import Toast from 'wepy-com-toast';
+import { WalletHelper } from '../utils/wallet';
 import { LOCAL_WALLET, CURR_WALLET } from '../utils/constant';
 import tip from '../utils/tip';
-import * as Random from '../utils/random';
 export default class LoginLocal extends wepy.page {
   customData = {}; // 自定义数据
 
@@ -61,12 +70,24 @@ export default class LoginLocal extends wepy.page {
 
   onLoad() {} // 在Page和Component共用的生命周期函数
 
-  onShow() {} // 只在Page中存在的页面生命周期函数
+  onShow() {
+    let wals = wepy.getStorageSync(LOCAL_WALLET) || {};
+    console.log(wals);
+    let temp_wal = [];
+    for (const key in wals) {
+      console.log(wals[key]);
+      temp_wal.push(wals[key]['accounts'][0]);
+    }
+    this.wals = wals;
+    this.wallets = temp_wal;
+    this.$apply();
+  } // 只在Page中存在的页面生命周期函数
 
   config = {}; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
 
   data = {
-    wallets: []
+    wallets: [],
+    wals: {}
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
   components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
@@ -78,55 +99,14 @@ export default class LoginLocal extends wepy.page {
   watch = {}; // 声明数据watcher（详见后文介绍）
 
   methods = {
-    select() {
-      let that = this;
-      let accountList = [];
-      let wals = wepy.getStorageSync(LOCAL_WALLET) || {};
-      let temp_wal = [];
-      for (const key in wals) {
-        temp_wal.push(wals[key]['accounts'][0]);
-      }
+    async OnSelect(e) {
+      console.log(e);
+      const selected = this.wals[e];
+      // WalletHelper.wallet = selected;
 
-      this.wallets = temp_wal;
-      this.$apply();
-    },
-    async formSubmit(e) {
-      let that = this;
-      let accountlable = this.accountlable;
-      let passphrase = e.detail.value.passphrase;
-
-      if (passphrase === '') {
-        tip.alert('密码不能为空');
-        return;
-      }
-      if (accountlable === '点击选择钱包') {
-        tip.alert('请先选择钱包');
-        return;
-      }
-      console.log(this.accountlable);
-
-      const wallet = this.wallets[accountlable];
-      console.log('=============================');
-      console.log(wallet);
-      wepy.showLoading({ title: '密码验证中' });
-
-      NEL.helper.Helper.GetPrivateKeyFromNep2(
-        wallet['accounts'][0].key,
-        passphrase,
-        wallet['scrypt'].N,
-        wallet['scrypt'].r,
-        wallet['scrypt'].p,
-        (info, result) => {
-          if (info === 'error') {
-            tip.alert('密码错误');
-            return;
-          }
-          console.log('result=' + 'info=' + info + ' result=' + result);
-          wepy.setStorageSync(CURR_WALLET, wallet);
-          wepy.hideLoading();
-          that.$redirect('./home');
-        }
-      );
+      await wepy.setStorageSync(CURR_WALLET, selected);
+      // wepy.hideLoading();
+      wepy.reLaunch({url:'./home'});
     }
   }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
 

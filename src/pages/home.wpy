@@ -213,7 +213,7 @@ import { SYSTEM_INFO, CURR_WALLET } from '../utils/constant';
 import { WWW } from '../utils/API';
 import { CoinTool } from '../utils/Coin';
 import { UTXO } from '../utils/UTXO';
-import {WalletHelper} from '../utils/wallet'
+import { WalletHelper } from '../utils/wallet';
 export default class Home extends wepy.page {
   config = {
     navigationBarTitleText: '首页'
@@ -254,16 +254,16 @@ export default class Home extends wepy.page {
   async onLoad() {
     const that = this;
     let systemInfo = wepy.getStorageSync(SYSTEM_INFO) || {};
-    this.blockWH = systemInfo.windowWidth  / 3;
-    this.fblockWH = systemInfo.windowWidth  / 4;
-
+    this.blockWH = systemInfo.windowWidth / 3;
+    this.fblockWH = systemInfo.windowWidth / 4;
+  }
+  onShow() {
     this.OnGetPrice();
     this.OnLogin();
   }
-
   async OnLogin() {
     let that = this;
-    this.wallet = wepy.getStorageSync(CURR_WALLET) || {};
+    this.wallet = wepy.getStorageSync(CURR_WALLET);
     this.wallet = this.wallet['accounts'][0];
     this.$apply();
     //本地缓存有账户 则直接加载本地账户信息

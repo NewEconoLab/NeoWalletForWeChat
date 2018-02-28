@@ -189,7 +189,7 @@ export default class LoginCreate extends wepy.page {
             that.$redirect('./createresult?wallet=' + jsonstr);
           } else {
             //TODO: alert for encoding error
-            tip.alert('nep2 key encoding error');
+            tip.alert('nep2 key encode error');
           }
         }
       );
