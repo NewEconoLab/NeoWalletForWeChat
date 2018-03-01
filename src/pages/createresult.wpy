@@ -160,7 +160,7 @@ export default class CreateResult extends wepy.page {
         tip.alert('请截图保存账户信息');
         return;
       }
-      this.$redirect('./home');
+      this.$redirect('./index');
     }
   }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
 

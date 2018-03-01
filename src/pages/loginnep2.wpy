@@ -167,7 +167,7 @@ export default class LoginNep2 extends wepy.page {
           wepy.setStorageSync(LOCAL_WALLET, wallets);
           wepy.setStorageSync(CURR_WALLET, wallet);
           wepy.hideLoading();
-          that.$redirect('./home?wallet=' + jsonstr);
+          that.$redirect('./index');
         }
       );
     }
