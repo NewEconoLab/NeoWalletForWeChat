@@ -7,9 +7,9 @@ export class UTXO {
     constructor() {
     }
     static async GetAssets(addr) {
-        this.history = []
-        this.assets = {}
-        this.balance = {}
+        UTXO.history.splice(0,UTXO.history.length);
+        UTXO.assets = {}
+        UTXO.balance = {}
         var utxos = await WWW.api_getUTXO(addr);
         this.assets = {};
         for (var i in utxos) {

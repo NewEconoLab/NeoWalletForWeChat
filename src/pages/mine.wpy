@@ -86,9 +86,9 @@
         <text class="text-label">Address:</text>
         <text class="text-content">{{wallet.address}}</text>
       </view>
-      <view class="area-text-item"  @tap="copyToClip(nep2Key = {{wallet.key}})">
+      <view class="area-text-item"  @tap="copyToClip(nep2Key = {{wallet.nep2key}})">
         <text class="text-label">Nep2 Key:</text>
-        <text class="text-content" >{{wallet.key}}</text>
+        <text class="text-content" >{{wallet.nep2key}}</text>
       </view>
     </view>
     <view class="area-btn">
@@ -112,6 +112,7 @@ export default class Mine extends wepy.page {
   onShow() {
     this.wallet = WalletHelper.wallet;
     this.$apply();
+    console.log(this.wallet)
   } // 只在Page中存在的页面生命周期函数
 
   config = {
@@ -147,7 +148,7 @@ export default class Mine extends wepy.page {
     },
 
     logout() {
-      wepy.reLaunch({ url: './index' });
+      wepy.reLaunch({ url: './login' });
     }
   }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
 

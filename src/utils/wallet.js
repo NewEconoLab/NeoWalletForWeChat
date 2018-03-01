@@ -18,7 +18,7 @@ export class WalletHelper {
         }
 
         NEL.helper.Helper.GetPrivateKeyFromNep2(
-            wallet.key,
+            wallet.nep2key,
             passphrase,
             SCRYPT_CONFIG['N'],
             SCRYPT_CONFIG['r'],
@@ -28,7 +28,7 @@ export class WalletHelper {
                     tip.alert('密码错误');
                     return;
                 }
-                console.log('result=' + 'info=' + info + ' result=' + result);
+                // console.log('result=' + 'info=' + info + ' result=' + result);
                 const prikey = result;
                 let pubkey = NEL.helper.Helper.GetPublicKeyFromPrivateKey(prikey);
                 callback(prikey, pubkey)

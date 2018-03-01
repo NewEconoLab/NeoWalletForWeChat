@@ -84,6 +84,7 @@ import wepy from 'wepy';
 import * as NEL from '../lib/neo-ts/index';
 import Toast from 'wepy-com-toast';
 import { LOCAL_WALLET, CURR_WALLET } from '../utils/constant';
+import { WalletHelper } from '../utils/wallet';
 import tip from '../utils/tip';
 import * as Random from '../utils/random';
 export default class LoginCreate extends wepy.page {
@@ -185,7 +186,9 @@ export default class LoginCreate extends wepy.page {
             wepy.setStorageSync(CURR_WALLET, wallet);
 
             wepy.showLoading({ title: '登陆中' });
+
             var jsonstr = JSON.stringify(wallet_json);
+            WalletHelper.wallet = wallet.accounts[0];
             // console.log(jsonstr);
             wepy.hideLoading();
             that.$redirect('./createresult?wallet=' + jsonstr);

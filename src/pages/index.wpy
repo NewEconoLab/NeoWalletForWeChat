@@ -275,7 +275,7 @@ export default class Index extends wepy.page {
     let that = this;
     this.wallet = wepy.getStorageSync(CURR_WALLET);
     this.$apply();
-    console.log(this.wallet);
+    // console.log(this.wallet);
     //本地缓存有账户 则直接加载本地账户信息
     if (
       this.wallet !== null &&
