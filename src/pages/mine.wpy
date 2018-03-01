@@ -114,7 +114,9 @@ export default class Mine extends wepy.page {
     this.$apply();
   } // 只在Page中存在的页面生命周期函数
 
-  config = {}; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
+  config = {
+    navigationBarTitleText: 'Mine'
+  }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
 
   data = {
     wallet: {}

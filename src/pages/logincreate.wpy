@@ -95,7 +95,9 @@ export default class LoginCreate extends wepy.page {
 
   onShow() {} // 只在Page中存在的页面生命周期函数
 
-  config = {}; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
+  config = {
+    navigationBarTitleText: 'Create'
+  }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
 
   data = {}; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
