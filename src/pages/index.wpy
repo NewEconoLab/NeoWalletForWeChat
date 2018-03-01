@@ -149,13 +149,13 @@
       <view class="asset-item">
         <text class = "title">NEO</text>
         <text class="number">{{NEO}}</text>
-        <text class="totle">￥{{NEOValue}} RMB</text>
+        <text class="totle">￥{{NEOValue}}</text>
       </view>
       <view class="line"></view>
       <view class="asset-item">
         <text class = "title">GAS</text>
         <text class="number">{{GAS}}</text>
-        <text class="totle">￥{{GASValue}} RMB</text>
+        <text class="totle">￥{{GASValue}}</text>
       </view>
     </view>
     <view class="area-block">
