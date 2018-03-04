@@ -3,13 +3,13 @@ import * as NEL from '../lib/neo-ts/index';
 import { CoinTool } from './Coin'
 export class UTXO {
     static assets = {}  //{ [id: string]: UTXO[] }
-    static history = []
+    static utxo = []
     static balance = {}
     constructor() {
     }
     static async GetAssets(addr) {
         let that = this
-        UTXO.history.splice(0, UTXO.history.length);
+        UTXO.utxo.splice(0, UTXO.utxo.length);
         UTXO.assets = {}
         UTXO.balance = {}
         var utxos = await WWW.api_getUTXO(addr);
@@ -29,8 +29,8 @@ export class UTXO {
             utxo.n = n;
             utxo.txid = txid;
             utxo.count = NEL.neo.Fixed8.parse(count);
-            let type = CoinTool.assetID2name[asset]
-            this.history.push({ asset: type, txid: txid, count: count })
+            let type = CoinTool.assetID2name[asset];
+            this.utxo.push({ asset: type, txid: txid, count: count })
             this.assets[asset].push(utxo);
         }
     }

@@ -333,7 +333,7 @@ export default class Index extends wepy.page {
     let neo = 0;
     let gas = 0;
 
-    for (let item of UTXO.history) {
+    for (let item of UTXO.utxo) {
       if (item.asset === 'NEO') neo = parseInt(item.count) + parseInt(neo);
       else gas = parseFloat(item.count) + parseFloat(gas);
     }
@@ -343,7 +343,7 @@ export default class Index extends wepy.page {
       NEO: neo,
       GAS: gas
     };
-    UTXO.history.reverse();
+    UTXO.utxo.reverse();
     this.$apply();
     console.log(UTXO.assets);
     this.OnTotalValue();
