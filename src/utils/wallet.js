@@ -3,6 +3,7 @@ import { SCRYPT_CONFIG } from './constant'
 import tip from '../utils/tip';
 export class WalletHelper {
     static wallet = null
+    static height = -1
     constructor() {
     }
 

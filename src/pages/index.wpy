@@ -320,6 +320,7 @@ export default class Index extends wepy.page {
     const height = await WWW.api_getHeight();
     console.log(height);
     this.Block = height;
+    WalletHelper.height = height;
     this.$apply();
   }
   /**

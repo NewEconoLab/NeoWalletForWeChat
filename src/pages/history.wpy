@@ -9,15 +9,26 @@
   padding: 5px 10px 5px 10px;
 }
 
+.area-head {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100;
+  padding: 5px 5px 5px 5px;
+  .label {
+    font-size: 15px;
+  }
+  .time {
+    font-size: 12px;
+    color: gray;
+  }
+}
 .area-txid {
   display: flex;
   flex-direction: column;
   width: 100%;
   height: wrap;
   border-bottom: thin gray dashed;
-  .label {
-    font-size: 13px;
-  }
   .txid {
     display: block;
     color: gray;
@@ -27,7 +38,7 @@
   }
 }
 
-.area-count {
+.area-confirm {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -46,14 +57,18 @@
 </style>
 <template>
   <view class="container">
-   <view class="history-block" wx:for="{{utxos}}" >
+   <view class="history-block" wx:for="{{TXs}}" >
+     <view class="area-head">
+       <text class="label">交易编号</text>
+       <text class="time">{{item.blocktime['$date']}}</text>
+     </view>
       <view class ="area-txid" @tap="OnDetail({{item.txid}})">
-        <text class="label">交易编号</text>
+        
         <text class="txid">{{item.txid}}</text>
       </view>
-      <view class="area-count">
-        <text class="label"> {{item.asset}}：</text>
-        <text class="count">{{item.count}}</text>
+      <view class="area-confirm">
+        <text class="label"> 确认高度：</text>
+        <text class="count">{{item.blockindex}}</text>
       </view>
     </view>
   </view>
@@ -66,6 +81,7 @@ import { USER_INFO, LOCAL_WALLET } from '../utils/constant';
 import { UTXO } from '../utils/UTXO';
 import { WWW } from '../utils/API';
 import { WalletHelper } from '../utils/wallet';
+import * as TimeHelper from '../utils/time';
 export default class History extends wepy.page {
   config = {
     navigationBarTitleText: 'History',
@@ -124,6 +140,16 @@ export default class History extends wepy.page {
     const txs = await WWW.rpc_getAddressTXs(this.address, 20, this.page);
     console.log(txs);
     this.isLoading = false;
+    for (let index in txs) {
+      const date = txs[index].blocktime['$date']
+        txs[index].blocktime['$date'] = TimeHelper.formatTime(date,'Y/M/D h:m:s')
+        const bindex = txs[index].blockindex;
+        txs[index].blockindex = parseInt(WalletHelper.height)-parseInt(txs[index].blockindex)
+    }
+    console.log(txs);
+    
+    this.TXs = txs;
+    this.$apply();
   }
 }
 </script>
