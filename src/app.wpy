@@ -41,7 +41,10 @@ export default class extends wepy.app {
       'pages/login',
       'pages/send',
       'pages/history',
-      'pages/mine'
+      'pages/mine',
+      'pages/transaction',
+      'pages/vin',
+      'pages/vout'
     ],
     window: {
       backgroundTextStyle: 'light',

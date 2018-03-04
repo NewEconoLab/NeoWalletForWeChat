@@ -275,6 +275,7 @@ export default class Index extends wepy.page {
   onShow() {
     this.OnGetPrice();
     this.OnLogin();
+    CoinTool.initAllAsset();
   }
   async OnLogin() {
     let that = this;

@@ -1,0 +1,113 @@
+<style lang="less">
+.item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: white;
+  border-bottom: thin #999 solid;
+  padding: 10px 5px 10px 5px;
+  .label {
+    flex: 2;
+    font-size: 14px;
+  }
+  .content {
+    flex: 8;
+    font-size: 13px;
+    word-break: break-all;
+    color: gray;
+  }
+  .vin-out {
+    flex: 8;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    image {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+</style>
+<template>
+<view class="detail">
+    <view class="item">
+        <text class="label">交易编号</text>
+        <text class="content">{{tx.txid}}</text>
+    </view>
+     <view class="item">
+        <text class="label">区块高度</text>
+        <text class="content">{{tx.blockindex}}</text>
+    </view>
+     <view class="item">
+        <text class="label">网络费</text>
+        <text class="content">{{tx.net_fee}}</text>
+    </view>
+     <view class="item">
+        <text class="label">系统费</text>
+        <text class="content">{{tx.sys_fee}}</text>
+    </view>
+     <view class="item">
+        <text class="label">大小</text>
+        <text class="content">{{tx.size}}</text>
+    </view>
+    <view class="item">
+        <text class="label">交易类型</text>
+        <text class="content">{{tx.type}}</text>
+    </view>
+    <view class="item">
+        <text class="label">交易脚本</text>
+        <view class="content">{{tx.scripts[0].invocation}}</view>
+    </view>
+    <view class="item" @tap="OnVin()">
+        <text class="label">交易输入</text>
+        <view class="vin-out">
+            <image src='../images/right.png'/>
+        </view>
+    </view>
+    <view class="item" @tap="OnVout()">
+        <text class="label">交易输出</text>
+        <view class="vin-out">
+            <image src='../images/right.png'/>
+        </view>
+    </view>
+</view>
+</template>
+<script>
+import wepy from 'wepy';
+import { WWW } from '../utils/API';
+export default class Transaction extends wepy.page {
+  config = {
+    navigationBarTitleText: 'Transaction'
+  };
+  data = {
+    txid: '',
+    tx: {}
+  };
+
+  components = {};
+
+  methods = {
+    OnVin() {
+      wepy.navigateTo({ url: './vin?vin=' + JSON.stringify(this.tx.vin) });
+    },
+    OnVout() {
+      wepy.navigateTo({ url: './vout?vout=' + JSON.stringify(this.tx.vout) });
+    }
+  };
+  onLoad(option) {
+    this.txid = option.txid;
+    this.$apply();
+  }
+  async onShow() {
+    this.OnLoadTX(this.txid);
+  }
+
+  async OnLoadTX(txid) {
+    const r = await WWW.rpc_getRawTransaction(txid);
+    this.tx = r['0'];
+    this.$apply();
+    console.log(r);
+  }
+}
+</script>

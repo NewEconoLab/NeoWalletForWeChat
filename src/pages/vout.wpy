@@ -1,0 +1,86 @@
+<style lang="less">
+.history-block {
+  width: 90%;
+  display: block;
+  flex-direction: column;
+  border-radius: 5px;
+  margin-top: 10rpx;
+  background-color: white;
+  padding: 5px 10px 5px 10px;
+}
+
+.area-txid {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: wrap;
+  border-bottom: thin gray dashed;
+  .label {
+    font-size: 13px;
+  }
+  .txid {
+    display: block;
+    color: gray;
+    word-break: break-all;
+    font-size: 13px;
+    margin: 5px 0 5px 5px;
+  }
+}
+
+.area-count {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 5px;
+  width: 100%;
+  .label {
+    font-size: 13px;
+    color: rgb(13, 107, 13);
+  }
+  .count {
+    font-size: 15px;
+    padding-right: 5px;
+  }
+}
+</style>
+<template>
+ <view class="container">
+   <view class="history-block" wx:for="{{vout}}" >
+      <view class ="area-txid" @tap="OnDetail({{item.address}})">
+        <text class="label">输出地址</text>
+        <text class="txid">{{item.txid}}</text>
+      </view>
+      <view class="area-count">
+        <text class="label"> {{item.asset}} </text>
+        <text class="count">{{ item.value}}</text>
+      </view>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy';
+import { CoinTool } from '../utils/Coin';
+export default class Vout extends wepy.page {
+  config = {
+    navigationBarTitleText: 'Output'
+  };
+  data = {
+    vout: []
+  };
+
+  components = {};
+
+  methods = {};
+  onLoad(option) {
+    console.log(option.vout);
+    let outputs = JSON.parse(option.vout);
+    
+    for(let index in outputs){
+      outputs[index].asset = CoinTool.assetID2name(outputs[index].asset);
+    }
+    this.vout = outputs;
+    this.$apply();
+  }
+}
+</script>
