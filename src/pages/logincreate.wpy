@@ -55,19 +55,19 @@
         <view class="passphrase-item">
           <text class="title">钱包名:</text>
           <view class="input">
-            <input type="text" name="accountlabel" placeholder="请输入账户名" value='1234'/>
+            <input type="text" name="accountlabel" placeholder="请输入账户名" value=''/>
           </view>
         </view>
         <view class="passphrase-item">
           <view class="title">密码:</view>
             <view class="input">
-            <input type="text" name="passphrase" password placeholder="请输入密码" value='12345'/>
+            <input type="text" name="passphrase" password placeholder="请输入密码" value=''/>
           </view>
         </view>
         <view class="passphrase-item">
           <view class="title">密码验证:</view>
             <view class="input">
-            <input type="text" name="repassphrase" password placeholder="请再次输入密码" value='12345'/>
+            <input type="text" name="repassphrase" password placeholder="请再次输入密码" value=''/>
           </view>
         </view>
       </view>
@@ -177,7 +177,7 @@ export default class LoginCreate extends wepy.page {
         wallet.scrypt.p,
         (info, result) => {
           if (info == 'finish') {
-            wallet.accounts[0].nep2key = result;
+            wallet.accounts[0].key = result;
             const wallet_json = wallet.toJson();
             wallets[accountlabel] = wallet_json;
             wepy.showLoading({ title: '钱包创建完成' });

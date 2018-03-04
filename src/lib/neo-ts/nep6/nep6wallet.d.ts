@@ -1,6 +1,6 @@
 export declare class nep6account {
     address: string;
-    nep2key: string;
+    key: string;
     name: string;
     getPrivateKey(scrypt: nep6ScryptParameters, password: string, callback: (info: string, result: string | Uint8Array) => void): void;
 }

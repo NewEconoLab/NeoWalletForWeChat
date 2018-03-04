@@ -17,7 +17,7 @@ export class nep6account {
                 callback(i, r);
             }
         };
-        Helper.GetPrivateKeyFromNep2(this.nep2key, password, scrypt.N, scrypt.r, scrypt.p, cb);
+        Helper.GetPrivateKeyFromNep2(this.key, password, scrypt.N, scrypt.r, scrypt.p, cb);
     }
 }
 export class nep6ScryptParameters {
@@ -34,9 +34,9 @@ export class nep6wallet {
             var acc = json.accounts[i];
             var localacc = new nep6account();
             localacc.address = acc.address;
-            localacc.nep2key = acc.key;
+            localacc.key = acc.key;
             if (acc.key == undefined)
-                localacc.nep2key = null;
+                localacc.key = null;
             this.accounts.push(localacc);
         }
     }
@@ -58,7 +58,7 @@ export class nep6wallet {
             jsonacc["label"] = null;
             jsonacc["isDefault"] = false;
             jsonacc["lock"] = false;
-            jsonacc["key"] = acc.nep2key;
+            jsonacc["key"] = acc.key;
             jsonacc["extra"] = null;
             accounts.push(jsonacc);
         }

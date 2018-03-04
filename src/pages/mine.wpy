@@ -86,9 +86,9 @@
         <text class="text-label">Address:</text>
         <text class="text-content">{{wallet.address}}</text>
       </view>
-      <view class="area-text-item"  @tap="copyToClip(nep2Key = {{wallet.nep2key}})">
+      <view class="area-text-item"  @tap="copyToClip(nep2Key = {{wallet.key}})">
         <text class="text-label">Nep2 Key:</text>
-        <text class="text-content" >{{wallet.nep2key}}</text>
+        <text class="text-content" >{{wallet.key}}</text>
       </view>
     </view>
     <view class="area-btn">

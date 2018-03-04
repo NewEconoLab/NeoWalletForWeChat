@@ -1,7 +1,7 @@
 ﻿import { Helper } from '../Helper/AccountHelper'
 export class nep6account {
     public address: string;
-    public nep2key: string;
+    public key: string;
     public name: string;
     public getPrivateKey(scrypt: nep6ScryptParameters, password: string, callback: (info: string, result: string | Uint8Array) => void): void {
 
@@ -21,9 +21,10 @@ export class nep6account {
                 callback(i, r);
             }
         }
-        Helper.GetPrivateKeyFromNep2(this.nep2key, password, scrypt.N, scrypt.r, scrypt.p, cb);
+        Helper.GetPrivateKeyFromNep2(this.key, password, scrypt.N, scrypt.r, scrypt.p, cb);
     }
 }
+
 export class nep6ScryptParameters {
     public N: number;
     public r: number;
@@ -31,7 +32,6 @@ export class nep6ScryptParameters {
 }
 
 export class nep6wallet {
-
     scrypt: nep6ScryptParameters;
     accounts: nep6account[];
     public fromJsonStr(jsonstr: string): void {
@@ -45,10 +45,10 @@ export class nep6wallet {
             var acc = json.accounts[i];
             var localacc = new nep6account();
             localacc.address = acc.address;
-            localacc.nep2key = acc.key;
+            localacc.key = acc.key;
 
             if (acc.key == undefined)
-                localacc.nep2key = null;
+                localacc.key = null;
             this.accounts.push(localacc);
         }
     }
@@ -72,7 +72,7 @@ export class nep6wallet {
             jsonacc["label"] = null;
             jsonacc["isDefault"] = false;
             jsonacc["lock"] = false;
-            jsonacc["key"] = acc.nep2key;
+            jsonacc["key"] = acc.key;
             jsonacc["extra"] = null;
             accounts.push(jsonacc);
         }

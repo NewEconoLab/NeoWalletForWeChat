@@ -81,7 +81,9 @@ import { USER_INFO, LOCAL_WALLET } from '../utils/constant';
 import { UTXO } from '../utils/UTXO';
 import { WWW } from '../utils/API';
 import { WalletHelper } from '../utils/wallet';
+import { TransactionTool } from '../utils/transaction';
 import * as TimeHelper from '../utils/time';
+
 export default class History extends wepy.page {
   config = {
     navigationBarTitleText: 'History',
@@ -104,7 +106,7 @@ export default class History extends wepy.page {
     async OnDetail(txid) {
       // const r = await WWW.rpc_getRawTransaction(txid);
       // console.log(r);
-      wepy.navigateTo({url:'./transaction?txid='+txid})
+      wepy.navigateTo({ url: './transaction?txid=' + txid });
     }
   };
 
@@ -118,7 +120,9 @@ export default class History extends wepy.page {
   onShow() {
     this.OnLoadTXs();
   }
+
   onPullDownRefresh() {
+    if (this.isLoading) return;
     console.log('onPullDownRefresh');
     this.page = 1;
     this.$apply();
@@ -129,7 +133,7 @@ export default class History extends wepy.page {
    * Pull up refresh
    */
   async onReachBottom() {
-    console.log('onReachBottom');
+    if (this.isLoading) return;
     this.OnLoadTXs();
     this.page = parseInt(this.page) + 1;
     this.$apply();
@@ -142,15 +146,22 @@ export default class History extends wepy.page {
     console.log(txs);
     this.isLoading = false;
     for (let index in txs) {
-      const date = txs[index].blocktime['$date']
-        txs[index].blocktime['$date'] = TimeHelper.formatTime(date,'Y/M/D h:m:s')
-        const bindex = txs[index].blockindex;
-        txs[index].blockindex = parseInt(WalletHelper.height)-parseInt(txs[index].blockindex)
+      const date = txs[index].blocktime['$date'];
+      txs[index].blocktime['$date'] = TimeHelper.formatTime(
+        date,
+        'Y/M/D h:m:s'
+      );
+      const bindex = txs[index].blockindex;
+      txs[index].blockindex =
+        parseInt(WalletHelper.height) - parseInt(txs[index].blockindex);
     }
     console.log(txs);
-    
+
     this.TXs = txs;
     this.$apply();
+    // complete
+    wx.hideNavigationBarLoading(); //完成停止加载
+    wx.stopPullDownRefresh(); //停止下拉刷新
   }
 }
 </script>

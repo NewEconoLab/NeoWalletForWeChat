@@ -4,6 +4,8 @@ import { WalletHelper } from './wallet'
 import tip from './tip';
 import wepy from 'wepy'
 export class TransactionTool {
+    static unconfirm = []
+
     constructor() {
     }
 
@@ -28,9 +30,10 @@ export class TransactionTool {
         // console.log(NEL.helper.StringHelper.toHexString(tran.GetRawData()))
         wepy.showLoading({ title: '交易发送中' });
         var result = await WWW.rpc_postRawTransaction(tran.GetRawData());
+        wepy.hideLoading();
         console.log(result);
-        if (result === true) {
-            return txid;
+        if (result[0]['sendrawtransactionresult'] === true) {
+            return result[0]['txid'];
         }
         return 'failed'
 

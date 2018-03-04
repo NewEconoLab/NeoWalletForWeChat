@@ -20,7 +20,7 @@ export class WalletHelper {
         }
 
         NEL.helper.Helper.GetPrivateKeyFromNep2(
-            wallet.nep2key,
+            wallet.key,
             passphrase,
             SCRYPT_CONFIG['N'],
             SCRYPT_CONFIG['r'],

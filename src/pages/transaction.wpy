@@ -101,6 +101,7 @@ export default class Transaction extends wepy.page {
   }
   async onShow() {
     this.OnLoadTX(this.txid);
+    // Service.add('transaction',this)
   }
 
   async OnLoadTX(txid) {
