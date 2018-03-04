@@ -1,9 +1,9 @@
 import * as NEL from '../lib/neo-ts/index'
 import { WWW } from './API';
-import { ID_GAS, ID_NEO } from './constant'
 export class CoinTool {
-    static id_GAS = ID_GAS;
-    static id_NEO = ID_NEO;
+    static id_GAS = "0x602c79718b16e442de58778e148d0b1084e3b2dffd5de6b7b16cee7969282de7";
+    // asset neo id
+    static id_NEO = "0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b";
     static assetID2name = {};
     static name2assetID = {};
     static async initAllAsset() {

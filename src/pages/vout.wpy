@@ -49,10 +49,10 @@
    <view class="history-block" wx:for="{{vout}}" >
       <view class ="area-txid" @tap="OnDetail({{item.address}})">
         <text class="label">输出地址</text>
-        <text class="txid">{{item.txid}}</text>
+        <text class="txid">{{item.address}}</text>
       </view>
       <view class="area-count">
-        <text class="label"> {{item.asset}} </text>
+        <text class="label"> {{item.asset}} ：</text>
         <text class="count">{{ item.value}}</text>
       </view>
     </view>
@@ -77,7 +77,7 @@ export default class Vout extends wepy.page {
     let outputs = JSON.parse(option.vout);
     
     for(let index in outputs){
-      outputs[index].asset = CoinTool.assetID2name(outputs[index].asset);
+      outputs[index].asset = CoinTool.assetID2name[outputs[index].asset];
     }
     this.vout = outputs;
     this.$apply();

@@ -1,6 +1,6 @@
 import { WWW } from './API';
 import * as NEL from '../lib/neo-ts/index';
-import { ID_GAS, ID_NEO } from './constant'
+import { CoinTool } from './Coin'
 export class UTXO {
     static assets = {}  //{ [id: string]: UTXO[] }
     static history = []
@@ -29,18 +29,8 @@ export class UTXO {
             utxo.n = n;
             utxo.txid = txid;
             utxo.count = NEL.neo.Fixed8.parse(count);
-            let type = ''
-            switch (asset) {
-                case ID_GAS:
-                this.history.push({ asset: 'GAS', txid: txid, count: count })
-                    break
-                case ID_NEO:
-                this.history.push({ asset: 'NEO', txid: txid, count: count })
-                    break
-                default:
-                    break;
-            }
-            
+            let type = CoinTool.assetID2name[asset]
+            this.history.push({ asset: type, txid: txid, count: count })
             this.assets[asset].push(utxo);
         }
     }
