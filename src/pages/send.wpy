@@ -88,9 +88,9 @@
   margin-top: 10px;
   width: 96%;
   padding: 15px 10px 15px 10px;
-   border-bottom: thin gray solid;
+  border-bottom: thin gray solid;
   text {
-     font-size: 15px;
+    font-size: 15px;
   }
   .placeholder {
     font-size: 15px;
@@ -143,6 +143,8 @@ import * as NEL from '../lib/neo-ts/index';
 import tip from '../utils/tip';
 import { TransactionTool } from '../utils/transaction';
 import * as Random from '../utils/random';
+import { WWW } from '../utils/API';
+import { WalletHelper } from '../utils/wallet'
 export default class Send extends wepy.page {
   config = {
     navigationBarTitleText: 'Send'
@@ -158,8 +160,8 @@ export default class Send extends wepy.page {
     ],
     balance: '0',
     checked: 'GAS',
-    amount: '',
-    password:''
+    amount: '4',
+    password: '12345'
   };
 
   computed = {};
@@ -194,8 +196,9 @@ export default class Send extends wepy.page {
       }
       this.amount = amount;
       this.hiddenmodalput = false;
-      this.password = password;
+      this.password = '12345'//password;
       this.$apply();
+      this.OnSend();
     }
   };
 
@@ -205,27 +208,49 @@ export default class Send extends wepy.page {
     this.balance = UTXO.balance['GAS'];
     this.$apply();
   }
+  //构造并发送交易
   async OnSend() {
-    console.log(e);
-    var count = NEL.neo.Fixed8.parse(this.amount + '');
-    let coin = this.checked === 'GAS' ? CoinTool.id_GAS : CoinTool.id_NEO;
-    wepy.showLoading({ title: '交易生成中' });
-    var tran = CoinTool.makeTran(UTXO.assets, this.targetAddr, coin, count);
-    // console.log(tran);
-    let randomStr = await Random.getSecureRandom(256);
-    const txid = await TransactionTool.setTran(tran, this.password,randomStr);
-    wepy.hideLoading();
-    if (txid !== 'failed') {
-      wx.showToast({
-        title: '转账成功',
-        content: txid,
-        success: function(res) {
-          if (res.confirm) {
-            console.log('用户点击确定');
-          }
+    let that = this;
+    wepy.showLoading({title:'密码验证中'});
+    WalletHelper.decode(
+      this.password,
+      WalletHelper.wallet,
+      async (code, prikey, pubkey) => {
+        console.log('<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+        wepy.hideLoading();
+        if (code < 0) {
+          tip.error('密码错误');
+          return;
         }
-      });
-    }
+        var count = NEL.neo.Fixed8.parse(that.amount + '');
+        let coin = that.checked === 'GAS' ? CoinTool.id_GAS : CoinTool.id_NEO;
+        wepy.showLoading({ title: '交易生成中' });
+        var tran = CoinTool.makeTran(UTXO.assets, that.targetAddr, coin, count);
+        // console.log(tran);
+        let randomStr = await Random.getSecureRandom(256);
+        const txid = await TransactionTool.setTran(
+          tran,
+          prikey,
+          pubkey,
+          randomStr
+        );
+        console.log(txid);
+
+        wepy.hideLoading();
+        if (txid === 'failed') {
+        } else {
+          wx.showToast({
+            title: '转账成功',
+            content: txid,
+            success: async function(res) {
+              if (res.confirm) {
+                console.log('用户点击确定');
+              }
+            }
+          });
+        }
+      }
+    );
   }
 }
 </script>

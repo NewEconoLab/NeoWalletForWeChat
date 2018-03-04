@@ -89,7 +89,6 @@
   flex-direction: row;
   width: 100%;
   align-items: center;
-  border: thin solid rgb(214, 214, 214);
   background-color: white;
 }
 
@@ -184,7 +183,7 @@
       <view class="block-title">
         <text>功能</text>
       </view>
-      <view class="block-column">
+      <view class="block-column" style=" border: thin solid rgb(214, 214, 214);">
         <view class="block-function-item" style="width:{{fblockWH}}px;height:{{fblockWH}}px;border-right:thin solid rgb(214, 214, 214);" @tap="navigate('receive')">
           <image src="../images/receive.png" class="icon"></image>
           <text class="name">Receive</text>
@@ -200,6 +199,12 @@
         <view class="block-function-item" style="width:{{fblockWH}}px;height:{{fblockWH}}px;" @tap="navigate('history')">
           <image src="../images/history.png" class="icon"></image>
           <text class="name">History</text>
+        </view>
+      </view>
+      <view class="block-column" style="border-bottom: thin solid rgb(214, 214, 214);">
+         <view class="block-function-item" style="width:{{fblockWH}}px;height:{{fblockWH}}px;border-right:thin solid rgb(214, 214, 214);" @tap="navigate('token')">
+          <image src="../images/neo.jpg" class="icon"></image>
+          <text class="name">Token</text>
         </view>
       </view>
     </view>

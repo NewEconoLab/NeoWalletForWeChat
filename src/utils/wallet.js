@@ -14,6 +14,7 @@ export class WalletHelper {
      */
     static decode(passphrase, wallet, callback) {
         if (wallet === null) {
+            callback(-1, null, null)
             return;
         }
 
@@ -24,14 +25,17 @@ export class WalletHelper {
             SCRYPT_CONFIG['r'],
             SCRYPT_CONFIG['p'],
             (info, result) => {
+                console.log('==========123');
                 if (info === 'error') {
                     tip.alert('密码错误');
+                    callback(-1, null, null)
                     return;
                 }
-                // console.log('result=' + 'info=' + info + ' result=' + result);
+                console.log('==========');
                 const prikey = result;
                 let pubkey = NEL.helper.Helper.GetPublicKeyFromPrivateKey(prikey);
-                callback(prikey, pubkey)
+                console.log('==========456');
+                callback(0, prikey, pubkey)
             }
         );
     }

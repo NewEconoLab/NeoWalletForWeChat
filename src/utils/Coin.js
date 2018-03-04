@@ -89,7 +89,6 @@ export class CoinTool {
                 outputchange.value = change;
                 outputchange.assetId = NEL.helper.UintHelper.hexToBytes(assetid).reverse();
                 tran.outputs.push(outputchange);
-
             }
         }
         else {

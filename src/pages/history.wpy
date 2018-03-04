@@ -47,7 +47,7 @@
 <template>
   <view class="container">
    <view class="history-block" wx:for="{{utxos}}" >
-      <view class ="area-txid">
+      <view class ="area-txid" @tap="OnDetail({{item.txid}})">
         <text class="label">交易编号</text>
         <text class="txid">{{item.txid}}</text>
       </view>
@@ -64,28 +64,66 @@
 import wepy from 'wepy';
 import { USER_INFO, LOCAL_WALLET } from '../utils/constant';
 import { UTXO } from '../utils/UTXO';
+import { WWW } from '../utils/API';
+import { WalletHelper } from '../utils/wallet';
 export default class History extends wepy.page {
   config = {
-    navigationBarTitleText: 'History'
+    navigationBarTitleText: 'History',
+    enablePullDownRefresh: true
   };
 
   components = {};
 
   data = {
-    utxos: []
+    utxos: [],
+    TXs: [],
+    page: 1,
+    address: '',
+    isLoading: false
   };
 
   computed = {};
 
-  methods = {};
+  methods = {
+    async OnDetail(txid) {
+      const r = await WWW.rpc_getRawTransaction(txid);
+      console.log(r);
+    }
+  };
 
   events = {};
 
   onLoad() {
     this.utxos = UTXO.history;
+    this.address = WalletHelper.wallet.address;
     this.$apply();
-    // console.log('>>>>>');
-    // console.log(this.utxos);
+  }
+  onShow() {
+    this.OnLoadTXs();
+  }
+  onPullDownRefresh() {
+    console.log('onPullDownRefresh');
+    this.page = 1;
+    this.$apply();
+    this.OnLoadTXs();
+  }
+
+  /**
+   * Pull up refresh
+   */
+  async onReachBottom() {
+    console.log('onReachBottom');
+    this.OnLoadTXs();
+    this.page = parseInt(this.page) + 1;
+    this.$apply();
+  }
+
+  async OnLoadTXs() {
+    this.isLoading = true;
+    this.$apply();
+    const txs = await WWW.rpc_getAddressTXs(this.address, 20, this.page);
+    console.log(txs);
+    this.isLoading = false;
   }
 }
 </script>

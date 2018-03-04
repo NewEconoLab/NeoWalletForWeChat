@@ -2,9 +2,10 @@ import * as Request from './wxRequest';
 import * as NEL from '../lib/neo-ts/index';
 let hotapp = require('./hotapp.js');
 export class WWW {
-    static api = "http://47.96.168.8:81/api/testnet";
+    static api = "http://api.nel.group/api/testnet";
+    //"http://47.96.168.8:81/api/testnet";
     static priceHost = "https://api.coinmarketcap.com/v1/ticker/";
-    static rpc = "";
+    static rpc = WWW.api;
     static rpcName = "";
 
     /**
@@ -114,7 +115,35 @@ export class WWW {
     static async rpc_postRawTransaction(data) {
         var postdata = WWW.makeRpcPostBody("sendrawtransaction", NEL.helper.StringHelper.toHexString(data));
         console.log(postdata)
-        var result = await Request.wxRequest({ "method": "post", "body":{ 'tx':JSON.stringify(postdata),'server':WWW.rpc} }, "http://112.74.52.116/proxy.php");
+        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': WWW.rpc } }, "http://112.74.52.116/proxy.php");
+        // var result = await Request.wxRequest({ "method": "post", "body":JSON.stringify(postdata)}, WWW.rpc);
+        var r = result["result"];
+        return r;
+    }
+    
+    /**
+     * get transaction detail from txid
+     * @param {string} data
+     */
+    static async rpc_getRawTransaction(txid) {
+        var postdata = WWW.makeRpcPostBody("getrawtransaction", txid);
+        console.log(postdata)
+        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': WWW.rpc } }, "http://112.74.52.116/proxy.php");
+        // var result = await Request.wxRequest({ "method": "post", "body":JSON.stringify(postdata)}, WWW.rpc);
+        var r = result["result"];
+        return r;
+    }
+
+    /**
+     * Get transaction history by address
+     * @param {string} addr the address used to get txs
+     * @param {number = 20} max the max number of txs per page
+     * @param {number = 1} page page index
+     */
+    static async rpc_getAddressTXs(addr, max = 20, page = 1) {
+        var postdata = WWW.makeRpcPostBody("getaddresstxs", addr, max, page);
+        console.log(postdata)
+        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': WWW.rpc } }, "http://112.74.52.116/proxy.php");
         // var result = await Request.wxRequest({ "method": "post", "body":JSON.stringify(postdata)}, WWW.rpc);
         var r = result["result"];
         return r;

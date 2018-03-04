@@ -29,6 +29,7 @@ export class nep6ScryptParameters {
     public r: number;
     public p: number;
 }
+
 export class nep6wallet {
 
     scrypt: nep6ScryptParameters;
