@@ -20,12 +20,12 @@ export async function getSecureRandom(len) {
   let random = ''
   const code = await this.getLoginCode();
   const userinfo = await this.getUserInfo();
-  console.log(code)
+  // console.log(code)
   random = SHA256(code + random).toString()
   random = SHA256(userinfo.signature + random).toString()
   random = SHA256(userinfo.encryptedData + random).toString()
   random = SHA256(userinfo.iv + random).toString()
-  console.log(random)
+  // console.log(random)
   wepy.hideLoading();
   return random.slice(0, len)
 }
@@ -37,7 +37,7 @@ export function getLoginCode() {
         if (res.code) {
           resolve(res.code)
         } else {
-          console.log('获取用户登录态失败！' + res.errMsg)
+          // console.log('获取用户登录态失败！' + res.errMsg)
         }
       }
     });

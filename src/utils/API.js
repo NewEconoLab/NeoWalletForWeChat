@@ -114,7 +114,7 @@ export class WWW {
      */
     static async rpc_postRawTransaction(data) {
         var postdata = WWW.makeRpcPostBody("sendrawtransaction", NEL.helper.StringHelper.toHexString(data));
-        console.log(postdata)
+        // console.log(postdata)
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': WWW.rpc } }, "http://112.74.52.116/proxy.php");
         // var result = await Request.wxRequest({ "method": "post", "body":JSON.stringify(postdata)}, WWW.rpc);
         var r = result["result"];
@@ -127,7 +127,7 @@ export class WWW {
      */
     static async rpc_getRawTransaction(txid) {
         var postdata = WWW.makeRpcPostBody("getrawtransaction", txid);
-        console.log(postdata)
+        // console.log(postdata)
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': WWW.rpc } }, "http://112.74.52.116/proxy.php");
         // var result = await Request.wxRequest({ "method": "post", "body":JSON.stringify(postdata)}, WWW.rpc);
         var r = result["result"];
@@ -142,7 +142,7 @@ export class WWW {
      */
     static async rpc_getAddressTXs(addr, max = 20, page = 1) {
         var postdata = WWW.makeRpcPostBody("getaddresstxs", addr, max, page);
-        console.log(postdata)
+        // console.log(postdata)
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': WWW.rpc } }, "http://112.74.52.116/proxy.php");
         // var result = await Request.wxRequest({ "method": "post", "body":JSON.stringify(postdata)}, WWW.rpc);
         var r = result["result"];

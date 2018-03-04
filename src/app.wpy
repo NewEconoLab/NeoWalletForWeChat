@@ -73,7 +73,7 @@ export default class extends wepy.app {
 
     wepy.getUserInfo({
       success(res) {
-        console.log(res);
+        // console.log(res);
         // 存储userInfo
         that.globalData.userInfo = res.userInfo;
         wepy.setStorageSync(USER_INFO, res.userInfo);

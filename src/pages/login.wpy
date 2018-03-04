@@ -66,7 +66,7 @@
         <button type="primary" disabled="{{disabled}}" @tap="loginLocal()" >本地账户</button>
       </view>
        <view class="login-item">
-        <button type="primary" @tap="loginNep()">NEP6登陆</button>
+        <button type="primary" @tap="loginNep()">扫码登陆</button>
       </view>
        <view class="login-item" >
         <button type="primary" @tap="loginCreate()">新建账户</button>
