@@ -5,10 +5,14 @@ export class UTXO {
     static assets = {}  //{ [id: string]: UTXO[] }
     static utxo = []
     static balance = {}
+    static lock = false; // use lock to prevent muti request competition
     constructor() {
     }
     static async GetAssets(addr) {
-        let that = this
+        if (this.lock === true) {
+            return;
+        }
+        this.lock = true;
         UTXO.utxo.splice(0, UTXO.utxo.length);
         UTXO.assets = {}
         UTXO.balance = {}
@@ -33,7 +37,9 @@ export class UTXO {
             this.utxo.push({ asset: type, txid: txid, count: count })
             this.assets[asset].push(utxo);
         }
+        this.lock = false;
     }
+
 }
 
 export class Utxo {

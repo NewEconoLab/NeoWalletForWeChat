@@ -72,7 +72,7 @@
         </view>
       </view>
       <view class="area-btn">
-        <button type="primary" formType="submit">创建新钱包</button>
+        <button type="primary" disable="{{isGenerating}}" formType="submit">创建新钱包</button>
       </view>
    
   </view>
@@ -100,7 +100,9 @@ export default class LoginCreate extends wepy.page {
     navigationBarTitleText: 'Create'
   }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
 
-  data = {}; // 页面所需数据均需在这里声明，可用于模板数据绑定
+  data = {
+    isGenerating: false
+  }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
   components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
 
@@ -112,6 +114,8 @@ export default class LoginCreate extends wepy.page {
 
   methods = {
     async formSubmit(e) {
+      this.isGenerating = true;
+      this.$apply();
       let that = this;
       let accountlabel = e.detail.value.accountlabel;
       let passphrase = e.detail.value.passphrase;
@@ -176,6 +180,8 @@ export default class LoginCreate extends wepy.page {
         wallet.scrypt.r,
         wallet.scrypt.p,
         (info, result) => {
+          that.isGenerating = false;
+          that.$apply();
           if (info == 'finish') {
             wallet.accounts[0].key = result;
             const wallet_json = wallet.toJson();

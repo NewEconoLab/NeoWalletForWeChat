@@ -264,6 +264,7 @@ export default class Send extends wepy.page {
             success: async function(res) {
               if (res.confirm) {
                 console.log('用户点击确定');
+                wx.navigateBack();
               }
             }
           });

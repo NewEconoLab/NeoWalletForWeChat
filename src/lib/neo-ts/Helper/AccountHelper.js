@@ -229,7 +229,7 @@ export class Helper {
         let addr = Helper.GetAddressFromPublicKey(pubkey);
         const strkey = SHA256(SHA256(addr).toString()).toString().slice(0, 4);
         let uint8pass = this.String2Bytes(passphrase);
-        // console.log('strkey = ' + prikey);
+        console.log('strkey = ' + prikey);
         scrypt.default(uint8pass, strkey, {
             logN: 5,
             r: r,

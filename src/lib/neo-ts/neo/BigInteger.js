@@ -487,11 +487,11 @@ export class BigInteger {
     pow(exponent) {
         return BigInteger.pow(this, exponent);
     }
-    static random(bitLength, rng, randomStr) {
+    static random(bitLength, randomStr) {
         if (bitLength == 0)
             return BigInteger.Zero;
         let bytes = new Uint8Array(Math.ceil(bitLength / 8));
-        if (rng == null) {
+        if (randomStr == null) {
             for (let i = 0; i < bytes.length; i++)
                 bytes[i] = Math.random() * 256;
         }

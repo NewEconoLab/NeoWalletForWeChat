@@ -158,7 +158,7 @@ export default class CreateResult extends wepy.page {
     login() {
       if (!this.captureScreen) {
         tip.alert('请截图保存账户信息');
-        // return;
+        return;
       }
       this.$redirect('./index');
     }

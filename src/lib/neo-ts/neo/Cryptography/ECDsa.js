@@ -13,7 +13,6 @@ export class ECDsa {
     }
     static generateKey(curve) {
         let prikey = new Uint8Array(32);
-        crypto.getRandomValues(prikey);
         let pubkey = ECPoint.multiply(curve.G, prikey);
         return {
             privateKey: new ECDsaCryptoKey(pubkey, prikey),
@@ -30,7 +29,7 @@ export class ECDsa {
             let k;
             do {
                 do {
-                    k = BigInteger.random(this.key.publicKey.curve.N.bitLength(), crypto, randomStr);
+                    k = BigInteger.random(this.key.publicKey.curve.N.bitLength(), randomStr);
                 } while (k.sign() == 0 || k.compareTo(this.key.publicKey.curve.N) >= 0);
                 let p = ECPoint.multiply(this.key.publicKey.curve.G, k);
                 let x = p.x.value;

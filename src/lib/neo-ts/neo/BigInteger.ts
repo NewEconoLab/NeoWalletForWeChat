@@ -489,10 +489,10 @@ export class BigInteger {
         return BigInteger.pow(this, exponent);
     }
 
-    public static random(bitLength: number, rng?: any, randomStr?: string, ): BigInteger {
+    public static random(bitLength: number, randomStr?: string, ): BigInteger {
         if (bitLength == 0) return BigInteger.Zero;
         let bytes = new Uint8Array(Math.ceil(bitLength / 8));
-        if (rng == null) {
+        if (randomStr == null) {
             for (let i = 0; i < bytes.length; i++)
                 bytes[i] = Math.random() * 256;
         }
