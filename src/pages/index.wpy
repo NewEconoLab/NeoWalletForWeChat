@@ -95,6 +95,7 @@
 .block-price-item {
   display: flex;
   width: 250rpx;
+  height: 250rpx;
   flex-direction: column;
   align-items: center;
   .icon {
@@ -120,6 +121,7 @@
 .block-function-item {
   display: flex;
   width: 187.5rpx;
+  height: 187.5rpx;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -162,17 +164,17 @@
         <text>NEO生态</text>
       </view>
       <view class="block-column">
-        <view class="block-price-item" style="width:{{blockWH}}px;height:{{blockWH}}px;border-right:thin solid rgb(214, 214, 214);">
+        <view class="block-price-item" style="border-right:thin solid rgb(214, 214, 214);">
           <image src="../images/neo.jpg" class="icon"></image>
           <text class="name">NEO</text>
           <text class="price-{{PN?'rise':'decrease'}}">￥{{NEOPrice}}</text>
         </view>
-        <view class="block-price-item" style="width:{{blockWH}}px;height:{{blockWH}}px">
+        <view class="block-price-item" >
             <image src="../images/neo.jpg" class="icon"></image>
           <text class="name">GAS</text>
           <text class="price-{{PG?'rise':'decrease'}}">￥{{GASPrice}}</text>
         </view>
-        <view class="block-price-item" style="width:{{blockWH}}px;height:{{blockWH}}px; border-left:thin solid rgb(214, 214, 214);">
+        <view class="block-price-item" style="border-left:thin solid rgb(214, 214, 214);">
           <image src="../images/bitcoin.png" class="icon"></image>
           <text class="name">BitCoin</text>
           <text class="price-{{PB?'rise':'decrease'}}">￥{{BitCoinPrice}}</text>
@@ -184,19 +186,19 @@
         <text>功能</text>
       </view>
       <view class="block-column" style=" border: thin solid rgb(214, 214, 214);">
-        <view class="block-function-item" style="width:{{fblockWH}}px;height:{{fblockWH}}px;border-right:thin solid rgb(214, 214, 214);" @tap="navigate('receive')">
+        <view class="block-function-item" style="border-right:thin solid rgb(214, 214, 214);" @tap="navigate('receive')">
           <image src="../images/receive.png" class="icon"></image>
           <text class="name">Receive</text>
         </view>
-        <view class="block-function-item" style="width:{{fblockWH}}px;height:{{fblockWH}}px;border-right:thin solid rgb(214, 214, 214);" @tap="navigate('send')">
+        <view class="block-function-item" style="border-right:thin solid rgb(214, 214, 214);" @tap="navigate('send')">
             <image src="../images/send.png" class="icon"></image>
           <text class="name">Send</text>
         </view>
-        <view class="block-function-item" style="width:{{fblockWH}}px;height:{{fblockWH}}px;border-right:thin solid rgb(214, 214, 214);" @tap="navigate('mine')">
+        <view class="block-function-item" style="border-right:thin solid rgb(214, 214, 214);" @tap="navigate('mine')">
           <image src="../images/account.png" class="icon"></image>
           <text class="name">Mine</text>
         </view>
-        <view class="block-function-item" style="width:{{fblockWH}}px;height:{{fblockWH}}px;" @tap="navigate('history')">
+        <view class="block-function-item"  @tap="navigate('history')">
           <image src="../images/history.png" class="icon"></image>
           <text class="name">History</text>
         </view>
@@ -214,7 +216,7 @@
 
 <script>
 import wepy from 'wepy';
-import { SYSTEM_INFO, CURR_WALLET } from '../utils/constant';
+import { CURR_WALLET } from '../utils/constant';
 import { WWW } from '../utils/API';
 import { CoinTool } from '../utils/Coin';
 import { UTXO } from '../utils/UTXO';
@@ -228,8 +230,6 @@ export default class Index extends wepy.page {
   components = {};
 
   data = {
-    blockWH: -1,
-    fblockWH: -1,
     wallet: {},
     NEO: '0',
     GAS: '0',
@@ -268,9 +268,6 @@ export default class Index extends wepy.page {
 
   async onLoad() {
     const that = this;
-    let systemInfo = (await wepy.getStorageSync(SYSTEM_INFO)) || {};
-    this.blockWH = systemInfo.windowWidth / 3;
-    this.fblockWH = systemInfo.windowWidth / 4;
   }
   onShow() {
     this.OnGetPrice();

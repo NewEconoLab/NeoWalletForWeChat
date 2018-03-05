@@ -18,7 +18,6 @@ import 'wepy-async-function';
 import {
   USER_SPECICAL_INFO,
   USER_INFO,
-  SYSTEM_INFO,
   ADDRESS_ID,
   SEL_CLASS_CODE
 } from './utils/constant';
@@ -77,10 +76,6 @@ export default class extends wepy.app {
         // 存储userInfo
         that.globalData.userInfo = res.userInfo;
         wepy.setStorageSync(USER_INFO, res.userInfo);
-        // 存储系统信息
-        let systemInfo = wepy.getSystemInfoSync();
-        // console.log(systemInfo);
-        wepy.setStorageSync(SYSTEM_INFO, systemInfo);
       }
     });
   }

@@ -95,7 +95,6 @@
 import wepy from 'wepy';
 import drawQrcode from 'weapp-qrcode';
 import tip from '../utils/tip';
-import { SYSTEM_INFO } from '../utils/constant';
 export default class CreateResult extends wepy.page {
   customData = {}; // 自定义数据
 
