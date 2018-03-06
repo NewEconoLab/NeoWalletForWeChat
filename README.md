@@ -8,9 +8,13 @@ This project is developed with the help and support from [NEL](https://github.co
 ## Donation
 - NEO/GAS: ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F
 
-<center>
-<img src="./img/qrcode.jpg" width="200" alt="NEOWallet"/>
-</center>
+## Mini Program QRCode
+
+<p align="center">
+  <img
+    src="./img/qrcode.jpg"
+    width="125px;">
+</p>
 
 ## ScreenCapture
 <div>
