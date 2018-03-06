@@ -74,7 +74,7 @@ Please note that the open source protocol for this repository is **MIT**. This m
 **You must open the source code**
 
 ## Author
-- Jinghui Liao<jinghui@wayne.edu>
+- Jinghui Liao <jinghui@wayne.edu>
 
 
 Copyright (c) 2018 - Present
