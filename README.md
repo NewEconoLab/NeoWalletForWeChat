@@ -5,18 +5,16 @@ This project is developed with the help and support from [NEL](https://github.co
 - 点击链接加入群【NEO开发 从入门到放弃】：https://jq.qq.com/?_wv=1027&k=5erIkal
 - 点击链接加入群【NEL区块链技术交流】：https://jq.qq.com/?_wv=1027&k=57bF3he
 
-## Donation
-- NEO/GAS: ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F
-
 ## Mini Program QRCode
 
 <p align="center">
   <img
     src="./img/qrcode.jpg"
-    width="125px;">
+    width="300px;">
 </p>
 
 ## ScreenCapture
+
 <div>
 <img src="./img/index.JPG" width="200" alt="首页"/>
 <img src="./img/send.JPG" width="200" alt="转账"/>
@@ -56,10 +54,10 @@ npm run dev
 
 
 ### Build&Watch
+
 ```
 wepy build --watch
 ```
-
 
 ## Dependencies
 
@@ -75,11 +73,11 @@ wepy build --watch
 
 Please note that the open source protocol for this repository is **MIT**. This means that you have the freedom to run, copy, modify and distribute the software. 
 
-**You must open the source code**
-
 ## Author
+
 - Jinghui Liao <jinghui@wayne.edu>
 
+## Donation
 
-Copyright (c) 2018 - Present
+- NEO/GAS: ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F
 
