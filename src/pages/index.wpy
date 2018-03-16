@@ -107,8 +107,28 @@ export default class Index extends wepy.page {
       wepy.hideLoading();
     }
   }
-  onScanLogin(nep2key) {
-    this.$redirect('./loginnep2?nep2=' + nep2key);
+  onScanLogin(key) {
+     switch (key.length) {
+        case 52: //wif
+          const prikey = NEL.helper.Helper.GetPrivateKeyFromWIF(key);
+          if (prikey.length!==64) {
+            wepy.hideLoading();
+            tip.alert('密钥格式错误');
+            return；
+          }
+          key = NEL.helper.StringHelper.toHexString(prikey);
+        case 64: //privatekey
+          WalletHelper.setPrikey(key);
+          wepy.hideLoading();
+          await wepy.setStorageSync(CURR_WALLET, WalletHelper.toString());
+          wepy.reLaunch({ url: './home' });
+          break;
+        default:
+          //error input format
+           wepy.hideLoading();
+           tip.alert('密钥格式错误')
+          break;
+      }
   }
 }
 </script>
