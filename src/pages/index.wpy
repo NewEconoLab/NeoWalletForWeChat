@@ -61,6 +61,7 @@
 import wepy from 'wepy';
 import { LOCAL_WALLET } from '../utils/constant';
 import { WalletHelper } from '../utils/wallet';
+import * as Random from '../utils/random';
 export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: '登陆'
@@ -74,7 +75,8 @@ export default class Index extends wepy.page {
 
   methods = {
     loginCreate() {
-      this.$redirect('./logincreate');
+      this.onCreateAccount();
+      //this.$redirect('./logincreate');
     },
     loginScan() {
       let that = this;
@@ -129,6 +131,19 @@ export default class Index extends wepy.page {
            tip.alert('密钥格式错误')
           break;
       }
+  }
+  onCreateAccount(){
+      wepy.showLoading({ title: '私钥生成中' });
+      let privateKey = await Random.getSecureRandom(64);
+      if(privatekey.length !== 64){
+        tip.error('私钥生成失败');
+        return；
+      }
+      
+      WalletHelper.setPrikey(privateKey);
+      await wepy.setStorageSync(CURR_WALLET, WalletHelper.toString());
+      wepy.hideLoading();
+      wepy.reLaunch({ url: './createresult' });
   }
 }
 </script>
