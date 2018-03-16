@@ -1,381 +1,117 @@
- <style lang="less">
-.area-chain {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin-top: 20rpx;
-}
-.chain-height {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-left: 10rpx;
-  .label {
-    font-size: 13px;
-    color: gray;
-  }
-  .height {
-    color: forestgreen;
-  }
-}
-.chain-net {
-  background-color: green;
-  border-radius: 0px;
-  border-bottom-left-radius: 15px;
-  border-top-left-radius: 15px;
-  align-items: center;
-  padding: 5px 15px 5px 15px;
-  display: flex;
-  flex-direction: row;
-  text {
-    color: white;
-    font-size: 11px;
-  }
-}
-.area-asset {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background-color: white;
-  margin: 20rpx 0 0 0;
-}
-.asset-item {
-  width: 375rpx;
+<style lang="less">
+.login {
   display: flex;
   flex-direction: column;
   align-items: center;
-  .title {
-    margin-top: 30rpx;
-    font-size: 15px;
-  }
-  .number {
-    font-size: 30px;
-    margin-top: 15rpx;
-  }
-  .totle {
-    color: gray;
-    font-size: 12px;
-    font-weight: lighter;
-    margin: 10rpx 0 30rpx 0;
-  }
-}
-.line {
-  width: 1rpx;
-  height: 50px;
-  background-color: blue;
-}
-.area-block {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
-}
-.block-title {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  justify-content: flex-start;
-  background-color: white;
-  padding: 12px 0 13px 10px;
-  text {
-    font-size: 14px;
-  }
-}
-.block-column {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  align-items: center;
-  background-color: white;
+  margin-top: 100rpx;
+  width: 90%;
 }
 
-.block-price-item {
-  display: flex;
-  width: 250rpx;
+.login-item {
+  width: 400rpx;
   height: 250rpx;
-  flex-direction: column;
-  align-items: center;
-  .icon {
-    margin-top: 10px;
-    width: 70rpx;
-    height: 70rpx;
-  }
-  .name {
-    margin-top: 20rpx;
-  }
-  .price-rise {
-    margin: 20rpx 0 10rpx 0;
-    font-size: 14px;
-    color: rgb(107, 179, 0);
-  }
-  .price-decrease {
-    margin: 20rpx 0 10rpx 0;
-    font-size: 14px;
-    color: red;
-  }
-}
-
-.block-function-item {
+  margin-top: 30rpx;
+  background-color: lightskyblue;
   display: flex;
-  width: 187.5rpx;
-  height: 187.5rpx;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  border-radius: 5px;
   .icon {
     width: 50rpx;
     height: 50rpx;
   }
   .name {
-    margin-top: 20rpx;
-    font-size: 13px;
+    color:white;
+    margin-top: 30rpx;
+    font-weight: 100;
+    font-size: 14px;
+    
   }
+}
+
+.foot {
+  display: inline-block;
+  position: fixed;
+  bottom: 0;
+  margin-bottom: 30rpx;
+  font-size: 14px;
+  color: slategray;
 }
 </style>
 <template>
   <view class="container">
-    <view class="area-chain">
-      <view class="chain-height">
-        <text class="label">区块高度：</text>
-        <text class="height">{{Block}}</text>
+    <view class="login">
+      <view class="login-item" @tap="loginCreate()" >
+        <image src="../images/add_account.png" class="icon"></image>
+          <text class="name">新建账户</text>
       </view>
-      <view class="chain-net">
-        <text>测试网</text>
+       <view class="login-item" @tap="loginScan()">
+         <image src="../images/scan_qr.png" class="icon"></image>
+          <text class="name">扫描二维码</text>
       </view>
-    </view>
-    <view class="area-asset">
-      <view class="asset-item">
-        <text class = "title">NEO</text>
-        <text class="number">{{NEO}}</text>
-        <text class="totle">￥{{NEOValue}}</text>
+       <view class="login-item" @tap="loginImport()">
+         <image src="../images/import_key.png" class="icon"></image>
+          <text class="name">导入密钥</text>
       </view>
-      <view class="line"></view>
-      <view class="asset-item">
-        <text class = "title">GAS</text>
-        <text class="number">{{GAS}}</text>
-        <text class="totle">￥{{GASValue}}</text>
-      </view>
-    </view>
-    <view class="area-block">
-      <view class="block-title">
-        <text>NEO生态</text>
-      </view>
-      <view class="block-column">
-        <view class="block-price-item" style="border-right:thin solid rgb(214, 214, 214);">
-          <image src="../images/neo.jpg" class="icon"></image>
-          <text class="name">NEO</text>
-          <text class="price-{{PN?'rise':'decrease'}}">￥{{NEOPrice}}</text>
-        </view>
-        <view class="block-price-item" >
-            <image src="../images/neo.jpg" class="icon"></image>
-          <text class="name">GAS</text>
-          <text class="price-{{PG?'rise':'decrease'}}">￥{{GASPrice}}</text>
-        </view>
-        <view class="block-price-item" style="border-left:thin solid rgb(214, 214, 214);">
-          <image src="../images/bitcoin.png" class="icon"></image>
-          <text class="name">BitCoin</text>
-          <text class="price-{{PB?'rise':'decrease'}}">￥{{BitCoinPrice}}</text>
-        </view>
-      </view>
-    </view>
-      <view class="area-block">
-      <view class="block-title">
-        <text>功能</text>
-      </view>
-      <view class="block-column" style=" border: thin solid rgb(214, 214, 214);">
-        <view class="block-function-item" style="border-right:thin solid rgb(214, 214, 214);" @tap="navigate('receive')">
-          <image src="../images/receive.png" class="icon"></image>
-          <text class="name">Receive</text>
-        </view>
-        <view class="block-function-item" style="border-right:thin solid rgb(214, 214, 214);" @tap="navigate('send')">
-            <image src="../images/send.png" class="icon"></image>
-          <text class="name">Send</text>
-        </view>
-        <view class="block-function-item" style="border-right:thin solid rgb(214, 214, 214);" @tap="navigate('mine')">
-          <image src="../images/account.png" class="icon"></image>
-          <text class="name">Mine</text>
-        </view>
-        <view class="block-function-item"  @tap="navigate('history')">
-          <image src="../images/history.png" class="icon"></image>
-          <text class="name">History</text>
-        </view>
-      </view>
-      <!-- <view class="block-column" style="border-bottom: thin solid rgb(214, 214, 214);">
-         <view class="block-function-item" style="width:{{fblockWH}}px;height:{{fblockWH}}px;border-right:thin solid rgb(214, 214, 214);" @tap="navigate('token')">
-          <image src="../images/neo.jpg" class="icon"></image>
-          <text class="name">Token</text>
-        </view>
-      </view> -->
     </view>
   </view>
-
 </template>
 
 <script>
 import wepy from 'wepy';
-import { CURR_WALLET } from '../utils/constant';
-import { WWW } from '../utils/API';
-import { CoinTool } from '../utils/Coin';
-import { UTXO } from '../utils/UTXO';
-import { WalletHelper } from '../utils/wallet';
-import tip from '../utils/tip';
+import { USER_INFO, LOCAL_WALLET } from '../utils/constant';
 export default class Index extends wepy.page {
   config = {
-    navigationBarTitleText: '首页'
+    navigationBarTitleText: '登陆'
   };
 
   components = {};
 
   data = {
-    wallet: {},
-    NEO: '0',
-    GAS: '0',
-    NEOPrice: 0.0,
-    GASPrice: 0.0,
-    BitCoinPrice: 0.0,
-    NEOValue: '0',
-    GASValue: '0',
-    Block: '1',
-    PN: true,
-    PG: true,
-    PB: true,
-    isLogin: false
+    userInfo: {
+      nickName: ''
+    }
   };
 
   computed = {};
 
   methods = {
-    navigate(page) {
-      if (WalletHelper.wallet === null) {
-        if (page === 'mine') {
-          wepy.navigateTo({
-            url: '/pages/login'
-          });
-        } else tip.error('您尚未登陆钱包账户');
-        return;
-      } else {
-        wepy.navigateTo({
-          url: '/pages/' + page
-        });
-      }
+    loginCreate() {
+      this.$redirect('./logincreate');
+    },
+    loginScan() {
+      let that = this;
+      wepy.scanCode({
+        success: res => {
+          // console.log(res);
+          that.onScanLogin(res.result);
+        },
+        fail: res => {
+          // console.log(res);
+        }
+      });
+    },
+    loginImport() {
+      console.log(this.disabled);
+      if (this.disabled) return;
+      else this.$redirect('./loginlocal');
     }
   };
 
   events = {};
 
-  async onLoad() {
-    const that = this;
+  onLoad() {
+    this.userInfo = wepy.getStorageSync(USER_INFO) || {};
+    this.$apply();
   }
   onShow() {
-    this.OnGetPrice();
-    this.OnLogin();
-    CoinTool.initAllAsset();
-  }
-  async OnLogin() {
-    let that = this;
-    this.wallet = wepy.getStorageSync(CURR_WALLET);
-    this.$apply();
-    // console.log(this.wallet);
-    //本地缓存有账户 则直接加载本地账户信息
-    if (
-      this.wallet !== null &&
-      this.wallet !== undefined &&
-      this.wallet !== ''
-    ) {
-      this.isLogin = true;
-      this.wallet = this.wallet['accounts'][0];
-      WalletHelper.wallet = this.wallet;
+    const wallets = wepy.getStorageSync(LOCAL_WALLET);
+    if (wallets !== {} && wallets !== undefined && wallets !== '')
       this.$apply();
-    }
-    await this.OnTimeOut();
-    //循环执行代码
-    setInterval(async () => {
-      await that.OnTimeOut();
-    }, 15000); //循环时间 这里是15秒
   }
-  /**
-   * 定时触发
-   */
-  async OnTimeOut() {
-    if (WWW.rpc === '') {
-      WWW.rpc = await WWW.rpc_getURL();
-    }
-    if (WalletHelper.wallet !== null) {
-      const addr = WalletHelper.wallet.address;
-      this.OnGetAssets(addr);
-    }
-    this.OnGetHeight();
-  }
-
-  /**
-   * 加载区块链高度
-   */
-  async OnGetHeight() {
-    const height = await WWW.api_getHeight();
-    // console.log(height);
-    this.Block = height;
-    WalletHelper.height = height;
-    this.$apply();
-  }
-  /**
-   * 获取账户资产信息 UTXO
-   */
-  async OnGetAssets(addr) {
-    // console.log(addr);
-    await UTXO.GetAssets(addr);
-    let neo = 0;
-    let gas = 0;
-
-    for (let item of UTXO.utxo) {
-      if (item.asset === 'NEO') neo = parseInt(item.count) + parseInt(neo);
-      else gas = parseFloat(item.count) + parseFloat(gas);
-    }
-    this.NEO = neo;
-    this.GAS = gas.toFixed(4);
-    UTXO.balance = {
-      NEO: neo,
-      GAS: gas
-    };
-    UTXO.utxo.reverse();
-    this.$apply();
-    // console.log(UTXO.assets);
-    this.OnTotalValue();
-  }
-  /**
-   * 获取市场价格
-   */
-  async OnGetPrice() {
-    const coins = await WWW.api_getCoinPrice();
-    console.log(coins);
-    this.NEOPrice = parseFloat(coins['NEO'][0]['price_cny']).toFixed(2);
-    this.GASPrice = parseFloat(coins['GAS'][0]['price_cny']).toFixed(2);
-    this.BitCoinPrice = parseFloat(coins['BitCoin'][0]['price_cny']).toFixed(2);
-    let priceChange = {};
-    if (coins['NEO'][0]['percent_change_1h'][0] !== '-') this.PN = true;
-    else this.PN = false;
-
-    if (coins['GAS'][0]['percent_change_1h'][0] !== '-') this.PG = true;
-    else this.PG = false;
-
-    if (coins['BitCoin'][0]['percent_change_1h'][0] !== '-') this.PB = true;
-    else this.PB = false;
-    this.$apply();
-    this.OnTotalValue();
-  }
-  /**
-   * 计算等价法币资产
-   */
-  OnTotalValue() {
-    let gasAsset = parseFloat(this.GASPrice) * parseFloat(this.GAS);
-    let neoAsset = parseFloat(this.NEOPrice) * parseFloat(this.NEO);
-    this.NEOValue = neoAsset.toFixed(2);
-    this.GASValue = gasAsset.toFixed(2);
-    this.$apply();
-    // console.log(neoAsset.toFixed(2));
+  onScanLogin(nep2key) {
+    this.$redirect('./loginnep2?nep2=' + nep2key);
   }
 }
 </script>
- 

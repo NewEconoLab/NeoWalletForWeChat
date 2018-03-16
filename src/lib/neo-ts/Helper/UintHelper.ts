@@ -24,9 +24,10 @@ export function hexToBytes(str: string): Uint8Array {
     }
     return bytes;
 }
-export function clone(uintarr:Uint8Array): Uint8Array {
+export function clone(uintarr: Uint8Array): Uint8Array {
     var u8 = new Uint8Array(uintarr.length);
     for (let i = 0; i < uintarr.length; i++)
         u8[i] = uintarr[i];
     return u8;
 }
+
