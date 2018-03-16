@@ -33,7 +33,7 @@ export default class extends wepy.app {
     pages: [
       'pages/index',
       'pages/logincreate',
-      'pages/loginlocal',
+      'pages/LoginWIF',
       'pages/loginnep2',
       'pages/receive',
       'pages/createresult',

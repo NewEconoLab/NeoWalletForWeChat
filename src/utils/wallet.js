@@ -4,9 +4,54 @@ import tip from '../utils/tip';
 export class WalletHelper {
     static wallet = null
     static height = -1
-    constructor() {
+    static address = null
+    static privatekey = null
+    static publickey = null
+    constructor() { }
+
+    /**
+     * return address 
+     */
+    static getAddress() {
+        if (this.privatekey === null) {
+            tip.alert('密钥格式错误，重新登陆')
+            return;
+        }
+
+        if (this.address === null) {
+            if (this.publickey === null) {
+                const prikey = NEL.helper.UintHelper.hexToBytes(this.privatekey);
+                this.publickey = NEL.helper.Helper.GetPublicKeyFromPrivateKey(prikey);
+            }
+            this.address = NEL.helper.Helper.GetAddressFromPublicKey(this.publickey);
+        }
+        return this.address;
     }
 
+    static setPrikey(key) {
+        if (key.length !== 64) {
+            tip.alert('密钥格式错误')
+            return;
+        }
+        this.privatekey = key;
+        if (this.address === null) {
+            if (this.publickey === null) {
+                const prikey = NEL.helper.UintHelper.hexToBytes(this.privatekey);
+                this.publickey = NEL.helper.Helper.GetPublicKeyFromPrivateKey(prikey);
+            }
+            this.address = NEL.helper.Helper.GetAddressFromPublicKey(this.publickey);
+        }
+    }
+
+    static toString() {
+        return JSON.stringify({ 'prikey': this.privatekey, 'pubkey': this.publickey, 'address': this.address });
+    }
+    static parse(str) {
+        const wallet = JSON.parse(str);
+        this.address = wallet.address;
+        this.privatekey = wallet.prikey;
+        this.publickey = wallet.pubkey;
+    }
     /**
      * decode nep2 to get private key
      * @param {string} passphrase 

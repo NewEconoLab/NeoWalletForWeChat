@@ -22,11 +22,10 @@
     height: 50rpx;
   }
   .name {
-    color:white;
+    color: white;
     margin-top: 30rpx;
     font-weight: 100;
     font-size: 14px;
-    
   }
 }
 
@@ -60,7 +59,8 @@
 
 <script>
 import wepy from 'wepy';
-import { USER_INFO, LOCAL_WALLET } from '../utils/constant';
+import { LOCAL_WALLET } from '../utils/constant';
+import { WalletHelper } from '../utils/wallet';
 export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: '登陆'
@@ -68,11 +68,7 @@ export default class Index extends wepy.page {
 
   components = {};
 
-  data = {
-    userInfo: {
-      nickName: ''
-    }
-  };
+  data = {};
 
   computed = {};
 
@@ -95,20 +91,21 @@ export default class Index extends wepy.page {
     loginImport() {
       console.log(this.disabled);
       if (this.disabled) return;
-      else this.$redirect('./loginlocal');
+      else this.$redirect('./loginWIF');
     }
   };
 
   events = {};
 
-  onLoad() {
-    this.userInfo = wepy.getStorageSync(USER_INFO) || {};
-    this.$apply();
-  }
+  onLoad() {}
   onShow() {
-    const wallets = wepy.getStorageSync(LOCAL_WALLET);
-    if (wallets !== {} && wallets !== undefined && wallets !== '')
-      this.$apply();
+    const wallet = wepy.getStorageSync(LOCAL_WALLET);
+    if (wallets !== {} && wallets !== undefined && wallets !== '') {
+      wepy.showLoading({ title: '登陆中' });
+      WalletHelper.parse(wallet);
+      wepy.reLaunch({ url: './home' });
+      wepy.hideLoading();
+    }
   }
   onScanLogin(nep2key) {
     this.$redirect('./loginnep2?nep2=' + nep2key);

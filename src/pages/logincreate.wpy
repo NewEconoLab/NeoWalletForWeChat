@@ -160,6 +160,7 @@ export default class LoginCreate extends wepy.page {
       // console.log('address = ' + address);
 
       wepy.showLoading({ title: '新钱包创建完成' });
+      
       setTimeout(function() {
         wepy.hideLoading();
       }, 1000);
