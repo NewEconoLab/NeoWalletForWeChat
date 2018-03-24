@@ -136,26 +136,14 @@ export class Helper {
 
     public static Sign(message: Uint8Array, privateKey: Uint8Array,randomStr:string): Uint8Array {
 
+        //计算公钥
         var PublicKey = ECPoint.multiply(ECCurve.secp256r1.G, privateKey);
         var pubkey = PublicKey.encodePoint(false).subarray(1, 64);
-
-        //var PublicKey = Thin ECC.ECCurve.Secp256r1.G * prikey;
-        //var pubkey = PublicKey.EncodePoint(false).Skip(1).ToArray();
-
+        //获取CryptoKey
         var key = new CryptoKey.ECDsaCryptoKey(PublicKey, privateKey);
         var ecdsa = new ECDsa(key);
-        ////using(var ecdsa = System.Security.Cryptography.ECDsa.Create(new System.Security.Cryptography.ECParameters
-        //{
-        //        Curve = System.Security.Cryptography.ECCurve.NamedCurves.nistP256,
-        //        D = prikey,
-        //        Q = new System.Security.Cryptography.ECPoint
-        //    {
-        //        X = pubkey.Take(32).ToArray(),
-        //        Y = pubkey.Skip(32).ToArray()
-        //    }
-        //}))
         {
-            //var hash =  Sha256.computeHash(message);
+            //签名
             return new Uint8Array(ecdsa.sign(message,randomStr));
         }
     }

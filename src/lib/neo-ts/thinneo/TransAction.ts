@@ -371,20 +371,15 @@ export class Transaction {
     public AddWitness(signdata: Uint8Array, pubkey: Uint8Array, addrs: string): void {
         {//额外的验证
             var msg = this.GetMessage();
-
             var bsign = Helper.VerifySignature(msg, signdata, pubkey);
             if (bsign == false)
                 throw new Error("wrong sign");
-
             var addr = Helper.GetAddressFromPublicKey(pubkey);
             if (addr != addrs)
                 throw new Error("wrong script");
         }
-
         var vscript = Helper.GetAddressCheckScriptFromPublicKey(pubkey);
-
         //iscript 对个人账户见证人他是一条pushbytes 指令
-
         var sb = new ScriptBuilder();
         sb.EmitPushBytes(signdata);
 

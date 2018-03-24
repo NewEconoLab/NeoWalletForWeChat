@@ -1,44 +1,28 @@
  <style lang="less">
-.area-chain {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+.area-uppper {
+  height: 470rpx;
   width: 100%;
-  margin-top: 20rpx;
-}
-.chain-height {
+  background: linear-gradient(to right, #69c0fd, #a6a4fd);
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  margin-left: 10rpx;
-  .label {
-    font-size: 13px;
-    color: gray;
-  }
-  .height {
-    color: forestgreen;
-  }
 }
-.chain-net {
-  background-color: green;
-  border-radius: 0px;
-  border-bottom-left-radius: 15px;
-  border-top-left-radius: 15px;
-  align-items: center;
-  padding: 5px 15px 5px 15px;
+.upper-title {
+  width: 100%;
   display: flex;
+  align-items: flex-start;
   flex-direction: row;
+  margin: 10px 0 0 25px;
   text {
+    font-size: 19px;
     color: white;
-    font-size: 11px;
   }
 }
-.area-asset {
+
+.upper-asset {
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: white;
   margin: 20rpx 0 0 0;
 }
 .asset-item {
@@ -48,30 +32,83 @@
   align-items: center;
   .title {
     margin-top: 30rpx;
-    font-size: 15px;
+    font-size: 17px;
+    color: white;
   }
   .number {
     font-size: 30px;
     margin-top: 15rpx;
+    color: white;
   }
   .totle {
-    color: gray;
     font-size: 12px;
     font-weight: lighter;
     margin: 10rpx 0 30rpx 0;
+    color: white;
   }
 }
-.line {
-  width: 1rpx;
-  height: 50px;
-  background-color: blue;
+
+.area-medium {
+  display: flex;
+  flex-direction: row;
+  top: 0;
+  margin-top: -70rpx;
+  height: 200rpx;
+  width: 90%;
+  box-shadow:2px 8px 10px #999;
+  background-color: white;
+  border-radius: 5px;
+  justify-content: space-between;
 }
+.medium-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .icon {
+    width: 60rpx;
+    height: 60rpx;
+  }
+  .name {
+    margin-top: 20rpx;
+    font-size: 13px;
+    color:#27adf1;
+  }
+}
+
+.area-lower {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.lower-chain {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 86%;
+  margin-top: 20px;
+
+  .label {
+    font-size: 13px;
+    color: #888;
+  }
+  .height {
+    color: #888;
+    font-size: 13px;
+  }
+}
+
+
 .area-block {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 60px;
 }
 .block-title {
   display: flex;
@@ -100,8 +137,8 @@
   align-items: center;
   .icon {
     margin-top: 10px;
-    width: 70rpx;
-    height: 70rpx;
+    width: 30rpx;
+    height: 30rpx;
   }
   .name {
     margin-top: 20rpx;
@@ -118,26 +155,49 @@
   }
 }
 
-.block-function-item {
-  display: flex;
-  width: 187.5rpx;
-  height: 187.5rpx;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  .icon {
-    width: 50rpx;
-    height: 50rpx;
-  }
-  .name {
-    margin-top: 20rpx;
-    font-size: 13px;
-  }
-}
 </style>
 <template>
   <view class="container">
-    <view class="area-chain">
+    <view class="area-uppper">
+      <view class="upper-title"><text>NEO Wallet</text></view>
+      <view class="upper-asset">
+        <view class="asset-item">
+          <text class = "title">NEO</text>
+          <text class="number">{{NEO}}</text>
+          <text class="totle">￥{{NEOValue}}</text>
+        </view>
+        <view class="asset-item">
+          <text class = "title">GAS</text>
+          <text class="number">{{GAS}}</text>
+          <text class="totle">￥{{GASValue}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="area-medium">
+       <view class="medium-item" style="margin-left:20px;" @tap="navigate('receive')">
+          <image src="../images/receive.png" class="icon"></image>
+          <text class="name">Receive</text>
+        </view>
+        <view class="medium-item" @tap="navigate('send')">
+            <image src="../images/send.png" class="icon"></image>
+          <text class="name">Send</text>
+        </view>
+        <view class="medium-item"  @tap="navigate('history')">
+          <image src="../images/history.png" class="icon"></image>
+          <text class="name">History</text>
+        </view>
+        <view class="medium-item"  style="margin-right:20px;" @tap="navigate('mine')">
+          <image src="../images/account.png" class="icon"></image>
+          <text class="name">Mine</text>
+        </view>
+    </view>
+    <view class="area-lower">
+     <view class="lower-chain">
+          <text class="label">Block Height:</text>
+          <text class="height">{{Block}}</text>
+        </view>
+    </view>
+    <!-- <view class="area-chain">
       <view class="chain-height">
         <text class="label">区块高度：</text>
         <text class="height">{{Block}}</text>
@@ -146,19 +206,7 @@
         <text>测试网</text>
       </view>
     </view>
-    <view class="area-asset">
-      <view class="asset-item">
-        <text class = "title">NEO</text>
-        <text class="number">{{NEO}}</text>
-        <text class="totle">￥{{NEOValue}}</text>
-      </view>
-      <view class="line"></view>
-      <view class="asset-item">
-        <text class = "title">GAS</text>
-        <text class="number">{{GAS}}</text>
-        <text class="totle">￥{{GASValue}}</text>
-      </view>
-    </view>
+
     <view class="area-block">
       <view class="block-title">
         <text>NEO生态</text>
@@ -186,30 +234,9 @@
         <text>功能</text>
       </view>
       <view class="block-column" style=" border: thin solid rgb(214, 214, 214);">
-        <view class="block-function-item" style="border-right:thin solid rgb(214, 214, 214);" @tap="navigate('receive')">
-          <image src="../images/receive.png" class="icon"></image>
-          <text class="name">Receive</text>
-        </view>
-        <view class="block-function-item" style="border-right:thin solid rgb(214, 214, 214);" @tap="navigate('send')">
-            <image src="../images/send.png" class="icon"></image>
-          <text class="name">Send</text>
-        </view>
-        <view class="block-function-item" style="border-right:thin solid rgb(214, 214, 214);" @tap="navigate('mine')">
-          <image src="../images/account.png" class="icon"></image>
-          <text class="name">Mine</text>
-        </view>
-        <view class="block-function-item"  @tap="navigate('history')">
-          <image src="../images/history.png" class="icon"></image>
-          <text class="name">History</text>
-        </view>
+       
       </view>
-      <!-- <view class="block-column" style="border-bottom: thin solid rgb(214, 214, 214);">
-         <view class="block-function-item" style="width:{{fblockWH}}px;height:{{fblockWH}}px;border-right:thin solid rgb(214, 214, 214);" @tap="navigate('token')">
-          <image src="../images/neo.jpg" class="icon"></image>
-          <text class="name">Token</text>
-        </view>
-      </view> -->
-    </view>
+    </view> -->
   </view>
 
 </template>
