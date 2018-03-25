@@ -72,7 +72,7 @@ export default class LoginWIF extends wepy.page {
           if (prikey.length!==64) {
             wepy.hideLoading();
             tip.alert('密钥格式错误');
-            return；
+            return;
           }
           key = NEL.helper.StringHelper.toHexString(prikey);
         case 64: //privatekey

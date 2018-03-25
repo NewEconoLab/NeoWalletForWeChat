@@ -1,29 +1,18 @@
  <style lang="less">
 .area-uppper {
-  height: 470rpx;
+  height: 450rpx;
   width: 100%;
   background: linear-gradient(to right, #69c0fd, #a6a4fd);
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-.upper-title {
-  width: 100%;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: row;
-  margin: 10px 0 0 25px;
-  text {
-    font-size: 19px;
-    color: white;
-  }
-}
 
 .upper-asset {
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: 20rpx 0 0 0;
+  margin: 0 0 0 0;
 }
 .asset-item {
   width: 375rpx;
@@ -31,19 +20,19 @@
   flex-direction: column;
   align-items: center;
   .title {
-    margin-top: 30rpx;
-    font-size: 17px;
+    margin-top: 45rpx;
+    font-size: 18px;
     color: white;
   }
   .number {
-    font-size: 30px;
-    margin-top: 15rpx;
+    font-size: 34px;
+    margin-top: 45rpx;
     color: white;
   }
   .totle {
     font-size: 12px;
     font-weight: lighter;
-    margin: 10rpx 0 30rpx 0;
+    margin: 45rpx 0 0 0;
     color: white;
   }
 }
@@ -53,9 +42,9 @@
   flex-direction: row;
   top: 0;
   margin-top: -70rpx;
-  height: 200rpx;
-  width: 90%;
-  box-shadow:2px 8px 10px #999;
+  height: 197rpx;
+  width: 700rpx;
+  box-shadow: 2px 8px 10px #999;
   background-color: white;
   border-radius: 5px;
   justify-content: space-between;
@@ -72,7 +61,7 @@
   .name {
     margin-top: 20rpx;
     font-size: 13px;
-    color:#27adf1;
+    color: #27adf1;
   }
 }
 
@@ -90,76 +79,57 @@
   justify-content: space-between;
   align-items: center;
   width: 86%;
-  margin-top: 20px;
+  margin-top: 70rpx;
 
   .label {
     font-size: 13px;
-    color: #888;
+    color: #a3a3a3;
   }
   .height {
-    color: #888;
+    color: #a3a3a3;
     font-size: 13px;
   }
 }
 
-
-.area-block {
-  width: 100%;
+.lower-price {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 60px;
+  margin-top: 36rpx;
 }
-.block-title {
+.price-item {
   display: flex;
   flex-direction: row;
-  width: 100%;
-  justify-content: flex-start;
-  background-color: white;
-  padding: 12px 0 13px 10px;
-  text {
-    font-size: 14px;
-  }
-}
-.block-column {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
+  justify-content: space-between;
   align-items: center;
+  width: 660rpx;
+  height: 95rpx;
+  margin-top: 28rpx;
+  border-radius: 5px;
   background-color: white;
-}
-
-.block-price-item {
-  display: flex;
-  width: 250rpx;
-  height: 250rpx;
-  flex-direction: column;
-  align-items: center;
-  .icon {
-    margin-top: 10px;
-    width: 30rpx;
-    height: 30rpx;
+    box-shadow: 2px 4px 6px #bbb;
+  .label {
+    font-size: 13px;
+    color: #a3a3a3;
+    margin-left: 50rpx;
   }
-  .name {
-    margin-top: 20rpx;
-  }
-  .price-rise {
-    margin: 20rpx 0 10rpx 0;
-    font-size: 14px;
-    color: rgb(107, 179, 0);
-  }
-  .price-decrease {
-    margin: 20rpx 0 10rpx 0;
-    font-size: 14px;
-    color: red;
+  .price {
+    width: 200rpx;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    text {
+      color: #27adf1;
+      font-size: 13px;
+    }
   }
 }
-
 </style>
 <template>
   <view class="container">
     <view class="area-uppper">
-      <view class="upper-title"><text>NEO Wallet</text></view>
       <view class="upper-asset">
         <view class="asset-item">
           <text class = "title">NEO</text>
@@ -193,50 +163,30 @@
     </view>
     <view class="area-lower">
      <view class="lower-chain">
-          <text class="label">Block Height:</text>
-          <text class="height">{{Block}}</text>
-        </view>
-    </view>
-    <!-- <view class="area-chain">
-      <view class="chain-height">
-        <text class="label">区块高度：</text>
+        <text class="label">Block Height:</text>
         <text class="height">{{Block}}</text>
       </view>
-      <view class="chain-net">
-        <text>测试网</text>
-      </view>
-    </view>
-
-    <view class="area-block">
-      <view class="block-title">
-        <text>NEO生态</text>
-      </view>
-      <view class="block-column">
-        <view class="block-price-item" style="border-right:thin solid rgb(214, 214, 214);">
-          <image src="../images/neo.jpg" class="icon"></image>
-          <text class="name">NEO</text>
-          <text class="price-{{PN?'rise':'decrease'}}">￥{{NEOPrice}}</text>
+      <view class="lower-price">
+        <view class="price-item">
+          <text class="label">NEO</text>
+          <view class="price">
+            <text  style="color:{{PN?'green':'red'}};">￥{{NEOPrice}}</text>
+          </view>
         </view>
-        <view class="block-price-item" >
-            <image src="../images/neo.jpg" class="icon"></image>
-          <text class="name">GAS</text>
-          <text class="price-{{PG?'rise':'decrease'}}">￥{{GASPrice}}</text>
+        <view class="price-item">
+          <text class="label">GAS</text>
+          <view class="price">
+            <text  style="color:{{PG?'green':'red'}};">￥{{GASPrice}}</text>
+          </view>
         </view>
-        <view class="block-price-item" style="border-left:thin solid rgb(214, 214, 214);">
-          <image src="../images/bitcoin.png" class="icon"></image>
-          <text class="name">BitCoin</text>
-          <text class="price-{{PB?'rise':'decrease'}}">￥{{BitCoinPrice}}</text>
+        <view class="price-item">
+          <text class="label">BitCoin</text>
+          <view class="price">
+            <text style="color:{{PB?'green':'red'}};">￥{{BitCoinPrice}}</text>
+          </view>
         </view>
       </view>
     </view>
-      <view class="area-block">
-      <view class="block-title">
-        <text>功能</text>
-      </view>
-      <view class="block-column" style=" border: thin solid rgb(214, 214, 214);">
-       
-      </view>
-    </view> -->
   </view>
 
 </template>
@@ -251,7 +201,7 @@ import { WalletHelper } from '../utils/wallet';
 import tip from '../utils/tip';
 export default class Home extends wepy.page {
   config = {
-    navigationBarTitleText: '首页'
+    navigationBarTitleText: 'NEO Wallet'
   };
 
   components = {};

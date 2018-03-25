@@ -109,14 +109,14 @@ export default class Index extends wepy.page {
       wepy.hideLoading();
     }
   }
-  onScanLogin(key) {
+  async onScanLogin(key) {
      switch (key.length) {
         case 52: //wif
           const prikey = NEL.helper.Helper.GetPrivateKeyFromWIF(key);
           if (prikey.length!==64) {
             wepy.hideLoading();
             tip.alert('密钥格式错误');
-            return；
+            return;
           }
           key = NEL.helper.StringHelper.toHexString(prikey);
         case 64: //privatekey
@@ -132,12 +132,12 @@ export default class Index extends wepy.page {
           break;
       }
   }
-  onCreateAccount(){
+  async onCreateAccount(){
       wepy.showLoading({ title: '私钥生成中' });
       let privateKey = await Random.getSecureRandom(64);
       if(privatekey.length !== 64){
         tip.error('私钥生成失败');
-        return；
+        return;
       }
       
       WalletHelper.setPrikey(privateKey);
