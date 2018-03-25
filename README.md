@@ -23,7 +23,13 @@ This project is developed with the help and support from [NEL](https://github.co
 - 删除界面： loginNep2,loginLocal
 
 ## ScreenCapture
+### New Version
+<div>
+<img src="./img/home.png" width="200" alt="首页"/>
+<img src="./img/send.png" width="200" alt="转账"/>
+</div>
 
+### Old Version
 <div>
 <img src="./img/index.JPG" width="200" alt="首页"/>
 <img src="./img/send.JPG" width="200" alt="转账"/>

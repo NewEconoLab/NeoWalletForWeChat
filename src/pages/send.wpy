@@ -83,7 +83,7 @@
   .label {
     margin-top: 20rpx;
     font-size: 18px;
-    color: #a3a3a3;
+    color: #27adf1;
     font-family: Helvetica,Arial , sans-serif;
   }
 
@@ -243,7 +243,7 @@
           </view>
           <view class="button-item"  @tap="navigate('receive')">
             <image src="../images/scanPay.png" class="icon"></image>
-            <text class="label">Scan Pay</text>
+            <text class="label" style="color:#a3a3a3;">Scan Pay</text>
           </view>
         </view>
       </view>
