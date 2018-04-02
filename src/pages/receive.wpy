@@ -17,7 +17,7 @@
   margin-top: 120rpx;
   background-color: white;
   border-radius: 5px;
-   box-shadow: 10px 15px 20px rgba(100,100,100,0.3);
+  box-shadow: 10px 15px 20px rgba(100, 100, 100, 0.3);
 }
 
 .qrcode {
@@ -96,10 +96,22 @@ export default class Receive extends wepy.page {
     //   let ctx = wx.createCanvasContext('address');
     // //  let d =  document.getElementById('address');
     //  console.log(document);
-     
   } // 在Page和Component共用的生命周期函数
 
-  onShow() {} // 只在Page中存在的页面生命周期函数
+  onShow() {
+    wx.showShareMenu({
+      withShareTicket: true,
+      success: function(res) {
+        // 分享成功
+        console.log('shareMenu share success');
+        console.log('分享' + res);
+      },
+      fail: function(res) {
+        // 分享失败
+        console.log(res);
+      }
+    });
+  } // 只在Page中存在的页面生命周期函数
 
   config = {
     navigationBarTitleText: 'Receive'
@@ -133,7 +145,31 @@ export default class Receive extends wepy.page {
       });
     }
   }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
-
-  events = {}; // 声明组件之间的事件处理函数
+  onShareAppMessage() {
+    return {
+      title: '这里是机智life小程序',
+      path: '/page/index/index?id=123',
+      success: function(res) {
+        console.log(res.shareTickets[0]);
+        // console.log
+        wx.getShareInfo({
+          shareTicket: res.shareTickets[0],
+          success: function(res) {
+            console.log(res);
+          },
+          fail: function(res) {
+            console.log(res);
+          },
+          complete: function(res) {
+            console.log(res);
+          }
+        });
+      },
+      fail: function(res) {
+        // 分享失败
+        console.log(res);
+      }
+    };
+  }
 }
 </script>
