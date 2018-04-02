@@ -258,26 +258,6 @@
       <view class="area-btn">
         <button type="primary" formType="submit">确认</button>
       </view>
-      <!-- <view class="area-input">
-        <view class="input-addr">
-          <input class="address" name="address" placeholder-class="placeholder" placeholder="Target Address" value='{{targetAddr}}'/>
-          <image src="../images/scan.png" class="icon" @tap="OnScan()"></image>
-        </view>
-        <view class="area-balance">
-
-        </view>
-        <view class="area-count">
-          <view class="count">
-            <input name="amount" placeholder="Amount" class="amount" placeholder-class="placeholder" type="{{checked==='GAS'?'digit':'number'}}" value='{{amount}}'/>
-          </view>
-        </view>
-      </view>
-      <view class="area-pass">
-        <input placeholder="Passphrase" password='true' placeholder-class="placeholder" name="passphrase"/>
-      </view>
-      <view class="area-btn">
-        <button type="primary" formType="submit">确认</button>
-      </view>  -->
     </view>
   </form>
 </template>
