@@ -2,31 +2,36 @@
 .bg {
   background: linear-gradient(to right, #69c0fd, #a6a4fd);
 }
+.note-text {
+  margin-top: 64rpx;
+  font-size: 16px;
+  color: #69c0fd;
+}
 .area-qrcode {
   display: flex;
   flex-direction: column;
   align-items: center;
+  // justify-content: center;
   width: 700rpx; // 750rpx
-  height:715rpx;
+  height: 715rpx;
   margin-top: 120rpx;
   background-color: white;
   border-radius: 5px;
+   box-shadow: 10px 15px 20px rgba(100,100,100,0.3);
 }
-.qrcode-item {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  align-items: center;
-}
+
 .qrcode {
-  margin-top: 30px;
+  margin-top: 62rpx;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  .canvas {
+    width: 230px;
+    height: 230px;
+  }
 }
-.note-text {
-  margin-top: 64rpx;
-  font-size: 16px;
-  color:#69c0fd;
-}
+
 .area-address {
   display: flex;
   flex-direction: column;
@@ -37,13 +42,13 @@
 }
 .address-label {
   font-size: 16px;
-  font-family: Helvetica,Arial , sans-serif;
-  color:white;
+  font-family: Helvetica, Arial, sans-serif;
+  color: white;
 }
 .address-content {
-  margin-top: 63rpx;
+  margin-top: 53rpx;
   font-size: 15px;
-  font-family: Helvetica,Arial , sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   word-break: break-all;
   color: white;
   margin-left: 20rpx;
@@ -55,7 +60,7 @@
     <view class="area-qrcode">
       <text class="note-text" >点击二维码，复制地址</text>
       <view class="qrcode" @tap="copyToClip({{wallet.address}})">
-        <canvas style="width: 475rpx; height: 475rpx;" canvas-id="address"></canvas>
+        <canvas class="canvas"canvas-id="address"></canvas>
       </view>
     </view>
     <view class="area-address">
@@ -83,11 +88,15 @@ export default class Receive extends wepy.page {
     this.$apply();
     console.log(this.wallet);
     drawQrcode({
-      width: 200,
-      height: 200,
+      width: 230,
+      height: 230,
       canvasId: 'address',
       text: this.wallet.address
     });
+    //   let ctx = wx.createCanvasContext('address');
+    // //  let d =  document.getElementById('address');
+    //  console.log(document);
+     
   } // 在Page和Component共用的生命周期函数
 
   onShow() {} // 只在Page中存在的页面生命周期函数

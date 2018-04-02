@@ -21,6 +21,17 @@ module.exports = {
     modules: ['node_modules']
   },
   compilers: {
+    typescript: {
+      compilerOptions: {
+        "module": "commonjs",
+        "target": "es6",
+        "declaration": true,
+        "sourceMap": true,
+        "removeComments": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
+      }
+  },
     less: {
       compress: prod
     },
