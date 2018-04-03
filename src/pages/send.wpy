@@ -134,87 +134,12 @@
     color:#a3a3a3;
   }
 }
-// .area-input {
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   width: 100%;
-// }
-// .input-addr {
-//   margin-top: 20px;
-//   display: flex;
-//   flex-direction: row;
-//   align-items: center;
-//   background-color: white;
-//   justify-content: space-between;
-//   padding: 15px 10px 15px 10px;
-//   border-bottom: thin gray solid;
-//   width: 96%;
-//   .address {
-//     flex: 16;
-//     font-size: 15px;
-//     .placeholder {
-//       font-size: 15px;
-//     }
-//   }
-//   .icon {
-//     flex: 1;
-//     width: 50rpx;
-//     height: 50rpx;
-//   }
-// }
-
-// .area-balance {
-//   margin-top: 15px;
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: flex-start;
-//   align-items: center;
-//   width: 100%;
-// }
-
-
-
-
-// .area-count {
-//   margin-top: 15px;
-//   display: flex;
-//   flex-direction: row;
-//   justify-content: flex-start;
-//   align-items: center;
-//   width: 100%;
-//   .count {
-//     background-color: white;
-//     padding: 10px 5px 10px 5px;
-//     width: 100%;
-//     .amount {
-//       font-size: 17px;
-//       .placeholder {
-//         font-size: 15px;
-//       }
-//     }
-//   }
-// }
-// .area-pass {
-//   display: flex;
-//   flex-direction: row;
-//   align-items: center;
-//   justify-content: flex-start;
-//   background-color: white;
-//   margin-top: 10px;
-//   width: 96%;
-//   padding: 15px 10px 15px 10px;
-//   border-bottom: thin gray solid;
-//   text {
-//     font-size: 15px;
-//   }
-//   .placeholder {
-//     font-size: 15px;
-//   }
-// }
 .area-btn {
   margin-top: 100rpx;
   width: 80%;
+  button::after{
+    border: none;
+  }
 }
 </style>
 <template>
@@ -256,7 +181,7 @@
         </view>
       </view>
       <view class="area-btn">
-        <button type="primary" formType="submit">确认</button>
+        <button type="primary" style="background-color:#69c0fd;" formType="submit">确认</button>
       </view>
     </view>
   </form>

@@ -1,57 +1,66 @@
 <style lang="less">
 .history-block {
   width: 695rpx;
-  height:270rpx;
   display: block;
   flex-direction: column;
   border-radius: 5px;
   margin-top: 32rpx;
   margin-bottom: 18rpx;
   background-color: white;
+  justify-content: center;
 }
 
+.content{
+  width:100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+//头部
 .area-head {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  width: 100%;
-  margin-left: 10rpx;
+  align-items: flex-end;
+  width: 625rpx;
+  margin: 30rpx 0 0 0;
   .label {
     font-size: 17px;
-    font-family: Helvetica,Arial , sans-serif;
-    font-weight: bold;
+    font-family: "黑体";
     color:#a3a3a3;
   }
   .time {
-    font-size: 14px;
+    font-size: 13px;
     color: #a3a3a3;
   }
 }
+//交易ID
 .area-txid {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 625rpx;
   height: wrap;
-  border-bottom: thin gray dashed;
+  border-bottom: thin rgb(230, 230, 230) solid;
   .txid {
     display: block;
     color: gray;
     word-break: break-all;
     font-size: 13px;
-    margin: 5px 0 8px 5px;
+    margin: 34rpx 0 30rpx 0;
   }
 }
-
+//确认高度
 .area-confirm {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
-  margin-top: 9px;
-  width: 100%;
+  margin: 20rpx 20rpx 20rpx 20rpx;
+  width: 625rpx;
   .label {
     font-size: 16px;
     color: #69c0fd;
+    font-family: "黑体";
   }
   .count {
     font-size: 16px;
@@ -63,6 +72,7 @@
 <template>
   <view class="container">
    <view class="history-block" wx:for="{{TXs}}" >
+     <view class="content">
      <view class="area-head">
        <text class="label">交易编号</text>
        <text class="time">{{item.blocktime['$date']}}</text>
@@ -75,6 +85,7 @@
         <text class="label"> 确认高度：</text>
         <text class="count">{{item.blockindex}}</text>
       </view>
+    </view>
     </view>
   </view>
 
