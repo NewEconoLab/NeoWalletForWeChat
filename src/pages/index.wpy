@@ -1,57 +1,69 @@
 <style lang="less">
-.login {
+.area-uppper {
+  width: 100%;
+  height: 406rpx;
+  background: linear-gradient(to right, #69c0fd, #a6a4fd);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.upper-avatar {
+  border-radius: 50%;
+  width: 160rpx;
+  height: 160rpx;
+  margin-top: 70rpx;
+}
+.upper-nickName {
+  font-family: '黑体', Helvetica, sans-serif;
+  font-size: 15px;
+  margin-top: 50rpx;
+  color: white;
+}
+
+.area-lower {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 100rpx;
-  width: 90%;
+  width: 660rpx;
+  margin-top: 70rpx;
 }
 
 .login-item {
-  width: 400rpx;
-  height: 250rpx;
-  margin-top: 30rpx;
-  background-color: lightskyblue;
+  width: 100%;
+  height: 95rpx;
+  background-color: #69c0fd;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   border-radius: 5px;
-  .icon {
-    width: 50rpx;
-    height: 50rpx;
-  }
+  margin-bottom: 55rpx;
+  justify-content: center;
+  box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
   .name {
     color: white;
-    margin-top: 30rpx;
-    font-weight: 100;
-    font-size: 14px;
+    font-family: '黑体', Helvetica, sans-serif;
+    font-size: 16px;
   }
 }
 
-.foot {
-  display: inline-block;
-  position: fixed;
-  bottom: 0;
-  margin-bottom: 30rpx;
-  font-size: 14px;
-  color: slategray;
-}
 </style>
 <template>
   <view class="container">
-    <view class="login">
+    <view class="area-uppper">
+      <image class="upper-avatar" src="{{avatarUrl}}"></image>
+      <text class="upper-nickName">{{nickName}}</text>
+    </view>
+    <view class="area-lower">
       <view class="login-item" @tap="loginCreate()" >
-        <image src="../images/add_account.png" class="icon"></image>
-          <text class="name">新建账户</text>
+        <text class="name" style="color:white;">创建账户</text>
       </view>
-       <view class="login-item" @tap="loginScan()">
-         <image src="../images/scan_qr.png" class="icon"></image>
-          <text class="name">扫描二维码</text>
+      <view class="login-item" style="background-color: white;" @tap="loginScan()">
+        <text class="name" style="color:gray;">导入账户</text>
       </view>
-       <view class="login-item" @tap="loginImport()">
-         <image src="../images/import_key.png" class="icon"></image>
-          <text class="name">导入密钥</text>
+      <view class="login-item" style="background-color: white;" @tap="loginImport()">
+        <text class="name" style="color:gray;">账户列表</text>
       </view>
     </view>
   </view>
@@ -59,17 +71,20 @@
 
 <script>
 import wepy from 'wepy';
-import { LOCAL_WALLET } from '../utils/constant';
+import { LOCAL_WALLET, USER_INFO } from '../utils/constant';
 import { WalletHelper } from '../utils/wallet';
 import * as Random from '../utils/random';
 export default class Index extends wepy.page {
   config = {
-    navigationBarTitleText: '登陆'
+    navigationBarTitleText: '账户'
   };
 
   components = {};
 
-  data = {};
+  data = {
+    avatarUrl: '',
+    nickName: ''
+  };
 
   computed = {};
 
@@ -99,7 +114,13 @@ export default class Index extends wepy.page {
 
   events = {};
 
-  onLoad() {}
+  onLoad() {
+    let that = this;
+    let userInfo = wepy.getStorageSync(USER_INFO);
+    that.avatarUrl = userInfo.avatarUrl;
+    that.nickName = userInfo.nickName;
+  }
+  
   onShow() {
     const wallet = wepy.getStorageSync(LOCAL_WALLET);
     if (wallets !== {} && wallets !== undefined && wallets !== '') {
@@ -110,40 +131,41 @@ export default class Index extends wepy.page {
     }
   }
   async onScanLogin(key) {
-     switch (key.length) {
-        case 52: //wif
-          const prikey = NEL.helper.Helper.GetPrivateKeyFromWIF(key);
-          if (prikey.length!==64) {
-            wepy.hideLoading();
-            tip.alert('密钥格式错误');
-            return;
-          }
-          key = NEL.helper.StringHelper.toHexString(prikey);
-        case 64: //privatekey
-          WalletHelper.setPrikey(key);
+    switch (key.length) {
+      case 52: //wif
+        const prikey = NEL.helper.Helper.GetPrivateKeyFromWIF(key);
+        if (prikey.length !== 64) {
           wepy.hideLoading();
-          await wepy.setStorageSync(CURR_WALLET, WalletHelper.toString());
-          wepy.reLaunch({ url: './home' });
-          break;
-        default:
-          //error input format
-           wepy.hideLoading();
-           tip.alert('密钥格式错误')
-          break;
-      }
+          tip.alert('密钥格式错误');
+          return;
+        }
+        key = NEL.helper.StringHelper.toHexString(prikey);
+      case 64: //privatekey
+        WalletHelper.setPrikey(key);
+        wepy.hideLoading();
+        await wepy.setStorageSync(CURR_WALLET, WalletHelper.toString());
+        wepy.reLaunch({ url: './home' });
+        break;
+      default:
+        //error input format
+        wepy.hideLoading();
+        tip.alert('密钥格式错误');
+        break;
+    }
   }
-  async onCreateAccount(){
-      wepy.showLoading({ title: '私钥生成中' });
-      let privateKey = await Random.getSecureRandom(64);
-      if(privatekey.length !== 64){
-        tip.error('私钥生成失败');
-        return;
-      }
-      
-      WalletHelper.setPrikey(privateKey);
-      await wepy.setStorageSync(CURR_WALLET, WalletHelper.toString());
-      wepy.hideLoading();
-      wepy.reLaunch({ url: './createresult' });
+  //创建新账户
+  async onCreateAccount() {
+    wepy.showLoading({ title: '私钥生成中' });
+    let privateKey = await Random.getSecureRandom(64);
+    if (privatekey.length !== 64) {
+      tip.error('私钥生成失败');
+      return;
+    }
+
+    WalletHelper.setPrikey(privateKey);
+    await wepy.setStorageSync(CURR_WALLET, WalletHelper.toString());
+    wepy.hideLoading();
+    wepy.reLaunch({ url: './createresult' });
   }
 }
 </script>
