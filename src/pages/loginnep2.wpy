@@ -78,7 +78,7 @@ import wepy from 'wepy';
 import * as NEL from '../lib/neo-ts/index';
 import { LOCAL_WALLET, CURR_WALLET } from '../utils/constant';
 import tip from '../utils/tip';
-import { WalletHelper } from '../utils/wallet';
+import { Wallet } from '../utils/wallet';
 import * as Random from '../utils/random';
 export default class LoginNep2 extends wepy.page {
   customData = {}; // 自定义数据
@@ -166,7 +166,7 @@ export default class LoginNep2 extends wepy.page {
           wepy.showLoading({ title: '数据存储中' });
           wepy.setStorageSync(LOCAL_WALLET, wallets);
           wepy.setStorageSync(CURR_WALLET, wallet);
-          WalletHelper.wallet = wallet.accounts[0];
+          Wallet.wallet = wallet.accounts[0];
           wepy.hideLoading();
           that.$redirect('./index');
         }

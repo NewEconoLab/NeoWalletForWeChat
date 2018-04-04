@@ -1,12 +1,18 @@
 import * as NEL from '../lib/neo-ts/index';
 import { SCRYPT_CONFIG } from './constant'
 import tip from '../utils/tip';
-export class WalletHelper {
+export class Wallet {
     static wallet = null
     static height = -1
     static address = null
     static privatekey = null
     static publickey = null
+
+    //保存watchonly地址
+    static watchonly = [];
+    //保存用户的openid
+    static openid = ''
+
     constructor() { }
 
     /**

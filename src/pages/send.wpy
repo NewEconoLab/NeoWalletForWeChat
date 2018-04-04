@@ -194,8 +194,7 @@ import * as NEL from '../lib/neo-ts/index';
 import tip from '../utils/tip';
 import { TransactionTool } from '../utils/transaction';
 import * as Random from '../utils/random';
-import { WWW } from '../utils/API';
-import { WalletHelper } from '../utils/wallet';
+import { Wallet } from '../utils/wallet';
 export default class Send extends wepy.page {
   config = {
     navigationBarTitleText: 'Send'
@@ -272,9 +271,9 @@ export default class Send extends wepy.page {
   async OnSend() {
     let that = this;
     wepy.showLoading({ title: '密码验证中' });
-    WalletHelper.decode(
+    Wallet.decode(
       this.password,
-      WalletHelper.wallet,
+      Wallet.wallet,
       async (code, prikey, pubkey) => {
         wepy.hideLoading();
         if (code < 0) {

@@ -72,7 +72,7 @@
 <script>
 import wepy from 'wepy';
 import { LOCAL_WALLET, USER_INFO } from '../utils/constant';
-import { WalletHelper } from '../utils/wallet';
+import { Wallet } from '../utils/wallet';
 import * as Random from '../utils/random';
 export default class Index extends wepy.page {
   config = {
@@ -123,9 +123,9 @@ export default class Index extends wepy.page {
   
   onShow() {
     const wallet = wepy.getStorageSync(LOCAL_WALLET);
-    if (wallets !== {} && wallets !== undefined && wallets !== '') {
+    if (wallet !== {} && wallet !== undefined && wallet !== '') {
       wepy.showLoading({ title: '登陆中' });
-      WalletHelper.parse(wallet);
+      Wallet.parse(wallet);
       wepy.reLaunch({ url: './home' });
       wepy.hideLoading();
     }
@@ -141,9 +141,9 @@ export default class Index extends wepy.page {
         }
         key = NEL.helper.StringHelper.toHexString(prikey);
       case 64: //privatekey
-        WalletHelper.setPrikey(key);
+        Wallet.setPrikey(key);
         wepy.hideLoading();
-        await wepy.setStorageSync(CURR_WALLET, WalletHelper.toString());
+        await wepy.setStorageSync(CURR_WALLET, Wallet.toString());
         wepy.reLaunch({ url: './home' });
         break;
       default:
@@ -162,8 +162,8 @@ export default class Index extends wepy.page {
       return;
     }
 
-    WalletHelper.setPrikey(privateKey);
-    await wepy.setStorageSync(CURR_WALLET, WalletHelper.toString());
+    Wallet.setPrikey(privateKey);
+    await wepy.setStorageSync(CURR_WALLET, Wallet.toString());
     wepy.hideLoading();
     wepy.reLaunch({ url: './createresult' });
   }

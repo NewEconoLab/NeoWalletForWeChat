@@ -99,7 +99,7 @@
 
 <script>
 import wepy from 'wepy';
-import { WalletHelper } from '../utils/wallet';
+import { Wallet } from '../utils/wallet';
 import tip from '../utils/tip';
 
 export default class Mine extends wepy.page {
@@ -110,7 +110,7 @@ export default class Mine extends wepy.page {
   onLoad() {} // 在Page和Component共用的生命周期函数
 
   onShow() {
-    this.wallet = WalletHelper.wallet;
+    this.wallet = Wallet.wallet;
     this.$apply();
     console.log(this.wallet)
   } // 只在Page中存在的页面生命周期函数

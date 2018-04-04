@@ -6,6 +6,7 @@ export class WWW {
     static priceHost = "https://api.coinmarketcap.com/v1/ticker/";
     static rpc = WWW.api;
     static rpcName = "";
+    static proxy_server = "http://112.74.52.116/";
 
     /**
      * create Rpc Url
@@ -51,10 +52,11 @@ export class WWW {
      */
     static async makeaddrpost(body) {
         // console.log(postdata)
-        var result = await Request.wxRequest({ "method": "post", "body": body }, "http://112.74.52.116/neowallet/index.php");
+        var result = await Request.wxRequest({ "method": "post", "body": body }, WWW.proxy_server + "neowallet/index.php");
         // var result = await Request.wxRequest({ "method": "post", "body":JSON.stringify(postdata)}, WWW.rpc);
-        return result["result"];
+        return result;
     }
+
     /** 
      * get blockchain height
      * @return int 
@@ -122,7 +124,7 @@ export class WWW {
     static async rpc_postRawTransaction(data) {
         var postdata = WWW.makeRpcPostBody("sendrawtransaction", NEL.helper.StringHelper.toHexString(data));
         // console.log(postdata)
-        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': WWW.rpc } }, "http://112.74.52.116/proxy.php");
+        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': WWW.rpc } }, WWW.proxy_server + "proxy.php");
         // var result = await Request.wxRequest({ "method": "post", "body":JSON.stringify(postdata)}, WWW.rpc);
         var r = result["result"];
         return r;
@@ -135,7 +137,7 @@ export class WWW {
     static async rpc_getRawTransaction(txid) {
         var postdata = WWW.makeRpcPostBody("getrawtransaction", txid);
         // console.log(postdata)
-        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': WWW.rpc } }, "http://112.74.52.116/proxy.php");
+        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': WWW.rpc } }, WWW.proxy_server + "proxy.php");
         // var result = await Request.wxRequest({ "method": "post", "body":JSON.stringify(postdata)}, WWW.rpc);
         var r = result["result"];
         return r;
@@ -150,7 +152,7 @@ export class WWW {
     static async rpc_getAddressTXs(addr, max = 20, page = 1) {
         var postdata = WWW.makeRpcPostBody("getaddresstxs", addr, max, page);
         // console.log(postdata)
-        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': WWW.rpc } }, "http://112.74.52.116/proxy.php");
+        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': WWW.rpc } }, WWW.proxy_server + "proxy.php");
         // var result = await Request.wxRequest({ "method": "post", "body":JSON.stringify(postdata)}, WWW.rpc);
         var r = result["result"];
         return r;
@@ -171,8 +173,8 @@ export class WWW {
      * @param {string} openid 用户唯一身份识别
      * @param {string} address 增加的地址
      */
-    static async  addr_insert(openid, address) {
-        let body = { 'method': 'insert', 'openid': openid, 'address': address };
+    static async  addr_insert(openid, label,address) {
+        let body = { 'method': 'insert', 'openid': openid, 'label':label,'address': address };
         return await WWW.makeaddrpost(body);;
     }
 
@@ -189,7 +191,7 @@ export class WWW {
     * 查询watchonly地址
     * @param {string} openid 用户唯一身份识别
     */
-    static async  query_insert(openid) {
+    static async addr_query(openid) {
         let body = { 'method': 'query', 'openid': openid };
         return await WWW.makeaddrpost(body);;
     }
@@ -197,8 +199,10 @@ export class WWW {
     * 获取openid
     * @param {string} code
     */
-    static async  query_insert(code) {
+    static async addr_openid(code) {
         let body = { 'method': 'openid', 'code': code };
+        console.log(body);
+        
         return await WWW.makeaddrpost(body);;
     }
 }

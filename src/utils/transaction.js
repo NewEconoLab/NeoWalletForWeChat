@@ -1,6 +1,6 @@
 import * as NEL from '../lib/neo-ts/index'
 import { WWW } from './API';
-import { WalletHelper } from './wallet'
+import { Wallet } from './wallet'
 import tip from './tip';
 import wepy from 'wepy'
 export class TransactionTool {
@@ -26,7 +26,7 @@ export class TransactionTool {
         wepy.showLoading({ title: '签名中' });
         var signdata = NEL.helper.Helper.Sign(msg, prikey, randomStr);
         // console.log('signdata= ' + signdata)
-        tran.AddWitness(signdata, pubkey, WalletHelper.wallet.address);
+        tran.AddWitness(signdata, pubkey, Wallet.wallet.address);
         // console.log(NEL.helper.StringHelper.toHexString(tran.GetRawData()))
         wepy.showLoading({ title: '交易发送中' });
         var result = await WWW.rpc_postRawTransaction(tran.GetRawData());

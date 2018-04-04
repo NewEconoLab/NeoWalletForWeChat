@@ -24,7 +24,7 @@
 <script>
 import wepy from 'wepy';
 import * as NEL from '../lib/neo-ts/index';
-import { WalletHelper } from '../utils/wallet';
+import { Wallet } from '../utils/wallet';
 import { LOCAL_WALLET, CURR_WALLET } from '../utils/constant';
 import tip from '../utils/tip';
 export default class LoginWIF extends wepy.page {
@@ -76,9 +76,9 @@ export default class LoginWIF extends wepy.page {
           }
           key = NEL.helper.StringHelper.toHexString(prikey);
         case 64: //privatekey
-          WalletHelper.setPrikey(key);
+          Wallet.setPrikey(key);
           wepy.hideLoading();
-          await wepy.setStorageSync(CURR_WALLET, WalletHelper.toString());
+          await wepy.setStorageSync(CURR_WALLET, Wallet.toString());
           wepy.reLaunch({ url: './home' });
           break;
         default:

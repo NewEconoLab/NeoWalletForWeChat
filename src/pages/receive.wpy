@@ -79,7 +79,7 @@ import wepy from 'wepy';
 import drawQrcode from 'weapp-qrcode';
 import tip from '../utils/tip';
 import { CURR_WALLET } from '../utils/constant';
-import { WalletHelper } from '../utils/wallet';
+import { Wallet } from '../utils/wallet';
 export default class Receive extends wepy.page {
   customData = {}; // 自定义数据
 
@@ -88,7 +88,7 @@ export default class Receive extends wepy.page {
   onLoad(option) {
     // this.wallet = JSON.parse(option.wallet)['accounts'][0];
     // this.wallet = wepy.getStorageSync(CURR_WALLET) || {};
-    this.wallet = WalletHelper.wallet; // this.wallet['accounts'][0];
+    this.wallet = Wallet.wallet; // this.wallet['accounts'][0];
     this.$apply();
     console.log(this.wallet);
     drawQrcode({

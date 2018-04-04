@@ -15,16 +15,11 @@ Page {
 <script>
 import wepy from 'wepy';
 import 'wepy-async-function';
-import {
-  USER_SPECICAL_INFO,
-  USER_INFO,
-  ADDRESS_ID,
-  SEL_CLASS_CODE
-} from './utils/constant';
+import { USER_INFO } from './utils/constant';
 import { setStore } from 'wepy-redux';
 import configStore from './store';
-import tip from './utils/tip';
-import { SHA256 } from 'crypto-js';
+import { WWW } from './utils/API';
+import { Wallet } from './utils/wallet'
 const store = configStore();
 setStore(store);
 
@@ -37,6 +32,7 @@ export default class extends wepy.app {
       'pages/loginnep2',
       'pages/receive',
       'pages/createresult',
+      'pages/loginaccounts',
       'pages/home',
       'pages/send',
       'pages/history',
@@ -57,7 +53,7 @@ export default class extends wepy.app {
     userInfo: null
   };
 
-  constructor() {DC097579dc66
+  constructor() {
     super();
     this.use('requestfix');
   }
@@ -68,24 +64,28 @@ export default class extends wepy.app {
     if (this.globalData.userInfo) {
       return;
     }
+    
+    //登陆获取用户code
     wx.login({
-      success: function(res) {
-        if (res.code) {
-          console.log('------------');
-          console.log(res.code);
-        } else {
+      success: async function(res) {
+        console.log(res);
+        const code = res['code']
+        if (code) {
+          //获取用户openid
+         let id = await WWW.addr_openid(code);
+         id = id['openid']
+         //保存用户id在wallet中
+         Wallet.openid = id;
         }
       }
     });
-
-    // wepy.getUserInfo({
-    //   success(res) {
-    //     // console.log(res);
-    //     // 存储userInfo
-    //     that.globalData.userInfo = res.userInfo;
-    //     wepy.setStorageSync(USER_INFO, res.userInfo);
-    //   }
-    // });
+    
+    wepy.getUserInfo({
+      success(res) {
+        that.globalData.userInfo = res.userInfo;
+        wepy.setStorageSync(USER_INFO, res.userInfo);
+      }
+    });
   }
 }
 </script>

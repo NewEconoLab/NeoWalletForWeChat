@@ -96,7 +96,7 @@ import wepy from 'wepy';
 import { USER_INFO, LOCAL_WALLET } from '../utils/constant';
 import { UTXO } from '../utils/UTXO';
 import { WWW } from '../utils/API';
-import { WalletHelper } from '../utils/wallet';
+import { Wallet } from '../utils/wallet';
 import { TransactionTool } from '../utils/transaction';
 import * as TimeHelper from '../utils/time';
 
@@ -130,7 +130,7 @@ export default class History extends wepy.page {
 
   onLoad() {
     this.utxos = UTXO.history;
-    this.address = WalletHelper.wallet.address;
+    this.address = Wallet.wallet.address;
     this.$apply();
   }
   onShow() {
@@ -169,7 +169,7 @@ export default class History extends wepy.page {
       );
       const bindex = txs[index].blockindex;
       txs[index].blockindex =
-        parseInt(WalletHelper.height) - parseInt(txs[index].blockindex)+1;
+        parseInt(Wallet.height) - parseInt(txs[index].blockindex)+1;
     }
     console.log(txs);
 

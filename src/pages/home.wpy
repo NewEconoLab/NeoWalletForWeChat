@@ -205,7 +205,7 @@ import { CURR_WALLET } from '../utils/constant';
 import { WWW } from '../utils/API';
 import { CoinTool } from '../utils/Coin';
 import { UTXO } from '../utils/UTXO';
-import { WalletHelper } from '../utils/wallet';
+import { Wallet } from '../utils/wallet';
 import tip from '../utils/tip';
 export default class Home extends wepy.page {
   config = {
@@ -234,7 +234,7 @@ export default class Home extends wepy.page {
 
   methods = {
     navigate(page) {
-      if (WalletHelper.wallet === null) {
+      if (Wallet.wallet === null) {
         if (page === 'mine') {
           wepy.navigateTo({
             url: '/pages/login'
@@ -272,7 +272,7 @@ export default class Home extends wepy.page {
     ) {
       this.isLogin = true;
       this.wallet = this.wallet['accounts'][0];
-      WalletHelper.wallet = this.wallet;
+      Wallet.wallet = this.wallet;
       this.$apply();
     }
     await this.OnTimeOut();
@@ -288,8 +288,8 @@ export default class Home extends wepy.page {
     if (WWW.rpc === '') {
       WWW.rpc = await WWW.rpc_getURL();
     }
-    if (WalletHelper.wallet !== null) {
-      const addr = WalletHelper.wallet.address;
+    if (Wallet.wallet !== null) {
+      const addr = Wallet.wallet.address;
       this.OnGetAssets(addr);
     }
     this.OnGetHeight();
@@ -302,7 +302,7 @@ export default class Home extends wepy.page {
     const height = await WWW.api_getHeight();
     // console.log(height);
     this.Block = height;
-    WalletHelper.height = height;
+    Wallet.height = height;
     this.$apply();
   }
   /**

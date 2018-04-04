@@ -60,15 +60,18 @@
 
 <script>
 import wepy from 'wepy';
-import { WalletHelper } from '../utils/wallet';
+import { Wallet } from '../utils/wallet';
 import { LOCAL_WALLET, CURR_WALLET } from '../utils/constant';
 import tip from '../utils/tip';
-export default class LoginLocal extends wepy.page {
+export default class LoginAccounts extends wepy.page {
   customData = {}; // 自定义数据
 
   customFunction() {} // 自定义方法
 
-  onLoad() {} // 在Page和Component共用的生命周期函数
+  onLoad() {
+    //在界面加载之前获取watchonly账户
+    
+  } // 在Page和Component共用的生命周期函数
 
   onShow() {
     let wals = wepy.getStorageSync(LOCAL_WALLET) || {};
@@ -106,7 +109,7 @@ export default class LoginLocal extends wepy.page {
 
       await wepy.setStorageSync(CURR_WALLET, selected);
       // wepy.hideLoading();
-      wepy.reLaunch({url:'./index'});
+      wepy.reLaunch({ url: './index' });
     }
   }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
 
