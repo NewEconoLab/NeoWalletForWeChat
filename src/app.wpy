@@ -57,7 +57,7 @@ export default class extends wepy.app {
     userInfo: null
   };
 
-  constructor() {
+  constructor() {DC097579dc66
     super();
     this.use('requestfix');
   }
@@ -68,16 +68,24 @@ export default class extends wepy.app {
     if (this.globalData.userInfo) {
       return;
     }
-    await wepy.login();
-
-    wepy.getUserInfo({
-      success(res) {
-        // console.log(res);
-        // 存储userInfo
-        that.globalData.userInfo = res.userInfo;
-        wepy.setStorageSync(USER_INFO, res.userInfo);
+    wx.login({
+      success: function(res) {
+        if (res.code) {
+          console.log('------------');
+          console.log(res.code);
+        } else {
+        }
       }
     });
+
+    // wepy.getUserInfo({
+    //   success(res) {
+    //     // console.log(res);
+    //     // 存储userInfo
+    //     that.globalData.userInfo = res.userInfo;
+    //     wepy.setStorageSync(USER_INFO, res.userInfo);
+    //   }
+    // });
   }
 }
 </script>

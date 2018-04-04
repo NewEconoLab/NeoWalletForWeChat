@@ -3,7 +3,6 @@ import * as NEL from '../lib/neo-ts/index';
 let hotapp = require('./hotapp.js');
 export class WWW {
     static api = "http://api.nel.group/api/testnet";
-    //"http://47.96.168.8:81/api/testnet";
     static priceHost = "https://api.coinmarketcap.com/v1/ticker/";
     static rpc = WWW.api;
     static rpcName = "";
@@ -15,7 +14,6 @@ export class WWW {
      * @param _params any[]
      */
     static makeRpcUrl(url, method, ..._params) {
-
 
         if (url[url.length - 1] != '/')
             url = url + "/";
@@ -33,7 +31,7 @@ export class WWW {
      * create Rpc post call body
      * @param method string
      * @param _params any[]
-     * @return {}
+     * @return {map}
      */
     static makeRpcPostBody(method, ..._params) {
         var body = {};
@@ -47,7 +45,16 @@ export class WWW {
         body["params"] = params;
         return body;
     }
-
+    /**
+     * 构造watchonly地址管理接口
+     * @param {map} body 
+     */
+    static async makeaddrpost(body) {
+        // console.log(postdata)
+        var result = await Request.wxRequest({ "method": "post", "body": body }, "http://112.74.52.116/neowallet/index.php");
+        // var result = await Request.wxRequest({ "method": "post", "body":JSON.stringify(postdata)}, WWW.rpc);
+        return result["result"];
+    }
     /** 
      * get blockchain height
      * @return int 
@@ -120,7 +127,7 @@ export class WWW {
         var r = result["result"];
         return r;
     }
-    
+
     /**
      * get transaction detail from txid
      * @param {string} data
@@ -157,5 +164,41 @@ export class WWW {
             return null;
         var r = json["result"];
         return r;
+    }
+
+    /**
+     * 增加新的watchonly地址
+     * @param {string} openid 用户唯一身份识别
+     * @param {string} address 增加的地址
+     */
+    static async  addr_insert(openid, address) {
+        let body = { 'method': 'insert', 'openid': openid, 'address': address };
+        return await WWW.makeaddrpost(body);;
+    }
+
+    /**
+    * 删除watchonly地址
+    * @param {string} openid 用户唯一身份识别
+    * @param {string} address 增加的地址
+    */
+    static async  addr_delete(openid, address) {
+        let body = { 'method': 'delete', 'openid': openid, 'address': address };
+        return await WWW.makeaddrpost(body);;
+    }
+    /**
+    * 查询watchonly地址
+    * @param {string} openid 用户唯一身份识别
+    */
+    static async  query_insert(openid) {
+        let body = { 'method': 'query', 'openid': openid };
+        return await WWW.makeaddrpost(body);;
+    }
+    /**
+    * 获取openid
+    * @param {string} code
+    */
+    static async  query_insert(code) {
+        let body = { 'method': 'openid', 'code': code };
+        return await WWW.makeaddrpost(body);;
     }
 }
