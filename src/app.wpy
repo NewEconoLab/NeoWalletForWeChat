@@ -39,7 +39,8 @@ export default class extends wepy.app {
       'pages/mine',
       'pages/transaction',
       'pages/vin',
-      'pages/vout'
+      'pages/vout',
+      'pages/watchonly'
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -64,16 +65,16 @@ export default class extends wepy.app {
     if (this.globalData.userInfo) {
       return;
     }
-    
+
     //登陆获取用户code
-    wx.login({
+    await wx.login({
       success: async function(res) {
         console.log(res);
         const code = res['code']
         if (code) {
           //获取用户openid
          let id = await WWW.addr_openid(code);
-         id = id['openid']
+         id = id['openid'];
          //保存用户id在wallet中
          Wallet.openid = id;
         }

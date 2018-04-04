@@ -6,11 +6,11 @@
   border-radius: 5px;
   margin: 32rpx 0 13rpx 0;
   background-color: white;
-  box-shadow: 2px 2px 20px rgba(130,130,130,0.2);
+  box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
 }
 .content {
   width: 660rpx;
-  height:182rpx;
+  height: 182rpx;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -53,6 +53,13 @@
   color: #cccccc;
   margin-bottom: 45rpx;
 }
+.foot-button {
+  width: 600rpx;
+  margin-top: 55rpx;
+  button::after {
+    border: none;
+  }
+}
 </style>
 
 <template>
@@ -62,24 +69,15 @@
       <view class="area-icon">
         <image  src="../images/icon.png" />
       </view>
-      <view class="area-info" @tap="OnSelect({{item.label}})">
+      <view class="area-info" @tap="OnSelect({{item.address}})">
         <text class="info-name"> {{item.label}}</text>
         <text class="info-addr">{{item.address}}</text>
       </view>
       </view>
     </view>
-
-   <view class="wallet-block" wx:for="{{wallets}}" >
-     <view class="content">
-      <view class="area-icon">
-        <image  src="../images/icon.png" />
+      <view class="foot-button">
+        <button type="primary" style="background-color:#69c0fd;" @tap="submit">添加观察账户</button>
       </view>
-      <view class="area-info" @tap="OnSelect({{item.name}})">
-        <text class="info-name"> {{item.name}}</text>
-        <text class="info-addr">{{item.address}}</text>
-      </view>
-      </view>
-    </view>
   </view>
 </template>
 
@@ -89,7 +87,7 @@ import { Wallet } from '../utils/wallet';
 import { WWW } from '../utils/API';
 import { LOCAL_WALLET, CURR_WALLET } from '../utils/constant';
 import tip from '../utils/tip';
-export default class LoginAccounts extends wepy.page {
+export default class WatchOnly extends wepy.page {
   customData = {}; // 自定义数据
 
   customFunction() {} // 自定义方法
@@ -98,25 +96,12 @@ export default class LoginAccounts extends wepy.page {
     this.OnLoadWatchOnly();
   } // 在Page和Component共用的生命周期函数
 
-  async onShow() {
-    let wals = wepy.getStorageSync(LOCAL_WALLET) || {};
-    console.log(wals);
-    let temp_wal = [];
-    for (const key in wals) {
-      console.log(wals[key]);
-      temp_wal.push(wals[key]['accounts'][0]);
-    }
-    this.wals = wals;
-    this.wallets = temp_wal;
-    this.$apply();
-  } // 只在Page中存在的页面生命周期函数
+  async onShow() {} // 只在Page中存在的页面生命周期函数
 
   config = {}; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
 
   data = {
-    wallets: [],
-    watchonly: [],
-    wals: {}
+    watchonly: []
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
   components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
@@ -129,13 +114,10 @@ export default class LoginAccounts extends wepy.page {
 
   methods = {
     async OnSelect(e) {
-      console.log(e);
-      const selected = this.wals[e];
-      // WalletHelper.wallet = selected;
-
-      await wepy.setStorageSync(CURR_WALLET, selected);
-      // wepy.hideLoading();
-      wepy.reLaunch({ url: './index' });
+      const selected = e;
+      wepy.navigateTo({
+        url: '/pages/watch?address=' + selected
+      });
     }
   }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
 

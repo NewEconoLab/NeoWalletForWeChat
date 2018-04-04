@@ -1,84 +1,101 @@
-<style lang="less">
-.logo {
-  position: relative;
-  width: 200rpx;
-  height: 200rpx;
-  margin-top: 80px;
-  border-radius: 7%;
-}
-.area-passphrase {
-  width: 100%;
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 40px;
-}
-
-.passphrase-item {
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  border-top: 1px solid #efefef;
-  padding: 20rpx 20rpx;
-  width: 96%;
-  justify-content: center;
-  .title {
-    flex: 2;
-    margin-right: 20rpx;
-    font-size: 14px;
-  }
-  .input {
-    flex: 9;
-    input {
-      font-size: 13px;
-      color: #333;
-    }
-  }
-}
-.area-btn {
-  margin-top: 100rpx;
-  width: 80%;
-}
+ <style lang="less">
 .form {
   width: 100%;
   align-items: center;
 }
-</style>
 
+.area-uppper {
+  height: 470rpx;
+  width: 100%;
+  background: linear-gradient(to right, #69c0fd, #a6a4fd);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.upper-logo {
+  width: 160rpx;
+  height: 160rpx;
+  margin-top: 84rpx;
+  border-radius: 50%;
+  background-color: white;
+}
+
+.area-medium {
+  display: flex;
+  flex-direction: column;
+  top: 0;
+  margin-top: -150rpx;
+  width: 700rpx;
+  box-shadow: 10px 15px 20px rgba(100, 100, 100, 0.2);
+  background-color: white;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: center;
+}
+.medium-content {
+  margin: 10rpx 0  67rpx 0;
+  width: 616rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.medium-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-top: 75rpx;
+  align-items: center;
+  width: 616rpx;
+  border-bottom: thin solid #cccccc;
+  .input {
+    width: 100%;
+    padding-bottom: 20rpx;
+    font-size: 16px;
+    padding-left: 20rpx;
+  }
+}
+
+.area-btn {
+  margin-top: 75rpx;
+  width: 660rpx;
+  button::after{
+    border: none;
+  }
+}
+
+</style>
 <template>
 <form bindsubmit="formSubmit" class="form">
   <view class="container">
-    <image src="../images/icon.png" class="logo"></image>
-    
-      <view class="area-passphrase">
-        <view class="passphrase-item">
-          <text class="title">钱包名:</text>
-          <view class="input">
-            <input type="text" name="accountlabel" placeholder="请输入账户名" value=''/>
-          </view>
-        </view>
-        <view class="passphrase-item">
-          <view class="title">密码:</view>
-            <view class="input">
-            <input type="text" name="passphrase" password placeholder="请输入密码" value=''/>
-          </view>
-        </view>
-        <view class="passphrase-item">
-          <view class="title">密码验证:</view>
-            <view class="input">
-            <input type="text" name="repassphrase" password placeholder="请再次输入密码" value=''/>
-          </view>
+    <view class="area-uppper">
+     <image class="upper-logo" src="../images/icon.png" ></image>
+    </view>
+    <view class="area-medium">
+      <view class="medium-content">
+      <view class="medium-item">
+        <view class="input">
+          <input type="text" name="accountlabel" placeholder="标签" value=''/>
         </view>
       </view>
+      <view class="medium-item">
+        <view class="input">
+          <input type="text" name="passphrase" password placeholder="请输入密码" value=''/>
+        </view>
+      </view>
+      <view class="medium-item">
+        <view class="input">
+          <input type="text" name="repassphrase" password placeholder="确认密码" value=''/>
+        </view>
+      </view>
+      </view>
+    </view>
       <view class="area-btn">
-        <button type="primary" disable="{{isGenerating}}" formType="submit">创建新钱包</button>
+        <button type="primary" style="background-color:#69c0fd;" formType="submit">生成账户</button>
       </view>
-   
   </view>
-   </form>
+</form>
 </template>
-
 <script>
 import wepy from 'wepy';
 import * as NEL from '../lib/neo-ts/index';
@@ -97,7 +114,7 @@ export default class LoginCreate extends wepy.page {
   onShow() {} // 只在Page中存在的页面生命周期函数
 
   config = {
-    navigationBarTitleText: 'Create'
+    navigationBarTitleText: '新账户'
   }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
 
   data = {
@@ -160,7 +177,7 @@ export default class LoginCreate extends wepy.page {
       // console.log('address = ' + address);
 
       wepy.showLoading({ title: '新钱包创建完成' });
-      
+
       setTimeout(function() {
         wepy.hideLoading();
       }, 1000);

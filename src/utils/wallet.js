@@ -8,13 +8,20 @@ export class Wallet {
     static privatekey = null
     static publickey = null
 
-    //保存watchonly地址
-    static watchonly = [];
+    //当前账户是否为观察账户
+    static watchonly = false;
     //保存用户的openid
-    static openid = ''
+    static openid = null
 
     constructor() { }
-
+    /**
+     * 切换账户的时候调用（观察账户的时候不切换）
+     */
+    static reset(){
+        Wallet.privatekey = null;
+        Wallet.publickey = null;
+        Wallet.watchonly = null;
+    }
     /**
      * return address 
      */
