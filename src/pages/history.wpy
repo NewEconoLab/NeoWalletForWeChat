@@ -102,7 +102,7 @@ import * as TimeHelper from '../utils/time';
 
 export default class History extends wepy.page {
   config = {
-    navigationBarTitleText: 'History',
+    navigationBarTitleText: '交易历史',
     enablePullDownRefresh: true
   };
 

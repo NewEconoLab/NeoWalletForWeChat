@@ -209,7 +209,7 @@ import { Wallet } from '../utils/wallet';
 import tip from '../utils/tip';
 export default class Home extends wepy.page {
   config = {
-    navigationBarTitleText: 'NEO Wallet'
+    navigationBarTitleText: '首页'
   };
 
   components = {};
