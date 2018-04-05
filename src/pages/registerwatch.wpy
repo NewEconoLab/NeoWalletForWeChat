@@ -99,18 +99,18 @@
         <input class="address" name="address" placeholder-class="holder" placeholder="账户地址" value='{{targetAddr}}'/>
       </view>
       <view class="medium-button">
-        <view class="button-item"  @tap="navigate('receive')">
+        <view class="button-item" >
           <image src="../images/address.png" class="icon"></image>
-          <text class="label">输入</text>
+          <text class="label">输入账户</text>
         </view>
-        <view class="button-item"  @tap="navigate('receive')">
+        <view class="button-item"  @tap="OnScan()">
           <image src="../images/scanPay.png" class="icon"></image>
-           <text class="label" style="color:#a3a3a3;">扫码</text>
+           <text class="label" style="color:#a3a3a3;">扫二维码</text>
         </view>
       </view>
     </view>
     <view class="area-btn">
-      <button type="primary" style="background-color:#69c0fd;" formType="submit">注册观察账户</button>
+      <button type="primary" style="background-color:#69c0fd;" formType="submit">完成</button>
     </view>
   </view>
 </form>
@@ -132,7 +132,7 @@ export default class RegisterWatch extends wepy.page {
   onShow() {} // 只在Page中存在的页面生命周期函数
 
   config = {
-    navigationBarTitleText: '注册账户'
+    navigationBarTitleText: '添加观察账户'
   }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
 
   data = {

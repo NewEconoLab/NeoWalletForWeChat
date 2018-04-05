@@ -2,7 +2,6 @@
 .bg {
   background: linear-gradient(to right, #69c0fd, #a6a4fd);
 }
-
 .area-qrcode {
   display: flex;
   flex-direction: column;
@@ -64,7 +63,7 @@
     <view class="area-qrcode">
       <text class="note-text" >点击二维码，复制地址</text>
       <view class="qrcode" @tap="copyToClip({{wallet.address}})">
-        <canvas class="canvas"canvas-id="address"></canvas>
+        <canvas class="canvas" canvas-id="address"></canvas>
       </view>
     </view>
     <view class="area-address">
@@ -76,7 +75,7 @@
 
 <script>
 import wepy from 'wepy';
-import drawQrcode from 'weapp-qrcode';
+import drawQrcode from '../lib/qrcode/qr';
 import tip from '../utils/tip';
 import { CURR_WALLET } from '../utils/constant';
 import { Wallet } from '../utils/wallet';
@@ -86,9 +85,7 @@ export default class Receive extends wepy.page {
   customFunction() {} // 自定义方法
 
   onLoad(option) {
-    // this.wallet = JSON.parse(option.wallet)['accounts'][0];
-    // this.wallet = wepy.getStorageSync(CURR_WALLET) || {};
-    this.wallet = Wallet.wallet; // this.wallet['accounts'][0];
+    this.wallet = Wallet.wallet;
     this.$apply();
     console.log(this.wallet);
     drawQrcode({
@@ -97,9 +94,6 @@ export default class Receive extends wepy.page {
       canvasId: 'address',
       text: this.wallet.address
     });
-    //   let ctx = wx.createCanvasContext('address');
-    // //  let d =  document.getElementById('address');
-    //  console.log(document);
   } // 在Page和Component共用的生命周期函数
 
   onShow() {
@@ -118,7 +112,7 @@ export default class Receive extends wepy.page {
   } // 只在Page中存在的页面生命周期函数
 
   config = {
-    navigationBarTitleText: 'Receive'
+    navigationBarTitleText: '收款'
   }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
 
   data = {
@@ -151,8 +145,8 @@ export default class Receive extends wepy.page {
   }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
   onShareAppMessage() {
     return {
-      title: '这里是机智life小程序',
-      path: '/page/index/index?id=123',
+      title: 'NEO小程序钱包',
+      path: './pages/home',
       success: function(res) {
         console.log(res.shareTickets[0]);
         // console.log

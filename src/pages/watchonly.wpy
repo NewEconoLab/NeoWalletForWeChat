@@ -76,7 +76,7 @@
       </view>
     </view>
       <view class="foot-button">
-        <button type="primary" style="background-color:#69c0fd;" @tap="submit">添加观察账户</button>
+        <button type="primary" style="background-color:#69c0fd;" @tap="registerWatch()">添加观察账户</button>
       </view>
   </view>
 </template>
@@ -98,7 +98,9 @@ export default class WatchOnly extends wepy.page {
 
   async onShow() {} // 只在Page中存在的页面生命周期函数
 
-  config = {}; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
+  config = {
+    navigationBarTitleText: '观察账户列表'
+  }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
 
   data = {
     watchonly: []
@@ -117,6 +119,11 @@ export default class WatchOnly extends wepy.page {
       const selected = e;
       wepy.navigateTo({
         url: '/pages/watch?address=' + selected
+      });
+    },
+    registerWatch(){
+      wepy.navigateTo({
+        url: '/pages/registerwatch'
       });
     }
   }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明

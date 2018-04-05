@@ -23,20 +23,20 @@
     margin-top: 45rpx;
     font-size: 18px;
     color: white;
-    font-family: Helvetica,Arial , sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
   }
   .number {
     font-size: 34px;
     margin-top: 45rpx;
     color: white;
-    font-family: Helvetica,Arial , sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
   }
   .totle {
     font-size: 12px;
     font-weight: lighter;
     margin: 45rpx 0 0 0;
     color: white;
-    font-family: Helvetica,Arial , sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
   }
 }
 
@@ -47,7 +47,7 @@
   margin-top: -70rpx;
   height: 197rpx;
   width: 700rpx;
-  box-shadow: 10px 15px 20px rgba(100,100,100,0.2);
+  box-shadow: 10px 15px 20px rgba(100, 100, 100, 0.2);
   background-color: white;
   border-radius: 5px;
   justify-content: space-between;
@@ -65,7 +65,7 @@
     margin-top: 20rpx;
     font-size: 13px;
     color: #27adf1;
-    font-family: Helvetica,Arial , sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
   }
 }
 
@@ -88,12 +88,12 @@
   .label {
     font-size: 13px;
     color: #a3a3a3;
-    font-family: Helvetica,Arial , sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
   }
   .height {
     color: #a3a3a3;
     font-size: 13px;
-    font-family: Helvetica,Arial , sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
   }
 }
 
@@ -113,12 +113,12 @@
   margin-top: 28rpx;
   border-radius: 5px;
   background-color: white;
-  box-shadow: 2px 2px 20px rgba(130,130,130,0.2);
+  box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
   .label {
     font-size: 13px;
     color: #a3a3a3;
     margin-left: 50rpx;
-    font-family: Helvetica,Arial , sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
   }
   .price {
     width: 200rpx;
@@ -130,7 +130,7 @@
     text {
       color: #27adf1;
       font-size: 13px;
-      font-family: Helvetica,Arial , sans-serif;
+      font-family: Helvetica, Arial, sans-serif;
     }
   }
 }
@@ -318,14 +318,16 @@ export default class Home extends wepy.page {
       if (item.asset === 'NEO') neo = parseInt(item.count) + parseInt(neo);
       else gas = parseFloat(item.count) + parseFloat(gas);
     }
+
     this.NEO = neo;
     this.GAS = gas.toFixed(4);
+    this.$apply();
     UTXO.balance = {
       NEO: neo,
       GAS: gas
     };
     UTXO.utxo.reverse();
-    this.$apply();
+
     // console.log(UTXO.assets);
     this.OnTotalValue();
   }

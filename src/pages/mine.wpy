@@ -178,18 +178,15 @@ export default class Mine extends wepy.page {
         itemColor: '#69c0fd',
         success(res) {
           if (res.tapIndex === 0) {
-            wx.showToast({ title: '重命名' });
+            wx.showToast({ title: '开发中' });
           } else if (res.tapIndex === 1) {
-            // wx.showToast({ title: '切换账户' });
             wx.navigateTo({ url: './index?switch=' + true });
           } else if (res.tapIndex === 2) {
-            // wx.showToast({ title: 'watchonly' });
             wx.navigateTo({ url: './watchonly' });
           } else if (res.tapIndex === 3) {
-            wx.showToast({ title: '删除账户' });
             wx.showModal({
               title: '提示',
-              content: '账户删除后只能靠重新导入来恢复',
+              content: '账户删除后只能通过重新导入来恢复',
               showCancel: true,
               success: res => {
                 //确认删除
