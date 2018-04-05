@@ -92,7 +92,7 @@ export default class Index extends wepy.page {
     register() {
       // this.onCreateAccount();
       // this.$redirect('./logincreate');
-      wx.navigateTo({url:'./register'});
+      wx.navigateTo({ url: './register' });
     },
     loginScan() {
       let that = this;
@@ -128,6 +128,9 @@ export default class Index extends wepy.page {
     const wallet = wepy.getStorageSync(LOCAL_WALLET);
     if (wallet !== {} && wallet !== undefined && wallet !== '') {
       wepy.showLoading({ title: '登陆中' });
+      setTimeout(function() {
+        wepy.hideLoading();
+      }, 4000);
       Wallet.parse(wallet);
       wepy.reLaunch({ url: './home' });
       wepy.hideLoading();
