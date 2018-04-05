@@ -47,7 +47,6 @@
     font-size: 16px;
   }
 }
-
 </style>
 <template>
   <view class="container">
@@ -83,7 +82,8 @@ export default class Index extends wepy.page {
 
   data = {
     avatarUrl: '',
-    nickName: ''
+    nickName: '',
+    isSwitch: false
   };
 
   computed = {};
@@ -114,15 +114,16 @@ export default class Index extends wepy.page {
 
   events = {};
 
-  onLoad() {
-    let that = this;
+  onLoad(option) {
+    this.isSwitch = option.switch;
     let userInfo = wepy.getStorageSync(USER_INFO);
-    that.avatarUrl = userInfo.avatarUrl;
-    that.nickName = userInfo.nickName;
-    that.$apply();
+    this.avatarUrl = userInfo.avatarUrl;
+    this.nickName = userInfo.nickName;
+    this.$apply();
   }
-  
+
   onShow() {
+    if (this.isSwitch) return;
     const wallet = wepy.getStorageSync(LOCAL_WALLET);
     if (wallet !== {} && wallet !== undefined && wallet !== '') {
       wepy.showLoading({ title: '登陆中' });

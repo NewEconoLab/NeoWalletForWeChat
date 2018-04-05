@@ -2,7 +2,6 @@
 .bg {
   background: linear-gradient(to right, #69c0fd, #a6a4fd);
 }
-
 .area-user {
   display: flex;
   flex-direction: column;
@@ -15,7 +14,7 @@
     background-color: white;
   }
   .nickName {
-    font-family: '黑体', Helvetica, sans-serif;
+    font-family: '黑体', Helvetica;
     font-size: 15px;
     margin-top: 45rpx;
     color: white;
@@ -42,7 +41,7 @@
 .text-label {
   flex: 2.5;
   font-size: 16px;
-  font-family: '黑体', Helvetica, sans-serif;
+  font-family: '黑体';
   padding-left: 5px;
   color: white;
   justify-content: flex-end;
@@ -56,16 +55,29 @@
   line-height: 47rpx;
   align-items: flex-end;
 }
-.area-btn {
-  display: block;
-  margin-top: 100rpx;
-  width: 80%;
+.area-lower {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 660rpx;
+  margin-top: 145rpx;
 }
-.warnning {
-  position: fixed;
-  bottom: 0;
-  margin-bottom: 10px;
-  color: red;
+
+.button-item {
+  width: 660rpx;
+  height: 95rpx;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 5px;
+  justify-content: center;
+  box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
+  .name {
+    color: #a3a3a3;
+    font-family: '黑体';
+    font-size: 16px;
+  }
 }
 </style>
 
@@ -75,7 +87,7 @@
      <image class="avatar" src="{{avatarUrl}}"></image>
       <text class="nickName">{{nickName}}</text>
     </view>
-    
+  
     <view class="area-text">
       <view class="area-text-item"  @tap="copyToClip(name = {{wallet.name}})">
         <text class="text-label" >账户名:</text>
@@ -91,15 +103,18 @@
       </view>
       <view class="area-text-item"  @tap="copyToClip(nep2Key = {{wallet.key}})">
         <text class="text-label">私钥密文:</text>
-        <text class="text-content" >{{wallet.key}}</text>
+        <text class="text-content">{{wallet.key}}</text>
       </view>
     </view>
-    <view class="area-btn">
-      <button type="warn" @tap="logout()">退出当前账号</button>
+
+    <view class="area-lower">
+      <view class="button-item" @tap="manage()" >
+        <text class="name" >账户管理</text>
+      </view>
     </view>
+
   </view>
 </template>
-
 <script>
 import wepy from 'wepy';
 import { Wallet } from '../utils/wallet';
@@ -150,13 +165,31 @@ export default class Mine extends wepy.page {
           wepy.getClipboardData({
             success: function(res) {
               console.log(res.data); // data
-              tip.success('复制成功',500);
+              tip.success('复制成功', 500);
             }
           });
         }
       });
     },
-
+    manage() {
+      let that = this;
+      wx.showActionSheet({
+        itemList: ['重命名', '切换账户', 'watchonly', '删除账户'],
+        itemColor: '#69c0fd',
+        success(res) {
+          if (res.tapIndex === 0) {
+            wx.showToast({ title: '重命名' });
+          } else if (res.tapIndex === 1) {
+            wx.showToast({ title: '切换账户' });
+            wx.navigateTo({ url: './index?switch='+false });
+          } else if (res.tapIndex === 2) {
+            wx.showToast({ title: 'watchonly' });
+          } else if (res.tapIndex === 2) {
+            wx.showToast({ title: '删除账户' });
+          }
+        }
+      });
+    },
     logout() {
       wepy.reLaunch({ url: './login' });
     }
