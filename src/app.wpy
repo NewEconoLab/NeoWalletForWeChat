@@ -27,7 +27,7 @@ export default class extends wepy.app {
   config = {
     pages: [
       'pages/index',
-      'pages/logincreate',
+      'pages/register',
       'pages/LoginWIF',
       'pages/loginnep2',
       'pages/receive',
@@ -40,7 +40,9 @@ export default class extends wepy.app {
       'pages/transaction',
       'pages/vin',
       'pages/vout',
-      'pages/watchonly'
+      'pages/watchonly',
+      'pages/watch',
+      'pages/registerwatch'
     ],
     window: {
       backgroundTextStyle: 'light',

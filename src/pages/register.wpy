@@ -48,6 +48,7 @@
   align-items: center;
   width: 616rpx;
   border-bottom: thin solid #cccccc;
+  font-family: '黑体', Helvetica, Arial, sans-serif;
   .input {
     width: 100%;
     padding-bottom: 20rpx;
@@ -99,12 +100,11 @@
 <script>
 import wepy from 'wepy';
 import * as NEL from '../lib/neo-ts/index';
-import Toast from 'wepy-com-toast';
 import { LOCAL_WALLET, CURR_WALLET } from '../utils/constant';
 import { Wallet } from '../utils/wallet';
 import tip from '../utils/tip';
 import * as Random from '../utils/random';
-export default class LoginCreate extends wepy.page {
+export default class Register extends wepy.page {
   customData = {}; // 自定义数据
 
   customFunction() {} // 自定义方法

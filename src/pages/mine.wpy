@@ -1,27 +1,24 @@
 <style lang="less">
+.bg {
+  background: linear-gradient(to right, #69c0fd, #a6a4fd);
+}
+
 .area-user {
   display: flex;
   flex-direction: column;
   align-items: center;
-  .logo {
-    width: 150rpx;
-    height: 150rpx;
-    margin-top: 50px;
+  .avatar {
+    width: 163rpx;
+    height: 163rpx;
+    margin-top: 101rpx;
     border-radius: 50%;
     background-color: white;
   }
-  .name {
-    color: gray;
-    margin-top: 20px;
-  }
-  .address {
-    margin-top: 9px;
-    font-size: 12px;
-    font-family: italic;
-    font-weight: 400;
-    word-break: break-all;
-    color: #1e90ff;
-    padding: 0 10px 5px 10px;
+  .nickName {
+    font-family: '黑体', Helvetica, sans-serif;
+    font-size: 15px;
+    margin-top: 45rpx;
+    color: white;
   }
 }
 
@@ -29,32 +26,35 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  margin-top: 15px;
+  width: 660rpx;
+  margin-top: 63rpx;
 }
 .area-text-item {
   display: flex;
-  flex-direction: column;
-  align-items: left;
+  flex-direction: row;
+  align-items: flex-end;
   width: 100%;
-  margin: 2px 15px 0 15px;
-  background-color: white;
+  padding-bottom: 15rpx;
+  padding-top: 15rpx;
+  border-bottom: thin solid #dddddd;
+  justify-content: center;
 }
 .text-label {
-  margin-top: 5px;
-  font-size: 12px;
-  font-family: normal;
-  font-weight: 900;
+  flex: 2.5;
+  font-size: 16px;
+  font-family: '黑体', Helvetica, sans-serif;
   padding-left: 5px;
+  color: white;
+  justify-content: flex-end;
 }
 .text-content {
-  margin-top: 9rpx;
-  font-size: 12px;
-  font-family: italic;
-  font-weight: 400;
+  flex: 8;
+  font-size: 15px;
+  font-family: Arial, Helvetica, sans-serif;
   word-break: break-all;
-  color: #777;
-  padding: 0 10px 5px 10px;
+  color: white;
+  line-height: 47rpx;
+  align-items: flex-end;
 }
 .area-btn {
   display: block;
@@ -70,24 +70,27 @@
 </style>
 
 <template>
-  <view class="container">
+  <view class="container bg">
     <view class= "area-user">
-      <image src="../images/icon.png" class="logo"></image>
-      <text class="name">{{wallet.name}}</text>
-      <text class="address">{{wallet.address}}</text>
+     <image class="avatar" src="{{avatarUrl}}"></image>
+      <text class="nickName">{{nickName}}</text>
     </view>
     
     <view class="area-text">
       <view class="area-text-item"  @tap="copyToClip(name = {{wallet.name}})">
-        <text class="text-label">Name:</text>
+        <text class="text-label" >账户名:</text>
         <text class="text-content" >{{wallet.name}}</text>
       </view>
       <view class="area-text-item"  @tap="copyToClip(address = {{wallet.address}})">
-        <text class="text-label">Address:</text>
+        <text class="text-label">地址:</text>
+        <text class="text-content">{{wallet.address}}</text>
+      </view>
+      <view class="area-text-item"  @tap="copyToClip(address = {{wallet.address}})">
+        <text class="text-label">公钥:</text>
         <text class="text-content">{{wallet.address}}</text>
       </view>
       <view class="area-text-item"  @tap="copyToClip(nep2Key = {{wallet.key}})">
-        <text class="text-label">Nep2 Key:</text>
+        <text class="text-label">私钥密文:</text>
         <text class="text-content" >{{wallet.key}}</text>
       </view>
     </view>
@@ -100,6 +103,7 @@
 <script>
 import wepy from 'wepy';
 import { Wallet } from '../utils/wallet';
+import { USER_INFO } from '../utils/constant';
 import tip from '../utils/tip';
 
 export default class Mine extends wepy.page {
@@ -107,20 +111,26 @@ export default class Mine extends wepy.page {
 
   customFunction() {} // 自定义方法
 
-  onLoad() {} // 在Page和Component共用的生命周期函数
-
-  onShow() {
+  onLoad() {
+    let userInfo = wepy.getStorageSync(USER_INFO);
+    this.avatarUrl = userInfo.avatarUrl;
+    this.nickName = userInfo.nickName;
     this.wallet = Wallet.wallet;
     this.$apply();
-    console.log(this.wallet)
+  } // 在Page和Component共用的生命周期函数
+
+  onShow() {
+    console.log(this.wallet);
   } // 只在Page中存在的页面生命周期函数
 
   config = {
-    navigationBarTitleText: 'Mine'
+    navigationBarTitleText: '个人'
   }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
 
   data = {
-    wallet: {}
+    wallet: {},
+    avatarUrl: '',
+    nickName: ''
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
   components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
@@ -140,7 +150,7 @@ export default class Mine extends wepy.page {
           wepy.getClipboardData({
             success: function(res) {
               console.log(res.data); // data
-              tip.alert('复制成功');
+              tip.success('复制成功',500);
             }
           });
         }

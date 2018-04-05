@@ -56,7 +56,7 @@
       <text class="upper-nickName">{{nickName}}</text>
     </view>
     <view class="area-lower">
-      <view class="login-item" @tap="loginCreate()" >
+      <view class="login-item" @tap="register()" >
         <text class="name" style="color:white;">创建账户</text>
       </view>
       <view class="login-item" style="background-color: white;" @tap="loginScan()">
@@ -89,7 +89,7 @@ export default class Index extends wepy.page {
   computed = {};
 
   methods = {
-    loginCreate() {
+    register() {
       this.onCreateAccount();
       //this.$redirect('./logincreate');
     },
@@ -119,6 +119,7 @@ export default class Index extends wepy.page {
     let userInfo = wepy.getStorageSync(USER_INFO);
     that.avatarUrl = userInfo.avatarUrl;
     that.nickName = userInfo.nickName;
+    that.$apply();
   }
   
   onShow() {
