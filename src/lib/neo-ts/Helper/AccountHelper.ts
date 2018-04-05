@@ -288,7 +288,7 @@ export class Helper {
         // console.log('strkey = ' + strkey)
         // console.log('strkey = '+ uint8pass)
         console.log('strkey = ' + prikey)
-        scrypt.default(uint8pass, strkey, {
+        scrypt(uint8pass, strkey, {
             logN: 5,
             r: r,
             p: p,
@@ -362,7 +362,7 @@ export class Helper {
         var encryptedkey = buffer.subarray(7, 7 + 32);
         let uint8pass = this.String2Bytes(passphrase);
         let strkey = this.Bytes2String(addresshash);
-        scrypt.default(uint8pass, strkey, {
+        scrypt(uint8pass, strkey, {
             logN: 5,
             r: r,
             p: p,

@@ -61,7 +61,7 @@
       <view class="login-item" style="background-color: white;" @tap="loginScan()">
         <text class="name" style="color:gray;">导入账户</text>
       </view>
-      <view class="login-item" style="background-color: white;" @tap="loginImport()">
+      <view class="login-item" style="background-color: white;" @tap="loginAccounts()">
         <text class="name" style="color:gray;">账户列表</text>
       </view>
     </view>
@@ -90,8 +90,9 @@ export default class Index extends wepy.page {
 
   methods = {
     register() {
-      this.onCreateAccount();
-      //this.$redirect('./logincreate');
+      // this.onCreateAccount();
+      // this.$redirect('./logincreate');
+      wx.navigateTo({url:'./register'});
     },
     loginScan() {
       let that = this;
@@ -105,10 +106,10 @@ export default class Index extends wepy.page {
         }
       });
     },
-    loginImport() {
+    loginAccounts() {
       console.log(this.disabled);
       if (this.disabled) return;
-      else this.$redirect('./loginWIF');
+      else this.$redirect('./loginaccounts');
     }
   };
 

@@ -76,17 +76,17 @@
       <view class="medium-content">
       <view class="medium-item">
         <view class="input">
-          <input type="text" name="accountlabel" placeholder="标签" value=''/>
+          <input type="text" name="accountlabel" placeholder="标签" value='zhizhang'/>
         </view>
       </view>
       <view class="medium-item">
         <view class="input">
-          <input type="text" name="passphrase" password placeholder="请输入密码" value=''/>
+          <input type="text" name="passphrase" password placeholder="请输入密码" value='zhizhang'/>
         </view>
       </view>
       <view class="medium-item">
         <view class="input">
-          <input type="text" name="repassphrase" password placeholder="确认密码" value=''/>
+          <input type="text" name="repassphrase" password placeholder="确认密码" value='zhizhang'/>
         </view>
       </view>
       </view>
@@ -100,7 +100,7 @@
 <script>
 import wepy from 'wepy';
 import * as NEL from '../lib/neo-ts/index';
-import { LOCAL_WALLET, CURR_WALLET } from '../utils/constant';
+import { LOCAL_WALLET, CURR_WALLET,SCRYPT_CONFIG } from '../utils/constant';
 import { Wallet } from '../utils/wallet';
 import tip from '../utils/tip';
 import * as Random from '../utils/random';
@@ -146,8 +146,6 @@ export default class Register extends wepy.page {
         tip.alert('账户名不能为空');
         return;
       }
-      console.log('form发生了submit事件，携带数据为：', e.detail.value);
-      console.log(LOCAL_WALLET);
 
       let wallets = wepy.getStorageSync(LOCAL_WALLET) || {};
       console.log(wallets);
@@ -184,9 +182,9 @@ export default class Register extends wepy.page {
 
       var wallet = new NEL.nep6.nep6wallet();
       wallet.scrypt = new NEL.nep6.nep6ScryptParameters();
-      wallet.scrypt.N = 16384;
-      wallet.scrypt.r = 8;
-      wallet.scrypt.p = 8;
+      wallet.scrypt.N = SCRYPT_CONFIG.N;
+      wallet.scrypt.r = SCRYPT_CONFIG.r;
+      wallet.scrypt.p = SCRYPT_CONFIG.p;
       wallet.accounts = [];
       wallet.accounts[0] = new NEL.nep6.nep6account();
       wallet.accounts[0].address = address;
@@ -204,8 +202,10 @@ export default class Register extends wepy.page {
             wallet.accounts[0].key = result;
             const wallet_json = wallet.toJson();
             wallets[accountlabel] = wallet_json;
+
             wepy.showLoading({ title: '钱包创建完成' });
             wepy.showLoading({ title: '数据存储中' });
+
             wepy.setStorageSync(LOCAL_WALLET, wallets);
             wepy.setStorageSync(CURR_WALLET, wallet);
 
@@ -218,7 +218,7 @@ export default class Register extends wepy.page {
             that.$redirect('./createresult?wallet=' + jsonstr);
           } else {
             //TODO: alert for encoding error
-            tip.alert('nep2 key encode error');
+            tip.error('私钥加密失败');
           }
         }
       );

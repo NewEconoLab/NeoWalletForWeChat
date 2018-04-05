@@ -122,7 +122,7 @@ import { WWW } from '../utils/API';
 import { CoinTool } from '../utils/Coin';
 export default class Transaction extends wepy.page {
   config = {
-    navigationBarTitleText: 'Transaction'
+    navigationBarTitleText: '交易详情'
   };
   data = {
     txid: '',
