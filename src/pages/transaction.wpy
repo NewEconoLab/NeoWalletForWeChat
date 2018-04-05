@@ -3,6 +3,23 @@
   background: linear-gradient(to right, #69c0fd, #a6a4fd);
   // padding-top: 96rpx;
 }
+.scroll {
+  width: 100%;
+  height: 100%;
+}
+.inner {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom:  200rpx;
+}
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  color: transparent;
+}
 .item {
   display: flex;
   flex-direction: row;
@@ -10,13 +27,13 @@
   border-bottom: thin #dddddd solid;
   width: 678rpx;
   justify-content: center;
-  padding:20rpx 0 20rpx 0;
+  padding: 20rpx 0 20rpx 0;
   .label {
-    flex: 2.5;
+    flex: 3;
     font-size: 16px;
     font-weight: bold;
     font-family: '黑体';
-    color:white;
+    color: white;
     justify-content: flex-end;
   }
   .content {
@@ -26,21 +43,33 @@
     font-family: Arial, Helvetica, sans-serif;
     color: white;
   }
+
   .vin-out {
     flex: 8;
     display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    align-items: center;
-    image {
-      width: 20px;
-      height: 20px;
+    flex-direction: column;
+    align-items: flex-end;
+    .upper {
+      padding: 0 20rpx 20rpx 0;
+      font-size: 15px;
+      word-break: break-all;
+      font-family: Arial, Helvetica, sans-serif;
+      color: white;
+      border-bottom: thin solid #dddddd;
+    }
+    .lower {
+      padding: 20rpx 20rpx 0 0;
+      font-size: 15px;
+      font-family: Arial, Helvetica, sans-serif;
+      color: white;
     }
   }
 }
 </style>
 <template>
 <view class="container bg">
+  <scroll-view scroll-y class="scroll">
+    <view class="inner">
     <view class="item">
         <text class="label">交易编号</text>
         <text class="content">{{tx.txid}}</text>
@@ -69,29 +98,35 @@
         <text class="label">交易脚本</text>
         <view class="content">{{tx.scripts[0].invocation}}</view>
     </view>
-    <view class="item" @tap="OnVin()">
-        <text class="label">交易输入</text>
-        <view class="vin-out">
-            <image src='../images/right.png'/>
-        </view>
+    <view class="item" wx:for="{{tx.vin}}">
+      <text class="label">交易输入</text>
+      <view class="vin-out">
+        <text class="upper">{{item.txid}}</text>
+        <text class="lower">VOUT：{{item.vout}}</text>
+      </view>
     </view>
-    <view class="item" @tap="OnVout()">
-        <text class="label">交易输出</text>
-        <view class="vin-out">
-            <image src='../images/right.png'/>
-        </view>
+    <view class="item" wx:for="{{vout}}">
+      <text class="label">交易输出</text>
+      <view class="vin-out">
+        <text class="upper">{{item.address}}</text>
+        <text class="lower">{{item.asset}} ：{{ item.value}}</text>
+      </view>
     </view>
+    </view>
+  </scroll-view>
 </view>
 </template>
 <script>
 import wepy from 'wepy';
 import { WWW } from '../utils/API';
+import { CoinTool } from '../utils/Coin';
 export default class Transaction extends wepy.page {
   config = {
     navigationBarTitleText: 'Transaction'
   };
   data = {
     txid: '',
+    vout:[],
     tx: {}
   };
 
@@ -117,6 +152,12 @@ export default class Transaction extends wepy.page {
   async OnLoadTX(txid) {
     const r = await WWW.rpc_getRawTransaction(txid);
     this.tx = r['0'];
+    this.$apply();
+    let outputs = this.tx.vout;
+    for(let index in outputs){
+      outputs[index].asset = CoinTool.assetID2name[outputs[index].asset];
+    }
+    this.vout = outputs;
     this.$apply();
     console.log(r);
   }
