@@ -1,20 +1,30 @@
 <style lang="less">
+.bg {
+  background: linear-gradient(to right, #69c0fd, #a6a4fd);
+  // padding-top: 96rpx;
+}
 .item {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  background-color: white;
-  border-bottom: thin #999 solid;
-  padding: 10px 5px 10px 5px;
+  align-items: flex-end;
+  border-bottom: thin #dddddd solid;
+  width: 678rpx;
+  justify-content: center;
+  padding:20rpx 0 20rpx 0;
   .label {
-    flex: 2;
-    font-size: 14px;
+    flex: 2.5;
+    font-size: 16px;
+    font-weight: bold;
+    font-family: '黑体';
+    color:white;
+    justify-content: flex-end;
   }
   .content {
     flex: 8;
-    font-size: 13px;
+    font-size: 15px;
     word-break: break-all;
-    color: gray;
+    font-family: Arial, Helvetica, sans-serif;
+    color: white;
   }
   .vin-out {
     flex: 8;
@@ -30,7 +40,7 @@
 }
 </style>
 <template>
-<view class="detail">
+<view class="container bg">
     <view class="item">
         <text class="label">交易编号</text>
         <text class="content">{{tx.txid}}</text>
@@ -40,7 +50,7 @@
         <text class="content">{{tx.blockindex}}</text>
     </view>
      <view class="item">
-        <text class="label">网络费</text>
+        <text class="label">手续费</text>
         <text class="content">{{tx.net_fee}}</text>
     </view>
      <view class="item">
@@ -98,9 +108,9 @@ export default class Transaction extends wepy.page {
   onLoad(option) {
     this.txid = option.txid;
     this.$apply();
+    this.OnLoadTX(this.txid);
   }
   async onShow() {
-    this.OnLoadTX(this.txid);
     // Service.add('transaction',this)
   }
 

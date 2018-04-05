@@ -180,7 +180,7 @@ export default class Mine extends wepy.page {
           if (res.tapIndex === 0) {
             wx.showToast({ title: '重命名' });
           } else if (res.tapIndex === 1) {
-            wx.showToast({ title: '切换账户' });
+            // wx.showToast({ title: '切换账户' });
             wx.navigateTo({ url: './index?switch=' + true });
           } else if (res.tapIndex === 2) {
             // wx.showToast({ title: 'watchonly' });
@@ -200,7 +200,7 @@ export default class Mine extends wepy.page {
                   let wals = wepy.getStorageSync(LOCAL_WALLET) || {};
                   wals.remove(that.wallet.name);
                   wepy.setStorageSync(LOCAL_WALLET, wals);
-                  wepy.reLaunch({ url: './index?switch='+true });
+                  wepy.reLaunch({ url: './index?switch=' + true });
                 } else if (res.cancel) {
                 }
               },
