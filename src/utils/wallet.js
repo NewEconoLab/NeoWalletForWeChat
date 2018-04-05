@@ -21,6 +21,7 @@ export class Wallet {
         Wallet.privatekey = null;
         Wallet.publickey = null;
         Wallet.watchonly = null;
+        Wallet.wallet = null;
     }
     /**
      * return address 

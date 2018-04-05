@@ -181,11 +181,33 @@ export default class Mine extends wepy.page {
             wx.showToast({ title: '重命名' });
           } else if (res.tapIndex === 1) {
             wx.showToast({ title: '切换账户' });
-            wx.navigateTo({ url: './index?switch='+false });
+            wx.navigateTo({ url: './index?switch=' + true });
           } else if (res.tapIndex === 2) {
-            wx.showToast({ title: 'watchonly' });
-          } else if (res.tapIndex === 2) {
+            // wx.showToast({ title: 'watchonly' });
+            wx.navigateTo({ url: './watchonly' });
+          } else if (res.tapIndex === 3) {
             wx.showToast({ title: '删除账户' });
+            wx.showModal({
+              title: '提示',
+              content: '账户删除后只能靠重新导入来恢复',
+              showCancel: true,
+              success: res => {
+                //确认删除
+                if (res.confirm) {
+                  //清空内存及缓存中的账户信息
+                  Wallet.reset();
+                  wepy.setStorageSync(CURR_WALLET, null);
+                  let wals = wepy.getStorageSync(LOCAL_WALLET) || {};
+                  wals.remove(that.wallet.name);
+                  wepy.setStorageSync(LOCAL_WALLET, wals);
+                  wepy.reLaunch({ url: './index?switch='+true });
+                } else if (res.cancel) {
+                }
+              },
+              fail: res => {
+                reject(payload);
+              }
+            });
           }
         }
       });
