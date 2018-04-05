@@ -13,7 +13,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom:  200rpx;
+  margin-bottom: 200rpx;
 }
 ::-webkit-scrollbar {
   width: 0;
@@ -126,20 +126,13 @@ export default class Transaction extends wepy.page {
   };
   data = {
     txid: '',
-    vout:[],
+    vout: [],
     tx: {}
   };
 
   components = {};
 
-  methods = {
-    OnVin() {
-      wepy.navigateTo({ url: './vin?vin=' + JSON.stringify(this.tx.vin) });
-    },
-    OnVout() {
-      wepy.navigateTo({ url: './vout?vout=' + JSON.stringify(this.tx.vout) });
-    }
-  };
+  methods = {};
   onLoad(option) {
     this.txid = option.txid;
     this.$apply();
@@ -154,7 +147,7 @@ export default class Transaction extends wepy.page {
     this.tx = r['0'];
     this.$apply();
     let outputs = this.tx.vout;
-    for(let index in outputs){
+    for (let index in outputs) {
       outputs[index].asset = CoinTool.assetID2name[outputs[index].asset];
     }
     this.vout = outputs;

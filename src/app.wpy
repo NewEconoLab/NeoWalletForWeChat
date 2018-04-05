@@ -38,8 +38,6 @@ export default class extends wepy.app {
       'pages/history',
       'pages/mine',
       'pages/transaction',
-      'pages/vin',
-      'pages/vout',
       'pages/watchonly',
       'pages/watch',
       'pages/registerwatch'
