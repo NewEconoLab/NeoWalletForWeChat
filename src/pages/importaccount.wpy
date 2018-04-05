@@ -1,0 +1,237 @@
+ <style lang="less">
+.form {
+  width: 100%;
+  align-items: center;
+}
+
+.area-uppper {
+  height: 470rpx;
+  width: 100%;
+  background: linear-gradient(to right, #69c0fd, #a6a4fd);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.upper-logo {
+  width: 160rpx;
+  height: 160rpx;
+  margin-top: 84rpx;
+  border-radius: 50%;
+  background-color: white;
+}
+
+.area-medium {
+  display: flex;
+  flex-direction: column;
+  top: 0;
+  margin-top: -150rpx;
+  width: 700rpx;
+  box-shadow: 10px 15px 20px rgba(100, 100, 100, 0.2);
+  background-color: white;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: center;
+}
+.medium-input {
+  font-family: '黑体', Helvetica, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-top: 75rpx;
+  align-items: center;
+  width: 616rpx;
+  border-bottom: thin solid #cccccc;
+  .address {
+    width: 100%;
+    padding-bottom: 20rpx;
+    font-size: 16px;
+    padding-left: 20rpx;
+  }
+  .holder {
+    color: #a3a3a3;
+  }
+}
+.medium-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 620rpx;
+  margin-top: 60rpx;
+}
+.button-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 50rpx;
+  .icon {
+    width: 60rpx;
+    height: 60rpx;
+  }
+  .label {
+    margin-top: 20rpx;
+    font-size: 18px;
+    color: #27adf1;
+    font-family: Helvetica, Arial, sans-serif;
+  }
+}
+.area-btn {
+  margin-top: 75rpx;
+  width: 660rpx;
+  button::after {
+    border: none;
+  }
+}
+</style>
+<template>
+<form bindsubmit="formSubmit" class="form">
+  <view class="container">
+    <view class="area-uppper">
+     <image class="upper-logo" src="../images/icon.png" ></image>
+    </view>
+    <view class="area-medium">
+      <view class="medium-input" style="margin-top: 100rpx;">
+        <input class="address" name="accountlabel" placeholder-class="holder" placeholder="账户名" value='{{label}}'/>
+      </view>
+      <view class="medium-input">
+        <input class="address" name="prikey" placeholder-class="holder" placeholder="私钥" value='{{prikey}}'/>
+      </view>
+      <view class="medium-button">
+        <view class="button-item" >
+          <image src="../images/address.png" class="icon"></image>
+          <text class="label">输入私钥</text>
+        </view>
+        <view class="button-item"  @tap="OnScan()">
+          <image src="../images/scanPay.png" class="icon"></image>
+           <text class="label" style="color:#a3a3a3;">扫二维码</text>
+        </view>
+      </view>
+    </view>
+    <view class="area-btn">
+      <button type="primary" style="background-color:#69c0fd;" formType="submit">导入账户</button>
+    </view>
+  </view>
+</form>
+</template>
+<script>
+import wepy from 'wepy';
+import * as NEL from '../lib/neo-ts/index';
+import { LOCAL_WALLET, CURR_WALLET } from '../utils/constant';
+import { Wallet } from '../utils/wallet';
+import { WWW } from '../utils/API';
+import tip from '../utils/tip';
+export default class ImportAccount extends wepy.page {
+  customData = {}; // 自定义数据
+
+  customFunction() {} // 自定义方法
+
+  onLoad() {} // 在Page和Component共用的生命周期函数
+
+  onShow() {} // 只在Page中存在的页面生命周期函数
+
+  config = {
+    navigationBarTitleText: '导入账户'
+  }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
+
+  data = {
+    isLoading: false,
+    prikey: '',
+    label: ''
+  }; // 页面所需数据均需在这里声明，可用于模板数据绑定
+
+  components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
+
+  mixins = []; // 声明页面所引用的Mixin实例
+
+  computed = {}; // 声明计算属性（详见后文介绍）
+
+  watch = {}; // 声明数据watcher（详见后文介绍）
+
+  methods = {
+    async formSubmit(e) {
+      let that = this;
+      let accountlabel = e.detail.value.accountlabel;
+      let prikey = e.detail.value.prikey;
+
+      that.OnAccountProcess(accountlabel, prikey);
+    },
+
+    OnScan() {
+      let that = this;
+      wepy.scanCode({
+        success: res => {
+          console.log(res);
+          res = res.result;
+          if (res.length === 64) {
+            that.prikey = res;
+            that.$apply();
+          } else if (res['address'] !== undefined) {
+            that.prikey = res['key'];
+            that.label = res['name'];
+            that.$apply();
+            that.OnWalletProcess(res['name'], res['key'], res['address']);
+          }
+        },
+        fail: res => {
+          console.log(res);
+        }
+      });
+    }
+  }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
+
+  events = {}; // 声明组件之间的事件处理函数
+  OnAccountProcess(accountlabel, privateKey) {
+    if (accountlabel === '') {
+      tip.alert('账户名不能为空');
+      return;
+    }
+    if (privateKey.length !== 64) {
+      tip.error('私钥格式错误');
+      return;
+    }
+    let wallets = wepy.getStorageSync(LOCAL_WALLET) || {};
+
+    if (wallets[accountlabel] !== undefined) {
+      tip.alert('账户名已存在');
+      return;
+    }
+
+    privateKey = NEL.helper.UintHelper.hexToBytes(privateKey);
+
+    wepy.showLoading({ title: '公钥生成中' });
+    const publicKey = NEL.helper.Helper.GetPublicKeyFromPrivateKey(privateKey);
+
+    wepy.showLoading({ title: '地址计算中' });
+    const address = NEL.helper.Helper.GetAddressFromPublicKey(publicKey);
+    this.OnWalletProcess(accountlabel, privateKey, address);
+  }
+  OnWalletProcess(accountlabel, privateKey, address) {
+    var wallet = new NEL.nep6.nep6wallet();
+    wallet.scrypt = new NEL.nep6.nep6ScryptParameters();
+    wallet.scrypt.N = SCRYPT_CONFIG.N;
+    wallet.scrypt.r = SCRYPT_CONFIG.r;
+    wallet.scrypt.p = SCRYPT_CONFIG.p;
+    wallet.accounts = [];
+    wallet.accounts[0] = new NEL.nep6.nep6account();
+    wallet.accounts[0].address = address;
+    wallet.accounts[0].name = accountlabel;
+    wallet.accounts[0].key = privateKey;
+    const wallet_json = wallet.toJson();
+    wallets[accountlabel] = wallet_json;
+
+    wepy.showLoading({ title: '钱包创建完成' });
+    wepy.showLoading({ title: '数据存储中' });
+
+    wepy.setStorageSync(LOCAL_WALLET, wallets);
+    wepy.setStorageSync(CURR_WALLET, wallet);
+
+    wepy.showLoading({ title: '登陆中' });
+
+    var jsonstr = JSON.stringify(wallet_json);
+    wepy.hideLoading();
+    that.$redirect('./regresult?wallet=' + jsonstr);
+  }
+}
+</script>

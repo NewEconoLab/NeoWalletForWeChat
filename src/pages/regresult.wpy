@@ -1,0 +1,182 @@
+<style lang="less">
+.bg {
+  background: linear-gradient(to right, #69c0fd, #a6a4fd);
+}
+.area-qrcode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 700rpx;
+  margin-top: 71rpx;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 10px 15px 20px rgba(100, 100, 100, 0.2);
+}
+.qrcode-item {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+}
+.area-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 15px;
+}
+.area-text-item {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  width: 100%;
+  margin: 2px 15px 0 15px;
+  background-color: white;
+}
+.text-label {
+  margin-top: 5px;
+  font-size: 12px;
+  font-family: normal;
+  font-weight: 900;
+  padding-left: 5px;
+}
+.text-content {
+  margin-top: 9rpx;
+  font-size: 12px;
+  font-family: italic;
+  font-weight: 400;
+  word-break: break-all;
+  color: #777;
+  padding: 0 10px 5px 10px;
+}
+.area-btn {
+  display: block;
+  margin-top: 105rpx;
+  width: 660rpx;
+}
+.warnning {
+  position: fixed;
+  bottom: 0;
+  margin-bottom: 10px;
+  color: red;
+}
+</style>
+
+<template>
+  <view class="container bg">
+    <view class="area-qrcode">
+      <view class="qrcode-item">
+        <canvas style="width: {{canvasWH}}px; height: {{canvasWH+50}}px;" width="{{canvasWH*3}}" height="{{(canvasWH+50)*3}}" canvas-id="nep2Key" @tap="backUp()"></canvas>
+      </view>
+    </view>
+    <view class="area-btn">
+      <button type="primary" style="background-color: white; color:#a3a3a3;" @tap="login()">登陆</button>
+    </view>
+    <text class="warnning">账户信息非常重要，请点击二维码备份。</text>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import drawQrcode from '../lib/qrcode/index';
+import tip from '../utils/tip';
+import * as TimeHelper from '../utils/time';
+export default class RegResult extends wepy.page {
+  customData = {}; // 自定义数据
+
+  customFunction() {} // 自定义方法
+
+  onLoad(option) {
+    let that = this;
+    this.wallet = JSON.parse(option.wallet)['accounts'][0];
+    this.$apply();
+
+    wx.getSystemInfo({
+      //获取系统信息成功，将系统窗口的宽高赋给页面的宽高
+      success: function(res) {
+        that.width = res.windowWidth;
+        that.height = res.windowHeight;
+        that.canvasWH = res.windowWidth * 0.91;
+        const t = TimeHelper.formatTime(new Date(), 'Y/M/D h:m:s');
+        that.currTime = t;
+        that.$apply();
+        that.OnDraw();
+      }
+    });
+  
+    this.$apply();
+  } // 在Page和Component共用的生命周期函数
+
+  onShow() {} // 只在Page中存在的页面生命周期函数
+
+  config = {
+    navigationBarTitleText: '账户备份'
+  }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
+
+  data = {
+    wallet: {},
+    accountSaved: false,
+    currTime: '',
+    height: 0,
+    width: 0,
+    canvasWH: 0,
+    pixelRatio: 0
+  }; // 页面所需数据均需在这里声明，可用于模板数据绑定
+
+  components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
+
+  mixins = []; // 声明页面所引用的Mixin实例
+
+  computed = {}; // 声明计算属性（详见后文介绍）
+
+  watch = {}; // 声明数据watcher（详见后文介绍）
+
+  methods = {
+    backUp() {
+      this.backUpAccount();
+    },
+    login() {
+      if (!this.accountSaved) {
+        tip.error('请先备份账户');
+        return;
+      }
+      wepy.reLaunch({url:'./home'});
+    }
+  }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
+
+  events = {}; // 声明组件之间的事件处理函数
+
+  async OnDraw() {
+    let that = this;
+    await drawQrcode({
+      WH: that.width,
+      CWH: that.canvasWH,
+      name: wallet.name,
+      addr: wallet.address,
+      currTime: that.currTime,
+      canvasId: 'nep2Key',
+      text: JSON.stringify(this.wallet)
+    });
+    that.backUpAccount();
+  }
+  backUpAccount() {
+    let that = this;
+    wx.canvasToTempFilePath({
+      x: 0,
+      y: 0,
+      width: that.canvasWH,
+      height: that.canvasWH + 50,
+      destWidth: that.canvasWH * 3,
+      destHeight: (that.canvasWH + 50) * 3,
+      canvasId: 'nep2Key',
+      success: function(res) {
+        that.accountSaved = true;
+        that.$apply();
+        wx.saveImageToPhotosAlbum({
+          filePath: res.tempFilePath
+        });
+      }
+    });
+  }
+}
+</script>
