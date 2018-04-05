@@ -12,40 +12,11 @@
   border-radius: 5px;
   box-shadow: 10px 15px 20px rgba(100, 100, 100, 0.2);
 }
-.info {
-  width: 650rpx;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  margin-top: 55rpx;
-  font-size: 16px;
-  color: #27adf1;
-  word-break: break-all;
-}
 .qrcode-item {
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-content: center;
   align-items: center;
-  margin-top: 30rpx;
-}
-.qrcode-label {
-  font-size: 16px;
-  width: 100%;
-  text-align: center;
-  margin-top: 25rpx;
-  color: #333333;
-  font-family: '黑体';
-}
-.qrcode-time {
-  font-size: 11px;
-  width: 100%;
-  text-align: center;
-  margin-top: 10rpx;
-  color: #a3a3a3;
-  margin-bottom: 35rpx;
-  font-family: Arial, Helvetica, sans-serif;
 }
 .area-text {
   display: flex;
@@ -94,11 +65,8 @@
 <template>
   <view class="container bg">
     <view class="area-qrcode">
-      <view class="info">{{wallet.name}}：{{wallet.address}}jjjjjjjjjjjjjjjjjjjjj</view>
       <view class="qrcode-item">
-        <canvas style="width: {{width*0.93}}px; height: {{width*0.93}}px;" canvas-id="nep2Key"></canvas>
-        <text class="qrcode-label">NEO账户备份/Back Up</text>
-        <text class="qrcode-time">{{currTime}}</text>
+        <canvas style="width: {{canvasWH}}px; height: {{canvasWH+70}}px;" canvas-id="nep2Key"></canvas>
       </view>
     </view>
     <view class="area-text">
@@ -124,7 +92,7 @@
 
 <script>
 import wepy from 'wepy';
-import drawQrcode from 'weapp-qrcode';
+import drawQrcode from '../lib/qrcode/index';
 import tip from '../utils/tip';
 import * as TimeHelper from '../utils/time';
 export default class CreateResult extends wepy.page {
@@ -140,17 +108,15 @@ export default class CreateResult extends wepy.page {
       success: function(res) {
         that.width = res.windowWidth;
         that.height = res.windowHeight;
+        that.canvasWH = res.windowWidth * 0.93;
+
+        const t = TimeHelper.formatTime(new Date(), 'Y/M/D h:m:s');
+        that.currTime = t;
         that.$apply();
+
         that.OnDraw();
       }
     });
-
-    //this.wallet = JSON.parse(option.wallet)['accounts'][0];
-    const t = TimeHelper.formatTime(new Date(), 'Y/M/D h:m:s');
-    this.currTime = t;
-    this.$apply();
-
-
     wx.onUserCaptureScreen(function(res) {
       console.log('用户截屏了');
       that.captureScreen = true;
@@ -169,10 +135,11 @@ export default class CreateResult extends wepy.page {
   data = {
     wallet: {},
     captureScreen: false,
-    currTime: 'jjjjj',
+    currTime: '',
     height: 0,
     width: 0,
-    canvasWH:0
+    canvasWH: 0,
+    pixelRatio: 0
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
   components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
@@ -210,12 +177,14 @@ export default class CreateResult extends wepy.page {
 
   events = {}; // 声明组件之间的事件处理函数
 
-  OnDraw(){
-    let that = this
-    let wh =  0.4*that.width;
+  OnDraw() {
+    let that = this;
     drawQrcode({
-      width:wh,
-      height: wh,
+      WH: that.width,
+      CWH: that.canvasWH,
+      name: 'nuanbing:', //wallet.name+'：'+wallet.address
+      addr: 'ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F',
+      currTime: that.currTime,
       canvasId: 'nep2Key',
       text: 'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh' //this.wallet.key
     });
