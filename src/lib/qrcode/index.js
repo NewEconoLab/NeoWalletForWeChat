@@ -28,18 +28,18 @@ function drawQrcode(options = {}) {
 
     // get canvas context
     var ctx = wx.createCanvasContext && wx.createCanvasContext(options.canvasId)
-var label_y = 20;
+    var label_y = 25;
     //绘制头部信息
     ctx.setFillStyle('#27adf1')
     // ctx.setFontSize(16);
     ctx.setTextBaseline('middle');
-    ctx.setFontSize(16);
+    ctx.setFontSize(18);
     ctx.setTextAlign('left')
-    ctx.fillText(options.name, 20, 20);
+    ctx.fillText(options.name, 20, label_y);
 
-    var addr_y = label_y+25;
+    var addr_y = label_y + 25;
     ctx.setFillStyle('#a3a3a3')
-    ctx.setFontSize(12);
+    ctx.setFontSize(13);
     ctx.setTextAlign('left')
     ctx.fillText(options.addr, 20, addr_y);
 

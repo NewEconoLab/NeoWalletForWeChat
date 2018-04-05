@@ -51,8 +51,8 @@
 }
 .area-btn {
   display: block;
-  margin-top: 100rpx;
-  width: 80%;
+  margin-top: 105rpx;
+  width: 660rpx;
 }
 .warnning {
   position: fixed;
@@ -66,25 +66,11 @@
   <view class="container bg">
     <view class="area-qrcode">
       <view class="qrcode-item">
-        <canvas style="width: {{canvasWH}}px; height: {{canvasWH+70}}px;" canvas-id="nep2Key"></canvas>
-      </view>
-    </view>
-    <view class="area-text">
-      <view class="area-text-item"  @tap="copyToClip(name = {{wallet.name}})">
-        <text class="text-label">Name:</text>
-        <text class="text-content" >{{wallet.name}}</text>
-      </view>
-      <view class="area-text-item"  @tap="copyToClip(address = {{wallet.address}})">
-        <text class="text-label">Address:</text>
-        <text class="text-content">{{wallet.address}}</text>
-      </view>
-      <view class="area-text-item"  @tap="copyToClip(nep2Key = {{wallet.key}})">
-        <text class="text-label">NEO小程序账户备份:</text>
-        <text class="text-content" >{{wallet.key}}</text>
+        <canvas style="width: {{canvasWH}}px; height: {{canvasWH+50}}px;" canvas-id="nep2Key"></canvas>
       </view>
     </view>
     <view class="area-btn">
-      <button type="primary" @tap="login()">登陆</button>
+      <button type="primary" style="background-color: white; color:#a3a3a3;" @tap="login()">登陆</button>
     </view>
     <text class="warnning">非常重要，请截图保存！！</text>
   </view>
