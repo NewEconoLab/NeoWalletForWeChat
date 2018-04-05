@@ -168,7 +168,7 @@ export default class Index extends wepy.page {
     Wallet.setPrikey(privateKey);
     await wepy.setStorageSync(CURR_WALLET, Wallet.toString());
     wepy.hideLoading();
-    wepy.reLaunch({ url: './createresult' });
+    wepy.reLaunch({ url: './regresult' });
   }
 }
 </script>

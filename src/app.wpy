@@ -31,7 +31,7 @@ export default class extends wepy.app {
       'pages/LoginWIF',
       'pages/loginnep2',
       'pages/receive',
-      'pages/createresult',
+      'pages/regresult',
       'pages/loginaccounts',
       'pages/home',
       'pages/send',

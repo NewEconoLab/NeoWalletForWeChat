@@ -28,7 +28,13 @@ function drawQrcode(options = {}) {
 
     // get canvas context
     var ctx = wx.createCanvasContext && wx.createCanvasContext(options.canvasId)
+
+    //白色背景
+    ctx.setFillStyle('white');
+    ctx.fillRect(0, 0, options.CWH, options.CWH + 50)
+
     var label_y = 25;
+
     //绘制头部信息
     ctx.setFillStyle('#27adf1')
     // ctx.setFontSize(16);
