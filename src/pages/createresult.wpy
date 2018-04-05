@@ -1,10 +1,26 @@
 <style lang="less">
+.bg {
+  background: linear-gradient(to right, #69c0fd, #a6a4fd);
+}
 .area-qrcode {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%; // 750rpx
-  margin-top: 20rpx;
+  width: 700rpx;
+  margin-top: 71rpx;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 10px 15px 20px rgba(100, 100, 100, 0.2);
+}
+.info {
+  width: 650rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  margin-top: 55rpx;
+  font-size: 16px;
+  color: #27adf1;
+  word-break: break-all;
 }
 .qrcode-item {
   height: 100%;
@@ -12,11 +28,24 @@
   flex-direction: column;
   align-content: center;
   align-items: center;
+  margin-top: 30rpx;
 }
 .qrcode-label {
-  font-size: 13px;
+  font-size: 16px;
   width: 100%;
   text-align: center;
+  margin-top: 25rpx;
+  color: #333333;
+  font-family: '黑体';
+}
+.qrcode-time {
+  font-size: 11px;
+  width: 100%;
+  text-align: center;
+  margin-top: 10rpx;
+  color: #a3a3a3;
+  margin-bottom: 35rpx;
+  font-family: Arial, Helvetica, sans-serif;
 }
 .area-text {
   display: flex;
@@ -63,11 +92,13 @@
 </style>
 
 <template>
-  <view class="container">
+  <view class="container bg">
     <view class="area-qrcode">
+      <view class="info">{{wallet.name}}：{{wallet.address}}jjjjjjjjjjjjjjjjjjjjj</view>
       <view class="qrcode-item">
-        <canvas style="width: 200px; height: 200px;" canvas-id="nep2Key"></canvas>
-        <text>Nep2 Key</text>
+        <canvas style="width: {{width*0.93}}px; height: {{width*0.93}}px;" canvas-id="nep2Key"></canvas>
+        <text class="qrcode-label">NEO账户备份/Back Up</text>
+        <text class="qrcode-time">{{currTime}}</text>
       </view>
     </view>
     <view class="area-text">
@@ -80,7 +111,7 @@
         <text class="text-content">{{wallet.address}}</text>
       </view>
       <view class="area-text-item"  @tap="copyToClip(nep2Key = {{wallet.key}})">
-        <text class="text-label">Nep2 Key:</text>
+        <text class="text-label">NEO小程序账户备份:</text>
         <text class="text-content" >{{wallet.key}}</text>
       </view>
     </view>
@@ -95,6 +126,7 @@
 import wepy from 'wepy';
 import drawQrcode from 'weapp-qrcode';
 import tip from '../utils/tip';
+import * as TimeHelper from '../utils/time';
 export default class CreateResult extends wepy.page {
   customData = {}; // 自定义数据
 
@@ -102,14 +134,23 @@ export default class CreateResult extends wepy.page {
 
   onLoad(option) {
     let that = this;
-    this.wallet = JSON.parse(option.wallet)['accounts'][0];
 
-    drawQrcode({
-      width: 200,
-      height: 200,
-      canvasId: 'nep2Key',
-      text: this.wallet.key
+    wx.getSystemInfo({
+      //获取系统信息成功，将系统窗口的宽高赋给页面的宽高
+      success: function(res) {
+        that.width = res.windowWidth;
+        that.height = res.windowHeight;
+        that.$apply();
+        that.OnDraw();
+      }
     });
+
+    //this.wallet = JSON.parse(option.wallet)['accounts'][0];
+    const t = TimeHelper.formatTime(new Date(), 'Y/M/D h:m:s');
+    this.currTime = t;
+    this.$apply();
+
+
     wx.onUserCaptureScreen(function(res) {
       console.log('用户截屏了');
       that.captureScreen = true;
@@ -127,7 +168,11 @@ export default class CreateResult extends wepy.page {
 
   data = {
     wallet: {},
-    captureScreen: false
+    captureScreen: false,
+    currTime: 'jjjjj',
+    height: 0,
+    width: 0,
+    canvasWH:0
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
   components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
@@ -164,5 +209,16 @@ export default class CreateResult extends wepy.page {
   }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
 
   events = {}; // 声明组件之间的事件处理函数
+
+  OnDraw(){
+    let that = this
+    let wh =  0.4*that.width;
+    drawQrcode({
+      width:wh,
+      height: wh,
+      canvasId: 'nep2Key',
+      text: 'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh' //this.wallet.key
+    });
+  }
 }
 </script>
