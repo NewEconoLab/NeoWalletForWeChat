@@ -58,7 +58,7 @@
       <view class="login-item" @tap="register()" >
         <text class="name" style="color:white;">创建账户</text>
       </view>
-      <view class="login-item" style="background-color: white;" @tap="loginScan()">
+      <view class="login-item" style="background-color: white;" @tap="loginImport()">
         <text class="name" style="color:gray;">导入账户</text>
       </view>
       <view class="login-item" style="background-color: white;" @tap="loginAccounts()">
@@ -90,26 +90,17 @@ export default class Index extends wepy.page {
 
   methods = {
     register() {
-      // this.onCreateAccount();
-      // this.$redirect('./logincreate');
       wx.navigateTo({ url: './register' });
     },
-    loginScan() {
-      let that = this;
-      wepy.scanCode({
-        success: res => {
-          // console.log(res);
-          that.onScanLogin(res.result);
-        },
-        fail: res => {
-          // console.log(res);
-        }
+    loginImport() {
+      wepy.navigateTo({
+        url: './importaccount'
       });
     },
     loginAccounts() {
-      console.log(this.disabled);
-      if (this.disabled) return;
-      else this.$redirect('./loginaccounts');
+      wepy.navigateTo({
+        url: './loginaccounts'
+      });
     }
   };
 
@@ -135,43 +126,6 @@ export default class Index extends wepy.page {
       wepy.reLaunch({ url: './home' });
       wepy.hideLoading();
     }
-  }
-  async onScanLogin(key) {
-    switch (key.length) {
-      case 52: //wif
-        const prikey = NEL.helper.Helper.GetPrivateKeyFromWIF(key);
-        if (prikey.length !== 64) {
-          wepy.hideLoading();
-          tip.alert('密钥格式错误');
-          return;
-        }
-        key = NEL.helper.StringHelper.toHexString(prikey);
-      case 64: //privatekey
-        Wallet.setPrikey(key);
-        wepy.hideLoading();
-        await wepy.setStorageSync(CURR_WALLET, Wallet.toString());
-        wepy.reLaunch({ url: './home' });
-        break;
-      default:
-        //error input format
-        wepy.hideLoading();
-        tip.alert('密钥格式错误');
-        break;
-    }
-  }
-  //创建新账户
-  async onCreateAccount() {
-    wepy.showLoading({ title: '私钥生成中' });
-    let privateKey = await Random.getSecureRandom(64);
-    if (privatekey.length !== 64) {
-      tip.error('私钥生成失败');
-      return;
-    }
-
-    Wallet.setPrikey(privateKey);
-    await wepy.setStorageSync(CURR_WALLET, Wallet.toString());
-    wepy.hideLoading();
-    wepy.reLaunch({ url: './regresult' });
   }
 }
 </script>

@@ -151,8 +151,8 @@ export default class RegResult extends wepy.page {
     await drawQrcode({
       WH: that.width,
       CWH: that.canvasWH,
-      name: wallet.name,
-      addr: wallet.address,
+      name: that.wallet.name,
+      addr: that.wallet.address,
       currTime: that.currTime,
       canvasId: 'nep2Key',
       text: JSON.stringify(this.wallet)

@@ -76,7 +76,7 @@
       <view class="medium-content">
       <view class="medium-item">
         <view class="input">
-          <input type="text" name="accountlabel" placeholder="标签" value='zhizhang2'/>
+          <input type="text" name="accountlabel" placeholder="标签" value='zhizhang4'/>
         </view>
       </view>
       <view class="medium-item">
