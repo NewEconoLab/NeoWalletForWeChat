@@ -197,38 +197,15 @@ export default class ImportAccount extends wepy.page {
       tip.alert('账户名已存在');
       return;
     }
-
-    privateKey = NEL.helper.UintHelper.hexToBytes(privateKey);
-
-    wepy.showLoading({ title: '公钥生成中' });
-    const publicKey = NEL.helper.Helper.GetPublicKeyFromPrivateKey(privateKey);
-
-    wepy.showLoading({ title: '地址计算中' });
-    const address = NEL.helper.Helper.GetAddressFromPublicKey(publicKey);
-    this.OnWalletProcess(accountlabel, privateKey, address);
-  }
-  OnWalletProcess(accountlabel, privateKey, address) {
-    var wallet = new NEL.nep6.nep6wallet();
-    wallet.scrypt = new NEL.nep6.nep6ScryptParameters();
-    wallet.scrypt.N = SCRYPT_CONFIG.N;
-    wallet.scrypt.r = SCRYPT_CONFIG.r;
-    wallet.scrypt.p = SCRYPT_CONFIG.p;
-    wallet.accounts = [];
-    wallet.accounts[0] = new NEL.nep6.nep6account();
-    wallet.accounts[0].address = address;
-    wallet.accounts[0].name = accountlabel;
-    wallet.accounts[0].key = privateKey;
+    var wallet = Wallet.getWallet(accountlabel, privateKey);
     const wallet_json = wallet.toJson();
     wallets[accountlabel] = wallet_json;
 
     wepy.showLoading({ title: '钱包创建完成' });
-    wepy.showLoading({ title: '数据存储中' });
-
     wepy.setStorageSync(LOCAL_WALLET, wallets);
-    wepy.setStorageSync(CURR_WALLET, wallet);
-
+    //本地缓存新生成的账户
+    Wallet.saveWallet(wallet);
     wepy.showLoading({ title: '登陆中' });
-
     var jsonstr = JSON.stringify(wallet_json);
     wepy.hideLoading();
     that.$redirect('./regresult?wallet=' + jsonstr);

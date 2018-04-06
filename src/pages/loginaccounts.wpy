@@ -6,11 +6,11 @@
   border-radius: 5px;
   margin: 32rpx 0 13rpx 0;
   background-color: white;
-  box-shadow: 2px 2px 20px rgba(130,130,130,0.2);
+  box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
 }
 .content {
   width: 660rpx;
-  height:182rpx;
+  height: 182rpx;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -94,16 +94,12 @@ export default class LoginAccounts extends wepy.page {
 
   customFunction() {} // 自定义方法
 
-  onLoad() {
-    this.OnLoadWatchOnly();
-  } // 在Page和Component共用的生命周期函数
+  onLoad() {} // 在Page和Component共用的生命周期函数
 
   async onShow() {
     let wals = wepy.getStorageSync(LOCAL_WALLET) || {};
-    console.log(wals);
     let temp_wal = [];
     for (const key in wals) {
-      console.log(wals[key]);
       temp_wal.push(wals[key]['accounts'][0]);
     }
     this.wals = wals;
@@ -111,7 +107,7 @@ export default class LoginAccounts extends wepy.page {
     this.$apply();
   } // 只在Page中存在的页面生命周期函数
 
-  config = {}; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
+  config = { navigationBarTitleText: '本地账户' }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
 
   data = {
     wallets: [],
@@ -129,28 +125,15 @@ export default class LoginAccounts extends wepy.page {
 
   methods = {
     async OnSelect(e) {
-      console.log(e);
       const selected = this.wals[e];
-      // WalletHelper.wallet = selected;
-
+      //设置缓存的当前账户
       await wepy.setStorageSync(CURR_WALLET, selected);
-      // wepy.hideLoading();
+      //设置内存中的当前账户
+      Wallet.wallet = selected['accounts'][0];
       wepy.reLaunch({ url: './home' });
     }
   }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
 
   events = {}; // 声明组件之间的事件处理函数
-  async OnLoadWatchOnly() {
-    let that = this;
-    console.log(Wallet.openid);
-    let res = await WWW.addr_query('odmGt4svzAtsP2LL-cG0CvzORpzc');
-    res = JSON.parse(res);
-    if (res['code'] == 0) {
-      let addr = res['address'];
-      that.watchonly = addr;
-      that.$apply();
-      console.log(addr);
-    }
-  }
 }
 </script>

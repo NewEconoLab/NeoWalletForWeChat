@@ -134,7 +134,7 @@ export class Helper {
     }
 
 
-    public static Sign(message: Uint8Array, privateKey: Uint8Array,randomStr:string): Uint8Array {
+    public static Sign(message: Uint8Array, privateKey: Uint8Array, randomStr: string): Uint8Array {
 
         //计算公钥
         var PublicKey = ECPoint.multiply(ECCurve.secp256r1.G, privateKey);
@@ -144,7 +144,7 @@ export class Helper {
         var ecdsa = new ECDsa(key);
         {
             //签名
-            return new Uint8Array(ecdsa.sign(message,randomStr));
+            return new Uint8Array(ecdsa.sign(message, randomStr));
         }
     }
     public static VerifySignature(message: Uint8Array, signature: Uint8Array, pubkey: Uint8Array) {
@@ -152,24 +152,7 @@ export class Helper {
         var usepk = PublicKey.encodePoint(false).subarray(1, 64);
         var key = new CryptoKey.ECDsaCryptoKey(PublicKey);
         var ecdsa = new ECDsa(key);
-
-        //byte[] first = { 0x45, 0x43, 0x53, 0x31, 0x20, 0x00, 0x00, 0x00 };
-        //usepk = first.Concat(usepk).ToArray();
-
-        //using (System.Security.Cryptography.CngKey key = System.Security.Cryptography.CngKey.Import(usepk, System.Security.Cryptography.CngKeyBlobFormat.EccPublicBlob))
-        //using (System.Security.Cryptography.ECDsaCng ecdsa = new System.Security.Cryptography.ECDsaCng(key))
-
-        //using(var ecdsa = System.Security.Cryptography.ECDsa.Create(new System.Security.Cryptography.ECParameters
-        //{
-        //        Curve = System.Security.Cryptography.ECCurve.NamedCurves.nistP256,
-        //        Q = new System.Security.Cryptography.ECPoint
-        //    {
-        //        X = usepk.Take(32).ToArray(),
-        //        Y = usepk.Skip(32).ToArray()
-        //    }
-        //}))
         {
-            //var hash = sha256.ComputeHash(message);
             return ecdsa.verify(message, signature);
         }
     }

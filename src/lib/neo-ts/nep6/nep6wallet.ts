@@ -1,8 +1,18 @@
 ﻿import { Helper } from '../Helper/AccountHelper'
+import {hexToBytes} from '../Helper/UintHelper'
+export class contract
+{
+    script: string;
+    parameters = [{ "name": "parameter0", "type": "Signature" }];
+    deployed = false;
+}
+
 export class nep6account {
     public address: string;
-    public key: string;
-    public name: string;
+    public nep2key: string;
+    public label: string;
+    public publickey: string;
+    public contract: contract
     public getPrivateKey(scrypt: nep6ScryptParameters, password: string, callback: (info: string, result: string | Uint8Array) => void): void {
 
         var cb = (i, r) => {
@@ -21,7 +31,7 @@ export class nep6account {
                 callback(i, r);
             }
         }
-        Helper.GetPrivateKeyFromNep2(this.key, password, scrypt.N, scrypt.r, scrypt.p, cb);
+        Helper.GetPrivateKeyFromNep2(this.nep2key, password, scrypt.N, scrypt.r, scrypt.p, cb);
     }
 }
 
@@ -45,10 +55,21 @@ export class nep6wallet {
             var acc = json.accounts[i];
             var localacc = new nep6account();
             localacc.address = acc.address;
-            localacc.key = acc.key;
+            localacc.nep2key = acc.key;
+            localacc.contract = acc.contract;
+            if (localacc.contract == null || localacc.contract.script == null) {
+                localacc.nep2key = null;
+
+            }
+            else {
+                var ss = hexToBytes(localacc.contract.script)//.hexToBytes();
+                if (ss.length != 35 || ss[0] != 33 || ss[34] != 172) {
+                    localacc.nep2key = null;
+                }
+            }
 
             if (acc.key == undefined)
-                localacc.key = null;
+                localacc.nep2key = null;
             this.accounts.push(localacc);
         }
     }
@@ -68,12 +89,13 @@ export class nep6wallet {
 
             var jsonacc = {};
             jsonacc["address"] = acc.address;
-            jsonacc["name"] = acc.name;
-            jsonacc["label"] = null;
+            jsonacc["pubkey"] = acc.publickey;
+            jsonacc["label"] = acc.label;
             jsonacc["isDefault"] = false;
             jsonacc["lock"] = false;
-            jsonacc["key"] = acc.key;
+            jsonacc["key"] = acc.nep2key;
             jsonacc["extra"] = null;
+            jsonacc["contract"] = acc.contract;
             accounts.push(jsonacc);
         }
         obj["accounts"] = accounts;

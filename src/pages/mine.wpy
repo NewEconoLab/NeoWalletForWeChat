@@ -99,10 +99,10 @@
       </view>
       <view class="area-text-item"  @tap="copyToClip(address = {{wallet.address}})">
         <text class="text-label">公钥:</text>
-        <text class="text-content">{{wallet.address}}</text>
+        <text class="text-content">{{wallet.publickey}}</text>
       </view>
       <view class="area-text-item"  @tap="copyToClip(nep2Key = {{wallet.key}})">
-        <text class="text-label">私钥密文:</text>
+        <text class="text-label">私钥{{(wallet.key.length===64)?'':'密文'}}:</text>
         <text class="text-content">{{wallet.key}}</text>
       </view>
     </view>

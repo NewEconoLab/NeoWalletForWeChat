@@ -2,9 +2,9 @@ import * as Request from './wxRequest';
 import * as NEL from '../lib/neo-ts/index';
 let hotapp = require('./hotapp.js');
 export class WWW {
-    static api = "http://api.nel.group/api/testnet";
+    static api = "https://api.nel.group/api/testnet";
     static priceHost = "https://api.coinmarketcap.com/v1/ticker/";
-    static rpc = WWW.api;
+    static rpc = "http://47.96.168.8:20332/testnet";
     static rpcName = "";
     static proxy_server = "http://112.74.52.116/";
 
@@ -111,7 +111,7 @@ export class WWW {
     }
 
     static async  rpc_getHeight() {
-        var str = WWW.makeRpcUrl(WWW.rpc, "getblockcount");
+        var str = WWW.makeRpcUrl(WWW.api, "getblockcount");
         var result = await Request.wxRequest({ "method": "get" }, str);
         var r = result["result"];
         var height = parseInt(str(r)) - 1;
@@ -124,9 +124,9 @@ export class WWW {
     static async rpc_postRawTransaction(data) {
         var postdata = WWW.makeRpcPostBody("sendrawtransaction", NEL.helper.StringHelper.toHexString(data));
         // console.log(postdata)
-        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': WWW.rpc } }, WWW.proxy_server + "proxy.php");
+        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': WWW.api } }, WWW.proxy_server + "proxy.php");
         // var result = await Request.wxRequest({ "method": "post", "body":JSON.stringify(postdata)}, WWW.rpc);
-        var r = result["result"];
+        var r = result["result"][0]['sendrawtransactionresult'];
         return r;
     }
 
@@ -159,12 +159,12 @@ export class WWW {
     }
 
     static async  rpc_getStorage(scripthash, key) {
-        var str = WWW.makeRpcUrl(WWW.rpc, "getstorage", scripthash.toHexString(), key.toHexString());
+        var str = WWW.makeRpcUrl(WWW.api, "getstorage", scripthash.toHexString(), key.toHexString());
         var result = await fetch(str, { "method": "get" });
         var json = JSON.parse(result)
         if (json["result"] == null)
             return null;
-        var r = json["result"];
+        var r = json["result"][0]['storagevalue'];
         return r;
     }
 
