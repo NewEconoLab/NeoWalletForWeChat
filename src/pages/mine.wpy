@@ -89,21 +89,21 @@
     </view>
   
     <view class="area-text">
-      <view class="area-text-item"  @tap="copyToClip(name = {{wallet.name}})">
+      <view class="area-text-item"  @tap="copyToClip(name = {{account.label}})">
         <text class="text-label" >账户名:</text>
-        <text class="text-content" >{{wallet.name}}</text>
+        <text class="text-content" >{{account.label}}</text>
       </view>
-      <view class="area-text-item"  @tap="copyToClip(address = {{wallet.address}})">
+      <view class="area-text-item"  @tap="copyToClip(address = {{account.address}})">
         <text class="text-label">地址:</text>
-        <text class="text-content">{{wallet.address}}</text>
+        <text class="text-content">{{account.address}}</text>
       </view>
-      <view class="area-text-item"  @tap="copyToClip(address = {{wallet.address}})">
+      <view class="area-text-item"  @tap="copyToClip(address = {{account.address}})">
         <text class="text-label">公钥:</text>
-        <text class="text-content">{{wallet.publickey}}</text>
+        <text class="text-content">{{account.publickey}}</text>
       </view>
-      <view class="area-text-item"  @tap="copyToClip(nep2Key = {{wallet.key}})">
-        <text class="text-label">私钥{{(wallet.key.length===64)?'':'密文'}}:</text>
-        <text class="text-content">{{wallet.key}}</text>
+      <view class="area-text-item"  @tap="copyToClip(nep2Key = {{account.nep2key}})">
+        <text class="text-label">私钥{{(account.nep2key.length===64)?'':'密文'}}:</text>
+        <text class="text-content">{{account.nep2key}}</text>
       </view>
     </view>
 
@@ -118,7 +118,7 @@
 <script>
 import wepy from 'wepy';
 import { Wallet } from '../utils/wallet';
-import { USER_INFO } from '../utils/constant';
+import { USER_INFO, CURR_WALLET } from '../utils/constant';
 import tip from '../utils/tip';
 
 export default class Mine extends wepy.page {
@@ -130,12 +130,13 @@ export default class Mine extends wepy.page {
     let userInfo = wepy.getStorageSync(USER_INFO);
     this.avatarUrl = userInfo.avatarUrl;
     this.nickName = userInfo.nickName;
-    this.wallet = Wallet.wallet;
     this.$apply();
   } // 在Page和Component共用的生命周期函数
 
   onShow() {
-    console.log(this.wallet);
+    this.account = Wallet.account;
+    this.$apply();
+    console.log(this.account);
   } // 只在Page中存在的页面生命周期函数
 
   config = {
@@ -143,7 +144,7 @@ export default class Mine extends wepy.page {
   }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
 
   data = {
-    wallet: {},
+    account: {},
     avatarUrl: '',
     nickName: ''
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
@@ -193,11 +194,7 @@ export default class Mine extends wepy.page {
                 if (res.confirm) {
                   //清空内存及缓存中的账户信息
                   Wallet.reset();
-                  wepy.setStorageSync(CURR_WALLET, null);
-                  let wals = wepy.getStorageSync(LOCAL_WALLET) || {};
-                  wals.remove(that.wallet.name);
-                  wepy.setStorageSync(LOCAL_WALLET, wals);
-                  wepy.reLaunch({ url: './index?switch=' + true });
+                  wx.navigateBack();
                 } else if (res.cancel) {
                 }
               },

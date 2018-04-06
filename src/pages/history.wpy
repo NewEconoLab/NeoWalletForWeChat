@@ -10,8 +10,8 @@
   justify-content: center;
 }
 
-.content{
-  width:100%;
+.content {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -26,8 +26,8 @@
   margin: 30rpx 0 0 0;
   .label {
     font-size: 17px;
-    font-family: "黑体";
-    color:#a3a3a3;
+    font-family: '黑体';
+    color: #a3a3a3;
   }
   .time {
     font-size: 13px;
@@ -60,12 +60,12 @@
   .label {
     font-size: 16px;
     color: #69c0fd;
-    font-family: "黑体";
+    font-family: '黑体';
   }
   .count {
     font-size: 16px;
     padding-right: 5px;
-    color:#69c0fd;
+    color: #69c0fd;
   }
 }
 </style>
@@ -120,8 +120,6 @@ export default class History extends wepy.page {
 
   methods = {
     async OnDetail(txid) {
-      // const r = await WWW.rpc_getRawTransaction(txid);
-      // console.log(r);
       wepy.navigateTo({ url: './transaction?txid=' + txid });
     }
   };
@@ -130,7 +128,7 @@ export default class History extends wepy.page {
 
   onLoad() {
     this.utxos = UTXO.history;
-    this.address = Wallet.wallet.address;
+    this.address = Wallet.account.address;
     this.$apply();
   }
   onShow() {
@@ -169,7 +167,7 @@ export default class History extends wepy.page {
       );
       const bindex = txs[index].blockindex;
       txs[index].blockindex =
-        parseInt(Wallet.height) - parseInt(txs[index].blockindex)+1;
+        parseInt(Wallet.height) - parseInt(txs[index].blockindex) + 1;
     }
     console.log(txs);
 

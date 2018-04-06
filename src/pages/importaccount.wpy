@@ -167,11 +167,19 @@ export default class ImportAccount extends wepy.page {
           if (res.length === 64) {
             that.prikey = res;
             that.$apply();
-          } else if (res['address'] !== undefined) {
-            that.prikey = res['key'];
-            that.label = res['name'];
-            that.$apply();
-            that.OnWalletProcess(res['name'], res['key'], res['address']);
+          } else {
+            try {
+              //在这里运行代码
+              const wallet = JSON.parse(res);
+              that.prikey = wallet['acounts'][0]['key'];
+              that.label = wallet['accounts'][0]['label'];
+              that.$apply();
+              that.OnParseJson(wallet);
+            } catch (err) {
+              //在这里处理错误
+              tip.error('格式错误');
+              return;
+            }
           }
         },
         fail: res => {
@@ -204,7 +212,23 @@ export default class ImportAccount extends wepy.page {
     wepy.showLoading({ title: '钱包创建完成' });
     wepy.setStorageSync(LOCAL_WALLET, wallets);
     //本地缓存新生成的账户
-    Wallet.saveWallet(wallet);
+    Wallet.setWallet(wallet);
+    wepy.showLoading({ title: '登陆中' });
+    var jsonstr = JSON.stringify(wallet_json);
+    wepy.hideLoading();
+    that.$redirect('./regresult?wallet=' + jsonstr);
+  }
+  OnParseJson(wallet) {
+    const account = wallet['accounts'][0];
+    const label = account['label'];
+    let wallets = wepy.getStorageSync(LOCAL_WALLET) || {};
+
+    if (wallets[label] !== undefined) {
+      tip.alert('账户名已存在');
+      return;
+    }
+    //本地缓存新导入的账户
+    Wallet.setWallet(wallet);
     wepy.showLoading({ title: '登陆中' });
     var jsonstr = JSON.stringify(wallet_json);
     wepy.hideLoading();

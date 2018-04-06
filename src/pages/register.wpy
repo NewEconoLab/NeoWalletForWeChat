@@ -179,7 +179,7 @@ export default class Register extends wepy.page {
             wepy.showLoading({ title: '钱包创建完成' });
             wepy.setStorageSync(LOCAL_WALLET, wallets);
             //本地缓存新生成的账户
-            Wallet.saveWallet(wallet);
+            Wallet.setWallet(wallet);
             wepy.showLoading({ title: '登陆中' });
             var jsonstr = JSON.stringify(wallet_json);
             wepy.hideLoading();

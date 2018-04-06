@@ -215,7 +215,7 @@ export default class Home extends wepy.page {
   components = {};
 
   data = {
-    wallet: {},
+    account: {},
     NEO: '0',
     GAS: '0',
     NEOPrice: 0.0,
@@ -234,10 +234,10 @@ export default class Home extends wepy.page {
 
   methods = {
     navigate(page) {
-      if (Wallet.wallet === null) {
+      if (Wallet.account === null) {
         if (page === 'mine') {
           wepy.navigateTo({
-            url: '/pages/login'
+            url: '/pages/index?switch=' + false
           });
         } else tip.error('您尚未登陆钱包账户');
         return;
@@ -251,9 +251,7 @@ export default class Home extends wepy.page {
 
   events = {};
 
-  async onLoad() {
-    const that = this;
-  }
+  async onLoad() {}
   onShow() {
     this.OnGetPrice();
     this.OnLogin();
@@ -261,19 +259,17 @@ export default class Home extends wepy.page {
   }
   async OnLogin() {
     let that = this;
-    this.wallet = wepy.getStorageSync(CURR_WALLET);
-    this.$apply();
-    // console.log(this.wallet);
+    const wallet = wepy.getStorageSync(CURR_WALLET);
+
     //本地缓存有账户 则直接加载本地账户信息
-    if (
-      this.wallet !== null &&
-      this.wallet !== undefined &&
-      this.wallet !== ''
-    ) {
+    if (wallet !== null && wallet !== undefined && wallet !== {}) {
       this.isLogin = true;
-      this.wallet = this.wallet['accounts'][0];
-      Wallet.wallet = this.wallet;
       this.$apply();
+      console.log('[[[[[[[[');
+      
+      console.log(wallet);
+    
+      Wallet.setWallet(wallet);
     }
     await this.OnTimeOut();
     //循环执行代码
@@ -288,8 +284,8 @@ export default class Home extends wepy.page {
     if (WWW.rpc === '') {
       WWW.rpc = await WWW.rpc_getURL();
     }
-    if (Wallet.wallet !== null) {
-      const addr = Wallet.wallet.address;
+    if (Wallet.account !== null) {
+      const addr = Wallet.account.address;
       this.OnGetAssets(addr);
     }
     this.OnGetHeight();

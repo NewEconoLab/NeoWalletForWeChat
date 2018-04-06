@@ -62,13 +62,13 @@
   <view class="container bg">
     <view class="area-qrcode">
       <text class="note-text" >点击二维码，复制地址</text>
-      <view class="qrcode" @tap="copyToClip({{wallet.address}})">
+      <view class="qrcode" @tap="copyToClip({{account.address}})">
         <canvas class="canvas" canvas-id="address"></canvas>
       </view>
     </view>
     <view class="area-address">
       <text class="address-label">地址:</text>
-      <text class="address-content">{{wallet.address}}</text>
+      <text class="address-content">{{account.address}}</text>
     </view>
   </view>
 </template>
@@ -85,14 +85,14 @@ export default class Receive extends wepy.page {
   customFunction() {} // 自定义方法
 
   onLoad(option) {
-    this.wallet = Wallet.wallet;
+    this.account = Wallet.account;
     this.$apply();
-    console.log(this.wallet);
+    console.log(this.account);
     drawQrcode({
       width: 230,
       height: 230,
       canvasId: 'address',
-      text: this.wallet.address
+      text: this.account.address
     });
   } // 在Page和Component共用的生命周期函数
 
@@ -116,7 +116,7 @@ export default class Receive extends wepy.page {
   }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
 
   data = {
-    wallet: {}
+    account: {}
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
   components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件

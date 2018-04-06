@@ -70,7 +70,7 @@
 
 <script>
 import wepy from 'wepy';
-import { LOCAL_WALLET, USER_INFO } from '../utils/constant';
+import { CURR_WALLET, USER_INFO } from '../utils/constant';
 import { Wallet } from '../utils/wallet';
 import * as Random from '../utils/random';
 export default class Index extends wepy.page {
@@ -116,13 +116,14 @@ export default class Index extends wepy.page {
 
   onShow() {
     if (this.isSwitch) return;
-    const wallet = wepy.getStorageSync(LOCAL_WALLET);
+    const wallet = wepy.getStorageSync(CURR_WALLET);
+
     if (wallet !== {} && wallet !== undefined && wallet !== '') {
       wepy.showLoading({ title: '登陆中' });
       setTimeout(function() {
         wepy.hideLoading();
       }, 4000);
-      Wallet.parse(wallet);
+      Wallet.setWallet(wallet);
       wepy.reLaunch({ url: './home' });
       wepy.hideLoading();
     }

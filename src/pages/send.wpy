@@ -276,7 +276,6 @@ export default class Send extends wepy.page {
     wepy.showLoading({ title: '密码验证中' });
     Wallet.decode(
       this.password,
-      Wallet.wallet,
       async (code, prikey, pubkey) => {
         wepy.hideLoading();
         if (code < 0) {

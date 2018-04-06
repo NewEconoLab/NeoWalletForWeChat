@@ -26,7 +26,7 @@ export class TransactionTool {
         wepy.showLoading({ title: '签名中' });
         var signdata = NEL.helper.Helper.Sign(msg, prikey, randomStr);
         // console.log('signdata= ' + signdata)
-        tran.AddWitness(signdata, pubkey, Wallet.wallet.address);
+        tran.AddWitness(signdata, pubkey, Wallet.account.address);
         // console.log(NEL.helper.StringHelper.toHexString(tran.GetRawData()))
         wepy.showLoading({ title: '交易发送中' });
         var result = await WWW.rpc_postRawTransaction(tran.GetRawData());
