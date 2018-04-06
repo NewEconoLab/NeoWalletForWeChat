@@ -339,7 +339,7 @@ export class BigInteger {
     public isZero(): boolean {
         return this._sign == 0;
     }
-
+    
     public leftShift(shift: number): BigInteger {
         if (shift == 0) return this;
         let shift_units = Math.floor(shift / DB);

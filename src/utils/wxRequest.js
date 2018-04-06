@@ -7,7 +7,13 @@ export async function wxRequest(params = {}, url) {
 
 export function Request(params = {}, url) {
   let body = params.body
-  // console.log(body)
+  let Loading = true;
+  setTimeout(function () {
+    wx.hideLoading();
+    if (Loading) {
+      tip.error('网络异常');
+    }
+  }, 5000);
   return new Promise((resolve, reject) => {
     let type = ''
     if (params.method === 'get')
@@ -23,6 +29,7 @@ export function Request(params = {}, url) {
         'content-type': type
       },
       success: function (res) {
+        Loading = false;
         if (res.data) {
           resolve(res.data)
         } else {

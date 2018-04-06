@@ -45,6 +45,7 @@
   padding-left: 5px;
   color: white;
   justify-content: flex-end;
+  line-height: 47rpx;
 }
 .text-content {
   flex: 8;
@@ -97,13 +98,13 @@
         <text class="text-label">地址:</text>
         <text class="text-content">{{account.address}}</text>
       </view>
-      <view class="area-text-item"  @tap="copyToClip(address = {{account.address}})">
+      <view class="area-text-item"  @tap="copyToClip(address = {{account.publicKey}})">
         <text class="text-label">公钥:</text>
-        <text class="text-content">{{account.publickey}}</text>
+        <text class="text-content">{{account.publicKey}}</text>
       </view>
       <view class="area-text-item"  @tap="copyToClip(nep2Key = {{account.nep2key}})">
-        <text class="text-label">私钥{{(account.nep2key.length===64)?'':'密文'}}:</text>
-        <text class="text-content">{{account.nep2key}}</text>
+        <text class="text-label">私钥{{(account.key.length===64)?'':'密文'}}:</text>
+        <text class="text-content">{{account.key}}</text>
       </view>
     </view>
 

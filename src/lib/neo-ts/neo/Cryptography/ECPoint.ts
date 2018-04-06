@@ -172,6 +172,7 @@ export class ECPoint {
 
     public static multiply(p: ECPoint, n: Uint8Array | BigInteger): ECPoint {
         let k = n instanceof Uint8Array ? BigInteger.fromUint8Array(n, 1, false) : n as BigInteger;
+
         if (p.isInfinity()) return p;
         if (k.isZero()) return p.curve.Infinity;
 

@@ -75,7 +75,7 @@
       <view class="medium-content">
       <view class="medium-item">
         <view class="input">
-          <input type="text" name="accountlabel" placeholder="标签" value='zhizhang5'/>
+          <input type="text" name="accountlabel" placeholder="标签" value='zhizhang6'/>
         </view>
       </view>
       <view class="medium-item">
@@ -156,14 +156,14 @@ export default class Register extends wepy.page {
       wepy.showLoading({ title: '私钥生成中' });
 
       let privateKey = await Random.getSecureRandom(64);
-      var wallet = Wallet.getWallet(accountlabel, privateKey);
 
+      var wallet = Wallet.getWallet(accountlabel, privateKey);
       setTimeout(function() {
         wepy.hideLoading();
       }, 1000);
 
       NEL.helper.Helper.GetNep2FromPrivateKey(
-        privateKey,
+        NEL.helper.UintHelper.hexToBytes(privateKey),
         passphrase,
         wallet.scrypt.N,
         wallet.scrypt.r,
