@@ -90,19 +90,19 @@
     </view>
   
     <view class="area-text">
-      <view class="area-text-item"  @tap="copyToClip(name = {{account.label}})">
+      <view class="area-text-item"  @tap="copyToClip({{account.label}})">
         <text class="text-label" >账户名</text>
         <text class="text-content" >{{account.label}}</text>
       </view>
-      <view class="area-text-item"  @tap="copyToClip(address = {{account.address}})">
+      <view class="area-text-item"  @tap="copyToClip({{account.address}})">
         <text class="text-label">地址</text>
         <text class="text-content">{{account.address}}</text>
       </view>
-      <view class="area-text-item"  @tap="copyToClip(address = {{account.publickey}})">
+      <view class="area-text-item"  @tap="copyToClip({{account.publickey}})">
         <text class="text-label">公钥</text>
         <text class="text-content">{{account.publickey}}</text>
       </view>
-      <view class="area-text-item"  @tap="copyToClip(nep2Key = {{account.nep2key}})">
+      <view class="area-text-item"  @tap="copyToClip({{account.nep2key}})">
         <text class="text-label">私钥{{(account.key.length===64)?'':'密文'}}</text>
         <text class="text-content">{{account.nep2key}}</text>
       </view>

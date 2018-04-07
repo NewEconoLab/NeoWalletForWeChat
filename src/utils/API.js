@@ -137,7 +137,7 @@ export class WWW {
     static async rpc_getRawTransaction(txid) {
         var postdata = WWW.makeRpcPostBody("getrawtransaction", txid);
         // console.log(postdata)
-        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': WWW.rpc } }, WWW.proxy_server + "proxy.php");
+        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': WWW.api } }, WWW.proxy_server + "proxy.php");
         // var result = await Request.wxRequest({ "method": "post", "body":JSON.stringify(postdata)}, WWW.rpc);
         var r = result["result"];
         return r;
@@ -152,7 +152,7 @@ export class WWW {
     static async rpc_getAddressTXs(addr, max = 20, page = 1) {
         var postdata = WWW.makeRpcPostBody("getaddresstxs", addr, max, page);
         // console.log(postdata)
-        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': WWW.rpc } }, WWW.proxy_server + "proxy.php");
+        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': WWW.api } }, WWW.proxy_server + "proxy.php");
         // var result = await Request.wxRequest({ "method": "post", "body":JSON.stringify(postdata)}, WWW.rpc);
         var r = result["result"];
         return r;

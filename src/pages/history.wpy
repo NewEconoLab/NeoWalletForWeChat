@@ -157,7 +157,6 @@ export default class History extends wepy.page {
     this.isLoading = true;
     this.$apply();
     const txs = await WWW.rpc_getAddressTXs(this.address, 20, this.page);
-    console.log(txs);
     this.isLoading = false;
     for (let index in txs) {
       const date = txs[index].blocktime['$date'];
