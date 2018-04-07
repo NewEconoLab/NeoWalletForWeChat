@@ -126,8 +126,13 @@ export class WWW {
         // console.log(postdata)
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': WWW.api } }, WWW.proxy_server + "proxy.php");
         // var result = await Request.wxRequest({ "method": "post", "body":JSON.stringify(postdata)}, WWW.rpc);
+        console.log(result);
+        
         var r = result["result"][0]['sendrawtransactionresult'];
-        return r;
+        if(r){
+            return result["result"][0]['txid']||''//[]
+        }
+        return 'failed';
     }
 
     /**

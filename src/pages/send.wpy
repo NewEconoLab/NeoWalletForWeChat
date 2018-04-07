@@ -179,7 +179,7 @@
           <input name="amount" placeholder="金额" class="content" placeholder-class="holder" type="{{checked==='GAS'?'digit':'number'}}" value='{{amount}}'/>
         </view>
         <view class="lower-passphrase">
-          <input placeholder="密码" class="content" password='true' placeholder-class="holder" name="passphrase"/>
+          <input placeholder="密码" class="content" password='true' placeholder-class="holder" name="passphrase" value='{{password}}'/>
         </view>
       </view>
       <view class="area-btn">
@@ -205,15 +205,15 @@ export default class Send extends wepy.page {
   components = {};
 
   data = {
-    targetAddr: '',
+    targetAddr: 'ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F',
     assets: [
       { name: 'NEO', value: 'NEO' },
       { name: 'GAS', value: 'GAS', checked: 'true' }
     ],
     balance: '0',
     checked: 'GAS',
-    amount: '',
-    password: ''
+    amount: '0.01',
+    password: 'zhizhang'
   };
 
   computed = {};
@@ -290,18 +290,19 @@ export default class Send extends wepy.page {
     });
   }
   async SendTran(prikey, pubkey) {
+    pubkey = NEL.helper.UintHelper.hexToBytes(pubkey);
     var count = NEL.neo.Fixed8.parse(this.amount + '');
     let coin = this.checked === 'GAS' ? CoinTool.id_GAS : CoinTool.id_NEO;
     wepy.showLoading({ title: '交易生成中' });
     var tran = CoinTool.makeTran(UTXO.assets, this.targetAddr, coin, count);
-    // console.log(tran);
     let randomStr = await Random.getSecureRandom(256);
+    wepy.showLoading({ title: '获取交易编号' });
     const txid = await TransactionTool.setTran(tran, prikey, pubkey, randomStr);
     wepy.hideLoading();
     if (txid === 'failed') {
       wepy.showModal({
         title: '提示',
-        content: '交易发送失败',
+        content: '交易失败',
         showCancel: false,
         success: async function(res) {
           if (res.confirm) {

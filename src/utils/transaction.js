@@ -29,13 +29,10 @@ export class TransactionTool {
         tran.AddWitness(signdata, pubkey, Wallet.account.address);
         // console.log(NEL.helper.StringHelper.toHexString(tran.GetRawData()))
         wepy.showLoading({ title: '交易发送中' });
-        var result = await WWW.rpc_postRawTransaction(tran.GetRawData());
+
+        const res = await WWW.rpc_postRawTransaction(tran.GetRawData());
         wepy.hideLoading();
-        // console.log(result);
-        if (result[0]['sendrawtransactionresult'] === true) {
-            return result[0]['txid'];
-        }
-        return 'failed'
+        return res;
 
     }
 }
