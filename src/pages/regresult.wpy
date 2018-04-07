@@ -88,7 +88,7 @@ export default class RegResult extends wepy.page {
 
   onLoad(option) {
     let that = this;
-    this.wallet = JSON.parse(option.wallet)['accounts'][0];
+    this.account = JSON.parse(option.wallet)['accounts'][0];
     this.$apply();
 
     wx.getSystemInfo({
@@ -103,7 +103,7 @@ export default class RegResult extends wepy.page {
         that.OnDraw();
       }
     });
-  
+
     this.$apply();
   } // 在Page和Component共用的生命周期函数
 
@@ -114,7 +114,7 @@ export default class RegResult extends wepy.page {
   }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
 
   data = {
-    wallet: {},
+    account: {},
     accountSaved: false,
     currTime: '',
     height: 0,
@@ -140,7 +140,7 @@ export default class RegResult extends wepy.page {
         tip.error('请先备份账户');
         return;
       }
-      wepy.reLaunch({url:'./home'});
+      wepy.reLaunch({ url: './home' });
     }
   }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
 
@@ -151,11 +151,11 @@ export default class RegResult extends wepy.page {
     await drawQrcode({
       WH: that.width,
       CWH: that.canvasWH,
-      name: that.wallet.name,
-      addr: that.wallet.address,
+      name: that.account.label,
+      addr: that.account.address,
       currTime: that.currTime,
       canvasId: 'nep2Key',
-      text: JSON.stringify(this.wallet)
+      text: JSON.stringify(this.account)
     });
     that.backUpAccount();
   }
@@ -172,9 +172,32 @@ export default class RegResult extends wepy.page {
       success: function(res) {
         that.accountSaved = true;
         that.$apply();
-        wx.saveImageToPhotosAlbum({
-          filePath: res.tempFilePath
-        });
+        that.save2Album(res);
+      }
+    });
+  }
+  save2Album(res) {
+    wx.saveImageToPhotosAlbum({
+      filePath: res.tempFilePath,
+      success: function(data) {
+        tip.success('备份成功');
+      },
+      fail: function(err) {
+        console.log(err);
+        if (err.errMsg === 'saveImageToPhotosAlbum:fail auth deny') {
+          console.log('用户一开始拒绝了，我们想再次发起授权');
+          console.log('打开设置窗口');
+          wx.openSetting({
+            success(settingdata) {
+              console.log(settingdata);
+              if (settingdata.authSetting['scope.writePhotosAlbum']) {
+                console.log('获取权限成功，给出再次点击图片保存到相册的提示。');
+              } else {
+                console.log('获取权限失败，给出不给权限就无法正常使用的提示');
+              }
+            }
+          });
+        }
       }
     });
   }

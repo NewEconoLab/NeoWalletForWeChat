@@ -18,10 +18,9 @@ export class Wallet {
      * 切换账户的时候调用（观察账户的时候不切换）
      */
     static reset() {
+        //清除文件缓存
         wx.setStorageSync(CURR_WALLET, null);
-        let wals = wx.getStorageSync(LOCAL_WALLET) || {};
-        wals.remove(Wallet.account.label);
-        wx.setStorageSync(LOCAL_WALLET, wals);
+        //清除内存缓存
         Wallet.account = null;
     }
 
@@ -32,7 +31,6 @@ export class Wallet {
      */
     static getWallet(label, key) {
         let privateKey = NEL.helper.UintHelper.hexToBytes(key);
-
         wx.showLoading({ title: '公钥计算中' });
         const publicKey = NEL.helper.Helper.GetPublicKeyFromPrivateKey(privateKey);
 
@@ -47,11 +45,40 @@ export class Wallet {
         wallet.accounts[0] = new NEL.nep6.nep6account();
         wallet.accounts[0].address = address;
         wallet.accounts[0].label = label;
-        wallet.accounts[0].key = key;
-        wallet.accounts[0].publicKey = NEL.helper.StringHelper.toHexString(publicKey);
+        wallet.accounts[0].nep2key = key;
+        wallet.accounts[0].publickey = NEL.helper.StringHelper.toHexString(publicKey);
         return wallet;
     }
 
+    static importAccount(json) {
+
+        const label = json['label'];
+        let wallets = wx.getStorageSync(LOCAL_WALLET) || {};
+
+        if (wallets[label] !== undefined) {
+            tip.alert('账户名已存在');
+            return;
+        }
+
+        var wallet = new NEL.nep6.nep6wallet();
+        wallet.scrypt = new NEL.nep6.nep6ScryptParameters();
+        wallet.scrypt.N = SCRYPT_CONFIG.N;
+        wallet.scrypt.r = SCRYPT_CONFIG.r;
+        wallet.scrypt.p = SCRYPT_CONFIG.p;
+        wallet.accounts = [];
+        wallet.accounts[0] = new NEL.nep6.nep6account();
+        wallet.accounts[0].address = json['address'];
+        wallet.accounts[0].label = json['label'];
+        wallet.accounts[0].nep2key = json['nep2key'];
+        wallet.accounts[0].publickey = json['publickey'];
+
+        Wallet.setWallet(wallet);
+
+        const wallet_json = wallet.toJson();
+        wallets[accountlabel] = wallet_json;
+        wx.setStorageSync(LOCAL_WALLET, wallets);
+
+    }
     /**
      * 缓存账户
      * @param {object} wallet 
@@ -63,6 +90,21 @@ export class Wallet {
 
     static setAccount(nep6account) {
         Wallet.account = nep6account;
+    }
+    /**
+     * 删除本地缓存的指定账户
+     * @param {string} label 
+     */
+    static removeWallet() {
+        const label = Wallet.account.label;
+        let wals = wx.getStorageSync(LOCAL_WALLET) || {};
+        let temp_wals = {};
+        for (var key in wals) {
+            if (key !== label)
+                temp_wals[key] = wals[key];
+        }
+        wx.setStorageSync(LOCAL_WALLET, temp_wals);
+        Wallet.reset();
     }
     /**
      * return address 

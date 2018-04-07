@@ -215,7 +215,6 @@ export default class Home extends wepy.page {
   components = {};
 
   data = {
-    account: {},
     NEO: '0',
     GAS: '0',
     NEOPrice: 0.0,
@@ -259,10 +258,11 @@ export default class Home extends wepy.page {
   }
   async OnLogin() {
     let that = this;
-    const wallet = wepy.getStorageSync(CURR_WALLET);
+    const wallet = wepy.getStorageSync(CURR_WALLET) || {};
+    console.log(Object.keys(wallet).length);
 
     //本地缓存有账户 则直接加载本地账户信息
-    if (wallet !== null && wallet !== undefined && wallet !== {}) {
+    if (Object.keys(wallet).length !== 0) {
       this.isLogin = true;
       this.$apply();
       Wallet.setWallet(wallet);

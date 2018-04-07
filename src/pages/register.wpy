@@ -158,6 +158,8 @@ export default class Register extends wepy.page {
       let privateKey = await Random.getSecureRandom(64);
 
       var wallet = Wallet.getWallet(accountlabel, privateKey);
+      console.log(wallet);
+      
       setTimeout(function() {
         wepy.hideLoading();
       }, 1000);
@@ -172,15 +174,15 @@ export default class Register extends wepy.page {
           that.isGenerating = false;
           that.$apply();
           if (info == 'finish') {
-            wallet.accounts[0].key = result;
+            wallet.accounts[0].nep2key = result;
             const wallet_json = wallet.toJson();
             wallets[accountlabel] = wallet_json;
+            console.log(wallet_json);
 
             wepy.showLoading({ title: '钱包创建完成' });
             wepy.setStorageSync(LOCAL_WALLET, wallets);
             //本地缓存新生成的账户
             Wallet.setWallet(wallet);
-            wepy.showLoading({ title: '登陆中' });
             var jsonstr = JSON.stringify(wallet_json);
             wepy.hideLoading();
             that.$redirect('./regresult?wallet=' + jsonstr);

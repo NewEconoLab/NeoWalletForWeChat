@@ -57,25 +57,13 @@
 
 <template>
   <view class="container">
-   <view class="wallet-block" wx:for="{{watchonly}}" >
+   <view class="wallet-block" wx:for="{{wallets}}" >
      <view class="content">
       <view class="area-icon">
         <image  src="../images/icon.png" />
       </view>
       <view class="area-info" @tap="OnSelect({{item.label}})">
         <text class="info-name"> {{item.label}}</text>
-        <text class="info-addr">{{item.address}}</text>
-      </view>
-      </view>
-    </view>
-
-   <view class="wallet-block" wx:for="{{wallets}}" >
-     <view class="content">
-      <view class="area-icon">
-        <image  src="../images/icon.png" />
-      </view>
-      <view class="area-info" @tap="OnSelect({{item.name}})">
-        <text class="info-name"> {{item.name}}</text>
         <text class="info-addr">{{item.address}}</text>
       </view>
       </view>

@@ -88,11 +88,11 @@ export class nep6wallet {
 
             var jsonacc = {};
             jsonacc["address"] = acc.address;
-            jsonacc["pubkey"] = acc.publickey;
+            jsonacc["publickey"] = acc.publickey;
             jsonacc["label"] = acc.label;
             jsonacc["isDefault"] = false;
             jsonacc["lock"] = false;
-            jsonacc["key"] = acc.nep2key;
+            jsonacc["nep2key"] = acc.nep2key;
             jsonacc["extra"] = null;
             jsonacc["contract"] = acc.contract;
             accounts.push(jsonacc);

@@ -91,20 +91,20 @@
   
     <view class="area-text">
       <view class="area-text-item"  @tap="copyToClip(name = {{account.label}})">
-        <text class="text-label" >账户名:</text>
+        <text class="text-label" >账户名</text>
         <text class="text-content" >{{account.label}}</text>
       </view>
       <view class="area-text-item"  @tap="copyToClip(address = {{account.address}})">
-        <text class="text-label">地址:</text>
+        <text class="text-label">地址</text>
         <text class="text-content">{{account.address}}</text>
       </view>
-      <view class="area-text-item"  @tap="copyToClip(address = {{account.publicKey}})">
-        <text class="text-label">公钥:</text>
-        <text class="text-content">{{account.publicKey}}</text>
+      <view class="area-text-item"  @tap="copyToClip(address = {{account.publickey}})">
+        <text class="text-label">公钥</text>
+        <text class="text-content">{{account.publickey}}</text>
       </view>
       <view class="area-text-item"  @tap="copyToClip(nep2Key = {{account.nep2key}})">
-        <text class="text-label">私钥{{(account.key.length===64)?'':'密文'}}:</text>
-        <text class="text-content">{{account.key}}</text>
+        <text class="text-label">私钥{{(account.key.length===64)?'':'密文'}}</text>
+        <text class="text-content">{{account.nep2key}}</text>
       </view>
     </view>
 
@@ -193,8 +193,7 @@ export default class Mine extends wepy.page {
               success: res => {
                 //确认删除
                 if (res.confirm) {
-                  //清空内存及缓存中的账户信息
-                  Wallet.reset();
+                  Wallet.removeWallet();
                   wx.navigateBack();
                 } else if (res.cancel) {
                 }
