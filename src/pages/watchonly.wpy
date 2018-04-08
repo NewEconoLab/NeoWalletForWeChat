@@ -70,7 +70,7 @@
       <view class="area-icon">
         <image  src="../images/icon.png" />
       </view>
-      <view class="area-info" @tap="OnSelect({{item.address}})">
+      <view class="area-info" @tap="OnSelect({{item.address}},{{item.label}})">
         <text class="info-name"> {{item.label}}</text>
         <text class="info-addr">{{item.address}}</text>
       </view>
@@ -116,10 +116,10 @@ export default class WatchOnly extends wepy.page {
   watch = {}; // 声明数据watcher（详见后文介绍）
 
   methods = {
-    async OnSelect(e) {
-      const selected = e;
+    async OnSelect(addr,label) {
+      const selected = addr;
       wepy.reLaunch({
-        url: '/pages/watch?address=' + selected
+        url: '/pages/watch?address=' + selected+'&label='+label
       });
     },
     registerWatch() {

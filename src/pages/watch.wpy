@@ -300,7 +300,8 @@ export default class Watch extends wepy.page {
     address: '',
     TXs: [],
     isLoading: false,
-    page: 1
+    page: 1,
+    label:''
   };
 
   computed = {};
@@ -311,7 +312,7 @@ export default class Watch extends wepy.page {
       switch (param) {
         case 'normal':
           wepy.reLaunch({
-            url: '/pages/index?switch=' + false
+            url: '/pages/index?switch=' + 0
           });
           break;
         case 'switch':
@@ -325,7 +326,7 @@ export default class Watch extends wepy.page {
             tip.success('删除成功');
             setTimeout(function() {
               wepy.reLaunch({
-                url: '/pages/index?switch=' + false
+                url: '/pages/index?switch=' + 0
               });
             }, 500);
           } else tip.error('删除失败');
@@ -360,6 +361,7 @@ export default class Watch extends wepy.page {
 
   onLoad(option) {
     this.address = option.address;
+    this.label = option.label;
     this.$apply();
   }
   async onShow() {
@@ -471,8 +473,8 @@ export default class Watch extends wepy.page {
   onShareAppMessage() {
     let that = this;
     return {
-      title: '观察账户',
-      desc: that.address,
+      title: that.address,
+      desc: '观察账户:'+that.label,
       path: '/pages/watch?address='+that.address
     };
   }

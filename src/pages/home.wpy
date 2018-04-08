@@ -236,7 +236,7 @@ export default class Home extends wepy.page {
       if (Wallet.account === null) {
         if (page === 'mine') {
           wepy.navigateTo({
-            url: '/pages/index?switch=' + false
+            url: '/pages/index?switch=' + 0
           });
         } else tip.error('您尚未登陆钱包账户');
         return;

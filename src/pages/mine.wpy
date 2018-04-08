@@ -184,7 +184,7 @@ export default class Mine extends wepy.page {
           if (res.tapIndex === 0) {
             wx.showToast({ title: '开发中' });
           } else if (res.tapIndex === 1) {
-            wx.navigateTo({ url: './index?switch=' + true });
+            wx.navigateTo({ url: './index?switch=' + 1 });
           } else if (res.tapIndex === 2) {
             wx.navigateTo({ url: './watchonly' });
           } else if (res.tapIndex === 3) {
