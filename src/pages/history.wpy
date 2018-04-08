@@ -163,7 +163,6 @@ export default class History extends wepy.page {
         date,
         'Y/M/D h:m:s'
       );
-      const bindex = txs[index].blockindex;
       txs[index].blockindex =
         parseInt(Wallet.height) - parseInt(txs[index].blockindex) + 1;
     }

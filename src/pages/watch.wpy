@@ -285,6 +285,7 @@ import { WWW } from '../utils/API';
 import { CoinTool } from '../utils/Coin';
 import { UTXO } from '../utils/UTXO';
 import { Wallet } from '../utils/wallet';
+import { Service } from '../utils/service';
 import tip from '../utils/tip';
 import * as TimeHelper from '../utils/time';
 export default class Watch extends wepy.page {
@@ -301,7 +302,7 @@ export default class Watch extends wepy.page {
     TXs: [],
     isLoading: false,
     page: 1,
-    label:''
+    label: ''
   };
 
   computed = {};
@@ -342,13 +343,20 @@ export default class Watch extends wepy.page {
       switch (param) {
         case 'account':
           that.selected = 0;
+          Service.isLoadTXs = false;
           break;
         case 'history':
           that.selected = 1;
-          that.OnGetTXs();
+          Service.isLoadTXs = true;
+          Service.OnGetTXs(1);
+          Service.txDelegate = function(txs) {
+            that.TXs = txs;
+            that.$apply();
+          };
           break;
         case 'manager':
           that.selected = 2;
+          Service.isLoadTXs = false;
           break;
         default:
           break;
@@ -366,116 +374,35 @@ export default class Watch extends wepy.page {
   }
   async onShow() {
     let that = this;
-    await this.OnTimeOut();
-    //循环执行代码
-    setInterval(async () => {
-      await that.OnTimeOut();
-    }, 15000); //循环时间 这里是15秒
-  }
-
-  /**
-   * 定时触发
-   */
-  async OnTimeOut() {
-    let that = this;
-    if (this.selected == 0) {
-      this.OnGetAssets(this.address);
-    } else if (this.selected === 1) {
-      that.OnGetTXs();
-    }
-
-    this.OnGetHeight();
-  }
-
-  /**
-   * 加载区块链高度
-   */
-  async OnGetHeight() {
-    const height = await WWW.api_getHeight();
-    Wallet.height = height;
+    Service.address = this.address;
+    Service.OnGetAssets();
+    Service.assetDelegate = function(assets) {
+      that.assets = assets;
+      that.$apply();
+    };
   }
   /**
-   * 获取账户资产信息 UTXO
+   * 下拉刷新
    */
-  async OnGetAssets(addr) {
-    let that = this;
-    let temp_assets = {};
-    await UTXO.GetAssets(addr);
-    for (let item of UTXO.utxo) {
-      if (temp_assets[item.asset] === undefined)
-        temp_assets[item.asset] = {
-          amount: 0,
-          price: 0,
-          total: 0,
-          type: item.asset
-        };
-      if (item.asset === 'NEO')
-        temp_assets[item.asset].amount += parseInt(item.count);
-      else temp_assets[item.asset].amount += parseFloat(item.count);
-    }
-    that.OnGetPrice(temp_assets);
-  }
-  /**
-   * 获取市场价格
-   */
-  async OnGetPrice(temp_assets) {
-    let that = this;
+  async onPullDownRefresh() {
+    if (this.isLoading) return;
     this.isLoading = true;
-    for (let key in that.assets) {
-      const coin = await WWW.api_getCoinPrice(key);
-      temp_assets[key].price = parseFloat(coin[0]['price_cny']).toFixed(2);
-      temp_assets[key].total =
-        parseFloat(temp_assets[key].amount) *
-        parseFloat(coin[0]['price_cny']).toFixed(2);
-      temp_assets[key].total = temp_assets[key].total.toFixed(2);
-      if (coin[0]['percent_change_1h'][0] !== '-') temp_assets[key].rise = true;
-      else temp_assets[key].rise = false;
-    }
-    that.assets = temp_assets;
-    that.$apply();
-    UTXO.utxo.reverse();
-  }
-  async OnGetTXs() {
-    const txs = await WWW.rpc_getAddressTXs(this.address, 20, this.page);
-    console.log(txs);
-
-    this.isLoading = false;
-    for (let index in txs) {
-      const date = txs[index].blocktime['$date'];
-      txs[index].blocktime['$date'] = TimeHelper.formatTime(
-        date,
-        'Y/M/D h:m:s'
-      );
-      const bindex = txs[index].blockindex;
-      txs[index].blockindex =
-        parseInt(Wallet.height) - parseInt(txs[index].blockindex) + 1;
-    }
-    console.log(txs);
-
-    this.TXs = txs;
     this.$apply();
-    console.log(this.TXs);
-    // complete
+    this.TXs = await Service.OnLoadTXs(1);
+    this.isLoading = false;
+    this.$apply();
     wx.hideNavigationBarLoading(); //完成停止加载
     wx.stopPullDownRefresh(); //停止下拉刷新
   }
-
   /**
-   * Pull up refresh
+   * 分享
    */
-  async onReachBottom() {
-    let that = this;
-    if (that.isLoading) return;
-    that.OnLoadTXs();
-    that.page = parseInt(that.page) + 1;
-    that.$apply();
-  }
   onShareAppMessage() {
     let that = this;
     return {
       title: that.address,
-      desc: '观察账户:'+that.label,
-      path: '/pages/watch?address='+that.address
+      desc: '观察账户:' + that.label,
+      path: '/pages/watch?address=' + that.address
     };
   }
 }

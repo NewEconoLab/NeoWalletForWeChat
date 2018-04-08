@@ -13,10 +13,11 @@ export class CoinTool {
             var names = asset.name;
             var id = asset.id;
             var name = "";
-            if (id == CoinTool.id_GAS) {
+            
+            if (id === CoinTool.id_GAS) {
                 name = "GAS";
             }
-            else if (id == CoinTool.id_NEO) {
+            else if (id === CoinTool.id_NEO) {
                 name = "NEO";
             }
             else {
