@@ -86,6 +86,12 @@ export default class extends wepy.app {
         wepy.setStorageSync(USER_INFO, res.userInfo);
       }
     });
+
+        //循环执行代码
+    setInterval(async () => {
+      console.log('helloworld');
+      
+    }, 15000); //循环时间 这里是15秒
   }
 }
 </script>

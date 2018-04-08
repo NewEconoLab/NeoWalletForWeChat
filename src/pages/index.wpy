@@ -72,7 +72,6 @@
 import wepy from 'wepy';
 import { CURR_WALLET, USER_INFO } from '../utils/constant';
 import { Wallet } from '../utils/wallet';
-import * as Random from '../utils/random';
 export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: '账户'
