@@ -30,7 +30,8 @@
     color: #a3a3a3;
   }
   .time {
-    font-size: 13px;
+    font-size: 14px;
+    font-family: '黑体';
     color: #a3a3a3;
   }
 }
@@ -43,9 +44,9 @@
   border-bottom: thin rgb(230, 230, 230) solid;
   .txid {
     display: block;
-    color: gray;
     word-break: break-all;
-    font-size: 13px;
+    font-size: 15px;
+    color: #a3a3a3;
     margin: 34rpx 0 30rpx 0;
   }
 }
@@ -73,10 +74,10 @@
   <view class="container">
    <view class="history-block" wx:for="{{TXs}}" >
      <view class="content">
-     <view class="area-head">
+      <view class="area-head">
        <text class="label">交易编号</text>
        <text class="time">{{item.blocktime['$date']}}</text>
-     </view>
+      </view>
       <view class ="area-txid" @tap="OnDetail({{item.txid}})">
         
         <text class="txid">{{item.txid}}</text>
@@ -85,10 +86,9 @@
         <text class="label"> 确认高度：</text>
         <text class="count">{{item.blockindex}}</text>
       </view>
-    </view>
+     </view>
     </view>
   </view>
-
 </template>
 
 <script>

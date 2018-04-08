@@ -7,7 +7,7 @@ export class WWW {
     static rpc = "http://47.96.168.8:20332/testnet";
     static rpcName = "";
     static proxy_server = "http://112.74.52.116/";
-
+    static templet_id = "2lEt8hQIzI6tbTw9ThtZhNalDG6GulckpcYEs_Ki7ZQ";
     /**
      * create Rpc Url
      * @param url string
@@ -127,10 +127,10 @@ export class WWW {
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': WWW.api } }, WWW.proxy_server + "proxy.php");
         // var result = await Request.wxRequest({ "method": "post", "body":JSON.stringify(postdata)}, WWW.rpc);
         console.log(result);
-        
+
         var r = result["result"][0]['sendrawtransactionresult'];
-        if(r){
-            return result["result"][0]['txid']||''//[]
+        if (r) {
+            return result["result"][0]['txid'] || ''//[]
         }
         return 'failed';
     }
@@ -178,8 +178,8 @@ export class WWW {
      * @param {string} openid 用户唯一身份识别
      * @param {string} address 增加的地址
      */
-    static async  addr_insert(openid, label,address) {
-        let body = { 'method': 'insert', 'openid': openid, 'label':label,'address': address };
+    static async  addr_insert(openid, label, address) {
+        let body = { 'method': 'insert', 'openid': openid, 'label': label, 'address': address };
         return await WWW.makeaddrpost(body);;
     }
 
@@ -198,7 +198,7 @@ export class WWW {
     */
     static async addr_query(openid) {
         let body = { 'method': 'query', 'openid': openid };
-        return await WWW.makeaddrpost(body);;
+        return await WWW.makeaddrpost(body);
     }
     /**
     * 获取openid
@@ -206,8 +206,71 @@ export class WWW {
     */
     static async addr_openid(code) {
         let body = { 'method': 'openid', 'code': code };
-        console.log(body);
-        
-        return await WWW.makeaddrpost(body);;
+        return await WWW.makeaddrpost(body);
+    }
+    /**
+     * 获取通知口令
+     */
+    static async access_token() {
+        let body = { 'method': 'access_token' };
+        return await WWW.makeaddrpost(body);
+    }
+    // /**
+    //  * 发送微信通知
+    //  * @param {string} txid 交易id
+    //  * @param {string} openid 用户唯一识别码
+    //  * @param {string} addr 转账地址
+    //  * @param {string} sendTime 交易时间
+    //  */
+    /**
+     * 
+     * @param {string} txid 
+     * @param {string} openid 
+     * @param {string} addr 
+     * @param {string} sendTime 
+     * @param {string} type 
+     * @param {string} amount 
+     * @param {string} token 
+     */
+    static async notify(txid, openid, addr, sendTime, type, amount, token, formId) {
+        // 交易时间{{keyword1.DATA}}
+        // 交易类型{{keyword2.DATA}}
+        // 交易金额{{keyword3.DATA}}
+        // 订单编号{{keyword4.DATA}}
+        // 交易人{{keyword5.DATA}}
+        let url = 'https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=' + token;
+        let body = {
+            touser: openid,
+            template_id: WWW.templet_id,
+            page: './transaction?txid = ' + txid,
+            form_id: formId,
+            "data": {
+                "keyword1": {
+                    "value": sendTime,
+                    "color": "#173177"
+                },
+                "keyword2": {
+                    "value": type + '交易',
+                    "color": "#173177"
+                },
+                "keyword3": {
+                    "value": amount + type,
+                    "color": "#173177"
+                },
+                "keyword4": {
+                    "value": txid,
+                    "color": "#173177"
+                },
+                "keyword5": {
+                    "value": addr,
+                    "color": "#173177"
+                }
+            }
+        }
+        var result = await Request.wxRequest({ "method": "post", "body": body }, url);
+        // var result = await Request.wxRequest({ "method": "post", "body":JSON.stringify(postdata)}, WWW.rpc);
+        var r = result["result"];
+        return r;
+
     }
 }

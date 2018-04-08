@@ -86,7 +86,7 @@
 }
 </style>
 <template>
-<form bindsubmit="formSubmit" class="form">
+<form bindsubmit="formSubmit" class="form" report-submit ="true">
   <view class="container">
     <view class="area-uppper">
      <image class="upper-logo" src="../images/icon.png" ></image>
@@ -122,6 +122,7 @@ import { LOCAL_WALLET, CURR_WALLET } from '../utils/constant';
 import { Wallet } from '../utils/wallet';
 import { WWW } from '../utils/API';
 import tip from '../utils/tip';
+import { TransactionTool } from '../utils/transaction';
 export default class ImportAccount extends wepy.page {
   customData = {}; // 自定义数据
 
@@ -154,7 +155,7 @@ export default class ImportAccount extends wepy.page {
       let that = this;
       let accountlabel = e.detail.value.accountlabel;
       let prikey = e.detail.value.prikey;
-
+      TransactionTool.formId.push(e.detail.formId);
       that.OnAccountProcess(accountlabel, prikey);
     },
 

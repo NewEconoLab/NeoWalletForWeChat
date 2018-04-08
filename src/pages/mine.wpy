@@ -15,7 +15,7 @@
   }
   .nickName {
     font-family: '黑体', Helvetica;
-    font-size: 15px;
+    font-size: 16px;
     margin-top: 45rpx;
     color: white;
   }
@@ -176,7 +176,7 @@ export default class Mine extends wepy.page {
     manage() {
       let that = this;
       wx.showActionSheet({
-        itemList: ['重命名', '切换账户', 'watchonly', '删除账户'],
+        itemList: ['重命名', '切换账户', '观察模式', '删除账户'],
         itemColor: '#69c0fd',
         success(res) {
           if (res.tapIndex === 0) {

@@ -154,24 +154,24 @@
     <view class="area-medium">
        <view class="medium-item" style="margin-left:20px;" @tap="navigate('receive')">
           <image src="../images/receive.png" class="icon"></image>
-          <text class="name">Receive</text>
+          <text class="name">收款</text>
         </view>
         <view class="medium-item" @tap="navigate('send')">
             <image src="../images/send.png" class="icon"></image>
-          <text class="name">Send</text>
+          <text class="name">转账</text>
         </view>
         <view class="medium-item"  @tap="navigate('history')">
           <image src="../images/history.png" class="icon"></image>
-          <text class="name">History</text>
+          <text class="name">历史</text>
         </view>
         <view class="medium-item"  style="margin-right:20px;" @tap="navigate('mine')">
           <image src="../images/account.png" class="icon"></image>
-          <text class="name">Mine</text>
+          <text class="name">个人</text>
         </view>
     </view>
     <view class="area-lower">
      <view class="lower-chain">
-        <text class="label">Block Height:</text>
+        <text class="label">区高度:</text>
         <text class="height">{{Block}}</text>
       </view>
       <view class="lower-price">
@@ -297,6 +297,7 @@ export default class Home extends wepy.page {
     Wallet.height = height;
     this.$apply();
   }
+  
   /**
    * 获取账户资产信息 UTXO
    */

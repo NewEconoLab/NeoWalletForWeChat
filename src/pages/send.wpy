@@ -14,7 +14,7 @@
 }
 .balance-label {
   color: white;
-  font-size: 20px;
+  font-size: 18px;
   font-family: '黑体';
 }
 .balance {
@@ -56,12 +56,12 @@
   .address {
     border-bottom: thin #cccccc solid;
     height: 57rpx;
-    font-size: 18px;
+    font-size: 16px;
     padding: 4px 0 4px 0;
     font-family: Arial, Helvetica, sans-serif;
   }
   .holder {
-    color: #a3a3a3;
+    color: #cccccc;
     font-family: '黑体';
   }
 }
@@ -84,7 +84,7 @@
   }
   .label {
     margin-top: 20rpx;
-    font-size: 18px;
+    font-size: 16px;
     color: #27adf1;
     font-family: '黑体';
   }
@@ -109,11 +109,12 @@
   align-items: center;
   box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
   .content {
-    font-size: 18px;
+    font-size: 16px;
     padding: 0 0 0 45rpx;
+    color:#a3a3a3;
   }
   .holder {
-    color: #a3a3a3;
+    color: #cccccc;
   }
 }
 .lower-passphrase {
@@ -128,24 +129,27 @@
   align-items: center;
   box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
   .content {
-    font-size: 18px;
+    font-size: 16px;
     padding: 0 0 0 45rpx;
     font-family: '黑体';
+    color:#a3a3a3;
   }
   .holder {
-    color: #a3a3a3;
+    color: #cccccc;
   }
 }
 .area-btn {
   margin-top: 100rpx;
   width: 80%;
+  font-size: 16px;
+  box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
   button::after {
     border: none;
   }
 }
 </style>
 <template>
-  <form bindsubmit="formSubmit" class="form">
+  <form bindsubmit="formSubmit" class="form" report-submit ="true">
     <view class="container">
       <view class="area-uppper">
         <view class="upper-balance">
@@ -161,7 +165,7 @@
       </view>
       <view class="area-medium">
         <view class="medium-address">
-          <input class="address" name="address" placeholder-class="holder" placeholder="目的地址" value='{{targetAddr}}'/>
+          <input class="address" name="address" placeholder-class="holder" placeholder="付款地址" value='{{targetAddr}}'/>
         </view>
         <view class="medium-button">
           <view class="button-item" >
@@ -213,7 +217,7 @@ export default class Send extends wepy.page {
     balance: '0',
     checked: 'GAS',
     amount: '0.01',
-    password: 'zhizhang'
+    password: 'test'
   };
 
   computed = {};
@@ -242,6 +246,7 @@ export default class Send extends wepy.page {
       let target = e.detail.value.address;
       let amount = e.detail.value.amount;
       let password = e.detail.value.passphrase;
+      TransactionTool.formId.push(e.detail.formId);
       if (target.length !== 34) {
         tip.alert('目标地址有误');
         return;
@@ -311,7 +316,7 @@ export default class Send extends wepy.page {
         }
       });
     } else {
-      TransactionTool.unconfirm.push(txid);
+      TransactionTool.unconfirmed.push(txid);
       wepy.showModal({
         title: '交易发送成功',
         content: txid,

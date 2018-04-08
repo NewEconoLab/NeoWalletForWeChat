@@ -4,7 +4,8 @@ import { Wallet } from './wallet'
 import tip from './tip';
 import wepy from 'wepy'
 export class TransactionTool {
-    static unconfirm = []
+    static formId = [];
+    static unconfirmed = []
 
     constructor() {
     }

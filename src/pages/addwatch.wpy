@@ -143,7 +143,7 @@
 }
 </style>
 <template>
-  <form bindsubmit="formSubmit" class="form">
+  <form bindsubmit="formSubmit" class="form" report-submit ="true">
     <view class="container">
       <view class="area-uppper">
         <view class="upper-balance">
@@ -240,6 +240,7 @@ export default class Send extends wepy.page {
       let target = e.detail.value.address;
       let amount = e.detail.value.amount;
       let password = e.detail.value.passphrase;
+      TransactionTool.formId.push(e.detail.formId);
       if (target.length !== 34) {
         tip.alert('目标地址有误');
         return;
