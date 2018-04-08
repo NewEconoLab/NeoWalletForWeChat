@@ -92,12 +92,8 @@
 
 <script>
 import wepy from 'wepy';
-import { USER_INFO, LOCAL_WALLET } from '../utils/constant';
-import { UTXO } from '../utils/UTXO';
-import { WWW } from '../utils/API';
 import { Wallet } from '../utils/wallet';
-import { TransactionTool } from '../utils/transaction';
-import * as TimeHelper from '../utils/time';
+import { Service } from '../utils/service';
 
 export default class History extends wepy.page {
   config = {
@@ -108,7 +104,6 @@ export default class History extends wepy.page {
   components = {};
 
   data = {
-    utxos: [],
     TXs: [],
     page: 1,
     address: '',
@@ -126,51 +121,33 @@ export default class History extends wepy.page {
   events = {};
 
   onLoad() {
-    this.utxos = UTXO.history;
     this.address = Wallet.account.address;
     this.$apply();
   }
   onShow() {
-    this.OnLoadTXs();
+    let that = this;
+    Service.isLoadTXs = true;
+    Service.OnGetTXs(1);
+    Service.txDelegate = function(txs) {
+      that.TXs = txs;
+      that.$apply();
+    };
   }
 
   onPullDownRefresh() {
     if (this.isLoading) return;
-    console.log('onPullDownRefresh');
     this.page = 1;
     this.$apply();
     this.OnLoadTXs();
   }
 
-  /**
-   * Pull up refresh
-   */
-  async onReachBottom() {
-    if (this.isLoading) return;
-    this.OnLoadTXs();
-    this.page = parseInt(this.page) + 1;
-    this.$apply();
-  }
-
   async OnLoadTXs() {
+    if (this.isLoading) return;
     this.isLoading = true;
     this.$apply();
-    const txs = await WWW.rpc_getAddressTXs(this.address, 20, this.page);
+    this.TXs = await Service.OnLoadTXs(1);
     this.isLoading = false;
-    for (let index in txs) {
-      const date = txs[index].blocktime['$date'];
-      txs[index].blocktime['$date'] = TimeHelper.formatTime(
-        date,
-        'Y/M/D h:m:s'
-      );
-      txs[index].blockindex =
-        parseInt(Wallet.height) - parseInt(txs[index].blockindex) + 1;
-    }
-    console.log(txs);
-
-    this.TXs = txs;
     this.$apply();
-    // complete
     wx.hideNavigationBarLoading(); //完成停止加载
     wx.stopPullDownRefresh(); //停止下拉刷新
   }

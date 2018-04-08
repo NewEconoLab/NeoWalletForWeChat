@@ -116,10 +116,10 @@ export default class WatchOnly extends wepy.page {
   watch = {}; // 声明数据watcher（详见后文介绍）
 
   methods = {
-    async OnSelect(addr,label) {
+    async OnSelect(addr, label) {
       const selected = addr;
       wepy.reLaunch({
-        url: '/pages/watch?address=' + selected+'&label='+label
+        url: '/pages/watch?address=' + selected + '&label=' + label
       });
     },
     registerWatch() {
@@ -132,15 +132,25 @@ export default class WatchOnly extends wepy.page {
   events = {}; // 声明组件之间的事件处理函数
   async OnLoadWatchOnly() {
     let that = this;
-    console.log(Wallet.openid);
+
     let res = await WWW.addr_query(Wallet.openid);
     res = JSON.parse(res);
     if (res['code'] == 0) {
       let addr = res['address'];
       that.watchonly = addr;
       that.$apply();
-      console.log(addr);
     }
+    wx.hideNavigationBarLoading(); //完成停止加载
+    wx.stopPullDownRefresh(); //停止下拉刷新
+  }
+
+  async onPullDownRefresh() {
+    if (this.isLoading) return;
+    this.isLoading = true;
+    this.$apply();
+    await OnLoadWatchOnly();
+    this.isLoading = false;
+    this.$apply();
   }
 }
 </script>

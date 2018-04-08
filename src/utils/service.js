@@ -56,9 +56,6 @@ export class Service {
         console.log(UTXO.utxo);
 
         for (let item of UTXO.utxo) {
-            console.log('>>>>>');
-            console.log(item);
-            
             if (temp_assets[item.asset] === undefined)
                 temp_assets[item.asset] = {
                     amount: 0,
@@ -75,10 +72,7 @@ export class Service {
             }
 
         }
-        console.log('=====');
-
-        console.log(temp_assets);
-
+        UTXO.balance = temp_assets;
         //回调资产接口
         Service.assetDelegate(await Service.OnGetPrice(temp_assets));
     }

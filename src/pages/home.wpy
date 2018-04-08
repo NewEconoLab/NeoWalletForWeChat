@@ -250,6 +250,7 @@ export default class Home extends wepy.page {
   onLoad() {}
   async onShow() {
     await CoinTool.initAllAsset();
+    Service.OnGetHeight();
     this.OnLogin();
   }
 

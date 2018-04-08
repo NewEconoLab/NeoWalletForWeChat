@@ -238,7 +238,7 @@ export default class Send extends wepy.page {
     },
     radioChange(e) {
       this.checked = e.detail.value;
-      this.balance = UTXO.balance[e.detail.value];
+      this.balance = UTXO.balance[e.detail.value].amount;
       this.amount = '';
       this.$apply();
     },
@@ -251,7 +251,7 @@ export default class Send extends wepy.page {
         tip.alert('目标地址有误');
         return;
       }
-      if (parseFloat(amount) > parseFloat(UTXO.balance[this.checked])) {
+      if (parseFloat(amount) > parseFloat(UTXO.balance[this.checked].amount)) {
         tip.alert('余额不足');
         return;
       }
@@ -271,7 +271,7 @@ export default class Send extends wepy.page {
   events = {};
 
   onLoad() {
-    this.balance = UTXO.balance['GAS'];
+    this.balance = UTXO.balance['GAS'].amount;
     this.$apply();
   }
   //构造并发送交易
