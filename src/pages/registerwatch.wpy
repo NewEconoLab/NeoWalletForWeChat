@@ -93,7 +93,7 @@
     </view>
     <view class="area-medium">
       <view class="medium-input" style="margin-top: 100rpx;">
-        <input class="address" name="accountlabel" placeholder-class="holder" placeholder="账户名"/>
+        <input class="address" name="accountlabel" placeholder-class="holder" placeholder="账户名" value='neon17'/>
       </view>
       <view class="medium-input">
         <input class="address" name="address" placeholder-class="holder" placeholder="账户地址" value='{{targetAddr}}'/>
@@ -117,11 +117,9 @@
 </template>
 <script>
 import wepy from 'wepy';
-import * as NEL from '../lib/neo-ts/index';
-import { LOCAL_WALLET, CURR_WALLET } from '../utils/constant';
 import { Wallet } from '../utils/wallet';
 import tip from '../utils/tip';
-import * as Random from '../utils/random';
+import {WWW} from '../utils/API';
 export default class RegisterWatch extends wepy.page {
   customData = {}; // 自定义数据
 
@@ -137,7 +135,7 @@ export default class RegisterWatch extends wepy.page {
 
   data = {
     isLoading: false,
-    targetAddr: ''
+    targetAddr: 'AaCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F'
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
   components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
@@ -175,6 +173,8 @@ export default class RegisterWatch extends wepy.page {
       that.isLoading = false;
       that.$apply();
       wepy.hideLoading();
+      console.log(res);
+      
       if (res['code'] == 0) {
         tip.success('注册成功');
         setTimeout(function() {

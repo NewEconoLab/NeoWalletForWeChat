@@ -79,7 +79,6 @@
        <text class="time">{{item.blocktime['$date']}}</text>
       </view>
       <view class ="area-txid" @tap="OnDetail({{item.txid}})">
-        
         <text class="txid">{{item.txid}}</text>
       </view>
       <view class="area-confirm">

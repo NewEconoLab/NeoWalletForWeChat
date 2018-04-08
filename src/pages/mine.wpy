@@ -139,7 +139,9 @@ export default class Mine extends wepy.page {
     this.$apply();
     console.log(this.account);
   } // 只在Page中存在的页面生命周期函数
-
+  onReady() {
+    this.$apply();
+  }
   config = {
     navigationBarTitleText: '个人'
   }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件

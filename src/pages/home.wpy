@@ -250,7 +250,7 @@ export default class Home extends wepy.page {
 
   events = {};
 
-  async onLoad() {}
+  onLoad() {}
   onShow() {
     this.OnGetPrice();
     this.OnLogin();
@@ -297,7 +297,7 @@ export default class Home extends wepy.page {
     Wallet.height = height;
     this.$apply();
   }
-  
+
   /**
    * 获取账户资产信息 UTXO
    */
@@ -328,20 +328,22 @@ export default class Home extends wepy.page {
    * 获取市场价格
    */
   async OnGetPrice() {
-    const coins = await WWW.api_getCoinPrice();
-    console.log(coins);
-    this.NEOPrice = parseFloat(coins['NEO'][0]['price_cny']).toFixed(2);
-    this.GASPrice = parseFloat(coins['GAS'][0]['price_cny']).toFixed(2);
-    this.BitCoinPrice = parseFloat(coins['BitCoin'][0]['price_cny']).toFixed(2);
-    let priceChange = {};
-    if (coins['NEO'][0]['percent_change_1h'][0] !== '-') this.PN = true;
+    let coin = await WWW.api_getCoinPrice('neo');
+    this.NEOPrice = parseFloat(coin[0]['price_cny']).toFixed(2);
+
+    if (coin[0]['percent_change_1h'][0] !== '-') this.PN = true;
     else this.PN = false;
 
-    if (coins['GAS'][0]['percent_change_1h'][0] !== '-') this.PG = true;
+    coin = await WWW.api_getCoinPrice('gas');
+    this.GASPrice = parseFloat(coin[0]['price_cny']).toFixed(2);
+    if (coin[0]['percent_change_1h'][0] !== '-') this.PG = true;
     else this.PG = false;
 
-    if (coins['BitCoin'][0]['percent_change_1h'][0] !== '-') this.PB = true;
+    coin = await WWW.api_getCoinPrice('bitcoin');
+    this.BitCoinPrice = parseFloat(coin[0]['price_cny']).toFixed(2);
+    if (coin[0]['percent_change_1h'][0] !== '-') this.PB = true;
     else this.PB = false;
+
     this.$apply();
     this.OnTotalValue();
   }

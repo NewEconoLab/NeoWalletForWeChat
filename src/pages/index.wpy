@@ -112,12 +112,10 @@ export default class Index extends wepy.page {
     this.avatarUrl = userInfo.avatarUrl;
     this.nickName = userInfo.nickName;
     this.$apply();
-  }
 
-  onShow() {
-    if (this.isSwitch) return;
+    if (option.switch===true) return;
     const wallet = wepy.getStorageSync(CURR_WALLET);
-
+    console.log(wallet);
     if (wallet !== {} && wallet !== undefined && wallet !== '') {
       wepy.showLoading({ title: '登陆中' });
       setTimeout(function() {
@@ -127,6 +125,10 @@ export default class Index extends wepy.page {
       wepy.reLaunch({ url: './home' });
       wepy.hideLoading();
     }
+  }
+
+  onShow() {
+    console.log(this.isSwitch);
   }
 }
 </script>

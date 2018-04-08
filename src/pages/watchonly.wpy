@@ -1,12 +1,8 @@
 <style lang="less">
 .wallet-block {
   width: 660rpx;
-  display: flex;
+  display: block;
   flex-direction: row;
-  border-radius: 5px;
-  margin: 32rpx 0 13rpx 0;
-  background-color: white;
-  box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
 }
 .content {
   width: 660rpx;
@@ -15,6 +11,10 @@
   flex-direction: row;
   align-items: center;
   background-color: white;
+  border-radius: 5px;
+  margin: 32rpx 0 13rpx 0;
+  background-color: white;
+  box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
 }
 .area-icon {
   width: 80rpx;
@@ -56,6 +56,7 @@
 .foot-button {
   width: 600rpx;
   margin-top: 55rpx;
+  margin-bottom: 100rpx;
   button::after {
     border: none;
   }
@@ -117,11 +118,11 @@ export default class WatchOnly extends wepy.page {
   methods = {
     async OnSelect(e) {
       const selected = e;
-      wepy.navigateTo({
+      wepy.reLaunch({
         url: '/pages/watch?address=' + selected
       });
     },
-    registerWatch(){
+    registerWatch() {
       wepy.navigateTo({
         url: '/pages/registerwatch'
       });
@@ -132,7 +133,7 @@ export default class WatchOnly extends wepy.page {
   async OnLoadWatchOnly() {
     let that = this;
     console.log(Wallet.openid);
-    let res = await WWW.addr_query('odmGt4svzAtsP2LL-cG0CvzORpzc');
+    let res = await WWW.addr_query(Wallet.openid);
     res = JSON.parse(res);
     if (res['code'] == 0) {
       let addr = res['address'];
