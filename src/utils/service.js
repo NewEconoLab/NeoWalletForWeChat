@@ -13,7 +13,35 @@ export class Service {
     static assetDelegate = null;
 
     static address = '';
+    static temp_assets = {
+        'NEO': {
+            amount: 0,
+            price: 0,
+            total: 0,
+            type: 'NEO'
+        }, 'GAS': {
+            amount: 0,
+            price: 0,
+            total: 0,
+            type: 'GAS'
+        }
+    };
 
+    static init(){
+        this.temp_assets = {
+            'NEO': {
+                amount: 0,
+                price: 0,
+                total: 0,
+                type: 'NEO'
+            }, 'GAS': {
+                amount: 0,
+                price: 0,
+                total: 0,
+                type: 'GAS'
+            }
+        };
+    }
     /**
     * 定时触发
     */
@@ -39,25 +67,16 @@ export class Service {
      * 获取账户资产信息 UTXO
      */
     static async OnGetAssets() {
-        let temp_assets = {
-            'NEO': {
-                amount: 0,
-                price: 0,
-                total: 0,
-                type: 'NEO'
-            }, 'GAS': {
-                amount: 0,
-                price: 0,
-                total: 0,
-                type: 'GAS'
-            }
-        };
-        await UTXO.GetAssets(Service.address);
-        console.log(UTXO.utxo);
+        let that = this;
+        
+        for (let key in that.temp_assets) {
+            that.temp_assets[key].amount = 0;
+        }
 
+        await UTXO.GetAssets(Service.address);
         for (let item of UTXO.utxo) {
-            if (temp_assets[item.asset] === undefined)
-                temp_assets[item.asset] = {
+            if (that.temp_assets[item.asset] === undefined)
+                that.temp_assets[item.asset] = {
                     amount: 0,
                     price: 0,
                     total: 0,
@@ -65,17 +84,17 @@ export class Service {
                 };
 
             if (item.asset === 'NEO')
-                temp_assets[item.asset].amount += parseInt(item.count);
+                that.temp_assets[item.asset].amount = parseInt(that.temp_assets[item.asset].amount) + parseInt(item.count);
             else {
-                temp_assets[item.asset].amount += parseFloat(item.count);
-                temp_assets[item.asset].amount.toFixed(8);
+                that.temp_assets[item.asset].amount = parseFloat(that.temp_assets[item.asset].amount) + parseFloat(item.count);
+                that.temp_assets[item.asset].amount = parseFloat(that.temp_assets[item.asset].amount).toFixed(8);
             }
 
         }
-        UTXO.balance = temp_assets;
-        Service.assetDelegate(temp_assets);
+        UTXO.balance = that.temp_assets;
+        Service.assetDelegate(that.temp_assets);
         //回调资产接口
-        Service.assetDelegate(await Service.OnGetPrice(temp_assets));
+        Service.assetDelegate(await Service.OnGetPrice(that.temp_assets));
     }
 
     /**
@@ -88,7 +107,7 @@ export class Service {
             temp_assets[key].total =
                 parseFloat(temp_assets[key].amount) *
                 parseFloat(coin[0]['price_cny']).toFixed(2);
-            temp_assets[key].total = temp_assets[key].total.toFixed(2);
+            temp_assets[key].total = parseFloat(temp_assets[key].total).toFixed(2);
             if (coin[0]['percent_change_1h'][0] !== '-') temp_assets[key].rise = true;
             else temp_assets[key].rise = false;
         }
@@ -114,10 +133,6 @@ export class Service {
             txs[index].blockindex =
                 parseInt(Wallet.height) - parseInt(txs[index].blockindex) + 1;
         }
-        console.log('service 92');
-
-        console.log(txs);
-
         Service.txDelegate(txs);
     }
 }

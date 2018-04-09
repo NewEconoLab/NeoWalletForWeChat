@@ -12,7 +12,7 @@
   margin-bottom: 200rpx;
 }
 .area-uppper {
-  height: 450rpx;
+  height: 250rpx;
   width: 100%;
   background: linear-gradient(to right, #69c0fd, #a6a4fd);
   display: flex;
@@ -46,7 +46,7 @@
 }
 .selected {
   .icon {
-    background-color: red;
+    
   }
   .label {
     color: red;
@@ -77,11 +77,17 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   background-color: white;
   border-radius: 5px;
   margin: 32rpx 0 13rpx 0;
   background-color: white;
   box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
+}
+.content-left{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 .content-icon {
   width: 80rpx;
@@ -215,15 +221,15 @@
     <view class="area-uppper">
       <view class="upper-navigator">
           <view class="upper-item {{selected==0?'selected':''}}"  @tap="navigate('account')">
-            <image src="../images/address.png" class="icon"></image>
+            <image src="../images/overview{{selected==0?'':'_gray'}}.png" class="icon"></image>
             <text class="label">账户概览</text>
           </view>
           <view class="upper-item {{selected==1?'selected':''}}"  @tap="navigate('history')" >
-            <image src="../images/address.png" class="icon"></image>
+            <image src="../images/historys{{selected==1?'':'_gray'}}.png" class="icon"></image>
             <text class="label">交易历史</text>
           </view>
           <view class="upper-item {{selected==2?'selected':''}}"  @tap="navigate('manager')">
-            <image src="../images/address.png" class="icon"></image>
+            <image src="../images/manager{{selected==2?'':'_gray'}}.png" class="icon"></image>
             <text class="label">账户管理</text>
           </view>
       </view>
@@ -232,12 +238,14 @@
       <view wx:if="{{selected==0}}">
         <view class="asset-block" wx:for="{{assets}}" >
           <view class="content">
-            <view class="content-icon">
-              <image src="../images/neo.jpg" class="content-icon"></image>
-            </view>
-            <view class="content-middle">
-              <text class="asset">{{item.amount+" "+item.type}}</text>
-              <text class="price" style="color:{{item.rise?'#45d68a':'#f67581'}};">{{item.price}}￥</text>
+            <view class="content-left">
+              <view class="content-icon">
+                <image src="../images/neo.png" class="content-icon"></image>
+              </view>
+              <view class="content-middle">
+                <text class="asset">{{item.amount+" "+item.type}}</text>
+                <text class="price" style="color:{{item.rise?'#45d68a':'#f67581'}};">{{item.price}}￥</text>
+              </view>
             </view>
             <view class="content-total">
               <text >{{item.total}}￥</text>
@@ -282,12 +290,10 @@
 <script>
 import wepy from 'wepy';
 import { WWW } from '../utils/API';
-import { CoinTool } from '../utils/Coin';
 import { UTXO } from '../utils/UTXO';
 import { Wallet } from '../utils/wallet';
 import { Service } from '../utils/service';
 import tip from '../utils/tip';
-import * as TimeHelper from '../utils/time';
 export default class Watch extends wepy.page {
   config = {
     navigationBarTitleText: '观察账户'
@@ -368,6 +374,7 @@ export default class Watch extends wepy.page {
   events = {};
 
   onLoad(option) {
+    Service.init();
     this.address = option.address;
     this.label = option.label;
     this.$apply();

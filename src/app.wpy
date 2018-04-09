@@ -90,7 +90,6 @@ export default class extends wepy.app {
 
         //循环执行代码
     setInterval(async () => {
-      console.log('helloworld');
       Service.OnTimeOut();
     }, 15000); //循环时间 这里是15秒
   }
