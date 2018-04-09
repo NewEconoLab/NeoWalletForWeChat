@@ -209,15 +209,15 @@ export default class Send extends wepy.page {
   components = {};
 
   data = {
-    targetAddr: 'ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F',
+    targetAddr: '',
     assets: [
       { name: 'NEO', value: 'NEO' },
       { name: 'GAS', value: 'GAS', checked: 'true' }
     ],
     balance: '0',
     checked: 'GAS',
-    amount: '0.01',
-    password: 'test'
+    amount: '',
+    password: ''
   };
 
   computed = {};

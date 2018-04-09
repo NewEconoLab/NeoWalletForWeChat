@@ -73,6 +73,7 @@ export class Service {
 
         }
         UTXO.balance = temp_assets;
+        Service.assetDelegate(temp_assets);
         //回调资产接口
         Service.assetDelegate(await Service.OnGetPrice(temp_assets));
     }

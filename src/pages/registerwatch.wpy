@@ -93,7 +93,7 @@
     </view>
     <view class="area-medium">
       <view class="medium-input" style="margin-top: 100rpx;">
-        <input class="address" name="accountlabel" placeholder-class="holder" placeholder="账户名" value='neon'/>
+        <input class="address" name="accountlabel" placeholder-class="holder" placeholder="账户名" value=''/>
       </view>
       <view class="medium-input">
         <input class="address" name="address" placeholder-class="holder" placeholder="账户地址" value='{{targetAddr}}'/>
@@ -135,7 +135,7 @@ export default class RegisterWatch extends wepy.page {
 
   data = {
     isLoading: false,
-    targetAddr: 'ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F'
+    targetAddr: ''
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
   components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
