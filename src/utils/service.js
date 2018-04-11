@@ -7,22 +7,22 @@ export class Service {
 
     static isLoadTXs = false;
     static isLoadAsset = true;
-    //交易历史代理
+    // 交易历史代理
     static txDelegate = null;
-    //资产代理
+    // 资产代理
     static assetDelegate = null;
 
     static address = '';
     static temp_assets = {
         'NEO': {
             amount: 0,
-            price: 0,
-            total: 0,
+            price: 0.00,
+            total: 0.00,
             type: 'NEO'
         }, 'GAS': {
-            amount: 0,
-            price: 0,
-            total: 0,
+            amount: 0.0000,
+            price: 0.00,
+            total: 0.00,
             type: 'GAS'
         }
     };
@@ -30,20 +30,20 @@ export class Service {
     static init(addr) {
         this.address = addr;
 
-        //暂时不加载历史记录
+        // 暂时不加载历史记录
         this.txDelegate = null;
         this.isLoadTXs = false;
-        
+
         this.temp_assets = {
             'NEO': {
                 amount: 0,
-                price: 0,
-                total: 0,
+                price: 0.00,
+                total: 0.00,
                 type: 'NEO'
             }, 'GAS': {
-                amount: 0,
-                price: 0,
-                total: 0,
+                amount: 0.0000,
+                price: 0.00,
+                total: 0.00,
                 type: 'GAS'
             }
         };
@@ -98,8 +98,9 @@ export class Service {
         }
         UTXO.balance = that.temp_assets;
         UTXO.utxo.reverse();
-        //回调coin资产
-        Service.assetDelegate(that.temp_assets);
+        // 回调coin资产
+        if (Service.assetDelegate !== null)
+            Service.assetDelegate(that.temp_assets);
     }
 
     /**
@@ -117,8 +118,9 @@ export class Service {
             if (coin[0]['percent_change_1h'][0] !== '-') that.temp_assets[key].rise = true;
             else that.temp_assets[key].rise = false;
         }
-        //回调法币资产
-        Service.assetDelegate(that.temp_assets);
+        // 回调法币资产
+        if (Service.assetDelegate !== null)
+            Service.assetDelegate(that.temp_assets);
     }
     /**
      * 获取历史交易

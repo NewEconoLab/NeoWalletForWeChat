@@ -59,32 +59,28 @@ export default class extends wepy.app {
     this.use('requestfix');
   }
 
-  async onLaunch() {
+  onLaunch() {
     const that = this;
 
-    if (this.globalData.userInfo) {
-      return;
-    }
-
-    //登陆获取用户code
-    await wepy.login({
+    // 登陆获取用户code
+    wx.login({
       success: async function(res) {
         console.log(res);
         const code = res['code'];
         if (code) {
-          //获取用户openid
+          // 获取用户openid
           let id = await WWW.addr_openid(code);
           id = id['openid'];
-          //保存用户id在wallet中
+          // 保存用户id在wallet中
           Wallet.openid = id;
         }
       }
     });
 
-    //循环执行代码
+    // 循环执行代码
     setInterval(async () => {
       Service.OnTimeOut();
-    }, 15000); //循环时间 这里是15秒
+    }, 15000); // 循环时间 这里是15秒
   }
 }
 </script>

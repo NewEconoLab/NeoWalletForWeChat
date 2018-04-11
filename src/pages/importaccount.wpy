@@ -171,7 +171,9 @@ export default class ImportAccount extends wepy.page {
           } else {
             try {
               //在这里运行代码
-              const account = res;
+              const account = JSON.parse(res);
+              console.log(account);
+              
               that.prikey = account['nep2key'];
               that.label = account['label'];
               that.$apply();
@@ -186,6 +188,7 @@ export default class ImportAccount extends wepy.page {
         },
         fail: res => {
           console.log(res);
+          tip.error('解析失败');
         }
       });
     }
@@ -220,7 +223,7 @@ export default class ImportAccount extends wepy.page {
     wepy.hideLoading();
     that.$redirect('./regresult?wallet=' + jsonstr);
   }
-  
+
  async OnParseJson(account) {
      await Wallet.importAccount(account);
      wepy.reLaunch({url:'./home'});
