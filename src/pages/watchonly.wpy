@@ -135,7 +135,7 @@ export default class WatchOnly extends wepy.page {
 
     let res = await WWW.addr_query(Wallet.openid);
     res = JSON.parse(res);
-    if (res['code'] == 0) {
+    if (res['code'] === 0) {
       let addr = res['address'];
       that.watchonly = addr;
       that.$apply();

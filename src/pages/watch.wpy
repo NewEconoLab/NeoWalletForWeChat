@@ -40,16 +40,13 @@
   .label {
     margin-top: 20rpx;
     font-size: 16px;
-    color: white;
+    color: #cccccc;
     font-family: '黑体';
   }
 }
 .selected {
-  .icon {
-    
-  }
   .label {
-    color: red;
+    color: white;
   }
 }
 
@@ -60,6 +57,7 @@
   align-items: center;
   width: 100%;
 }
+
 .asset-block {
   width: 695rpx;
   display: block;
@@ -84,7 +82,7 @@
   background-color: white;
   box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
 }
-.content-left{
+.content-left {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -108,12 +106,14 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  margin-left: 10rpx;
   .asset {
     font-family: Arial, Helvetica, sans-serif;
     color: #a3a3a3;
     font-size: 15px;
   }
   .price {
+    margin-top: 5rpx;
     font-family: Arial, Helvetica, sans-serif;
     color: #a3a3a3;
     font-size: 15px;
@@ -205,8 +205,8 @@
 }
 
 .manage-btn {
-  margin-top: 100rpx;
-  width: 80%;
+  margin-top: 50rpx;
+  width: 660rpx;
   font-size: 16px;
   box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
   button::after {
@@ -240,7 +240,7 @@
           <view class="content">
             <view class="content-left">
               <view class="content-icon">
-                <image src="../images/neo.png" class="content-icon"></image>
+                <image src="../images/neo.png"></image>
               </view>
               <view class="content-middle">
                 <text class="asset">{{item.amount+" "+item.type}}</text>
@@ -271,14 +271,14 @@
         </view>
       </view>
       <view wx:else>
-        <view class="area-btn">
-          <button type="primary" style="background-color:#69c0fd;" @tap="manage('normal')">正常登陆模式</button>
+        <view class="manage-btn">
+          <button type="primary" style="background-color:#69c0fd;width: 660rpx;" @tap="manage('normal')">正常登陆模式</button>
         </view>
-        <view class="area-btn">
-          <button type="primary" style="background-color:#69c0fd;" @tap="manage('switch')">切换观察账户</button>
+        <view class="manage-btn">
+          <button type="primary" style="background-color:#69c0fd;width: 660rpx;" @tap="manage('switch')">切换观察账户</button>
         </view>
-        <view class="area-btn">
-          <button type="primary" style="background-color:#69c0fd;" @tap="manage('delete')">删除当前账户</button>
+        <view class="manage-btn">
+          <button type="primary" style="background-color:#f67581;width: 660rpx;" @tap="manage('delete')">删除当前账户</button>
         </view>
       </view>
     </view>
@@ -314,6 +314,9 @@ export default class Watch extends wepy.page {
   computed = {};
 
   methods = {
+    async OnDetail(txid) {
+      wepy.navigateTo({ url: './transaction?txid=' + txid });
+    },
     async manage(param) {
       let that = this;
       switch (param) {

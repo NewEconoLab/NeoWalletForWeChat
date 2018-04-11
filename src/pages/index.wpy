@@ -111,8 +111,9 @@ export default class Index extends wepy.page {
     this.avatarUrl = userInfo.avatarUrl;
     this.nickName = userInfo.nickName;
     this.$apply();
+    
+    if (parseInt(option.switch) === 1) return;
 
-    if (option.switch === 1) return;
     const wallet = wepy.getStorageSync(CURR_WALLET);
     console.log(wallet);
     if (wallet !== {} && wallet !== undefined && wallet !== '') {
