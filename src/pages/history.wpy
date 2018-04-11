@@ -134,11 +134,13 @@ export default class History extends wepy.page {
     };
   }
 
-  onPullDownRefresh() {
+  async onPullDownRefresh() {
     if (this.isLoading) return;
     this.page = 1;
     this.$apply();
-    this.OnLoadTXs();
+    await this.OnLoadTXs();
+    wx.hideNavigationBarLoading(); //完成停止加载
+    wx.stopPullDownRefresh(); //停止下拉刷新
   }
 
   async OnLoadTXs() {
@@ -148,8 +150,6 @@ export default class History extends wepy.page {
     this.TXs = await Service.OnLoadTXs(1);
     this.isLoading = false;
     this.$apply();
-    wx.hideNavigationBarLoading(); //完成停止加载
-    wx.stopPullDownRefresh(); //停止下拉刷新
   }
 }
 </script>

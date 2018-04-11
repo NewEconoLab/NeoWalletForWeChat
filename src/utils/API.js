@@ -90,13 +90,6 @@ export class WWW {
         // https://api.coinmarketcap.com/v1/ticker/?limit=2
 
         return await Request.wxRequest({ "method": "get" }, WWW.priceHost +coin+'/?convert=CNY');
-        // let neo = await Request.wxRequest({ "method": "get" }, WWW.priceHost + 'neo/?convert=CNY');
-        // let bitCoin = await Request.wxRequest({ "method": "get" }, WWW.priceHost + 'bitcoin/?convert=CNY')
-        // return {
-        //     GAS: gas,
-        //     NEO: neo,
-        //     BitCoin: bitCoin
-        // }
     }
 
 

@@ -2,6 +2,20 @@
 .bg {
   background: linear-gradient(to right, #69c0fd, #a6a4fd);
 }
+ .scroll {
+  width: 100%;
+  height: 100%;
+}
+
+.inner {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 200rpx;
+}
+
 .area-user {
   display: flex;
   flex-direction: column;
@@ -73,6 +87,7 @@
   align-items: center;
   border-radius: 5px;
   justify-content: center;
+  margin-bottom: 100rpx;
   box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
   .name {
     color: #a3a3a3;
@@ -84,36 +99,39 @@
 
 <template>
   <view class="container bg">
-    <view class= "area-user">
-     <image class="avatar" src="{{avatarUrl}}"></image>
-      <text class="nickName">{{nickName}}</text>
-    </view>
+    <scroll-view scroll-y class="scroll">
+      <view class="inner">
+        <view class= "area-user">
+          <image class="avatar" src="{{avatarUrl}}"></image>
+          <text class="nickName">{{nickName}}</text>
+        </view>
   
-    <view class="area-text">
-      <view class="area-text-item"  @tap="copyToClip({{account.label}})">
-        <text class="text-label" >账户名</text>
-        <text class="text-content" >{{account.label}}</text>
-      </view>
-      <view class="area-text-item"  @tap="copyToClip({{account.address}})">
-        <text class="text-label">地址</text>
-        <text class="text-content">{{account.address}}</text>
-      </view>
-      <view class="area-text-item"  @tap="copyToClip({{account.publickey}})">
-        <text class="text-label">公钥</text>
-        <text class="text-content">{{account.publickey}}</text>
-      </view>
-      <view class="area-text-item"  @tap="copyToClip({{account.nep2key}})">
-        <text class="text-label">私钥{{(account.key.length===64)?'':'密文'}}</text>
-        <text class="text-content">{{account.nep2key}}</text>
-      </view>
-    </view>
+        <view class="area-text">
+          <view class="area-text-item"  @tap="copyToClip({{account.label}})">
+            <text class="text-label" >账户名</text>
+            <text class="text-content" >{{account.label}}</text>
+          </view>
+          <view class="area-text-item"  @tap="copyToClip({{account.address}})">
+            <text class="text-label">地址</text>
+            <text class="text-content">{{account.address}}</text>
+          </view>
+          <view class="area-text-item"  @tap="copyToClip({{account.publickey}})">
+            <text class="text-label">公钥</text>
+            <text class="text-content">{{account.publickey}}</text>
+          </view>
+          <view class="area-text-item"  @tap="copyToClip({{account.nep2key}})">
+            <text class="text-label">私钥{{(account.key.length===64)?'':'密文'}}</text>
+            <text class="text-content">{{account.nep2key}}</text>
+          </view>
+        </view>
 
-    <view class="area-lower">
-      <view class="button-item" @tap="manage()" >
-        <text class="name" >账户管理</text>
+        <view class="area-lower">
+          <view class="button-item" @tap="manage()" >
+            <text class="name" >账户管理</text>
+          </view>
+        </view>
       </view>
-    </view>
-
+    </scroll-view>
   </view>
 </template>
 <script>

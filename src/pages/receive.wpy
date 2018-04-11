@@ -146,7 +146,7 @@ export default class Receive extends wepy.page {
   onShareAppMessage() {
     return {
       title: 'NEO小程序钱包',
-      path: './pages/home',
+      path: './page/send',
       success: function(res) {
         console.log(res.shareTickets[0]);
         // console.log

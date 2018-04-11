@@ -19,8 +19,8 @@ import { USER_INFO } from './utils/constant';
 import { setStore } from 'wepy-redux';
 import configStore from './store';
 import { WWW } from './utils/API';
-import { Wallet } from './utils/wallet'
-import {Service} from './utils/service'
+import { Wallet } from './utils/wallet';
+import { Service } from './utils/service';
 const store = configStore();
 setStore(store);
 
@@ -44,7 +44,7 @@ export default class extends wepy.app {
     ],
     window: {
       backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#fff',
+      navigationBarBackgroundColor: '#69c0fd',
       navigationBarTitleText: 'NEL',
       navigationBarTextStyle: 'black'
     }
@@ -67,28 +67,21 @@ export default class extends wepy.app {
     }
 
     //登陆获取用户code
-    await wx.login({
+    await wepy.login({
       success: async function(res) {
         console.log(res);
-        const code = res['code']
+        const code = res['code'];
         if (code) {
           //获取用户openid
-         let id = await WWW.addr_openid(code);
-         id = id['openid'];
-         //保存用户id在wallet中
-         Wallet.openid = id;
+          let id = await WWW.addr_openid(code);
+          id = id['openid'];
+          //保存用户id在wallet中
+          Wallet.openid = id;
         }
       }
     });
-    
-    wepy.getUserInfo({
-      success(res) {
-        that.globalData.userInfo = res.userInfo;
-        wepy.setStorageSync(USER_INFO, res.userInfo);
-      }
-    });
 
-        //循环执行代码
+    //循环执行代码
     setInterval(async () => {
       Service.OnTimeOut();
     }, 15000); //循环时间 这里是15秒

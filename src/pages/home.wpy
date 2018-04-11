@@ -1,4 +1,18 @@
  <style lang="less">
+
+ .scroll {
+  width: 100%;
+  height: 100%;
+}
+.inner {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 200rpx;
+}
+
 .area-uppper {
   height: 450rpx;
   width: 100%;
@@ -141,6 +155,8 @@
 </style>
 <template>
   <view class="container">
+          <scroll-view scroll-y class="scroll">
+         <view class="inner">
     <view class="area-uppper">
       <view class="upper-asset">
         <view class="asset-item">
@@ -189,6 +205,8 @@
         </view>
       </view>
     </view>
+    </view>
+  </scroll-view>
   </view>
 
 </template>
@@ -267,20 +285,20 @@ export default class Home extends wepy.page {
       this.$apply();
       Wallet.setWallet(wallet);
     }
-    //暂时不加载历史记录
-    Service.txDelegate = null;
-    Service.isLoadTXs = false;
 
-    //设置服务地址
-    Service.address = Wallet.account.address;
-    //加载资产
-    Service.OnGetAssets();
+    //初始化
+    Service.init(Wallet.account.address);
+
+    //设置资产更新回调
     Service.assetDelegate = function(assets) {
       assets['GAS'].amount = parseFloat(assets['GAS'].amount).toFixed(4);
       that.assets = assets;
       that.Block = Wallet.height;
       that.$apply();
     };
+
+    //加载资产
+    Service.OnTimeOut();
   }
 }
 </script>

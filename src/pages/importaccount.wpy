@@ -161,10 +161,8 @@ export default class ImportAccount extends wepy.page {
 
     OnScan() {
       let that = this;
-      wepy.showLoading({ title: '解析中' });
       wepy.scanCode({
         success: res => {
-          wepy.hideLoading();
           console.log(res);
           res = res.result;
           if (res.length === 64) {
@@ -173,14 +171,13 @@ export default class ImportAccount extends wepy.page {
           } else {
             try {
               //在这里运行代码
-              const account = JSON.parse(res);
+              const account = res;
               that.prikey = account['nep2key'];
               that.label = account['label'];
               that.$apply();
               that.OnParseJson(account);
             } catch (err) {
               console.log(err);
-
               //在这里处理错误
               tip.error('格式错误');
               return;
@@ -223,9 +220,10 @@ export default class ImportAccount extends wepy.page {
     wepy.hideLoading();
     that.$redirect('./regresult?wallet=' + jsonstr);
   }
-  OnParseJson(account) {
-    Wallet.importAccount(account);
-    this.$redirect('./home');
+  
+ async OnParseJson(account) {
+     await Wallet.importAccount(account);
+     wepy.reLaunch({url:'./home'});
   }
 }
 </script>

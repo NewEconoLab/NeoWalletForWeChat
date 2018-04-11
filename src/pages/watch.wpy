@@ -334,11 +334,9 @@ export default class Watch extends wepy.page {
           wepy.hideLoading();
           if (res['code'] == 0) {
             tip.success('删除成功');
-            setTimeout(function() {
-              wepy.reLaunch({
-                url: '/pages/index?switch=' + 0
-              });
-            }, 500);
+            wepy.reLaunch({
+              url: '/pages/index?switch=' + 0
+            });
           } else tip.error('删除失败');
 
           break;
@@ -357,11 +355,11 @@ export default class Watch extends wepy.page {
         case 'history':
           that.selected = 1;
           Service.isLoadTXs = true;
-          Service.OnGetTXs(1);
           Service.txDelegate = function(txs) {
             that.TXs = txs;
             that.$apply();
           };
+          Service.OnGetTXs(1);
           break;
         case 'manager':
           that.selected = 2;
@@ -377,20 +375,25 @@ export default class Watch extends wepy.page {
   events = {};
 
   onLoad(option) {
-    Service.init();
     this.address = option.address;
     this.label = option.label;
     this.$apply();
   }
   async onShow() {
     let that = this;
-    Service.address = this.address;
-    Service.OnGetAssets();
+
+    // 初始化服务
+    Service.init(this.address);
+
+    // 资产加载回调
     Service.assetDelegate = function(assets) {
       that.assets = assets;
       that.$apply();
     };
+
+    Service.OnTimeOut();
   }
+
   /**
    * 下拉刷新
    */
@@ -398,7 +401,7 @@ export default class Watch extends wepy.page {
     if (this.isLoading) return;
     this.isLoading = true;
     this.$apply();
-    this.TXs = await Service.OnLoadTXs(1);
+    this.TXs = await Service.OnGetTXs(1);
     this.isLoading = false;
     this.$apply();
     wx.hideNavigationBarLoading(); //完成停止加载

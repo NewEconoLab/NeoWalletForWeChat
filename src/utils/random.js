@@ -1,7 +1,7 @@
 import tip from './tip';
 import { SHA256 } from 'crypto-js'
 import wepy from 'wepy'
-
+import { Wallet } from './wallet';
 
 /**
  *  Get random string algorithm based on wechat login encrypted information.
@@ -18,8 +18,8 @@ import wepy from 'wepy'
 export async function getSecureRandom(len) {
   wepy.showLoading({ title: '获取随机数种子' });
   let random = ''
-  const code = await this.getLoginCode();
-  const userinfo = await this.getUserInfo();
+  const code = await Wallet.getLoginCode();
+  const userinfo = await Wallet.getUserInfo();
   // console.log(code)
   random = SHA256(code + random).toString()
   random = SHA256(userinfo.signature + random).toString()
@@ -28,28 +28,4 @@ export async function getSecureRandom(len) {
   // console.log(random)
   wepy.hideLoading();
   return random.slice(0, len)
-}
-
-export function getLoginCode() {
-  return new Promise((resolve, reject) => {
-    wx.login({
-      success: function (res) {
-        if (res.code) {
-          resolve(res.code)
-        } else {
-          // console.log('获取用户登录态失败！' + res.errMsg)
-        }
-      }
-    });
-  })
-}
-
-export function getUserInfo() {
-  return new Promise((resolve, reject) => {
-    wx.getUserInfo({
-      success: function (res) {
-        resolve(res);
-      }
-    })
-  });
 }

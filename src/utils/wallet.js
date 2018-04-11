@@ -1,6 +1,7 @@
 import * as NEL from '../lib/neo-ts/index';
 import { SCRYPT_CONFIG, CURR_WALLET, LOCAL_WALLET } from './constant'
 import tip from '../utils/tip';
+
 export class Wallet {
     //当前账户钱包
     static wallet = null
@@ -75,9 +76,8 @@ export class Wallet {
         Wallet.setWallet(wallet);
 
         const wallet_json = wallet.toJson();
-        wallets[accountlabel] = wallet_json;
+        wallets[label] = wallet_json;
         wx.setStorageSync(LOCAL_WALLET, wallets);
-
     }
     /**
      * 缓存账户
@@ -157,5 +157,29 @@ export class Wallet {
                 callback(0, result, Wallet.account.publickey);
             }
         );
+    }
+
+    static getLoginCode() {
+        return new Promise((resolve, reject) => {
+            wx.login({
+                success: function (res) {
+                    if (res.code) {
+                        resolve(res.code)
+                    } else {
+                        // console.log('获取用户登录态失败！' + res.errMsg)
+                    }
+                }
+            });
+        })
+    }
+
+    static getUserInfo() {
+        return new Promise((resolve, reject) => {
+            wx.getUserInfo({
+                success: function (res) {
+                    resolve(res);
+                }
+            })
+        });
     }
 }
