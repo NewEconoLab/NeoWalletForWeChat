@@ -270,7 +270,10 @@ export default class Home extends wepy.page {
     //暂时不加载历史记录
     Service.txDelegate = null;
     Service.isLoadTXs = false;
+
+    //设置服务地址
     Service.address = Wallet.account.address;
+    //加载资产
     Service.OnGetAssets();
     Service.assetDelegate = function(assets) {
       assets['GAS'].amount = parseFloat(assets['GAS'].amount).toFixed(4);

@@ -10,8 +10,6 @@ import * as UintHelper from './UintHelper'
 import { SHA256, AES, enc, mode, pad } from 'crypto-js'
 import * as scrypt from 'scrypt-async'
 import * as StringHelper from './StringHelper'
-import { accessSync } from 'fs';
-import { Buffer } from 'buffer'
 // export declare var scrypt: any;
 // export declare var CryptoJS: any;
 var scrypt_loaded: boolean = false;

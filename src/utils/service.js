@@ -92,8 +92,9 @@ export class Service {
 
         }
         UTXO.balance = that.temp_assets;
+        //回调coin资产
         Service.assetDelegate(that.temp_assets);
-        //回调资产接口
+        //回调法币资产
         Service.assetDelegate(await Service.OnGetPrice(that.temp_assets));
     }
 
