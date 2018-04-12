@@ -265,15 +265,16 @@ export default class Home extends wepy.page {
   events = {};
 
   onLoad() {
-    Service.init();
+    
   }
   async onShow() {
     await CoinTool.initAllAsset();
-    this.OnLogin();
+    
   }
   // 页面渲染完成
-  onReady() {
+  async onReady() {
     const that = this;
+    await this.OnLogin();
     // 初始化
     Service.init(Wallet.account.address);
 

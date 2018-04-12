@@ -52,8 +52,11 @@
   .input {
     width: 100%;
     padding-bottom: 20rpx;
-    font-size: 16px;
     padding-left: 20rpx;
+    input {
+      color: #a3a3a3;
+      font-size: 16px;
+    }
   }
 }
 
@@ -99,7 +102,7 @@
 <script>
 import wepy from 'wepy';
 import * as NEL from '../lib/neo-ts/index';
-import { LOCAL_WALLET, CURR_WALLET, SCRYPT_CONFIG } from '../utils/constant';
+import { LOCAL_WALLET } from '../utils/constant';
 import { Wallet } from '../utils/wallet';
 import tip from '../utils/tip';
 import * as Random from '../utils/random';
@@ -159,7 +162,7 @@ export default class Register extends wepy.page {
 
       var wallet = Wallet.getWallet(accountlabel, privateKey);
       console.log(wallet);
-      
+
       setTimeout(function() {
         wepy.hideLoading();
       }, 1000);
