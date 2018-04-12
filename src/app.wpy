@@ -46,7 +46,7 @@ export default class extends wepy.app {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#69c0fd',
       navigationBarTitleText: 'NEL',
-      navigationBarTextStyle: 'black'
+      navigationBarTextStyle: 'white'
     }
   };
 

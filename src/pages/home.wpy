@@ -271,13 +271,13 @@ export default class Home extends wepy.page {
     await CoinTool.initAllAsset();
     this.OnLogin();
   }
-  //页面渲染完成
+  // 页面渲染完成
   onReady() {
     const that = this;
-    //初始化
+    // 初始化
     Service.init(Wallet.account.address);
 
-    //设置资产更新回调
+    // 设置资产更新回调
     Service.assetDelegate = function(assets) {
       assets['GAS'].amount = parseFloat(assets['GAS'].amount).toFixed(4);
       that.assets = assets;
@@ -286,7 +286,7 @@ export default class Home extends wepy.page {
     };
 
     Service.OnGetHeight();
-    //加载资产
+    // 加载资产
     Service.OnTimeOut();
   }
 
@@ -295,12 +295,18 @@ export default class Home extends wepy.page {
     const wallet = wepy.getStorageSync(CURR_WALLET) || {};
     console.log(Object.keys(wallet).length);
 
-    //本地缓存有账户 则直接加载本地账户信息
+    // 本地缓存有账户 则直接加载本地账户信息
     if (Object.keys(wallet).length !== 0) {
       this.isLogin = true;
       this.$apply();
       Wallet.setWallet(wallet);
     }
+  }
+  onShareAppMessage() {
+    return {
+      title: 'NEO钱包',
+      path: '/pages/index'
+    };
   }
 }
 </script>
