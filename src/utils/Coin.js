@@ -15,10 +15,10 @@ export class CoinTool {
             var name = "";
             
             if (id === CoinTool.id_GAS) {
-                name = "GAS";
+                name = 'GAS';
             }
             else if (id === CoinTool.id_NEO) {
-                name = "NEO";
+                name = 'NEO';
             }
             else {
                 for (var i in names) {

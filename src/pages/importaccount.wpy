@@ -170,10 +170,7 @@ export default class ImportAccount extends wepy.page {
             that.$apply();
           } else {
             try {
-              //在这里运行代码
               const account = JSON.parse(res);
-              console.log(account);
-              
               that.prikey = account['nep2key'];
               that.label = account['label'];
               that.$apply();

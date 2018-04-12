@@ -1,6 +1,5 @@
  <style lang="less">
-
- .scroll {
+.scroll {
   width: 100%;
   height: 100%;
 }
@@ -229,14 +228,14 @@ export default class Home extends wepy.page {
     assets: {
       NEO: {
         amount: 0,
-        price: 0,
-        total: 0,
+        price: 0.0,
+        total: 0.0,
         type: 'NEO'
       },
       GAS: {
-        amount: 0,
-        price: 0,
-        total: 0,
+        amount: 0.0,
+        price: 0.0,
+        total: 0.0,
         type: 'GAS'
       }
     },
@@ -270,8 +269,25 @@ export default class Home extends wepy.page {
   }
   async onShow() {
     await CoinTool.initAllAsset();
-    Service.OnGetHeight();
     this.OnLogin();
+  }
+  //页面渲染完成
+  onReady() {
+    const that = this;
+    //初始化
+    Service.init(Wallet.account.address);
+
+    //设置资产更新回调
+    Service.assetDelegate = function(assets) {
+      assets['GAS'].amount = parseFloat(assets['GAS'].amount).toFixed(4);
+      that.assets = assets;
+      that.Block = Wallet.height;
+      that.$apply();
+    };
+
+    Service.OnGetHeight();
+    //加载资产
+    Service.OnTimeOut();
   }
 
   async OnLogin() {
@@ -285,20 +301,6 @@ export default class Home extends wepy.page {
       this.$apply();
       Wallet.setWallet(wallet);
     }
-
-    //初始化
-    Service.init(Wallet.account.address);
-
-    //设置资产更新回调
-    Service.assetDelegate = function(assets) {
-      assets['GAS'].amount = parseFloat(assets['GAS'].amount).toFixed(4);
-      that.assets = assets;
-      that.Block = Wallet.height;
-      that.$apply();
-    };
-
-    //加载资产
-    Service.OnTimeOut();
   }
 }
 </script>

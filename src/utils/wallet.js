@@ -52,7 +52,6 @@ export class Wallet {
     }
 
     static importAccount(json) {
-
         const label = json['label'];
         let wallets = wx.getStorageSync(LOCAL_WALLET) || {};
 

@@ -111,7 +111,7 @@
   .content {
     font-size: 16px;
     padding: 0 0 0 45rpx;
-    color:#a3a3a3;
+    color: #a3a3a3;
   }
   .holder {
     color: #cccccc;
@@ -132,7 +132,7 @@
     font-size: 16px;
     padding: 0 0 0 45rpx;
     font-family: '黑体';
-    color:#a3a3a3;
+    color: #a3a3a3;
   }
   .holder {
     color: #cccccc;
@@ -182,7 +182,7 @@
         <view class="lower-amount">
           <input name="amount" placeholder="金额" class="content" placeholder-class="holder" type="{{checked==='GAS'?'digit':'number'}}" value='{{amount}}'/>
         </view>
-        <view class="lower-passphrase">
+        <view class="lower-passphrase" hidden="{{hidePW}}">
           <input placeholder="密码" class="content" password='true' placeholder-class="holder" name="passphrase" value='{{password}}'/>
         </view>
       </view>
@@ -217,7 +217,8 @@ export default class Send extends wepy.page {
     balance: '0',
     checked: 'GAS',
     amount: '',
-    password: ''
+    password: '',
+    hidePW: 'false'
   };
 
   computed = {};
@@ -243,6 +244,7 @@ export default class Send extends wepy.page {
       this.$apply();
     },
     async formSubmit(e) {
+      const that = this;
       let target = e.detail.value.address;
       let amount = e.detail.value.amount;
       let password = e.detail.value.passphrase;
@@ -255,7 +257,7 @@ export default class Send extends wepy.page {
         tip.alert('余额不足');
         return;
       }
-      if (password.length <= 0) {
+      if (password.length <= 0 && that.hidePW === 'false') {
         tip.alert('请输入密码');
         return;
       }
@@ -274,14 +276,23 @@ export default class Send extends wepy.page {
     this.balance = UTXO.balance['GAS'].amount;
     this.$apply();
   }
+  onReady() {
+    const that = this;
+    if (Wallet.account.nep2key.length === 64) {
+      that.hidePW = 'true';
+      that.$apply();
+    }
+  }
   //构造并发送交易
   async OnSend() {
     let that = this;
     wepy.showLoading({ title: '密码验证中' });
+
     //如果当前账户直接使用私钥
     if (Wallet.account.nep2key.length === 64) {
       //构造并发送交易
       that.SendTran(Wallet.account.nep2key, Wallet.account.publickey);
+      return;
     }
     Wallet.decode(this.password, async (code, prikey, pubkey) => {
       wepy.hideLoading();
@@ -291,7 +302,6 @@ export default class Send extends wepy.page {
       }
       //构造并发送交易
       that.SendTran(prikey, pubkey);
-      // console.log(txid);
     });
   }
   async SendTran(prikey, pubkey) {

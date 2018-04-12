@@ -52,8 +52,11 @@ export class Service {
     * 定时触发
     */
     static async OnTimeOut() {
+        console.log('onTimeOut');
+
         Service.OnGetAssets();
         Service.OnGetPrice();
+
         if (Service.isLoadTXs) {
             Service.OnGetTXs(1);
         }
@@ -83,8 +86,8 @@ export class Service {
             if (that.temp_assets[item.asset] === undefined)
                 that.temp_assets[item.asset] = {
                     amount: 0,
-                    price: 0,
-                    total: 0,
+                    price: 0.00,
+                    total: 0.00,
                     type: item.asset
                 };
 
@@ -98,6 +101,7 @@ export class Service {
         }
         UTXO.balance = that.temp_assets;
         UTXO.utxo.reverse();
+
         // 回调coin资产
         if (Service.assetDelegate !== null)
             Service.assetDelegate(that.temp_assets);
@@ -110,13 +114,19 @@ export class Service {
         let that = this;
         for (let key in that.temp_assets) {
             const coin = await WWW.api_getCoinPrice(key);
-            that.temp_assets[key].price = parseFloat(coin[0]['price_cny']).toFixed(2);
-            that.temp_assets[key].total =
-                parseFloat(that.temp_assets[key].amount) *
-                parseFloat(coin[0]['price_cny']).toFixed(2);
-            that.temp_assets[key].total = parseFloat(that.temp_assets[key].total).toFixed(2);
-            if (coin[0]['percent_change_1h'][0] !== '-') that.temp_assets[key].rise = true;
-            else that.temp_assets[key].rise = false;
+            try {
+                that.temp_assets[key].price = parseFloat(coin[0]['price_cny']).toFixed(2);
+                that.temp_assets[key].total =
+                    parseFloat(that.temp_assets[key].amount) *
+                    parseFloat(coin[0]['price_cny']).toFixed(2);
+                that.temp_assets[key].total = parseFloat(that.temp_assets[key].total).toFixed(2);
+                if (coin[0]['percent_change_1h'][0] !== '-') that.temp_assets[key].rise = true;
+                else that.temp_assets[key].rise = false;
+            } catch (err) {
+                console.log('NET_ERR');
+                console.log(err);
+
+            }
         }
         // 回调法币资产
         if (Service.assetDelegate !== null)
@@ -130,15 +140,24 @@ export class Service {
 
         const txs = await WWW.rpc_getAddressTXs(Service.address, 20, page);
         console.log(txs);
-
+        if (txs === undefined) {
+            if (Service.txDelegate !== null)
+                Service.txDelegate(null);
+        }
         for (let index in txs) {
-            const date = txs[index].blocktime['$date'];
-            txs[index].blocktime['$date'] = TimeHelper.formatTime(
-                date,
-                'Y/M/D h:m:s'
-            );
+            try {
+                const date = txs[index].blocktime['$date'];
+                txs[index].blocktime['$date'] = TimeHelper.formatTime(
+                    date,
+                    'Y/M/D h:m:s'
+                );
+            } catch (err) {
+                console.log('NET_Date_ERR');
+                console.log(err);
+            }
             txs[index].blockindex =
                 parseInt(Wallet.height) - parseInt(txs[index].blockindex) + 1;
+
         }
         if (Service.txDelegate !== null)
             Service.txDelegate(txs);

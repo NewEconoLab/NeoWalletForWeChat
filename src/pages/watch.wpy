@@ -1,4 +1,7 @@
  <style lang="less">
+.empty {
+  color: gray;
+}
 .scroll {
   width: 100%;
   height: 100%;
@@ -253,7 +256,8 @@
           </view>
         </view>
       </view>
-      <view wx:elif="{{selected==1}}"> 
+      <view wx:elif="{{selected==1}}">
+        <text class="empty" hide="{{notEmpty}}">还没有交易记录哦！</text>
         <view class="history-block" wx:for="{{TXs}}" >
           <view class="tx-content">
             <view class="area-head">
@@ -308,7 +312,8 @@ export default class Watch extends wepy.page {
     TXs: [],
     isLoading: false,
     page: 1,
-    label: ''
+    label: '',
+    notEmpty: 'true'
   };
 
   computed = {};
@@ -351,12 +356,18 @@ export default class Watch extends wepy.page {
         case 'account':
           that.selected = 0;
           Service.isLoadTXs = false;
+          Service.txDelegate = null;
           break;
         case 'history':
           that.selected = 1;
           Service.isLoadTXs = true;
           Service.txDelegate = function(txs) {
-            that.TXs = txs;
+            if (txs === null) that.empty = 'false';
+            else {
+              that.notEmpty = 'true';
+              that.TXs = txs;
+              that.isLoading = false;
+            }
             that.$apply();
           };
           Service.OnGetTXs(1);
@@ -364,6 +375,7 @@ export default class Watch extends wepy.page {
         case 'manager':
           that.selected = 2;
           Service.isLoadTXs = false;
+          Service.txDelegate = null;
           break;
         default:
           break;

@@ -1,4 +1,7 @@
 <style lang="less">
+.empty {
+  color: gray;
+}
 .history-block {
   width: 695rpx;
   display: block;
@@ -72,6 +75,7 @@
 </style>
 <template>
   <view class="container">
+    <text class="empty" hidden="{{notEmpty}}">还没有交易记录哦！</text>
    <view class="history-block" wx:for="{{TXs}}" >
      <view class="content">
       <view class="area-head">
@@ -107,7 +111,8 @@ export default class History extends wepy.page {
     TXs: [],
     page: 1,
     address: '',
-    isLoading: false
+    isLoading: false,
+    notEmpty: 'true'
   };
 
   computed = {};
@@ -133,7 +138,10 @@ export default class History extends wepy.page {
       that.$apply();
     };
   }
-
+  onUnload() {
+    Service.isLoadTXs = false;
+    Service.txDelegate = null;
+  }
   async onPullDownRefresh() {
     if (this.isLoading) return;
     this.page = 1;
@@ -147,8 +155,15 @@ export default class History extends wepy.page {
     if (this.isLoading) return;
     this.isLoading = true;
     this.$apply();
-    this.TXs = await Service.OnLoadTXs(1);
-    this.isLoading = false;
+    const TXs = await Service.OnLoadTXs(1);
+    if (TXs === null) {
+      this.notEmpty = 'false';
+    } else {
+      this.notEmpty = 'true';
+      this.TXs = TXs;
+      this.isLoading = false;
+    }
+
     this.$apply();
   }
 }
