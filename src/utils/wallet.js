@@ -125,6 +125,15 @@ export class Wallet {
     }
 
     /**
+     * wif 转私钥
+     * @param {string} wif 
+     */
+    static wif2prikey(wif) {
+        let prikey = NEL.helper.Helper.GetPrivateKeyFromWIF(wif);
+        prikey = NEL.helper.StringHelper.toHexString(prikey);
+        return prikey;
+    }
+    /**
      * decode nep2 to get private key
      * @param {string} passphrase 
      * @param {Wallet} wallet 

@@ -101,7 +101,7 @@
       <view class="medium-button">
         <view class="button-item" >
           <image src="../images/address.png" class="icon"></image>
-          <text class="label">输入私钥</text>
+          <text class="label">输入私钥/wif</text>
         </view>
         <view class="button-item"  @tap="OnScan()">
           <image src="../images/scanPay.png" class="icon"></image>
@@ -117,7 +117,6 @@
 </template>
 <script>
 import wepy from 'wepy';
-import * as NEL from '../lib/neo-ts/index';
 import { LOCAL_WALLET, CURR_WALLET } from '../utils/constant';
 import { Wallet } from '../utils/wallet';
 import { WWW } from '../utils/API';
@@ -155,7 +154,11 @@ export default class ImportAccount extends wepy.page {
       let that = this;
       let accountlabel = e.detail.value.accountlabel;
       let prikey = e.detail.value.prikey;
+
+      //收集微信通知需要的formId
       TransactionTool.formId.push(e.detail.formId);
+
+      //账户解析
       that.OnAccountProcess(accountlabel, prikey);
     },
 
@@ -165,7 +168,7 @@ export default class ImportAccount extends wepy.page {
         success: res => {
           console.log(res);
           res = res.result;
-          if (res.length === 64) {
+          if (res.length === 64 || res.length == 52) {
             that.prikey = res;
             that.$apply();
           } else {
@@ -197,7 +200,7 @@ export default class ImportAccount extends wepy.page {
       tip.alert('账户名不能为空');
       return;
     }
-    if (privateKey.length !== 64) {
+    if (privateKey.length !== 64 && privateKey.length !== 52) {
       tip.error('私钥格式错误');
       return;
     }
@@ -207,6 +210,12 @@ export default class ImportAccount extends wepy.page {
       tip.alert('账户名已存在');
       return;
     }
+
+    //WIF 转 prikey
+    if (privateKey.length === 52) {
+      privateKey = Wallet.wif2prikey(privateKey);
+    }
+
     var wallet = Wallet.getWallet(accountlabel, privateKey);
     const wallet_json = wallet.toJson();
     wallets[accountlabel] = wallet_json;
@@ -221,9 +230,9 @@ export default class ImportAccount extends wepy.page {
     that.$redirect('./regresult?wallet=' + jsonstr);
   }
 
- async OnParseJson(account) {
-     await Wallet.importAccount(account);
-     wepy.reLaunch({url:'./home'});
+  async OnParseJson(account) {
+    await Wallet.importAccount(account);
+    wepy.reLaunch({ url: './home' });
   }
 }
 </script>
