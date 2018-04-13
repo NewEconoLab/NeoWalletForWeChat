@@ -2,18 +2,7 @@
 .empty {
   color: gray;
 }
-.scroll {
-  width: 100%;
-  height: 100%;
-}
-.inner {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 200rpx;
-}
+
 .area-uppper {
   height: 250rpx;
   width: 100%;

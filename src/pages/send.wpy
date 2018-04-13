@@ -182,7 +182,7 @@
         <view class="lower-amount">
           <input name="amount" placeholder="金额" class="content" placeholder-class="holder" type="{{checked==='GAS'?'digit':'number'}}" value='{{amount}}'/>
         </view>
-        <view class="lower-passphrase" hidden="{{hidePW}}">
+        <view class="lower-passphrase" wx:if="{{hidePW ==='false'}}">
           <input placeholder="密码" class="content" password='true' placeholder-class="holder" name="passphrase" value='{{password}}'/>
         </view>
       </view>
@@ -273,8 +273,12 @@ export default class Send extends wepy.page {
   events = {};
 
   onLoad() {
-    this.balance = UTXO.balance['GAS'].amount;
-    this.$apply();
+    try {
+      this.balance = UTXO.balance['GAS'].amount;
+      this.$apply();
+    } catch (err) {
+      console.log(err);
+    }
   }
   onReady() {
     const that = this;

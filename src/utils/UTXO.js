@@ -24,7 +24,7 @@ export class UTXO {
             var n = item.n;
             var asset = item.asset;
             var count = item.value;
-            if (this.assets[asset] == undefined) {
+            if (this.assets[asset] === undefined) {
                 this.assets[asset] = [];
             }
             var utxo = new Utxo();

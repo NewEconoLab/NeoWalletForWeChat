@@ -23,7 +23,7 @@ export class CoinTool {
             else {
                 for (var i in names) {
                     name = names[i].name;
-                    if (names[i].lang == "en")
+                    if (names[i].lang === "en")
                         break;
                 }
             }

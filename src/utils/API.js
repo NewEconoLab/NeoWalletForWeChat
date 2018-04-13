@@ -160,7 +160,7 @@ export class WWW {
         var str = WWW.makeRpcUrl(WWW.api, "getstorage", scripthash.toHexString(), key.toHexString());
         var result = await fetch(str, { "method": "get" });
         var json = JSON.parse(result)
-        if (json["result"] == null)
+        if (json["result"] === null)
             return null;
         var r = json["result"][0]['storagevalue'];
         return r;

@@ -54,7 +54,14 @@
   color: white;
   margin-left: 20rpx;
   padding-bottom: 5rpx;
-  border-bottom: white thin solid;
+  // border-bottom: white thin solid;
+}
+
+.bottom-line{
+  width: 700rpx;
+  height:1px;
+  color:white;
+  margin-top: 30rpx;
 }
 </style>
 
@@ -71,6 +78,7 @@
       <text class="address-content">{{account.address}}</text>
     </view>
   </view>
+  <view class="bottom-line"></view>
 </template>
 
 <script>
