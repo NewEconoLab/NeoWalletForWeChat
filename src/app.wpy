@@ -54,6 +54,7 @@ export default class extends wepy.app {
       'pages/send',
       'pages/history',
       'pages/mine',
+      'pages/nns',
       'pages/transaction',
       'pages/watchonly',
       'pages/watch',
@@ -64,6 +65,38 @@ export default class extends wepy.app {
       navigationBarBackgroundColor: 'white',
       navigationBarTitleText: 'NEL',
       navigationBarTextStyle: 'black'
+    },
+    tabBar: {
+      color: "#999999",
+      selectedColor: "#ff6a3c",
+      backgroundColor: "#ffffff",
+      borderStyle: "black",
+      list: [
+        {
+          pagePath: "pages/home",
+          text: "首页",
+          iconPath: "images/neo.png",
+          selectedIconPath: "images/neo.png"
+        },
+        {
+          pagePath: "pages/watchonly",
+          text: "观察",
+          iconPath: "images/neo.png",
+          selectedIconPath: "images/neo.png"
+        },
+        {
+          pagePath: "pages/nns",
+          text: "NNS",
+          iconPath: "images/neo.png",
+          selectedIconPath: "images/neo.png"
+        },
+        {
+          pagePath: "pages/mine",
+          text: "个人",
+          iconPath: "images/neo.png",
+          selectedIconPath: "images/neo.png"
+        }
+      ]
     }
   };
 
