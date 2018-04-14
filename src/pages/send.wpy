@@ -214,7 +214,7 @@ export default class Send extends wepy.page {
       { name: 'NEO', value: 'NEO' },
       { name: 'GAS', value: 'GAS', checked: 'true' }
     ],
-    balance: '0',
+    balance: '0.0000',
     checked: 'GAS',
     amount: '',
     password: '',

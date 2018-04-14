@@ -11,12 +11,11 @@ export class TransactionTool {
     }
 
     /**
-     * construct transaction
+     * 构造并发送交易
      * @param {ThinNeo.Transaction} tran 
      * @param {string} randomStr
      */
     static async setTran(tran, prikey, pubkey, randomStr) {
-        let type = NEL.thinneo.TransAction.TransactionType[tran.type].toString();
         let version = tran.version.toString();
 
         tran.witnesses = [];
@@ -26,14 +25,27 @@ export class TransactionTool {
 
         wepy.showLoading({ title: '签名中' });
         var signdata = NEL.helper.Helper.Sign(msg, prikey, randomStr);
-        // console.log('signdata= ' + signdata)
+        
         tran.AddWitness(signdata, pubkey, Wallet.account.address);
-        // console.log(NEL.helper.StringHelper.toHexString(tran.GetRawData()))
+        
         wepy.showLoading({ title: '交易发送中' });
 
         const res = await WWW.rpc_postRawTransaction(tran.GetRawData());
         wepy.hideLoading();
         return res;
-
     }
+
+    // static async setNep5Tran(tran, prikey, pubkey, randomStr, assetid) {
+    //     tran.type = NEL.thinneo.TransAction.TransactionType.InvocationTransaction;
+    //     tran.extdata = new NEL.thinneo.InvokeTransData();
+    //     let script = null;
+    //     var sb = new NEL.thinneo.ScriptBuilder();
+    //     var scriptaddress = NEL.helper.UintHelper.hexToBytes(assetid).reverse();
+    //     sb.EmitPushString(inputName.value);
+    //     sb.EmitPushBytes(this.main.panelLoadKey.pubkey);
+    //     sb.EmitAppCall(scriptaddress);
+    //     tran.extdata.script = sb.ToArray();
+    //     tran.extdata.gas =  NEL.neo.Fixed8.fromNumber(1.0);
+    //     this.main.panelTransaction.setTran(tran);
+    // }
 }
