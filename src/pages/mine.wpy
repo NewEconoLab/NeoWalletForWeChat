@@ -5,16 +5,30 @@
 
 .area-user {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  width: 700rpx;
   .avatar {
-    width: 163rpx;
-    height: 163rpx;
+    width: 123rpx;
+    height: 123rpx;
     margin-top: 101rpx;
     border-radius: 50%;
     background-color: white;
   }
-  .nickName {
+  .info {
+    margin-top: 101rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 10rpx;
+  }
+  .label {
+    font-family: '黑体', Helvetica;
+    font-size: 16px;
+    margin-top: 5rpx;
+    color: white;
+  }
+  .nns {
     font-family: '黑体', Helvetica;
     font-size: 16px;
     margin-top: 45rpx;
@@ -90,14 +104,13 @@
       <view class="inner">
         <view class= "area-user">
           <image class="avatar" src="{{avatarUrl}}"></image>
-          <text class="nickName">{{nickName}}</text>
+          <view class="info">
+            <text class="nns">NNS:未设置</text>
+            <text class="label">{{account.label}}</text>
+          </view>
         </view>
   
         <view class="area-text">
-          <view class="area-text-item"  @tap="copyToClip({{account.label}})">
-            <text class="text-label" >账户名</text>
-            <text class="text-content" >{{account.label}}</text>
-          </view>
           <view class="area-text-item"  @tap="copyToClip({{account.address}})">
             <text class="text-label">地址</text>
             <text class="text-content">{{account.address}}</text>

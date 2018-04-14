@@ -166,14 +166,14 @@
             <image src="../images/send.png" class="icon"></image>
           <text class="name">转账</text>
         </view>
-        <view class="medium-item"  @tap="navigate('history')">
+        <!-- <view class="medium-item"  @tap="navigate('history')">
           <image src="../images/history.png" class="icon"></image>
           <text class="name">历史</text>
         </view>
         <view class="medium-item"  style="margin-right:20px;" @tap="navigate('mine')">
           <image src="../images/account.png" class="icon"></image>
           <text class="name">个人</text>
-        </view>
+        </view> -->
     </view>
     <view class="area-lower">
      <view class="lower-chain">
