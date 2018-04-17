@@ -1,8 +1,8 @@
-import * as neo from './neo/index'
-import * as nep6 from './nep6/index'
-import * as thinneo from './thinneo/index'
-import * as helper from './Helper/index'
+import * as Neo from './neo/index'
+import * as Nep6 from './nep6/index'
+import * as ThinNeo from './thinneo/index'
+import * as Helper from './Helper/index'
 export * from './neo/index'
 export * from './thinneo/index'
 
-export { neo, nep6, thinneo, helper }
+export { Neo, Nep6, ThinNeo, Helper }

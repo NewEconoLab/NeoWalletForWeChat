@@ -29,25 +29,39 @@ function drawQrcode(options = {}) {
     // get canvas context
     var ctx = wx.createCanvasContext && wx.createCanvasContext(options.canvasId)
 
-    //白色背景
+    // 白色背景
     ctx.setFillStyle('white');
     ctx.fillRect(0, 0, options.CWH, options.CWH + 50)
 
+    //头部高度
     var label_y = 25;
+    var icon_x = 20;
+    ctx.setStrokeStyle('#27adf1')
+    ctx.beginPath();//开始一个新的路径
+    ctx.arc(30,35,25,0,2*Math.PI,true);//设置一个原点(100,50)，半径为为50的圆的路径到当前路径  
+    ctx.stroke();//对当前路径进行描边  
+    ctx.closePath();//关闭当前路径  
 
-    //绘制头部信息
+     // 绘制logo
+    //  ctx.globalAlpha = 0.1;
+    const path = '../../images/neo.png';
+    ctx.drawImage(path, 10, 15, 40, 40);
+    //  ctx.globalAlpha = 1;
+
+    var label_x = icon_x+40;
+    // 绘制头部信息
     ctx.setFillStyle('#27adf1')
     // ctx.setFontSize(16);
     ctx.setTextBaseline('middle');
     ctx.setFontSize(18);
     ctx.setTextAlign('left')
-    ctx.fillText(options.name, 20, label_y);
+    ctx.fillText(options.name, label_x, label_y);
 
     var addr_y = label_y + 25;
     ctx.setFillStyle('#a3a3a3')
     ctx.setFontSize(13);
     ctx.setTextAlign('left')
-    ctx.fillText(options.addr, 20, addr_y);
+    ctx.fillText(options.addr, label_x, addr_y);
 
     var qrcode_y = addr_y + 30;
 

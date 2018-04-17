@@ -1,17 +1,17 @@
-import * as NEL from '../lib/neo-ts/index';
+import {Nep6,Helper} from '../lib/neo-ts/index';
 import { SCRYPT_CONFIG, CURR_WALLET, LOCAL_WALLET } from './constant'
 import tip from '../utils/tip';
 
-export class Wallet {
+export class WalletTool {
     //当前账户钱包
-    static wallet = null
-    static height = -1
+    static wallet:Nep6.nep6wallet = null
+    static height:number = -1
 
     //nep6account
-    static account = null
+    static account:Nep6.nep6account = null
 
     //保存用户的openid
-    static openid = null
+    static openid:string = null
 
     constructor() { }
 
@@ -22,7 +22,7 @@ export class Wallet {
         //清除文件缓存
         wx.setStorageSync(CURR_WALLET, null);
         //清除内存缓存
-        Wallet.account = null;
+        WalletTool.account = null;
     }
 
     /**
@@ -30,24 +30,24 @@ export class Wallet {
      * @param {string} label 
      * @param {string} key prikey
      */
-    static getWallet(label, key) {
-        let privateKey = NEL.helper.UintHelper.hexToBytes(key);
+    static getWallet(label:string, key:string):Nep6.nep6wallet {
+        let privateKey = Helper.UintHelper.hexToBytes(key);
         wx.showLoading({ title: '公钥计算中' });
-        const publicKey = NEL.helper.Helper.GetPublicKeyFromPrivateKey(privateKey);
+        const publicKey = Helper.Helper.GetPublicKeyFromPrivateKey(privateKey);
 
         wx.showLoading({ title: '地址计算中' });
-        const address = NEL.helper.Helper.GetAddressFromPublicKey(publicKey);
-        var wallet = new NEL.nep6.nep6wallet();
-        wallet.scrypt = new NEL.nep6.nep6ScryptParameters();
+        const address = Helper.Helper.GetAddressFromPublicKey(publicKey);
+        var wallet = new Nep6.nep6wallet();
+        wallet.scrypt = new Nep6.nep6ScryptParameters();
         wallet.scrypt.N = SCRYPT_CONFIG.N;
         wallet.scrypt.r = SCRYPT_CONFIG.r;
         wallet.scrypt.p = SCRYPT_CONFIG.p;
         wallet.accounts = [];
-        wallet.accounts[0] = new NEL.nep6.nep6account();
+        wallet.accounts[0] = new Nep6.nep6account();
         wallet.accounts[0].address = address;
         wallet.accounts[0].label = label;
         wallet.accounts[0].nep2key = key;
-        wallet.accounts[0].publickey = NEL.helper.StringHelper.toHexString(publicKey);
+        wallet.accounts[0].publickey = Helper.StringHelper.toHexString(publicKey);
         return wallet;
     }
 
@@ -60,19 +60,19 @@ export class Wallet {
             return;
         }
 
-        var wallet = new NEL.nep6.nep6wallet();
-        wallet.scrypt = new NEL.nep6.nep6ScryptParameters();
+        var wallet = new Nep6.nep6wallet();
+        wallet.scrypt = new Nep6.nep6ScryptParameters();
         wallet.scrypt.N = SCRYPT_CONFIG.N;
         wallet.scrypt.r = SCRYPT_CONFIG.r;
         wallet.scrypt.p = SCRYPT_CONFIG.p;
         wallet.accounts = [];
-        wallet.accounts[0] = new NEL.nep6.nep6account();
+        wallet.accounts[0] = new Nep6.nep6account();
         wallet.accounts[0].address = json['address'];
         wallet.accounts[0].label = json['label'];
         wallet.accounts[0].nep2key = json['nep2key'];
         wallet.accounts[0].publickey = json['publickey'];
 
-        Wallet.setWallet(wallet);
+        WalletTool.setWallet(wallet);
 
         const wallet_json = wallet.toJson();
         wallets[label] = wallet_json;
@@ -84,18 +84,18 @@ export class Wallet {
      */
     static setWallet(wallet) {
         wx.setStorageSync(CURR_WALLET, wallet);
-        Wallet.setAccount(wallet.accounts[0]);
+        WalletTool.setAccount(wallet.accounts[0]);
     }
 
     static setAccount(nep6account) {
-        Wallet.account = nep6account;
+        WalletTool.account = nep6account;
     }
     /**
      * 删除本地缓存的指定账户
      * @param {string} label 
      */
     static removeWallet() {
-        const label = Wallet.account.label;
+        const label = WalletTool.account.label;
         let wals = wx.getStorageSync(LOCAL_WALLET) || {};
         let temp_wals = {};
         for (var key in wals) {
@@ -103,35 +103,36 @@ export class Wallet {
                 temp_wals[key] = wals[key];
         }
         wx.setStorageSync(LOCAL_WALLET, temp_wals);
-        Wallet.reset();
+        WalletTool.reset();
     }
     /**
      * return address 
      */
-    static getAddress() {
-        if (this.privatekey === null) {
+    static getAddress():string {
+        if (this.account === null) {
             tip.alert('密钥格式错误，重新登陆')
             return;
         }
 
-        if (this.address === null) {
-            if (this.publickey === null) {
-                const prikey = NEL.helper.UintHelper.hexToBytes(this.privatekey);
-                this.publickey = NEL.helper.Helper.GetPublicKeyFromPrivateKey(prikey);
-            }
-            this.address = NEL.helper.Helper.GetAddressFromPublicKey(this.publickey);
-        }
-        return this.address;
+        // if (this.address === null) {
+        //     if (this.publickey === null) {
+        //         const prikey = NEL.helper.UintHelper.hexToBytes(this.privatekey);
+        //         this.publickey = NEL.helper.Helper.GetPublicKeyFromPrivateKey(prikey);
+        //     }
+        //     this.address = NEL.helper.Helper.GetAddressFromPublicKey(this.publickey);
+        // }
+        return this.account.address;
     }
 
     /**
      * wif 转私钥
      * @param {string} wif 
      */
-    static wif2prikey(wif) {
-        let prikey = NEL.helper.Helper.GetPrivateKeyFromWIF(wif);
-        prikey = NEL.helper.StringHelper.toHexString(prikey);
-        return prikey;
+    static wif2prikey(wif:string):string {
+        let prikey:Uint8Array = Helper.Helper.GetPrivateKeyFromWIF(wif);
+        let strkey:string = Helper.StringHelper.toHexString(prikey);
+
+        return strkey;
     }
     /**
      * decode nep2 to get private key
@@ -139,19 +140,19 @@ export class Wallet {
      * @param {Wallet} wallet 
      * @param {CallBack} callback
      */
-    static decode(passphrase, callback) {
-        if (Wallet.account === null) {
+    static decode(passphrase:string, callback:Function):Function {
+        if (WalletTool.account === null) {
             callback(-1, null, null)
             return;
         }
         //如果是通过导入私钥登陆的，那么账户里直接是私钥
-        if (Wallet.account.nep2key.length === 64) {
-            callback(0, Wallet.account.nep2key, Wallet.account.publickey);
+        if (WalletTool.account.nep2key.length === 64) {
+            callback(0, WalletTool.account.nep2key, WalletTool.account.publickey);
             return;
         }
 
-        NEL.helper.Helper.GetPrivateKeyFromNep2(
-            Wallet.account.nep2key,
+        Helper.Helper.GetPrivateKeyFromNep2(
+            WalletTool.account.nep2key,
             passphrase,
             SCRYPT_CONFIG['N'],
             SCRYPT_CONFIG['r'],
@@ -162,7 +163,7 @@ export class Wallet {
                     callback(-1, null, null)
                     return;
                 }
-                callback(0, result, Wallet.account.publickey);
+                callback(0, result, WalletTool.account.publickey);
             }
         );
     }

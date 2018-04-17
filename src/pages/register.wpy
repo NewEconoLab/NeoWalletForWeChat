@@ -78,17 +78,17 @@
       <view class="medium-content">
       <view class="medium-item">
         <view class="input">
-          <input type="text" name="accountlabel" placeholder="标签" value=''/>
+          <input type="text" name="accountlabel" placeholder="标签" value='aaaa8'/>
         </view>
       </view>
       <view class="medium-item">
         <view class="input">
-          <input type="text" name="passphrase" password placeholder="请输入密码" value=''/>
+          <input type="text" name="passphrase" password placeholder="请输入密码" value='aaaa'/>
         </view>
       </view>
       <view class="medium-item">
         <view class="input">
-          <input type="text" name="repassphrase" password placeholder="确认密码" value=''/>
+          <input type="text" name="repassphrase" password placeholder="确认密码" value='aaaa'/>
         </view>
       </view>
       </view>

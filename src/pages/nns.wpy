@@ -1,0 +1,119 @@
+ <style lang="less">
+.area-uppper {
+  height: 450rpx;
+  width: 100%;
+  background: linear-gradient(to right, #69c0fd, #a6a4fd);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text {
+    color: white;
+    font-size: 70px;
+  }
+}
+
+.area-medium {
+  display: flex;
+  flex-direction: row;
+  width: 700rpx;
+  box-shadow: 10px 15px 20px rgba(100, 100, 100, 0.2);
+   margin-top: 50rpx;
+}
+
+.search {
+  width: 80%;
+}
+.search_arr {
+  border: 1px solid #d0d0d0;
+  border-radius: 10rpx;
+  margin-left: 20rpx;
+  display: flex;
+  flex-direction: row;
+}
+.search_arr input {
+  margin-left: 60rpx;
+  height: 60rpx;
+  border-radius: 5px;
+}
+.bc_text {
+  line-height: 68rpx;
+  height: 68rpx;
+  margin-top: 34rpx;
+}
+
+.sousuo {
+  margin-left: 15rpx;
+  width: 15%;
+  line-height: 150%;
+  text-align: center;
+  border: 1px solid #d0d0d0;
+  border-radius: 10rpx;
+}
+
+.area-lower {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+</style>
+<template>
+  <view class="container">
+    <scroll-view scroll-y class="scroll">
+        <view class="inner">
+            <view class="area-uppper">
+                <text>NNS</text>
+            </view>
+            <view class="area-medium">
+                <view class="search">  
+                    <view class="search_arr">  
+                        <icon class="searchcion" size='20' type='search'></icon>  
+                        <input class="" disabled placeholder="请输入关键字" value="{{searchValue}}"/>  
+                    </view>  
+                </view>  
+                <view class='sousuo'>搜索</view>  
+            </view>
+
+        </view>
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import { CURR_WALLET } from '../utils/constant';
+import { CoinTool } from '../utils/Coin';
+import { Wallet } from '../utils/wallet';
+import { Service } from '../utils/service';
+import tip from '../utils/tip';
+export default class NNS extends wepy.page {
+  config = {
+    navigationBarTitleText: 'NNS'
+  };
+
+  components = {};
+
+  data = {};
+
+  computed = {};
+
+  methods = {};
+
+  events = {};
+
+  onLoad() {}
+  async onShow() {}
+  // 页面渲染完成
+  async onReady() {}
+
+  onShareAppMessage() {
+    return {
+      title: 'NEO钱包',
+      path: '/pages/index'
+    };
+  }
+}
+</script>
+ 

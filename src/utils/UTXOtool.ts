@@ -1,8 +1,8 @@
 import { WWW } from './API';
-import * as NEL from '../lib/neo-ts/index';
+import {Neo} from '../lib/neo-ts/index';
 import { CoinTool } from './Coin'
-export class UTXO {
-    static assets = {}  //{ [id: string]: UTXO[] }
+export class UTXOTool {
+    static assets:{ [id: string]: Utxo[] } = {} 
     static utxo = []
     static balance = {}
     static lock = false; // use lock to prevent muti request competition
@@ -13,9 +13,9 @@ export class UTXO {
             return;
         }
         this.lock = true;
-        UTXO.utxo.splice(0, UTXO.utxo.length);
-        UTXO.assets = {}
-        UTXO.balance = {}
+        UTXOTool.utxo.splice(0, UTXOTool.utxo.length);
+        UTXOTool.assets = {}
+        UTXOTool.balance = {}
         var utxos = await WWW.api_getUTXO(addr);
         this.assets = {};
         for (var i in utxos) {
@@ -32,7 +32,7 @@ export class UTXO {
             utxo.asset = asset;
             utxo.n = n;
             utxo.txid = txid;
-            utxo.count = NEL.neo.Fixed8.parse(count);
+            utxo.count = Neo.Fixed8.parse(count);
             let type = CoinTool.assetID2name[asset];
             this.utxo.push({ asset: type, txid: txid, count: count })
             this.assets[asset].push(utxo);
@@ -43,9 +43,9 @@ export class UTXO {
 }
 
 export class Utxo {
-    addr = '';
-    txid = '';
-    n = -1;
-    asset = '';
-    count = 0;
+    addr:string = '';
+    txid:string = '';
+    n:number = -1;
+    asset:string = '';
+    count:Neo.Fixed8 = Neo.Fixed8.Zero;
 }

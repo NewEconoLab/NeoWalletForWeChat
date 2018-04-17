@@ -185,6 +185,7 @@ export class WWW {
         let body = { 'method': 'delete', 'openid': openid, 'address': address };
         return await WWW.makeaddrpost(body);;
     }
+    
     /**
     * 查询watchonly地址
     * @param {string} openid 用户唯一身份识别

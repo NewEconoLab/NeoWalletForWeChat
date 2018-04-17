@@ -88,7 +88,7 @@ export default class RegResult extends wepy.page {
 
   onLoad(option) {
     let that = this;
-    this.account = JSON.parse(option.wallet)['accounts'][0];
+    //this.account = JSON.parse(option.wallet)['accounts'][0];
     this.$apply();
     wepy.showLoading({ title: '二维码生成中' });
     wx.getSystemInfo({
@@ -151,11 +151,11 @@ export default class RegResult extends wepy.page {
     await drawQrcode({
       WH: that.width,
       CWH: that.canvasWH,
-      name: that.account.label,
-      addr: that.account.address,
+      name: 'hhhhh',//that.account.label,
+      addr: 'jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj',//that.account.address,
       currTime: that.currTime,
       canvasId: 'nep2Key',
-      text: JSON.stringify(this.account)
+      text: 'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh'//JSON.stringify(this.account)
     });
     wepy.hideLoading();
     that.backUpAccount();

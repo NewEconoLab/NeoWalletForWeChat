@@ -1,19 +1,19 @@
 import { WWW } from './API';
-import { UTXO } from './UTXO';
-import { Wallet } from './wallet';
+import { UTXOTool } from './UTXOtool';
+import { WalletTool } from './wallettool';
 import * as TimeHelper from './time';
 
 export class Service {
 
-    static isLoadTXs = false;
-    static isLoadAsset = true;
+    static isLoadTXs: boolean = false;
+    static isLoadAsset: boolean = true;
     // 交易历史代理
-    static txDelegate = null;
+    static txDelegate: Function = null;
     // 资产代理
-    static assetDelegate = null;
+    static assetDelegate: Function = null;
 
-    static address = '';
-    static temp_assets = {
+    static address: string = '';
+    static temp_assets: any = {
         'NEO': {
             amount: 0,
             price: 0.00,
@@ -27,7 +27,7 @@ export class Service {
         }
     };
 
-    static init(addr) {
+    static init(addr: string) {
         this.address = addr;
 
         // 暂时不加载历史记录
@@ -68,7 +68,7 @@ export class Service {
      */
     static async OnGetHeight() {
         const height = await WWW.api_getHeight();
-        Wallet.height = height;
+        WalletTool.height = height;
     }
 
     /**
@@ -81,8 +81,8 @@ export class Service {
             that.temp_assets[key].amount = 0;
         }
 
-        await UTXO.GetAssets(Service.address);
-        for (let item of UTXO.utxo) {
+        await UTXOTool.GetAssets(Service.address);
+        for (let item of UTXOTool.utxo) {
             if (that.temp_assets[item.asset] === undefined)
                 that.temp_assets[item.asset] = {
                     amount: 0,
@@ -99,8 +99,8 @@ export class Service {
             }
 
         }
-        UTXO.balance = that.temp_assets;
-        UTXO.utxo.reverse();
+        UTXOTool.balance = that.temp_assets;
+        UTXOTool.utxo.reverse();
 
         // 回调coin资产
         if (Service.assetDelegate !== null)
@@ -117,9 +117,9 @@ export class Service {
             try {
                 that.temp_assets[key].price = parseFloat(coin[0]['price_cny']).toFixed(2);
                 that.temp_assets[key].total =
-                    parseFloat(that.temp_assets[key].amount) *
-                    parseFloat(coin[0]['price_cny']).toFixed(2);
-                that.temp_assets[key].total = parseFloat(that.temp_assets[key].total).toFixed(2);
+                    (that.temp_assets[key].amount as number) *
+                    (coin[0]['price_cny'] as number);
+                that.temp_assets[key].total = (that.temp_assets[key].total as number).toFixed(2);
                 if (coin[0]['percent_change_1h'][0] !== '-') that.temp_assets[key].rise = true;
                 else that.temp_assets[key].rise = false;
             } catch (err) {
@@ -135,7 +135,7 @@ export class Service {
     /**
      * 获取历史交易
      */
-    static async OnGetTXs(page) {
+    static async OnGetTXs(page:number) {
         console.log(Service.address);
 
         const txs = await WWW.rpc_getAddressTXs(Service.address, 20, page);
@@ -156,7 +156,7 @@ export class Service {
                 console.log(err);
             }
             txs[index].blockindex =
-                parseInt(Wallet.height) - parseInt(txs[index].blockindex) + 1;
+                (WalletTool.height as number) - (txs[index].blockindex as number) + 1;
 
         }
         if (Service.txDelegate !== null)

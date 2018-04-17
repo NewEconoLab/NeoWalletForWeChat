@@ -2,8 +2,9 @@
  * 提示与加载工具类
  */
 export default class Tips {
+
   constructor() {
-    this.isLoading = false;
+    Tips.isLoading = false;
   }
   /**
    * 弹出提示框
