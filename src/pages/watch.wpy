@@ -282,11 +282,7 @@
 
 <script>
 import wepy from 'wepy';
-import { WWW } from '../utils/API';
-import { UTXO } from '../utils/UTXO';
-import { Wallet } from '../utils/wallet';
-import { Service } from '../utils/service';
-import tip from '../utils/tip';
+import {Util} from '../utils/index';
 export default class Watch extends wepy.page {
   config = {
     navigationBarTitleText: '观察账户'
@@ -324,7 +320,7 @@ export default class Watch extends wepy.page {
           break;
         case 'delete':
           wepy.showLoading('账户删除中');
-          let res = await WWW.addr_delete(Wallet.openid, that.address);
+          let res = await Util.Https.addr_delete(Wallet.openid, that.address);
           wepy.hideLoading();
           if (res['code'] == 0) {
             tip.success('删除成功');

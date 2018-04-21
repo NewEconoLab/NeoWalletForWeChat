@@ -84,10 +84,7 @@
 
 <script>
 import wepy from 'wepy';
-import { Wallet } from '../utils/wallet';
-import { WWW } from '../utils/API';
-import { LOCAL_WALLET, CURR_WALLET } from '../utils/constant';
-import tip from '../utils/tip';
+import {Util} from '../utils/index'
 export default class WatchOnly extends wepy.page {
   customData = {}; // 自定义数据
 
@@ -133,7 +130,7 @@ export default class WatchOnly extends wepy.page {
   async OnLoadWatchOnly() {
     let that = this;
 
-    let res = await WWW.addr_query(Wallet.openid);
+    let res = await Util.Https.addr_query(WalletTool.openid);
     res = JSON.parse(res);
     if (res['code'] === 0) {
       let addr = res['address'];

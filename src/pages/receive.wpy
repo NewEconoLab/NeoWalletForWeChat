@@ -84,9 +84,7 @@
 <script>
 import wepy from 'wepy';
 import drawQrcode from '../lib/qrcode/qr';
-import tip from '../utils/tip';
-import { CURR_WALLET } from '../utils/constant';
-import { Wallet } from '../utils/wallet';
+import {Util} from '../utils/index';
 export default class Receive extends wepy.page {
   customData = {}; // 自定义数据
 

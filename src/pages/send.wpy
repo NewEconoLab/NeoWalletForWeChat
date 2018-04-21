@@ -194,13 +194,8 @@
 </template>
 <script>
 import wepy from 'wepy';
-import { UTXO } from '../utils/UTXO';
-import { CoinTool } from '../utils/Coin';
-import * as NEL from '../lib/neo-ts/index';
-import tip from '../utils/tip';
-import { TransactionTool } from '../utils/transaction';
-import * as Random from '../utils/random';
-import { Wallet } from '../utils/wallet';
+import {Helper,ThinNeo,Neo} from '../lib/neo-ts/index';
+import {Util} from '../utils/index';
 export default class Send extends wepy.page {
   config = {
     navigationBarTitleText: '转账'
@@ -309,8 +304,8 @@ export default class Send extends wepy.page {
     });
   }
   async SendTran(prikey, pubkey) {
-    pubkey = NEL.helper.UintHelper.hexToBytes(pubkey);
-    var count = NEL.neo.Fixed8.parse(this.amount + '');
+    pubkey = Helper.hexToBytes(pubkey);
+    var count = Neo.Fixed8.parse(this.amount + '');
     let coin = this.checked === 'GAS' ? CoinTool.id_GAS : CoinTool.id_NEO;
     wepy.showLoading({ title: '交易生成中' });
     var tran = CoinTool.makeTran(UTXO.assets, this.targetAddr, coin, count);

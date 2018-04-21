@@ -117,11 +117,7 @@
 </template>
 <script>
 import wepy from 'wepy';
-import { LOCAL_WALLET, CURR_WALLET } from '../utils/constant';
-import { Wallet } from '../utils/wallet';
-import { WWW } from '../utils/API';
-import tip from '../utils/tip';
-import { TransactionTool } from '../utils/transaction';
+import {Util} from '../utils/index';
 export default class ImportAccount extends wepy.page {
   customData = {}; // 自定义数据
 
@@ -137,8 +133,8 @@ export default class ImportAccount extends wepy.page {
 
   data = {
     isLoading: false,
-    prikey: '',
-    label: ''
+    prikey: 'L4ZntdDCocMJi4ozpTw4uTtxtAFNNCP2mX6m3P9CMJN66Dt2YJqP',
+    label: 'gui'
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
   components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
@@ -213,14 +209,14 @@ export default class ImportAccount extends wepy.page {
 
     //WIF 转 prikey
     if (privateKey.length === 52) {
-      privateKey = Wallet.wif2prikey(privateKey);
+      privateKey = WalletTool.wif2prikey(privateKey);
     }
 
-    var wallet = Wallet.getWallet(accountlabel, privateKey);
-    const wallet_json = wallet.toJson();
+    var wallet = WalletTool.getWallet(accountlabel, privateKey);
+    const wallet_json = WalletTool.toJson();
     wallets[accountlabel] = wallet_json;
 
-    wepy.showLoading({ title: '钱包创建完成' });
+    Util.Tip.loading('钱包创建完成');
     wepy.setStorageSync(LOCAL_WALLET, wallets);
 
     //本地缓存新生成的账户

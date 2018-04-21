@@ -73,10 +73,7 @@
 
 <script>
 import wepy from 'wepy';
-import { Wallet } from '../utils/wallet';
-import { WWW } from '../utils/API';
-import { LOCAL_WALLET, CURR_WALLET } from '../utils/constant';
-import tip from '../utils/tip';
+import {Util} from '../utils/index';
 export default class LoginAccounts extends wepy.page {
   customData = {}; // 自定义数据
 

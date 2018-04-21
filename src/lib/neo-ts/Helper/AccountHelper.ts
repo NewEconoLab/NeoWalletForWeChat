@@ -13,7 +13,7 @@ import * as StringHelper from './StringHelper'
 // export declare var scrypt: any;
 // export declare var CryptoJS: any;
 var scrypt_loaded: boolean = false;
-export class Helper {
+export class Account {
     public static GetPrivateKeyFromWIF(wif: string): Uint8Array {
         if (wif == null) throw new Error("null wif");
         var data = Base58.decode(wif);
@@ -75,7 +75,7 @@ export class Helper {
         return script;
     }
     public static GetPublicKeyScriptHashFromPublicKey(publicKey: Uint8Array): Uint8Array {
-        var script = Helper.GetAddressCheckScriptFromPublicKey(publicKey);
+        var script = Account.GetAddressCheckScriptFromPublicKey(publicKey);
         var scripthash = Sha256.computeHash(script);
         scripthash = RIPEMD160.computeHash(scripthash);
         return new Uint8Array(scripthash);
@@ -107,8 +107,8 @@ export class Helper {
         return Base58.encode(alldata);
     }
     public static GetAddressFromPublicKey(publicKey: Uint8Array): string {
-        var scripthash = Helper.GetPublicKeyScriptHashFromPublicKey(publicKey);
-        return Helper.GetAddressFromScriptHash(scripthash);
+        var scripthash = Account.GetPublicKeyScriptHashFromPublicKey(publicKey);
+        return Account.GetAddressFromScriptHash(scripthash);
     }
     public static GetPublicKeyScriptHash_FromAddress(address: string): Uint8Array {
         var array: Uint8Array = Base58.decode(address);
@@ -262,8 +262,8 @@ export class Helper {
      */
     public static GetNep2FromPrivateKey(prikey: Uint8Array, passphrase: string, n = 16384, r = 8, p = 8, callback: (info: string, result: string) => void): void {
         let that = this
-        var pubkey = Helper.GetPublicKeyFromPrivateKey(prikey);
-        let addr = Helper.GetAddressFromPublicKey(pubkey);
+        var pubkey = Account.GetPublicKeyFromPrivateKey(prikey);
+        let addr = Account.GetAddressFromPublicKey(pubkey);
         const strkey = SHA256(SHA256(addr).toString()).toString().slice(0, 4)
         let uint8pass = this.String2Bytes(passphrase);   //new TextEncoder("utf-8").encode(passphrase);
         // console.log('strkey = ' + strkey)

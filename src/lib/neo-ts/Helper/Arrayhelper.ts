@@ -1,6 +1,13 @@
 ﻿type Func<T, TResult> = (arg: T) => TResult;
 type Action<T> = Func<T, void>;
 
+export function contains<T>(arr:{}, key: T) {
+    for (let i in arr) {
+        if (arr[i] === key) return true;
+    }
+    return false;
+}
+
 export function fromArray<T>(arr: ArrayLike<T>): Array<T> {
     let array = new Array<T>(arr.length);
     for (let i = 0; i < array.length; i++)

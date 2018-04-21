@@ -101,11 +101,8 @@
 </template>
 <script>
 import wepy from 'wepy';
-import * as NEL from '../lib/neo-ts/index';
-import { LOCAL_WALLET } from '../utils/constant';
-import { Wallet } from '../utils/wallet';
-import tip from '../utils/tip';
-import * as Random from '../utils/random';
+import {Helper} from '../lib/neo-ts/index';
+import {Util} from '../utils/index';
 export default class Register extends wepy.page {
   customData = {}; // 自定义数据
 
@@ -160,15 +157,15 @@ export default class Register extends wepy.page {
 
       let privateKey = await Random.getSecureRandom(64);
 
-      var wallet = Wallet.getWallet(accountlabel, privateKey);
+      var wallet = WalletTool.getWallet(accountlabel, privateKey);
       console.log(wallet);
 
       setTimeout(function() {
         wepy.hideLoading();
       }, 1000);
 
-      NEL.helper.Helper.GetNep2FromPrivateKey(
-        NEL.helper.UintHelper.hexToBytes(privateKey),
+      Helper.Account.GetNep2FromPrivateKey(
+        Helper.hexToBytes(privateKey),
         passphrase,
         wallet.scrypt.N,
         wallet.scrypt.r,
@@ -185,7 +182,7 @@ export default class Register extends wepy.page {
             wepy.showLoading({ title: '钱包创建完成' });
             wepy.setStorageSync(LOCAL_WALLET, wallets);
             //本地缓存新生成的账户
-            Wallet.setWallet(wallet);
+            WalletTool.setWallet(wallet);
             var jsonstr = JSON.stringify(wallet_json);
             wepy.hideLoading();
             that.$redirect('./regresult?wallet=' + jsonstr);

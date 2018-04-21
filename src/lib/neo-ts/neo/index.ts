@@ -8,17 +8,7 @@ import { Uint256 } from './Uint256'
 import { Uint64 } from './Uint64'
 import { UintVariable } from './UintVariable'
 import {Fixed8} from './Fixed8'
-// export * from './BigInteger'
-// export * from './Cryptography/index'
-// export * from './IO/index'
-// export * from './Map'
-// export * from './Promise'
-// export * from  './Uint160'
-// export * from './Uint256'
-// export * from './Uint64'
-// export * from './UintVariable'
-// export * from './Fixed8'
-// export {Cryptography,IO}
+
 export {
     BigInteger,
     Cryptography,

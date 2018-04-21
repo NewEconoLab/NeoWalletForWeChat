@@ -79,8 +79,7 @@
 <script>
 import wepy from 'wepy';
 import drawQrcode from '../lib/qrcode/index';
-import tip from '../utils/tip';
-import * as TimeHelper from '../utils/time';
+import {Util} from '../utils/index';
 export default class RegResult extends wepy.page {
   customData = {}; // 自定义数据
 

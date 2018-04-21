@@ -36,7 +36,6 @@ import { USER_INFO } from './utils/constant';
 import { setStore } from 'wepy-redux';
 import configStore from './store';
 import { WWW } from './utils/API';
-import { Wallet } from './utils/wallet';
 import { Service } from './utils/service';
 const store = configStore();
 setStore(store);
@@ -67,22 +66,22 @@ export default class extends wepy.app {
       navigationBarTextStyle: 'black'
     },
     tabBar: {
-      color: "#999999",
-      selectedColor: "#ff6a3c",
+      color: "#cccccc",
+      selectedColor: "#27adf1",
       backgroundColor: "#ffffff",
       borderStyle: "black",
       list: [
         {
           pagePath: "pages/home",
           text: "首页",
-          iconPath: "images/neo.png",
-          selectedIconPath: "images/neo.png"
+          iconPath: "images/home.png",
+          selectedIconPath: "images/home_tap.png"
         },
         {
           pagePath: "pages/watchonly",
           text: "观察",
-          iconPath: "images/neo.png",
-          selectedIconPath: "images/neo.png"
+          iconPath: "images/watch.png",
+          selectedIconPath: "images/watch_tap.png"
         },
         {
           pagePath: "pages/nns",
@@ -93,8 +92,8 @@ export default class extends wepy.app {
         {
           pagePath: "pages/mine",
           text: "个人",
-          iconPath: "images/neo.png",
-          selectedIconPath: "images/neo.png"
+          iconPath: "images/mine.png",
+          selectedIconPath: "images/mine_tap.png"
         }
       ]
     }

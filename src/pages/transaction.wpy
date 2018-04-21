@@ -102,8 +102,7 @@
 </template>
 <script>
 import wepy from 'wepy';
-import { WWW } from '../utils/API';
-import { CoinTool } from '../utils/Coin';
+import {Util} from '../utils/index';
 export default class Transaction extends wepy.page {
   config = {
     navigationBarTitleText: '交易详情'

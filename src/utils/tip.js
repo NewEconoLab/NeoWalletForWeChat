@@ -6,10 +6,10 @@ export default class Tips {
   constructor() {
     Tips.isLoading = false;
   }
+
   /**
    * 弹出提示框
    */
-
   static success(title, duration = 500) {
     setTimeout(() => {
       wx.showToast({
@@ -105,7 +105,7 @@ export default class Tips {
    */
   static loading(title = "加载中") {
     if (Tips.isLoading) {
-      return;
+      wx.hideLoading();
     }
     Tips.isLoading = true;
     wx.showLoading({
@@ -114,6 +114,10 @@ export default class Tips {
     });
   }
 
+  static hideLoading(){
+    wx.hideLoading();
+    Tips.isLoading = false;
+  }
   /**
    * 加载完毕
    */

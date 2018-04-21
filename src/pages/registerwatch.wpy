@@ -117,9 +117,7 @@
 </template>
 <script>
 import wepy from 'wepy';
-import { Wallet } from '../utils/wallet';
-import tip from '../utils/tip';
-import {WWW} from '../utils/API';
+import {Util} from '../utils/index';
 export default class RegisterWatch extends wepy.page {
   customData = {}; // 自定义数据
 

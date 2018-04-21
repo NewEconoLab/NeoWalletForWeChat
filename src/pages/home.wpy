@@ -199,11 +199,7 @@
 
 <script>
 import wepy from 'wepy';
-import { CURR_WALLET } from '../utils/constant';
-import { CoinTool } from '../utils/Coin';
-import { Wallet } from '../utils/wallet';
-import { Service } from '../utils/service';
-import tip from '../utils/tip';
+import Util from '../utils/index';
 export default class Home extends wepy.page {
   config = {
     navigationBarTitleText: '首页'
@@ -234,7 +230,7 @@ export default class Home extends wepy.page {
 
   methods = {
     navigate(page) {
-      if (Wallet.account === null) {
+      if (WalletTool.account === null) {
         if (page === 'mine') {
           wepy.navigateTo({
             url: '/pages/index?switch=' + 0
@@ -263,31 +259,31 @@ export default class Home extends wepy.page {
     const that = this;
     await this.OnLogin();
     // 初始化
-    Service.init(Wallet.account.address);
+    Util.Service.init(WalletTool.account.address);
 
     // 设置资产更新回调
-    Service.assetDelegate = function(assets) {
+    Util.Service.assetDelegate = function(assets) {
       assets['GAS'].amount = parseFloat(assets['GAS'].amount).toFixed(4);
       that.assets = assets;
-      that.Block = Wallet.height;
+      that.Block = Util.Wallet.height;
       that.$apply();
     };
 
-    Service.OnGetHeight();
+    Util.Service.OnGetHeight();
     // 加载资产
     Service.OnTimeOut();
   }
 
   async OnLogin() {
     let that = this;
-    const wallet = wepy.getStorageSync(CURR_WALLET) || {};
+    const wallet = Util.Storage.get(CURR_WALLET) || {};
     console.log(Object.keys(wallet).length);
 
     // 本地缓存有账户 则直接加载本地账户信息
     if (Object.keys(wallet).length !== 0) {
       this.isLogin = true;
       this.$apply();
-      Wallet.setWallet(wallet);
+      Util.Wallet.setWallet(wallet);
     }
   }
   onShareAppMessage() {

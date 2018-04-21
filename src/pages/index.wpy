@@ -70,8 +70,7 @@
 
 <script>
 import wepy from 'wepy';
-import { CURR_WALLET, USER_INFO } from '../utils/constant';
-import { Wallet } from '../utils/wallet';
+import { Util } from '../utils/index';
 export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: '账户'
@@ -106,10 +105,12 @@ export default class Index extends wepy.page {
   events = {};
 
   async onLoad(option) {
-    this.isSwitch = option.switch||0;
-    let userInfo = wepy.getStorageSync(USER_INFO);
+    //是否是切换账号
+    this.isSwitch = option.switch || 0;
+    //获取缓存的用户信息
+    let userInfo = Util.Cache.get(USER_INFO);
     if (userInfo === undefined || userInfo === '') {
-      const res = await Wallet.getUserInfo();
+      const res = await  Wallet.getUserInfo();
       userInfo = res.userInfo;
       wepy.setStorageSync(USER_INFO, userInfo);
     }

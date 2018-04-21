@@ -83,11 +83,7 @@
 
 <script>
 import wepy from 'wepy';
-import { CURR_WALLET } from '../utils/constant';
-import { CoinTool } from '../utils/Coin';
-import { Wallet } from '../utils/wallet';
-import { Service } from '../utils/service';
-import tip from '../utils/tip';
+import {Util} from '../utils/index';
 export default class NNS extends wepy.page {
   config = {
     navigationBarTitleText: 'NNS'
