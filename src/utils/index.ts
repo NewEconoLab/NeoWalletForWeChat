@@ -43,10 +43,10 @@ export default {
         cache: Cache.get,
         height: Context.Height,
         account: Wallet.account,
+        nep2:Wallet.importAccount,
         assets: Context.Assets,
         rootName: NNS.getRootName,
         rootNameHash: NNS.getRootNameHash,
-        wallet: Wallet.getWallet,
         userInfo: Wallet.getUserInfo,
         TXs: Context.OnGetTXs,
         prikey:(wif:string):string=>{return Wallet.wif2prikey(wif)},
@@ -54,7 +54,7 @@ export default {
     },
     set: {
         cache: Cache.put,
-        wallet:(wallet:Nep6.nep6wallet)=>{ Context.account = wallet.account[0]; Wallet.setWallet(wallet);},
+        account:Wallet.setAccount,
         openid: Context.openid,
     },
     delegate: {

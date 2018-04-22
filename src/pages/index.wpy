@@ -108,11 +108,10 @@ export default class Index extends wepy.page {
     //是否是切换账号
     this.isSwitch = option.switch || 0;
     //获取缓存的用户信息
-    console.log(Util);
-    
+
     let userInfo = Util.get.cache(Util.config.USER_INFO);
     if (userInfo === undefined || userInfo === '') {
-      const res = await  Util.get.userInfo();
+      const res = await Util.get.userInfo();
       userInfo = res.userInfo;
       Util.set.cache(Util.config.USER_INFO, userInfo);
     }
@@ -123,14 +122,30 @@ export default class Index extends wepy.page {
 
     if (parseInt(option.switch) === 1) return;
 
-    const wallet = Util.get.cache(Util.config.CURR_WALLET);
-    console.log(wallet);
-    if (wallet !== {} && wallet !== undefined && wallet !== '') {
+    let account = Util.get.cache(Util.config.CURR_ACCOUNT);
+
+    if (account !== {} && account !== undefined && account !== '') {
+      try {
+        //做兼容
+        if (account.accounts !== undefined) {
+          account = account.accounts[0];
+          Util.set.cache(Util.config.CURR_ACCOUNT, account);
+          let wallets = Util.get.cache(Util.config.LOCAL_ACCOUNTS) || {};
+          let accounts = {};
+          for (let key in wallets) {
+            accounts[key] = wallets[key].accounts[0];
+          }
+          Util.set.cache(Util.config.LOCAL_ACCOUNTS, accounts);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+
       Util.show.loading('登陆中');
       setTimeout(function() {
         Util.hide.loading();
       }, 4000);
-      Util.set.wallet(wallet);
+      Util.set.account(account);
       wepy.reLaunch({ url: './home' });
       Util.hide.loading();
     }

@@ -82,7 +82,7 @@ export default class LoginAccounts extends wepy.page {
   onLoad() {} // 在Page和Component共用的生命周期函数
 
   async onShow() {
-    let wals = wepy.getStorageSync(LOCAL_WALLET) || {};
+    let wals = wepy.getStorageSync(LOCAL_ACCOUNTS) || {};
     let temp_wal = [];
     for (const key in wals) {
       temp_wal.push(wals[key]['accounts'][0]);

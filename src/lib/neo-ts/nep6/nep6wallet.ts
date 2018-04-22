@@ -1,7 +1,6 @@
-﻿import { Helper } from '../Helper/AccountHelper'
-import {hexToBytes} from '../Helper/UintHelper'
-export class contract
-{
+﻿import { Account } from '../Helper/AccountHelper'
+import { hexToBytes } from '../Helper/UintHelper'
+export class contract {
     script: string;
     parameters = [{ "name": "parameter0", "type": "Signature" }];
     deployed = false;
@@ -17,8 +16,8 @@ export class nep6account {
         var cb = (i, r) => {
             if (i == "finish") {
                 var bytes = r as Uint8Array;
-                var pkey = Helper.GetPublicKeyFromPrivateKey(bytes);
-                var address = Helper.GetAddressFromPublicKey(pkey);
+                var pkey = Account.GetPublicKeyFromPrivateKey(bytes);
+                var address = Account.GetAddressFromPublicKey(pkey);
                 if (address == this.address) {
                     callback(i, r);
                 }
@@ -30,7 +29,19 @@ export class nep6account {
                 callback(i, r);
             }
         }
-        Helper.GetPrivateKeyFromNep2(this.nep2key, password, scrypt.N, scrypt.r, scrypt.p, cb);
+        Account.GetPrivateKeyFromNep2(this.nep2key, password, scrypt.N, scrypt.r, scrypt.p, cb);
+    }
+    public toJson() {
+        var jsonacc = {};
+        jsonacc["address"] = this.address;
+        jsonacc["publickey"] = this.publickey;
+        jsonacc["label"] = this.label;
+        jsonacc["isDefault"] = false;
+        jsonacc["lock"] = false;
+        jsonacc["nep2key"] = this.nep2key;
+        jsonacc["extra"] = null;
+        jsonacc["contract"] = this.contract;
+        return jsonacc;
     }
 }
 

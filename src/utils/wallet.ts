@@ -1,16 +1,16 @@
-import {Nep6,Helper} from '../lib/neo-ts/index';
-import { SCRYPT_CONFIG, CURR_WALLET, LOCAL_WALLET } from './config'
+import { Nep6, Helper } from '../lib/neo-ts/index';
+import { SCRYPT_CONFIG, CURR_ACCOUNT, LOCAL_ACCOUNTS } from './config'
 import Tips from './tip';
 import Cache from './cache'
 export default class Wallet {
     //当前账户钱包
-    static wallet:Nep6.nep6wallet = null
+    static wallet: Nep6.nep6wallet = null
 
     //nep6account
-    static account:Nep6.nep6account = null
+    static account: Nep6.nep6account = null
 
     //保存用户的openid
-    static openid:string = null
+    static openid: string = null
 
     constructor() { }
 
@@ -19,7 +19,7 @@ export default class Wallet {
      */
     static reset() {
         //清除文件缓存
-        Cache.delete(CURR_WALLET);
+        Cache.delete(CURR_ACCOUNT);
         //清除内存缓存
         Wallet.account = null;
     }
@@ -29,85 +29,69 @@ export default class Wallet {
      * @param {string} label 
      * @param {string} key prikey
      */
-    static getWallet(label:string, key:string):Nep6.nep6wallet {
+    static getAccount(label: string, key: string): Nep6.nep6account {
         let privateKey = Helper.hexToBytes(key);
         Tips.loading('公钥计算中');
         const publicKey = Helper.Account.GetPublicKeyFromPrivateKey(privateKey);
 
         Tips.loading('地址计算中');
         const address = Helper.Account.GetAddressFromPublicKey(publicKey);
-        var wallet = new Nep6.nep6wallet();
-        wallet.scrypt = new Nep6.nep6ScryptParameters();
-        wallet.scrypt.N = SCRYPT_CONFIG.N;
-        wallet.scrypt.r = SCRYPT_CONFIG.r;
-        wallet.scrypt.p = SCRYPT_CONFIG.p;
-        wallet.accounts = [];
-        wallet.accounts[0] = new Nep6.nep6account();
-        wallet.accounts[0].address = address;
-        wallet.accounts[0].label = label;
-        wallet.accounts[0].nep2key = key;
-        wallet.accounts[0].publickey = Helper.toHexString(publicKey);
-        return wallet;
+        let account: Nep6.nep6account = new Nep6.nep6account();
+
+        account.address = address;
+        account.label = label;
+        account.nep2key = key;
+        account.publickey = Helper.toHexString(publicKey);
+        return account;
     }
 
     static importAccount(json) {
         const label = json['label'];
-        let wallets = Cache.get(LOCAL_WALLET) || {};
+        let accounts = Cache.get(LOCAL_ACCOUNTS) || {};
 
-        if (wallets[label] !== undefined) {
+        if (accounts[label] !== undefined) {
             Tips.alert('账户名已存在');
             return;
         }
 
-        var wallet = new Nep6.nep6wallet();
-        wallet.scrypt = new Nep6.nep6ScryptParameters();
-        wallet.scrypt.N = SCRYPT_CONFIG.N;
-        wallet.scrypt.r = SCRYPT_CONFIG.r;
-        wallet.scrypt.p = SCRYPT_CONFIG.p;
-        wallet.accounts = [];
-        wallet.accounts[0] = new Nep6.nep6account();
-        wallet.accounts[0].address = json['address'];
-        wallet.accounts[0].label = json['label'];
-        wallet.accounts[0].nep2key = json['nep2key'];
-        wallet.accounts[0].publickey = json['publickey'];
+        let account = new Nep6.nep6account();
+        account.address = json['address'];
+        account.label = json['label'];
+        account.nep2key = json['nep2key'];
+        account.publickey = json['publickey'];
 
-        Wallet.setWallet(wallet);
-
-        const wallet_json = wallet.toJson();
-        wallets[label] = wallet_json;
-        Cache.put(LOCAL_WALLET, wallets);
+        Wallet.setAccount(account);
+        accounts[label] = account;
+        Cache.put(LOCAL_ACCOUNTS, accounts);
     }
     /**
      * 缓存账户
      * @param {object} wallet 
      */
-    static setWallet(wallet) {
-        Cache.put(CURR_WALLET, wallet);
-        Wallet.setAccount(wallet.accounts[0]);
+    static setAccount(account: Nep6.nep6account) {
+        Cache.put(CURR_ACCOUNT, account);
+        Wallet.account = account;
     }
 
-    static setAccount(nep6account) {
-        Wallet.account = nep6account;
-    }
     /**
      * 删除本地缓存的指定账户
      * @param {string} label 
      */
     static removeWallet() {
         const label = Wallet.account.label;
-        let wals = Cache.get(LOCAL_WALLET) || {};
+        let wals = Cache.get(LOCAL_ACCOUNTS) || {};
         let temp_wals = {};
         for (var key in wals) {
             if (key !== label)
                 temp_wals[key] = wals[key];
         }
-        Cache.put(LOCAL_WALLET, temp_wals);
+        Cache.put(LOCAL_ACCOUNTS, temp_wals);
         Wallet.reset();
     }
     /**
      * return address 
      */
-    static getAddress():string {
+    static getAddress(): string {
         if (this.account === null) {
             Tips.alert('密钥格式错误，重新登陆')
             return;
@@ -127,9 +111,9 @@ export default class Wallet {
      * wif 转私钥
      * @param {string} wif 
      */
-    static wif2prikey(wif:string):string {
-        let prikey:Uint8Array = Helper.Account.GetPrivateKeyFromWIF(wif);
-        let strkey:string = Helper.toHexString(prikey);
+    static wif2prikey(wif: string): string {
+        let prikey: Uint8Array = Helper.Account.GetPrivateKeyFromWIF(wif);
+        let strkey: string = Helper.toHexString(prikey);
 
         return strkey;
     }
@@ -139,7 +123,7 @@ export default class Wallet {
      * @param {Wallet} wallet 
      * @param {CallBack} callback
      */
-    static decode(passphrase:string, callback:Function):Function {
+    static decode(passphrase: string, callback: Function): Function {
         if (Wallet.account === null) {
             callback(-1, null, null)
             return;

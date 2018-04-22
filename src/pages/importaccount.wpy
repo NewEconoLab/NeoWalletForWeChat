@@ -200,7 +200,7 @@ export default class ImportAccount extends wepy.page {
       tip.error('私钥格式错误');
       return;
     }
-    let wallets = Util.get.cache(LOCAL_WALLET) || {};
+    let wallets = Util.get.cache(Util.config.LOCAL_ACCOUNTS) || {};
 
     if (wallets[accountlabel] !== undefined) {
       Util.show.alert('账户名已存在');
@@ -212,15 +212,15 @@ export default class ImportAccount extends wepy.page {
       privateKey = Util.get.prikey(privateKey);
     }
 
-    var wallet = Util.get.wallet(accountlabel, privateKey);
-    const wallet_json = wallet.toJson();
-    wallets[accountlabel] = wallet_json;
+    var account = Util.get.nep2(accountlabel, privateKey);
+    
+    wallets[accountlabel] = account;
 
     Util.show.loading('钱包创建完成');
-    Util.set.cache(LOCAL_WALLET, wallets);
+    Util.set.cache(LOCAL_ACCOUNTS, wallets);
 
     //本地缓存新生成的账户
-     Util.set.wallet(wallet);
+     Util.set.account(account);
     // Util.loading('登陆中' });
     // var jsonstr = JSON.stringify(wallet_json);
     // wepy.hideLoading();

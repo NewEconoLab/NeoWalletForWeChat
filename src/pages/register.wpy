@@ -101,7 +101,7 @@
 </template>
 <script>
 import wepy from 'wepy';
-import {Helper} from '../lib/neo-ts/index';
+import { Helper } from '../lib/neo-ts/index';
 import Util from '../utils/index';
 export default class Register extends wepy.page {
   customData = {}; // 自定义数据
@@ -138,50 +138,48 @@ export default class Register extends wepy.page {
       let repassphrase = e.detail.value.repassphrase;
 
       if (passphrase === '' || passphrase !== repassphrase) {
-        tip.alert('两次密码不同');
+        Util.show.alert('两次密码不同');
         return;
       }
       if (accountlabel === '') {
         Util.show.alert('账户名不能为空');
         return;
       }
-      let wallets = Util.get.cache(LOCAL_WALLET) || {};
+      let wallets = Util.get.cache(Util.config.LOCAL_ACCOUNTS) || {};
       if (wallets[accountlabel] !== undefined) {
-        tip.alert('账户名已存在');
+        Util.show.alert('账户名已存在');
         return;
       }
       Util.show.loading('私钥生成中');
 
       let privateKey = await Util.get.random(64);
 
-      var wallet = Util.get.wallet(accountlabel, privateKey);
-      console.log(wallet);
+      var account = Util.get.nep2(accountlabel, privateKey);
 
       setTimeout(function() {
-        wepy.hideLoading();
+        Util.hide.loading();
       }, 1000);
 
       Helper.Account.GetNep2FromPrivateKey(
         Helper.hexToBytes(privateKey),
         passphrase,
-        wallet.scrypt.N,
-        wallet.scrypt.r,
-        wallet.scrypt.p,
+        Util.config.SCRYPT.N,
+        Util.config.SCRYPT.r,
+        Util.config.SCRYPT.p,
         (info, result) => {
           that.isGenerating = false;
           that.$apply();
           if (info == 'finish') {
-            wallet.accounts[0].nep2key = result;
-            const wallet_json = wallet.toJson();
-            wallets[accountlabel] = wallet_json;
-            console.log(wallet_json);
+            account.nep2key = result;
+            wallets[accountlabel] = account;
 
-           Util.show.loading('钱包创建完成');
-            Util.set.cache(LOCAL_WALLET, wallets);
+            Util.show.loading('钱包创建完成');
+            Util.set.cache(LOCAL_ACCOUNTS, wallets);
             //本地缓存新生成的账户
-           Util.set.wallet(wallet);
-            var jsonstr = JSON.stringify(wallet_json);
-           Util.hide.loading();
+            Util.set.account(account);
+
+            var jsonstr = JSON.stringify(account.toJson());
+            Util.hide.loading();
             that.$redirect('./regresult?wallet=' + jsonstr);
           } else {
             //TODO: alert for encoding error
