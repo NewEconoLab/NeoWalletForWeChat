@@ -5,10 +5,13 @@ export default class Cache {
      * @param {string} key 
      * @param {any} value 
      */
-    static put(key, value) {
+    static async put(key, value) {
+        console.log('key = ' + key);
+        console.log('value = '+value);
         if (key === null || key === undefined)
             return;
-        wx.setStorageSync(key, value);
+
+        await wx.setStorageSync(key, value);
     }
 
     /**

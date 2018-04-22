@@ -1,4 +1,4 @@
-﻿import { Helper } from '../Helper/AccountHelper'
+﻿import { Account } from '../Helper/AccountHelper'
 import { ScriptBuilder } from './ScriptBuilder'
 import { Fixed8 } from '../neo/Fixed8'
 import { BinaryWriter } from '../neo/IO/BinaryWriter'
@@ -115,8 +115,8 @@ export class Witness {
     public VerificationScript: Uint8Array;//校验脚本，通常是 push 公钥, CheckSig 两条指令   验证的东西就是未签名的交易
     //这个就是地址的脚本
     public get Address(): string {
-        var hash = Helper.GetScriptHashFromScript(this.VerificationScript);
-        return Helper.GetAddressFromScriptHash(hash);
+        var hash = Account.GetScriptHashFromScript(this.VerificationScript);
+        return Account.GetAddressFromScriptHash(hash);
     }
 }
 
@@ -420,14 +420,14 @@ export class Transaction {
     public AddWitness(signdata: Uint8Array, pubkey: Uint8Array, addrs: string): void {
         {//额外的验证
             var msg = this.GetMessage();
-            var bsign = Helper.VerifySignature(msg, signdata, pubkey);
+            var bsign = Account.VerifySignature(msg, signdata, pubkey);
             if (bsign == false)
                 throw new Error("wrong sign");
-            var addr = Helper.GetAddressFromPublicKey(pubkey);
+            var addr = Account.GetAddressFromPublicKey(pubkey);
             if (addr != addrs)
                 throw new Error("wrong script");
         }
-        var vscript = Helper.GetAddressCheckScriptFromPublicKey(pubkey);
+        var vscript = Account.GetAddressCheckScriptFromPublicKey(pubkey);
         //iscript 对个人账户见证人他是一条pushbytes 指令
         var sb = new ScriptBuilder();
         sb.EmitPushBytes(signdata);
@@ -439,7 +439,7 @@ export class Transaction {
 
     //增加智能合约见证人
     public AddWitnessScript(vscript: Uint8Array, iscript: Uint8Array): void {
-        var scripthash = Helper.GetScriptHashFromScript(vscript);
+        var scripthash = Account.GetScriptHashFromScript(vscript);
         if (this.witnesses == null)
             this.witnesses = [];
         var newwit = new Witness();

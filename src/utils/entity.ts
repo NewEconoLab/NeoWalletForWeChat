@@ -12,24 +12,26 @@ export class Asset {
 
     constructor(name) {
         this.name = name;
+        this.utxos = {};
     }
 
     /**
      * 每轮刷新的时候 总资产，总价值都需要重新计算
      */
-    init() {
+    public init() {
         this.amount = '0';
         this.total = '0.00';
     }
+
     /**
      * 添加UTXO
      *  检查下这个UTXO是否在已花费的列表中，如果有，而且高度已经超过了两个，那么就从spent移除，添加到utxo
      * @param utxo 新的UTXO
      * @param height 当前区块高度
      */
-    addUTXO(utxo: Utxo, height: number) {
+    public addUTXO(utxo: Utxo, height: number) {
         //已存在且已花费
-        if (this.utxos[utxo.txid] !== undefined && (this.utxos[utxo.txid] as Utxo).isSpent) {
+        if ((this.utxos[utxo.txid] as Utxo) !== undefined && (this.utxos[utxo.txid] as Utxo).isSpent) {
             //判断交易高度是否已经超过两个 判断交易失败，spent状态取消
             if (height - (this.utxos[utxo.txid] as Utxo).spent >= 2) {
                 (this.utxos[utxo.txid] as Utxo).isSpent = false;
@@ -40,13 +42,15 @@ export class Asset {
         }
         this.amount = (parseFloat(this.amount) + utxo.count).toFixed(8);
     }
-
+    public ss() {
+        console.log('====');
+    }
     /**
      * 获取支付用的utxo
      * @param amount 需要的总金额
      * @param height 当前区块高度
      */
-    pay(amount: Neo.Fixed8, height: number): any {
+    public pay(amount: Neo.Fixed8, height: number): any {
         let count: Neo.Fixed8 = Neo.Fixed8.Zero;
         let outputs: Utxo[] = [];
         for (let key in this.utxos) {
@@ -115,60 +119,6 @@ export class NeoAsset {
     claim: number;
 }
 
-export class UTXO {
-    addr: string;
-    txid: string;
-    n: number;
-    asset: string;
-    count: Neo.Fixed8;
-
-    static ArrayToString(utxos: UTXO[]): Array<any> {
-        var str = "";
-        var obj = [];
-        for (var i = 0; i < utxos.length; i++) {
-            obj.push({});
-            obj[i].n = utxos[i].n;
-            obj[i].addr = utxos[i].addr;
-            obj[i].txid = utxos[i].txid;
-            obj[i].asset = utxos[i].asset;
-            obj[i].count = utxos[i].count.toString();
-        }
-        return obj
-    }
-    static StringToArray(obj: Array<any>): UTXO[] {
-        var utxos: Array<UTXO> = new Array<UTXO>();
-        for (var i = 0; i < obj.length; i++) {
-            utxos.push(new UTXO);
-            var str: string = obj[i].count;
-            utxos[i].n = obj[i].n;
-            utxos[i].addr = obj[i].addr;
-            utxos[i].txid = obj[i].txid;
-            utxos[i].asset = obj[i].asset;
-            utxos[i].count = Neo.Fixed8.parse(str);
-        }
-        return utxos;
-    }
-
-    static setAssets(assets: { [id: string]: UTXO[] }) {
-        var obj = {}
-        for (var asset in assets) {
-            let arr = UTXO.ArrayToString(assets[asset]);
-            obj[asset] = arr;
-        }
-        sessionStorage.setItem("current-assets-utxos", JSON.stringify(obj));
-    }
-    static getAssets() {
-        let assets = null;
-        var str = sessionStorage.getItem("current-assets-utxos");
-        if (str !== null && str != undefined && str != '') {
-            assets = JSON.parse(str);
-            for (const asset in assets) {
-                assets[asset] = UTXO.StringToArray(assets[asset]);
-            }
-        }
-        return assets;
-    }
-}
 
 export class Consts {
     static baseContract = "0xdffbdd534a41dd4c56ba5ccba9dfaaf4f84e1362";
@@ -206,4 +156,28 @@ export interface Transaction {
 export class History {
     n: number; asset: string; value: string; address: string; assetname: string;
     time: string; txid: string;
+}
+
+export class Claim {
+    addr: string;//"ALfnhLg7rUyL6Jr98bzzoxz5J7m64fbR4s"
+    asset: string;//"0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b"
+    claimed: boolean;//""
+    createHeight: number;//1365554
+    n: number;//0
+    txid: string;//"0x90800a9dde3f00b61e16a387aa4a2ea15e4c7a4711a51aa9751da224d9178c64"
+    useHeight: number;//1373557
+    used: string;//"0x47bf58edae75796b1ba4fd5085e5012c3661109e2e82ad9b84666740e561c795"
+    value: number;//"1"
+
+    constructor(json: {}) {
+        this.addr = json['addr'];
+        this.asset = json['asset'];
+        this.claimed = json['claimed'];
+        this.createHeight = json['createHeight'];
+        this.n = json['n'];
+        this.txid = json['txid'];
+        this.useHeight = json['useHeight'];
+        this.used = json['used'];
+        this.value = json['value'];
+    }
 }

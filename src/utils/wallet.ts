@@ -1,5 +1,5 @@
 import { Nep6, Helper } from '../lib/neo-ts/index';
-import { SCRYPT_CONFIG, CURR_ACCOUNT, LOCAL_ACCOUNTS } from './config'
+import { SCRYPT, CURR_ACCOUNT, LOCAL_ACCOUNTS } from './config'
 import Tips from './tip';
 import Cache from './cache'
 export default class Wallet {

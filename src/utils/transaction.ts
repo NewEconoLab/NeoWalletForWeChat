@@ -2,8 +2,9 @@ import { Helper, Neo, ThinNeo } from '../lib/neo-ts/index'
 import Tips from './tip'
 import Wallet from './wallet'
 import Https from './Https'
-import { Asset, Pay } from './entity';
-
+import { Asset, Pay, Claim } from './entity';
+import Coin from './coin';
+import { getSecureRandom } from './random'
 export default class Transfer {
 
     static formId = [];
@@ -50,7 +51,7 @@ export default class Transfer {
         //交易类型为合约交易
         tran.type = ThinNeo.TransactionType.ContractTransaction;
         tran.version = 0;//0 or 1
-        tran.extdata = null;
+        // tran.extdata = null;
         tran.attributes = [];
         tran.inputs = [];
 
@@ -103,76 +104,106 @@ export default class Transfer {
         return tran;
     }
 
-    /**
-     *  nep5交易
-     * @param {string} address 
-     * @param {string} tatgeraddr 
-     * @param {string} asset 
-     * @param {string} amount 
-     */
-    static async nep5Transaction(address, tatgeraddr, asset, amount) {
-        let res = await Https.getNep5Asset(asset);
 
-        var decimals = res["decimals"];// as number;
-        var numarr = amount.split(".");
-        decimals -= (numarr.length == 1 ? 0 : numarr[1].length);
-
-        var v = 1;
-        for (var i = 0; i < decimals; i++) {
-            v *= 10;
-        }
-
-        var bnum = new Neo.BigInteger(amount.replace(".", ""));
-        var intv = bnum.multiply(v).toString();
-
-        var sb = new ThinNeo.ScriptBuilder();
-        var scriptaddress = Helper.hexToBytes(asset).reverse();
-        sb.EmitParamJson(["(address)" + address, "(address)" + tatgeraddr, "(integer)" + intv]);//第二个参数是个数组
-        sb.EmitPushString("transfer");//第一个参数
-        sb.EmitAppCall(scriptaddress);  //资产合约
-
-        //交易脚本构造完成
-        //接下来构造交易
-        return sb.ToArray();
-    }
-
-    /**
-     *  合约调用交易
-     * @param {Uint8Array} script 
-     */
-    static async contractInvokeTrans(script: Uint8Array) {
-        var addr = current.address;
+    static async claimGas(claims: Claim[], sum: string) {
         var tran = new ThinNeo.Transaction();
-        //合约类型
-        tran.inputs = [];
-        tran.outputs = [];
-        tran.type = ThinNeo.TransactionType.InvocationTransaction;
-        tran.extdata = new ThinNeo.InvokeTransData();
-
-        //塞入脚本
-        tran.extdata.script = script;
+        //交易类型为合约交易
+        tran.type = ThinNeo.TransactionType.ClaimTransaction;
+        tran.version = 0;//0 or 1
+        tran.extdata = new ThinNeo.ClaimTransData(); //JSON.parse(JSON.stringify(claims));
+        (tran.extdata as ThinNeo.ClaimTransData).claims = []
         tran.attributes = [];
-        tran.attributes[0] = new ThinNeo.Attribute();
-        tran.attributes[0].usage = ThinNeo.TransactionAttributeUsage.Script;
-        tran.attributes[0].data = Helper.Account.GetPublicKeyScriptHash_FromAddress(addr);
-        if (tran.witnesses == null)
-            tran.witnesses = [];
+        tran.inputs = [];
+        for (let i in claims) {
+            let claim = (claims[i] as Claim);
+            var input = new ThinNeo.TransactionInput();
+            input.hash = Helper.hexToBytes(claim.txid).reverse();
+            input.index = claim.n;
+            input["_addr"] = claim.addr;
+            (tran.extdata as ThinNeo.ClaimTransData).claims.push(input);
+        }
+        var output = new ThinNeo.TransactionOutput();
+        output.assetId = Helper.hexToBytes(Coin.id_GAS).reverse();
+        output.toAddress = Helper.Account.GetPublicKeyScriptHash_FromAddress(Wallet.account.address);
+        output.value = Neo.Fixed8.parse(sum);
+        tran.outputs = [];
+        tran.outputs.push(output);
+        let randomStr = await getSecureRandom(256);
 
-        var msg = tran.GetMessage();
-        var pubkey = current.pubkey;
-        var prekey = current.prikey;
-        var signdata = Helper.Account.Sign(msg, prekey);
-
-        //添加见证人
-        tran.AddWitness(signdata, pubkey, addr);
-        var data = tran.GetRawData();//: Uint8Array
-
-        var res = new Result();
-        var result = await Https.rpc_postRawTransaction(data);
-        res.err = !result;
-        res.info = "成功";
-        return res;
+        const prikey = Helper.hexToBytes(Wallet.account.nep2key);
+        const pubkey = Helper.hexToBytes(Wallet.account.publickey);
+        Transfer.setTran(tran, prikey, pubkey, randomStr);
     }
+    // /**
+    //  *  nep5交易
+    //  * @param {string} address 
+    //  * @param {string} tatgeraddr 
+    //  * @param {string} asset 
+    //  * @param {string} amount 
+    //  */
+    // static async nep5Transaction(address, tatgeraddr, asset, amount) {
+    //     let res = await Https.getNep5Asset(asset);
+
+    //     var decimals = res["decimals"];// as number;
+    //     var numarr = amount.split(".");
+    //     decimals -= (numarr.length == 1 ? 0 : numarr[1].length);
+
+    //     var v = 1;
+    //     for (var i = 0; i < decimals; i++) {
+    //         v *= 10;
+    //     }
+
+    //     var bnum = new Neo.BigInteger(amount.replace(".", ""));
+    //     var intv = bnum.multiply(v).toString();
+
+    //     var sb = new ThinNeo.ScriptBuilder();
+    //     var scriptaddress = Helper.hexToBytes(asset).reverse();
+    //     sb.EmitParamJson(["(address)" + address, "(address)" + tatgeraddr, "(integer)" + intv]);//第二个参数是个数组
+    //     sb.EmitPushString("transfer");//第一个参数
+    //     sb.EmitAppCall(scriptaddress);  //资产合约
+
+    //     //交易脚本构造完成
+    //     //接下来构造交易
+    //     return sb.ToArray();
+    // }
+
+    /**
+    //  *  合约调用交易
+    //  * @param {Uint8Array} script 
+    //  */
+    // static async contractInvokeTrans(script: Uint8Array) {
+    //     var addr = current.address;
+    //     var tran = new ThinNeo.Transaction();
+    //     //合约类型
+    //     tran.inputs = [];
+    //     tran.outputs = [];
+    //     tran.type = ThinNeo.TransactionType.InvocationTransaction;
+    //     tran.extdata = new ThinNeo.InvokeTransData();
+
+    //     //塞入脚本
+    //     tran.extdata.script = script;
+    //     tran.attributes = [];
+    //     tran.attributes[0] = new ThinNeo.Attribute();
+    //     tran.attributes[0].usage = ThinNeo.TransactionAttributeUsage.Script;
+    //     tran.attributes[0].data = Helper.Account.GetPublicKeyScriptHash_FromAddress(addr);
+    //     if (tran.witnesses == null)
+    //         tran.witnesses = [];
+
+    //     var msg = tran.GetMessage();
+    //     var pubkey = current.pubkey;
+    //     var prekey = current.prikey;
+    //     var signdata = Helper.Account.Sign(msg, prekey);
+
+    //     //添加见证人
+    //     tran.AddWitness(signdata, pubkey, addr);
+    //     var data = tran.GetRawData();//: Uint8Array
+
+    //     var res = new Result();
+    //     var result = await Https.rpc_postRawTransaction(data);
+    //     res.err = !result;
+    //     res.info = "成功";
+    //     return res;
+    // }
 
 
 }

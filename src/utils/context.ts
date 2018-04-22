@@ -13,37 +13,40 @@ export class Context {
     //记录币的对象 
     static Assets = {};
 
+    //可领取的gas
+    static Claims = {};
+
     //当前区块高度
     static Height: number = 0;
 
     //未确认交易
     static unconfirm = {};
 
-    static isLoadTXs: boolean = false;
-    static isLoadAsset: boolean = true;
-
-    // 交易历史代理
+    // 交易历史刷新代理
     static txDelegate: Function = null;
 
-    // 资产代理
+    // 资产刷新代理
     static assetDelegate: Function = null;
 
     static lock = false; // use lock to prevent muti request competition
 
-    static openid:string;
+    static openid: string;
 
 
-    static init(addr: string) {
+    static async init(account: Nep6.nep6account) {
         // 暂时不加载历史记录
         this.txDelegate = null;
-        this.isLoadTXs = false;
-
+        Wallet.setAccount(account);
         let neo = new Asset('NEO');
         let gas = new Asset('GAS');
 
-        this.Assets = {
-            'NEO': neo, 'GAS': gas
-        };
+        Context.Assets['NEO'] = neo;
+        Context.Assets['GAS'] = gas;
+
+        await Coin.initAllAsset();
+        Context.OnGetHeight();
+        Context.OnTimeOut();
+
     }
 
     /**
@@ -52,13 +55,12 @@ export class Context {
     static async OnTimeOut() {
         console.log('onTimeOut');
 
+        if (Context.assetDelegate === null) {
+            return;
+        }
         Context.OnGetAssets();
         Context.OnGetPrice();
-
-        if (Context.isLoadTXs) {
-            Context.OnGetTXs(1);
-        }
-
+        Context.OnGetTXs(1);
         Context.OnGetHeight();
     }
 
@@ -74,6 +76,12 @@ export class Context {
      * 获取账户资产信息 UTXO
      */
     static async OnGetAssets() {
+
+        if (Context.assetDelegate === null)
+            return;
+        for (let key in Context.Assets) {
+            (Context.Assets[key] as Asset).amount = '0.00';
+        }
         let that = this;
 
         //加锁，避免多个网络请求导致的刷新竞争
@@ -82,67 +90,62 @@ export class Context {
         this.lock = true;
 
         var utxos = await Https.api_getUTXO(Context.getAccount().address);
-
         for (var i in utxos) {
             var item = utxos[i];
             let utxo: Utxo = new Utxo(item);
             let type = Coin.assetID2name[utxo.asset];
-
-            if (this.Assets[type] === undefined) {
-                this.Assets[type] = [];
+            if (Context.Assets[type] === undefined) {
+                Context.Assets[type] = new Asset(type);
             }
 
-            (this.Assets[type] as Asset).addUTXO(utxo, this.Height);
+
+            if (Context.Assets[type] !== null)
+                (Context.Assets[type] as Asset).addUTXO(utxo, Context.Height);
         }
 
         //解锁
         this.lock = false;
-
-        // 回调coin资产
-        if (Context.assetDelegate !== null) {
-            //这里为了避免因为刷新导致的数据闪烁问题，使用深复制
-            // let assets = {};
-            // for (let key in this.Assets) {
-            //     const element = this.Assets[key];
-            //     assets[key] = new Asset(key);
-            // }
-            Context.assetDelegate(Context.Assets);
-        }
-
+        let assets = JSON.parse(JSON.stringify(Context.Assets));
+        Context.assetDelegate(assets);
     }
 
     /**
      * 获取市场价格
      */
     static async OnGetPrice() {
+        if (Context.assetDelegate === null)
+            return;
         let that = this;
+
         for (let key in Context.Assets) {
-            let asset = (Context.Assets[key] as Asset);
-            const coin = await Https.api_getCoinPrice(asset.name);
+
+            const coin = await Https.api_getCoinPrice((Context.Assets[key] as Asset).name);
             try {
                 // 更新价格
-                asset.price = parseFloat(coin[0]['price_cny']).toFixed(2);
+                (Context.Assets[key] as Asset).price = parseFloat(coin[0]['price_cny']).toFixed(2);
                 // 更新资产
-                asset.total =
-                    ((parseFloat(asset.amount.toString())) *
+                (Context.Assets[key] as Asset).total =
+                    ((parseFloat((Context.Assets[key] as Asset).amount.toString())) *
                         parseFloat(coin[0]['price_cny'])).toFixed(2);
                 // 更新币市走向
-                if (coin[0]['percent_change_1h'][0] !== '-') asset.rise = true;
-                else asset.rise = false;
+                if (coin[0]['percent_change_1h'][0] !== '-') (Context.Assets[key] as Asset).rise = true;
+                else (Context.Assets[key] as Asset).rise = false;
             } catch (err) {
                 console.log('NET_ERR');
                 console.log(err);
             }
         }
-        // 回调法币资产
-        if (Context.assetDelegate !== null)
-            Context.assetDelegate(Context.Assets);
+
+        let assets = JSON.parse(JSON.stringify(Context.Assets));
+        Context.assetDelegate(assets);
     }
 
     /**
      * 获取历史交易
      */
     static async OnGetTXs(page: number) {
+        if (Context.txDelegate === null)
+            return;
         const txs = await Https.rpc_getAddressTXs(Context.getAccount().address, 20, page);
         console.log(txs);
         if (txs === undefined) {
@@ -163,8 +166,7 @@ export class Context {
             txs[index].blockindex =
                 parseInt((Context.Height - (txs[index].blockindex as number) + 1).toString());
         }
-        if (Context.txDelegate !== null)
-            Context.txDelegate(txs);
+        Context.txDelegate(txs);
     }
 
     static getAccount(): Nep6.nep6account {
@@ -174,5 +176,5 @@ export class Context {
     static setAccount(account: Nep6.nep6account) {
         Wallet.account = account;
     }
-    
+
 }

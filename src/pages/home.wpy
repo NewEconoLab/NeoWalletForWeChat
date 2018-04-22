@@ -183,7 +183,7 @@
       <view class="lower-price">
         <view class="asset-block" wx:for="{{assets}}" >
           <view class="price-content">
-            <text class="label">{{item.type}}</text>
+            <text class="label">{{item.name}}</text>
             <view class="price">
               <text  style="color:{{item.rise?'#45d68a':'#f67581'}};">￥{{item.price}}</text>
             </view>
@@ -199,7 +199,9 @@
 
 <script>
 import wepy from 'wepy';
-import Util from '../utils/index';
+import Util, { Https } from '../utils/index';
+import Wallet from '../utils/wallet';
+import { Claim } from '../utils/entity';
 export default class Home extends wepy.page {
   config = {
     navigationBarTitleText: '首页'
@@ -229,8 +231,25 @@ export default class Home extends wepy.page {
   computed = {};
 
   methods = {
-    navigate(page) {
-      if (Util.get.account === null) {
+    async navigate(page) {
+      let res = await Https.api_getclaimgas(Util.get.account().address);
+
+      console.log(res);
+      let claims = [];
+      for (let i in res['claims']) {
+        let claim = new Claim(res.claims[i]);
+        claims.push(claim);
+      }
+
+      let a = res['gas'].toFixed(8);
+      console.log(a);
+
+
+      Util.send.claim(claims, a);
+      console.log(claims);
+
+      return;
+      if (Util.get.account() === null) {
         if (page === 'mine') {
           wepy.navigateTo({
             url: '/pages/index?switch=' + 0
@@ -247,42 +266,38 @@ export default class Home extends wepy.page {
 
   events = {};
 
-  onLoad() {
-    
-  }
-  async onShow() {
-    await Util.init.asset();
-  }
+  onLoad() {}
+  async onShow() {}
   // 页面渲染完成
   async onReady() {
     const that = this;
     await this.OnLogin();
 
-    // 初始化
-    Util.init.context();
-
     // 设置资产更新回调
-    Util.delegate.asset = function(assets) {
+    Util.delegate.asset(assets => {
       assets['GAS'].amount = parseFloat(assets['GAS'].amount).toFixed(4);
       that.assets = assets;
-      that.Block = Util.get.height;
+      that.Block = Util.get.height();
       that.$apply();
-    };
-
-    Util.service.start();
+    });
   }
 
   async OnLogin() {
     let that = this;
-    const wallet = Util.get.cache(Util.config.CURR_WALLET) || {};
-    console.log(Object.keys(wallet).length);
+    const account = Util.get.cache(Util.config.CURR_ACCOUNT) || {};
+    console.log('home');
+
+    console.log(account);
 
     // 本地缓存有账户 则直接加载本地账户信息
-    if (Object.keys(wallet).length !== 0) {
-      this.isLogin = true;
-      this.$apply();
-      Util.set.wallet(wallet);
-    }
+    try {
+      if (account.address !== undefined && account.address !== null) {
+        this.isLogin = true;
+        this.$apply();
+        Util.set.account(account);
+        Util.service.start(account);
+      }
+    } catch (err) {}
   }
   onShareAppMessage() {
     return {

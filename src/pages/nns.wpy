@@ -75,7 +75,6 @@
                 </view>  
                 <view class='sousuo'>搜索</view>  
             </view>
-
         </view>
     </scroll-view>
   </view>
@@ -106,8 +105,8 @@ export default class NNS extends wepy.page {
 
   onShareAppMessage() {
     return {
-      title: 'NEO钱包',
-      path: '/pages/index'
+      title: 'NEO域名系统',
+      path: '/pages/nns'
     };
   }
 }

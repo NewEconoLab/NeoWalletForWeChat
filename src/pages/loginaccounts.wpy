@@ -73,7 +73,7 @@
 
 <script>
 import wepy from 'wepy';
-import {Util} from '../utils/index';
+import Util from '../utils/index';
 export default class LoginAccounts extends wepy.page {
   customData = {}; // 自定义数据
 
@@ -82,10 +82,10 @@ export default class LoginAccounts extends wepy.page {
   onLoad() {} // 在Page和Component共用的生命周期函数
 
   async onShow() {
-    let wals = wepy.getStorageSync(LOCAL_ACCOUNTS) || {};
+    let wals =Util.get.cache(Util.config.LOCAL_ACCOUNTS) || {};
     let temp_wal = [];
     for (const key in wals) {
-      temp_wal.push(wals[key]['accounts'][0]);
+      temp_wal.push(wals[key]);
     }
     this.wals = wals;
     this.wallets = temp_wal;
@@ -111,8 +111,12 @@ export default class LoginAccounts extends wepy.page {
   methods = {
     async OnSelect(e) {
       const selected = this.wals[e];
+console.log('<<<<<<<<<<');
+
       //设置内存中的当前账户
-      Wallet.setWallet(selected);
+      await Util.set.account(selected);
+console.log('>>>>>>>>>>>>>>>');
+
       wepy.reLaunch({ url: './home' });
     }
   }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明

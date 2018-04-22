@@ -33,7 +33,7 @@ Page {
 import wepy from 'wepy';
 import 'wepy-async-function';
 
-import Util,{Https} from './utils/index'
+import Util, { Https } from './utils/index';
 
 export default class extends wepy.app {
   config = {
@@ -61,34 +61,34 @@ export default class extends wepy.app {
       navigationBarTextStyle: 'black'
     },
     tabBar: {
-      color: "#cccccc",
-      selectedColor: "#27adf1",
-      backgroundColor: "#ffffff",
-      borderStyle: "black",
+      color: '#cccccc',
+      selectedColor: '#27adf1',
+      backgroundColor: '#ffffff',
+      borderStyle: 'black',
       list: [
         {
-          pagePath: "pages/home",
-          text: "首页",
-          iconPath: "images/home.png",
-          selectedIconPath: "images/home_tap.png"
+          pagePath: 'pages/home',
+          text: '首页',
+          iconPath: 'images/home.png',
+          selectedIconPath: 'images/home_tap.png'
         },
         {
-          pagePath: "pages/watchonly",
-          text: "观察",
-          iconPath: "images/watch.png",
-          selectedIconPath: "images/watch_tap.png"
+          pagePath: 'pages/watchonly',
+          text: '观察',
+          iconPath: 'images/watch.png',
+          selectedIconPath: 'images/watch_tap.png'
         },
         {
-          pagePath: "pages/nns",
-          text: "NNS",
-          iconPath: "images/neo.png",
-          selectedIconPath: "images/neo.png"
+          pagePath: 'pages/nns',
+          text: 'NNS',
+          iconPath: 'images/neo.png',
+          selectedIconPath: 'images/neo.png'
         },
         {
-          pagePath: "pages/mine",
-          text: "个人",
-          iconPath: "images/mine.png",
-          selectedIconPath: "images/mine_tap.png"
+          pagePath: 'pages/mine',
+          text: '个人',
+          iconPath: 'images/mine.png',
+          selectedIconPath: 'images/mine_tap.png'
         }
       ]
     }
@@ -120,6 +120,11 @@ export default class extends wepy.app {
         }
       }
     });
+
+    // 循环执行代码
+    setInterval(async () => {
+      Util.service.update();
+    }, 15000); // 循环时间 这里是15秒
   }
 }
 </script>

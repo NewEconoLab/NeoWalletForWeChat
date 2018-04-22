@@ -125,7 +125,7 @@ export default class History extends wepy.page {
   events = {};
 
   onLoad() {
-    this.address = Util.get.account.address;
+    this.address = Util.get.account().address;
     this.$apply();
   }
   onShow() {

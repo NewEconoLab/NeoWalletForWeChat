@@ -33,33 +33,34 @@ export default {
     hide: {
         loading: Tips.loaded
     },
-    Send: {
+    send: {
         transfer: Transfer.makeTran,
-        invoke: Transfer.nep5Transaction,
-        // claim:Transfer.
+        // invoke: Transfer.nep5Transaction,
+        claim:Transfer.claimGas
     },
     get: {
         random: Random.getSecureRandom,
         cache: Cache.get,
-        height: Context.Height,
-        account: Wallet.account,
-        nep2:Wallet.importAccount,
-        assets: Context.Assets,
+        height: () => { return Context.Height },
+        account: () => { return Wallet.account },
+        nep2: Wallet.getAccount,
+        assets: () => { Context.Assets },
         rootName: NNS.getRootName,
         rootNameHash: NNS.getRootNameHash,
         userInfo: Wallet.getUserInfo,
         TXs: Context.OnGetTXs,
-        prikey:(wif:string):string=>{return Wallet.wif2prikey(wif)},
-        
+        prikey: (wif: string): string => { return Wallet.wif2prikey(wif) },
+
     },
     set: {
         cache: Cache.put,
-        account:Wallet.setAccount,
+        account: Wallet.setAccount,
         openid: Context.openid,
+        formid: (formid: string) => { Transfer.formId.push(formid); }
     },
     delegate: {
-        asset: Context.assetDelegate,
-        tx: Context.txDelegate
+        asset: (delegate: Function) => Context.assetDelegate = delegate,
+        tx: (delegate: Function) => Context.txDelegate = delegate
     },
     config: Config,
     init: {
@@ -67,6 +68,7 @@ export default {
         context: Context.init
     },
     service: {
-        start: () => { Context.OnGetHeight(); Context.OnTimeOut() }
+        start: Context.init,
+        update:Context.OnTimeOut,
     }
 }

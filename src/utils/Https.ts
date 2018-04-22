@@ -146,20 +146,22 @@ export default class Https {
     }
 
     /**
-     * 领取GAS
+     * 获取可领取的GAS
      * @param address 地址
      */
-    static async api_getclaimgas(address: string, type: number): Promise<number> {
+    static async api_getclaimgas(address: string, type: number) {
         if (type)
             var str = this.makeRpcUrl(this.api, "getclaimgas", address, type);
         else
             var str = this.makeRpcUrl(this.api, "getclaimgas", address);
-        var result = await fetch(str, { "method": "get" });
-        var json = await result.json();
-        var r = json["result"];
-        if (r == undefined)
-            return 0;
-        return r[0]["gas"];
+        // var result = await fetch(str, { "method": "get" });
+        var result = await Request.wxRequest({ "method": "get" }, str);
+        return result["result"][0];
+        // var json = await result.json();
+        // var r = json["result"];
+        // if (r == undefined)
+        //     return 0;
+        // return r[0]["gas"];
     }
 
     /***********************************************************

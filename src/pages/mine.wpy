@@ -150,9 +150,10 @@ export default class Mine extends wepy.page {
   } // 在Page和Component共用的生命周期函数
 
   onShow() {
-    this.account = Util.get.account;
+    this.account = Util.get.account();
+    console.log(Util.get.account());
+    
     this.$apply();
-    console.log(this.account);
   } // 只在Page中存在的页面生命周期函数
   onReady() {
     this.$apply();
