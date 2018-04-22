@@ -1,13 +1,15 @@
 import { DomainInfo, Consts, RootDomainInfo } from './entity';
-import { Https } from "./Https";
-import { Coin } from './coin';
 import {ThinNeo,Helper,Neo}from '../lib/neo-ts/index'
+import Https from "./Https";
+import Coin  from './coin';
+import Wallet from './wallet';
+import  Transfer from './transaction';
 
 /**
  * @name NEONameServiceTool
  * @method initRootDomain_初始化根域名信息
  */
-export class NNS
+export default class NNS
 {
     static root_test: RootDomainInfo;
 
@@ -19,7 +21,7 @@ export class NNS
         var test = new RootDomainInfo();
         test.roothash = NNS.nameHash("neo");
         test.rootname = "neo";
-        var scriptaddress = Consts.baseContract.hexToBytes().reverse();
+        var scriptaddress = Helper.hexToBytes(Consts.baseContract).reverse();
         var domain = await NNS.getDomainInfo(test.roothash, scriptaddress);
 ;
         test.owner = domain.owner;
@@ -39,9 +41,9 @@ export class NNS
         var subdomain: string = domainarr[ 0 ];
         domainarr.shift();
         domainarr.push(this.root_test.rootname)
-        var nnshash: Uint8Array = NNSTool.nameHashArray(domainarr);
-        let address = await NNSTool.getSubOwner(nnshash, subdomain, NNSTool.root_test.register);
-        let doamininfo = await NNSTool.getDomainInfo(nnshash, NNSTool.root_test.owner.reverse());
+        var nnshash: Uint8Array = NNS.nameHashArray(domainarr);
+        let address = await NNS.getSubOwner(nnshash, subdomain, NNS.root_test.register);
+        let doamininfo = await NNS.getDomainInfo(nnshash, NNS.root_test.owner.reverse());
         return address;
 
     }
@@ -55,18 +57,18 @@ export class NNS
         var domainarr: string[] = doamin.split('.');
         var subdomain: string = domainarr[ 0 ];
         domainarr.shift();
-        domainarr.push(NNSTool.root_test.rootname);
-        var nnshash: Uint8Array = NNSTool.nameHashArray(domainarr);
-        let domains = await NNSTool.getSubOwner(nnshash, subdomain, NNSTool.root_test.register);
+        domainarr.push(NNS.root_test.rootname);
+        var nnshash: Uint8Array = NNS.nameHashArray(domainarr);
+        let domains = await NNS.getSubOwner(nnshash, subdomain, NNS.root_test.register);
         var sb = new ThinNeo.ScriptBuilder();
-        var scriptaddress = NNSTool.root_test.register;
+        var scriptaddress = NNS.root_test.register;
         sb.EmitPushNumber(new Neo.BigInteger(232323));
         sb.Emit(ThinNeo.OpCode.DROP);
 
-        sb.EmitParamJson([ "(addr)" + LoginInfo.getCurrentAddress(), "(bytes)" + Helper.toHexString(nnshash), "(str)" + subdomain ]);//第二个参数是个数组
+        sb.EmitParamJson([ "(addr)" + Wallet.account.address, "(bytes)" + Helper.toHexString(nnshash), "(str)" + subdomain ]);//第二个参数是个数组
         sb.EmitPushString("requestSubDomain");//第一个参数
         sb.EmitAppCall(scriptaddress);  //资产合约
-        var res = Coin.contractInvokeTrans(sb.ToArray());
+        var res = Transfer.contractInvokeTrans(sb.ToArray());
         return res;
     }
 
@@ -87,7 +89,7 @@ export class NNS
         sb.EmitAppCall(scriptaddress);
         var data = sb.ToArray();
 
-        let result = await WWW.rpc_getInvokescript(data);
+        let result = await Https.rpc_getInvokescript(data);
         try
         {
             var state = result.state as string;
@@ -133,7 +135,7 @@ export class NNS
         sb.EmitAppCall(scriptaddress);
         var data = sb.ToArray();
 
-        let result = await WWW.rpc_getInvokescript(data);
+        let result = await Https.rpc_getInvokescript(data);
         try
         {
             var state = result[ "state" ] as string;
@@ -146,7 +148,7 @@ export class NNS
             //find name 他的type 有可能是string 或者ByteArray
             if (stack[ 0 ].type == "ByteArray")
             {
-                nameHash = (stack[ 0 ][ "value" ] as string).hexToBytes();
+                nameHash = Helper.hexToBytes(stack[ 0 ][ "value" ] as string);
 
             }
             return nameHash;
@@ -168,7 +170,7 @@ export class NNS
         sb.EmitAppCall(scriptaddress);
         var data = sb.ToArray();
 
-        let result = await WWW.rpc_getInvokescript(data);
+        let result = await Https.rpc_getInvokescript(data);
 
         try
         {
@@ -212,10 +214,10 @@ export class NNS
         let namehash: Uint8Array
         var domainarr: string[] = domain.split('.');
         var subdomain: string = domainarr[ 0 ];
-        var root: string = await NNSTool.getRootName();
+        var root: string = await NNS.getRootName();
         domainarr.shift();
         domainarr.push(root)
-        var nnshash: Uint8Array = NNSTool.nameHashArray(domainarr);
+        var nnshash: Uint8Array = NNS.nameHashArray(domainarr);
 
         return nnshash;
     }
@@ -241,7 +243,7 @@ export class NNS
         sb.EmitAppCall(scriptaddress);
         var data = sb.ToArray();
 
-        let result = await WWW.rpc_getInvokescript(data);
+        let result = await Https.rpc_getInvokescript(data);
         return;
     }
 
@@ -264,7 +266,7 @@ export class NNS
         sb.EmitAppCall(scriptaddress);
         var data = sb.ToArray();
 
-        let result = await WWW.rpc_getInvokescript(data);
+        let result = await Https.rpc_getInvokescript(data);
 
         try
         {
@@ -308,7 +310,7 @@ export class NNS
         sb.EmitAppCall(scriptaddress);
         var data = sb.ToArray();
 
-        let result = await WWW.rpc_getInvokescript(data);
+        let result = await Https.rpc_getInvokescript(data);
 
         try
         {
@@ -374,10 +376,10 @@ export class NNS
     static nameHashArray(domainarray: string[]): Uint8Array
     {
         domainarray.reverse();
-        var hash: Uint8Array = NNSTool.nameHash(domainarray[ 0 ]);
+        var hash: Uint8Array = NNS.nameHash(domainarray[ 0 ]);
         for (var i = 1; i < domainarray.length; i++)
         {
-            hash = NNSTool.nameHashSub(hash, domainarray[ i ]);
+            hash = NNS.nameHashSub(hash, domainarray[ i ]);
         }
         return hash;
     }
@@ -401,7 +403,7 @@ export class NNS
             sb.EmitAppCall(scriptaddress);
             //var data = sb.ToArray();
 
-            //let result = await WWW.rpc_getInvokescript(data);
+            //let result = await Https.rpc_getInvokescript(data);
 
         }
         catch (e)

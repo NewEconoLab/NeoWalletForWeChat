@@ -117,7 +117,7 @@
 </template>
 <script>
 import wepy from 'wepy';
-import {Util} from '../utils/index';
+import Util,{Https} from '../utils/index';
 export default class RegisterWatch extends wepy.page {
   customData = {}; // 自定义数据
 
@@ -157,24 +157,24 @@ export default class RegisterWatch extends wepy.page {
         return;
       }
 
-      wepy.showLoading({ title: '账户注册中' });
+     Util.show.loading('账户注册中' );
       setTimeout(function() {
         if (that.isLoading) {
-          wepy.hideLoading();
-          tip.error('网络异常', true);
+          Util.hide.loading();
+          Util.show.error('网络异常', true);
         }
       }, 7000);
 
       that.isLoading = true;
       that.$apply();
-      let res = await WWW.addr_insert(Wallet.openid, accountlabel, addr);
+      let res = await Https.addr_insert(Wallet.openid, accountlabel, addr);
       that.isLoading = false;
       that.$apply();
-      wepy.hideLoading();
+      Util.hide.loading()
       console.log(res);
       
       if (res['code'] == 0) {
-        tip.success('注册成功');
+        Util.show.success('注册成功');
         setTimeout(function() {
             wepy.navigateTo({
             url: '/pages/watch?address='+addr+"&label="+accountlabel

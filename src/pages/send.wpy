@@ -285,7 +285,7 @@ export default class Send extends wepy.page {
   //构造并发送交易
   async OnSend() {
     let that = this;
-    wepy.showLoading({ title: '密码验证中' });
+    Util.loading('密码验证中' );
 
     //如果当前账户直接使用私钥
     if (Wallet.account.nep2key.length === 64) {
@@ -307,10 +307,10 @@ export default class Send extends wepy.page {
     pubkey = Helper.hexToBytes(pubkey);
     var count = Neo.Fixed8.parse(this.amount + '');
     let coin = this.checked === 'GAS' ? CoinTool.id_GAS : CoinTool.id_NEO;
-    wepy.showLoading({ title: '交易生成中' });
+    Util.loading('交易生成中' );
     var tran = CoinTool.makeTran(UTXO.assets, this.targetAddr, coin, count);
     let randomStr = await Random.getSecureRandom(256);
-    wepy.showLoading({ title: '获取交易编号' });
+    Util.loading('获取交易编号');
     const txid = await TransactionTool.setTran(tran, prikey, pubkey, randomStr);
     wepy.hideLoading();
     if (txid === 'failed') {

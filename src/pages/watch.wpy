@@ -282,7 +282,7 @@
 
 <script>
 import wepy from 'wepy';
-import {Util} from '../utils/index';
+import Util,{Https} from '../utils/index';
 export default class Watch extends wepy.page {
   config = {
     navigationBarTitleText: '观察账户'
@@ -319,15 +319,15 @@ export default class Watch extends wepy.page {
           wepy.navigateTo({ url: '/pages/watchonly' });
           break;
         case 'delete':
-          wepy.showLoading('账户删除中');
-          let res = await Util.Https.addr_delete(Wallet.openid, that.address);
-          wepy.hideLoading();
+          Util.show.loading('账户删除中');
+          let res = await Https.addr_delete(Wallet.openid, that.address);
+          Util.hide.loading();
           if (res['code'] == 0) {
-            tip.success('删除成功');
+            Util.show.success('删除成功');
             wepy.reLaunch({
               url: '/pages/index?switch=' + 0
             });
-          } else tip.error('删除失败');
+          } else Util.show.error('删除失败');
 
           break;
         default:
@@ -340,13 +340,11 @@ export default class Watch extends wepy.page {
       switch (param) {
         case 'account':
           that.selected = 0;
-          Service.isLoadTXs = false;
-          Service.txDelegate = null;
+          Util.delegate.tx = null;
           break;
         case 'history':
           that.selected = 1;
-          Service.isLoadTXs = true;
-          Service.txDelegate = function(txs) {
+          Util.delegate.tx = function(txs) {
             if (txs === null) that.empty = 'false';
             else {
               that.notEmpty = 'true';
@@ -355,12 +353,11 @@ export default class Watch extends wepy.page {
             }
             that.$apply();
           };
-          Service.OnGetTXs(1);
+          Util.get.TXs(1);
           break;
         case 'manager':
           that.selected = 2;
-          Service.isLoadTXs = false;
-          Service.txDelegate = null;
+          Util.delegate.tx = null;
           break;
         default:
           break;
@@ -380,15 +377,13 @@ export default class Watch extends wepy.page {
     let that = this;
 
     // 初始化服务
-    Service.init(this.address);
+    Util.init.context();
 
     // 资产加载回调
-    Service.assetDelegate = function(assets) {
+    Util.delegate.asset = function(assets) {
       that.assets = assets;
       that.$apply();
     };
-
-    Service.OnTimeOut();
   }
 
   /**
@@ -398,7 +393,7 @@ export default class Watch extends wepy.page {
     if (this.isLoading) return;
     this.isLoading = true;
     this.$apply();
-    this.TXs = await Service.OnGetTXs(1);
+    this.TXs = await Util.get.TXs(1);
     this.isLoading = false;
     this.$apply();
     wx.hideNavigationBarLoading(); //完成停止加载

@@ -1,11 +1,10 @@
 import {Nep6,Helper} from '../lib/neo-ts/index';
 import { SCRYPT_CONFIG, CURR_WALLET, LOCAL_WALLET } from './config'
-import tip from '../utils/tip';
-
-export class Wallet {
+import Tips from './tip';
+import Cache from './cache'
+export default class Wallet {
     //当前账户钱包
     static wallet:Nep6.nep6wallet = null
-    static height:number = -1
 
     //nep6account
     static account:Nep6.nep6account = null
@@ -20,7 +19,7 @@ export class Wallet {
      */
     static reset() {
         //清除文件缓存
-        wx.setStorageSync(CURR_WALLET, null);
+        Cache.delete(CURR_WALLET);
         //清除内存缓存
         Wallet.account = null;
     }
@@ -32,10 +31,10 @@ export class Wallet {
      */
     static getWallet(label:string, key:string):Nep6.nep6wallet {
         let privateKey = Helper.hexToBytes(key);
-        wx.showLoading({ title: '公钥计算中' });
+        Tips.loading('公钥计算中');
         const publicKey = Helper.Account.GetPublicKeyFromPrivateKey(privateKey);
 
-        wx.showLoading({ title: '地址计算中' });
+        Tips.loading('地址计算中');
         const address = Helper.Account.GetAddressFromPublicKey(publicKey);
         var wallet = new Nep6.nep6wallet();
         wallet.scrypt = new Nep6.nep6ScryptParameters();
@@ -53,10 +52,10 @@ export class Wallet {
 
     static importAccount(json) {
         const label = json['label'];
-        let wallets = wx.getStorageSync(LOCAL_WALLET) || {};
+        let wallets = Cache.get(LOCAL_WALLET) || {};
 
         if (wallets[label] !== undefined) {
-            tip.alert('账户名已存在');
+            Tips.alert('账户名已存在');
             return;
         }
 
@@ -76,14 +75,14 @@ export class Wallet {
 
         const wallet_json = wallet.toJson();
         wallets[label] = wallet_json;
-        wx.setStorageSync(LOCAL_WALLET, wallets);
+        Cache.put(LOCAL_WALLET, wallets);
     }
     /**
      * 缓存账户
      * @param {object} wallet 
      */
     static setWallet(wallet) {
-        wx.setStorageSync(CURR_WALLET, wallet);
+        Cache.put(CURR_WALLET, wallet);
         Wallet.setAccount(wallet.accounts[0]);
     }
 
@@ -96,13 +95,13 @@ export class Wallet {
      */
     static removeWallet() {
         const label = Wallet.account.label;
-        let wals = wx.getStorageSync(LOCAL_WALLET) || {};
+        let wals = Cache.get(LOCAL_WALLET) || {};
         let temp_wals = {};
         for (var key in wals) {
             if (key !== label)
                 temp_wals[key] = wals[key];
         }
-        wx.setStorageSync(LOCAL_WALLET, temp_wals);
+        Cache.put(LOCAL_WALLET, temp_wals);
         Wallet.reset();
     }
     /**
@@ -110,7 +109,7 @@ export class Wallet {
      */
     static getAddress():string {
         if (this.account === null) {
-            tip.alert('密钥格式错误，重新登陆')
+            Tips.alert('密钥格式错误，重新登陆')
             return;
         }
 
@@ -159,7 +158,7 @@ export class Wallet {
             SCRYPT_CONFIG['p'],
             (info, result) => {
                 if (info === 'error') {
-                    tip.alert('密码错误');
+                    Tips.alert('密码错误');
                     callback(-1, null, null)
                     return;
                 }

@@ -8,8 +8,8 @@ export class Asset {
     total: string = '0.00';   // 持有的总价值
     name: string;    // 币名
     utxos: any;       // utxo 只有NEO和GAS才有
-    rise:boolean;     //币价走向
-    
+    rise: boolean;     //币价走向
+
     constructor(name) {
         this.name = name;
     }
@@ -48,7 +48,7 @@ export class Asset {
      */
     pay(amount: Neo.Fixed8, height: number): any {
         let count: Neo.Fixed8 = Neo.Fixed8.Zero;
-        let outputs = [];
+        let outputs: Utxo[] = [];
         for (let key in this.utxos) {
             let utxo = this.utxos[key];
             // 总额未够且 未花费
@@ -59,7 +59,19 @@ export class Asset {
                 outputs.push(utxo);
             }
         }
-        return outputs;
+        let pay = new Pay(this.id, outputs, count)
+        return { utxos: outputs, sum: count };
+    }
+}
+
+export class Pay {
+    assetid: string;
+    utxos: Utxo[];
+    sum: Neo.Fixed8;
+    constructor(id: string, utxos: Utxo[], sum: Neo.Fixed8) {
+        this.assetid = id;
+        this.utxos = utxos;
+        this.sum = sum;
     }
 }
 

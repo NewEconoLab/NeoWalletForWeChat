@@ -114,10 +114,7 @@ export default class Tips {
     });
   }
 
-  static hideLoading(){
-    wx.hideLoading();
-    Tips.isLoading = false;
-  }
+
   /**
    * 加载完毕
    */

@@ -1,7 +1,7 @@
 import * as Request from './wxRequest';
 import { Helper } from '../lib/neo-ts/index';
 let hotapp = require('./hotapp.js');
-export class Https {
+export default class Https {
     static api: string = "https://api.nel.group/api/testnet";
     static priceHost: string = "https://api.coinmarketcap.com/v1/ticker/";
     static rpc: string = "http://47.96.168.8:20332/testnet";
@@ -149,8 +149,11 @@ export class Https {
      * 领取GAS
      * @param address 地址
      */
-    static async api_getclaimgas(address: string): Promise<number> {
-        var str = this.makeRpcUrl(this.api, "getclaimgas", address);
+    static async api_getclaimgas(address: string, type: number): Promise<number> {
+        if (type)
+            var str = this.makeRpcUrl(this.api, "getclaimgas", address, type);
+        else
+            var str = this.makeRpcUrl(this.api, "getclaimgas", address);
         var result = await fetch(str, { "method": "get" });
         var json = await result.json();
         var r = json["result"];

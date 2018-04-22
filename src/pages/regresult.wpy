@@ -89,7 +89,7 @@ export default class RegResult extends wepy.page {
     let that = this;
     //this.account = JSON.parse(option.wallet)['accounts'][0];
     this.$apply();
-    wepy.showLoading({ title: '二维码生成中' });
+   Util.loading('二维码生成中' );
     wx.getSystemInfo({
       //获取系统信息成功，将系统窗口的宽高赋给页面的宽高
       success: function(res) {

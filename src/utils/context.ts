@@ -1,8 +1,9 @@
-import { Nep6, Neo } from '../lib/neo-ts/index'
+import { Nep6, Neo, ThinNeo } from '../lib/neo-ts/index'
 import { Asset, Utxo } from './entity';
-import { Https } from './Https';
-import { Coin } from './Coin';
+import Https from './Https';
+import Coin from './coin';
 import { formatTime } from './time'
+import Wallet from './wallet';
 /**
  * 记录当前系统运行状态
  * 包括 当前账户 刷新等等
@@ -11,9 +12,6 @@ export class Context {
 
     //记录币的对象 
     static Assets = {};
-
-    //当前登陆账户
-    static Account: Nep6.nep6account = null;
 
     //当前区块高度
     static Height: number = 0;
@@ -31,6 +29,9 @@ export class Context {
     static assetDelegate: Function = null;
 
     static lock = false; // use lock to prevent muti request competition
+
+    static openid:string;
+
 
     static init(addr: string) {
         // 暂时不加载历史记录
@@ -80,7 +81,7 @@ export class Context {
         //加锁
         this.lock = true;
 
-        var utxos = await Https.api_getUTXO(Context.Account.address);
+        var utxos = await Https.api_getUTXO(Context.getAccount().address);
 
         for (var i in utxos) {
             var item = utxos[i];
@@ -142,7 +143,7 @@ export class Context {
      * 获取历史交易
      */
     static async OnGetTXs(page: number) {
-        const txs = await Https.rpc_getAddressTXs(Context.Account.address, 20, page);
+        const txs = await Https.rpc_getAddressTXs(Context.getAccount().address, 20, page);
         console.log(txs);
         if (txs === undefined) {
             return;
@@ -163,7 +164,15 @@ export class Context {
                 parseInt((Context.Height - (txs[index].blockindex as number) + 1).toString());
         }
         if (Context.txDelegate !== null)
-        Context.txDelegate(txs);
+            Context.txDelegate(txs);
     }
 
+    static getAccount(): Nep6.nep6account {
+        return Wallet.account;
+    }
+
+    static setAccount(account: Nep6.nep6account) {
+        Wallet.account = account;
+    }
+    
 }

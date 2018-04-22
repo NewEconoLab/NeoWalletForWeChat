@@ -230,12 +230,12 @@ export default class Home extends wepy.page {
 
   methods = {
     navigate(page) {
-      if (WalletTool.account === null) {
+      if (Util.get.account === null) {
         if (page === 'mine') {
           wepy.navigateTo({
             url: '/pages/index?switch=' + 0
           });
-        } else tip.error('您尚未登陆钱包账户');
+        } else Util.show.error('您尚未登陆钱包账户');
         return;
       } else {
         wepy.navigateTo({
@@ -251,39 +251,37 @@ export default class Home extends wepy.page {
     
   }
   async onShow() {
-    await CoinTool.initAllAsset();
-    
+    await Util.init.asset();
   }
   // 页面渲染完成
   async onReady() {
     const that = this;
     await this.OnLogin();
+
     // 初始化
-    Util.Service.init(WalletTool.account.address);
+    Util.init.context();
 
     // 设置资产更新回调
-    Util.Service.assetDelegate = function(assets) {
+    Util.delegate.asset = function(assets) {
       assets['GAS'].amount = parseFloat(assets['GAS'].amount).toFixed(4);
       that.assets = assets;
-      that.Block = Util.Wallet.height;
+      that.Block = Util.get.height;
       that.$apply();
     };
 
-    Util.Service.OnGetHeight();
-    // 加载资产
-    Service.OnTimeOut();
+    Util.service.start();
   }
 
   async OnLogin() {
     let that = this;
-    const wallet = Util.Storage.get(CURR_WALLET) || {};
+    const wallet = Util.get.cache(Util.config.CURR_WALLET) || {};
     console.log(Object.keys(wallet).length);
 
     // 本地缓存有账户 则直接加载本地账户信息
     if (Object.keys(wallet).length !== 0) {
       this.isLogin = true;
       this.$apply();
-      Util.Wallet.setWallet(wallet);
+      Util.set.wallet(wallet);
     }
   }
   onShareAppMessage() {

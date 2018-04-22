@@ -70,7 +70,7 @@
 
 <script>
 import wepy from 'wepy';
-import { Util } from '../utils/index';
+import Util from '../utils/index';
 export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: '账户'
@@ -108,11 +108,13 @@ export default class Index extends wepy.page {
     //是否是切换账号
     this.isSwitch = option.switch || 0;
     //获取缓存的用户信息
-    let userInfo = Util.Cache.get(USER_INFO);
+    console.log(Util);
+    
+    let userInfo = Util.get.cache(Util.config.USER_INFO);
     if (userInfo === undefined || userInfo === '') {
-      const res = await  Wallet.getUserInfo();
+      const res = await  Util.get.userInfo();
       userInfo = res.userInfo;
-      wepy.setStorageSync(USER_INFO, userInfo);
+      Util.set.cache(Util.config.USER_INFO, userInfo);
     }
 
     this.avatarUrl = userInfo.avatarUrl;
@@ -121,16 +123,16 @@ export default class Index extends wepy.page {
 
     if (parseInt(option.switch) === 1) return;
 
-    const wallet = wepy.getStorageSync(CURR_WALLET);
+    const wallet = Util.get.cache(Util.config.CURR_WALLET);
     console.log(wallet);
     if (wallet !== {} && wallet !== undefined && wallet !== '') {
-      wepy.showLoading({ title: '登陆中' });
+      Util.show.loading('登陆中');
       setTimeout(function() {
-        wepy.hideLoading();
+        Util.hide.loading();
       }, 4000);
-      Wallet.setWallet(wallet);
+      Util.set.wallet(wallet);
       wepy.reLaunch({ url: './home' });
-      wepy.hideLoading();
+      Util.hide.loading();
     }
   }
 

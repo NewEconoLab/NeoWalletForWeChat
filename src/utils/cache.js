@@ -1,4 +1,4 @@
-export class Cache {
+export default class Cache {
 
     /**
      * 缓存数据
@@ -10,12 +10,16 @@ export class Cache {
             return;
         wx.setStorageSync(key, value);
     }
-    
+
     /**
      * 获取缓存
      * @param {string} key 
      */
     static get(key) {
         return wx.getStorageSync(key);
+    }
+
+    static delete(key) {
+        Cache.put(key, undefined);
     }
 }

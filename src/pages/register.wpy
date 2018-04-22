@@ -102,7 +102,7 @@
 <script>
 import wepy from 'wepy';
 import {Helper} from '../lib/neo-ts/index';
-import {Util} from '../utils/index';
+import Util from '../utils/index';
 export default class Register extends wepy.page {
   customData = {}; // 自定义数据
 
@@ -142,22 +142,19 @@ export default class Register extends wepy.page {
         return;
       }
       if (accountlabel === '') {
-        tip.alert('账户名不能为空');
+        Util.show.alert('账户名不能为空');
         return;
       }
-      let wallets = wepy.getStorageSync(LOCAL_WALLET) || {};
+      let wallets = Util.get.cache(LOCAL_WALLET) || {};
       if (wallets[accountlabel] !== undefined) {
         tip.alert('账户名已存在');
         return;
       }
+      Util.show.loading('私钥生成中');
 
-      wepy.showLoading({ title: '新钱包生成中' });
+      let privateKey = await Util.get.random(64);
 
-      wepy.showLoading({ title: '私钥生成中' });
-
-      let privateKey = await Random.getSecureRandom(64);
-
-      var wallet = WalletTool.getWallet(accountlabel, privateKey);
+      var wallet = Util.get.wallet(accountlabel, privateKey);
       console.log(wallet);
 
       setTimeout(function() {
@@ -179,16 +176,16 @@ export default class Register extends wepy.page {
             wallets[accountlabel] = wallet_json;
             console.log(wallet_json);
 
-            wepy.showLoading({ title: '钱包创建完成' });
-            wepy.setStorageSync(LOCAL_WALLET, wallets);
+           Util.show.loading('钱包创建完成');
+            Util.set.cache(LOCAL_WALLET, wallets);
             //本地缓存新生成的账户
-            WalletTool.setWallet(wallet);
+           Util.set.wallet(wallet);
             var jsonstr = JSON.stringify(wallet_json);
-            wepy.hideLoading();
+           Util.hide.loading();
             that.$redirect('./regresult?wallet=' + jsonstr);
           } else {
             //TODO: alert for encoding error
-            tip.error('私钥加密失败');
+            Util.show.error('私钥加密失败');
           }
         }
       );

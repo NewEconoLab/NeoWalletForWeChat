@@ -130,7 +130,7 @@ export default class WatchOnly extends wepy.page {
   async OnLoadWatchOnly() {
     let that = this;
 
-    let res = await Util.Https.addr_query(WalletTool.openid);
+    let res = await Util.Https.addr_query(Util.get.openid);
     res = JSON.parse(res);
     if (res['code'] === 0) {
       let addr = res['address'];

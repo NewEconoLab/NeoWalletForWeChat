@@ -32,13 +32,8 @@ Page {
 <script>
 import wepy from 'wepy';
 import 'wepy-async-function';
-import { USER_INFO } from './utils/constant';
-import { setStore } from 'wepy-redux';
-import configStore from './store';
-import { WWW } from './utils/API';
-import { Service } from './utils/service';
-const store = configStore();
-setStore(store);
+
+import Util,{Https} from './utils/index'
 
 export default class extends wepy.app {
   config = {
@@ -118,18 +113,13 @@ export default class extends wepy.app {
         const code = res['code'];
         if (code) {
           // 获取用户openid
-          let id = await WWW.addr_openid(code);
+          let id = await Https.addr_openid(code);
           id = id['openid'];
           // 保存用户id在wallet中
-          Wallet.openid = id;
+          Util.set.openid = id;
         }
       }
     });
-
-    // 循环执行代码
-    setInterval(async () => {
-      Service.OnTimeOut();
-    }, 15000); // 循环时间 这里是15秒
   }
 }
 </script>

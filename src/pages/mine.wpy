@@ -136,21 +136,21 @@
 </template>
 <script>
 import wepy from 'wepy';
-import {Util} from '../utils/index';
+import Util from '../utils/index';
 export default class Mine extends wepy.page {
   customData = {}; // 自定义数据
 
   customFunction() {} // 自定义方法
 
   onLoad() {
-    let userInfo = wepy.getStorageSync(USER_INFO);
+    let userInfo = Util.get.cache(Util.config.USER_INFO);
     this.avatarUrl = userInfo.avatarUrl;
     this.nickName = userInfo.nickName;
     this.$apply();
   } // 在Page和Component共用的生命周期函数
 
   onShow() {
-    this.account = Wallet.account;
+    this.account = Util.get.account;
     this.$apply();
     console.log(this.account);
   } // 只在Page中存在的页面生命周期函数
@@ -184,7 +184,7 @@ export default class Mine extends wepy.page {
           wepy.getClipboardData({
             success: function(res) {
               console.log(res.data); // data
-              tip.success('复制成功', 500);
+              Util.show.success('复制成功');
             }
           });
         }

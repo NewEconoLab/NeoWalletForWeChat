@@ -125,21 +125,19 @@ export default class History extends wepy.page {
   events = {};
 
   onLoad() {
-    this.address = WalletTool.account.address;
+    this.address = Util.get.account.address;
     this.$apply();
   }
   onShow() {
     let that = this;
-    Service.isLoadTXs = true;
-    Service.OnGetTXs(1);
-    Service.txDelegate = function(txs) {
+    Util.get.TXs(1);
+    Util.delegate.tx = function(txs) {
       that.TXs = txs;
       that.$apply();
     };
   }
   onUnload() {
-    Service.isLoadTXs = false;
-    Service.txDelegate = null;
+    Util.delegate.tx = null;
   }
   async onPullDownRefresh() {
     if (this.isLoading) return;
@@ -154,7 +152,7 @@ export default class History extends wepy.page {
     if (this.isLoading) return;
     this.isLoading = true;
     this.$apply();
-    const TXs = await Service.OnLoadTXs(1);
+    const TXs = await Util.get.TXs(1);
     if (TXs === null) {
       this.notEmpty = 'false';
     } else {
