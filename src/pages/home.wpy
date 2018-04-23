@@ -141,56 +141,57 @@
 </style>
 <template>
   <view class="container">
-          <scroll-view scroll-y class="scroll">
-         <view class="inner">
-    <view class="area-uppper">
-      <view class="upper-asset">
-        <view class="asset-item">
-          <text class = "title">NEO</text>
-          <text class="number">{{assets['NEO'].amount}}</text>
-          <text class="totle">￥{{assets['NEO'].total}}</text>
-        </view>
-        <view class="asset-item">
-          <text class = "title">GAS</text>
-          <text class="number">{{assets['GAS'].amount}}</text>
-          <text class="totle">￥{{assets['GAS'].total}}</text>
-        </view>
-      </view>
-    </view>
-    <view class="area-medium">
-       <view class="medium-item" style="margin-left:20px;" @tap="navigate('receive')">
-          <image src="../images/receive.png" class="icon"></image>
-          <text class="name">收款</text>
-        </view>
-        <view class="medium-item" @tap="navigate('send')">
-            <image src="../images/send.png" class="icon"></image>
-          <text class="name">转账</text>
-        </view>
-        <!-- <view class="medium-item"  @tap="navigate('history')">
-          <image src="../images/history.png" class="icon"></image>
-          <text class="name">历史</text>
-        </view>
-        <view class="medium-item"  style="margin-right:20px;" @tap="navigate('mine')">
-          <image src="../images/account.png" class="icon"></image>
-          <text class="name">个人</text>
-        </view> -->
-    </view>
-    <view class="area-lower">
-     <view class="lower-chain">
-        <text class="label">区高度:</text>
-        <text class="height">{{Block}}</text>
-      </view>
-      <view class="lower-price">
-        <view class="asset-block" wx:for="{{assets}}" >
-          <view class="price-content">
-            <text class="label">{{item.name}}</text>
-            <view class="price">
-              <text  style="color:{{item.rise?'#45d68a':'#f67581'}};">￥{{item.price}}</text>
+    <scroll-view scroll-y class="scroll">
+      <view class="inner">
+        <view class="area-uppper">
+           <image src="{{avater}}" style="height:20px;width:20px;" ></image>
+          <view class="upper-asset">
+            <view class="asset-item">
+              <text class = "title">NEO</text>
+              <text class="number">{{assets['NEO'].amount}}</text>
+              <text class="totle">￥{{assets['NEO'].total}}</text>
+            </view>
+            <view class="asset-item">
+              <text class = "title">GAS</text>
+              <text class="number">{{assets['GAS'].amount}}</text>
+              <text class="totle">￥{{assets['GAS'].total}}</text>
             </view>
           </view>
         </view>
-      </view>
-    </view>
+        <view class="area-medium">
+          <view class="medium-item" style="margin-left:20px;" @tap="navigate('receive')">
+              <image src="../images/receive.png" class="icon"></image>
+              <text class="name">收款</text>
+            </view>
+            <view class="medium-item" @tap="navigate('send')">
+                <image src="../images/send.png" class="icon"></image>
+              <text class="name">转账</text>
+            </view>
+            <!-- <view class="medium-item"  @tap="navigate('history')">
+              <image src="../images/history.png" class="icon"></image>
+              <text class="name">历史</text>
+            </view>
+            <view class="medium-item"  style="margin-right:20px;" @tap="navigate('mine')">
+              <image src="../images/account.png" class="icon"></image>
+              <text class="name">个人</text>
+            </view> -->
+        </view>
+        <view class="area-lower">
+          <view class="lower-chain">
+            <text class="label">区高度:</text>
+            <text class="height">{{Block}}</text>
+          </view>
+          <view class="lower-price">
+            <view class="asset-block" wx:for="{{assets}}" >
+              <view class="price-content">
+                <text class="label">{{item.name}}</text>
+                <view class="price">
+                  <text  style="color:{{item.rise?'#45d68a':'#f67581'}};">￥{{item.price}}</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
     </view>
   </scroll-view>
   </view>
@@ -202,6 +203,7 @@ import wepy from 'wepy';
 import Util, { Https } from '../utils/index';
 import Wallet from '../utils/wallet';
 import { Claim } from '../utils/entity';
+import Identicon from 'identicon.js'
 export default class Home extends wepy.page {
   config = {
     navigationBarTitleText: '首页'
@@ -225,15 +227,14 @@ export default class Home extends wepy.page {
       }
     },
     Block: '1',
-    isLogin: false
+    isLogin: false,
+    avater:''
   };
 
   computed = {};
 
   methods = {
     async navigate(page) {
-      this.claim();
-      return;
       if (Util.get.account() === null) {
         if (page === 'mine') {
           wepy.navigateTo({
@@ -252,7 +253,13 @@ export default class Home extends wepy.page {
   events = {};
 
   onLoad() {}
-  async onShow() {}
+  async onShow() {
+    var data = new Identicon('0387419467127d60bef1e11126cb1311609319e7a50c04781950498355cb8e1ad6', {size:20,margin:0}).toString();
+    console.log(data.length);
+    this.avater = "data:image/png;base64," + data;
+    this.$apply();
+    
+  }
   // 页面渲染完成
   async onReady() {
     const that = this;
