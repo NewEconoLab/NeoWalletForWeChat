@@ -232,22 +232,7 @@ export default class Home extends wepy.page {
 
   methods = {
     async navigate(page) {
-      let res = await Https.api_getclaimgas(Util.get.account().address);
-
-      console.log(res);
-      let claims = [];
-      for (let i in res['claims']) {
-        let claim = new Claim(res.claims[i]);
-        claims.push(claim);
-      }
-
-      let a = res['gas'].toFixed(8);
-      console.log(a);
-
-
-      Util.send.claim(claims, a);
-      console.log(claims);
-
+      this.claim();
       return;
       if (Util.get.account() === null) {
         if (page === 'mine') {
@@ -285,10 +270,6 @@ export default class Home extends wepy.page {
   async OnLogin() {
     let that = this;
     const account = Util.get.cache(Util.const.CURR_ACCOUNT) || {};
-    console.log('home');
-
-    console.log(account);
-
     // 本地缓存有账户 则直接加载本地账户信息
     try {
       if (account.address !== undefined && account.address !== null) {
@@ -304,6 +285,19 @@ export default class Home extends wepy.page {
       title: 'NEO钱包',
       path: '/pages/index'
     };
+  }
+  async claim() {
+    let res = await Https.api_getclaimgas(Util.get.account().address);
+
+    console.log(res);
+    let claims = [];
+    for (let i in res['claims']) {
+      let claim = new Claim(res.claims[i]);
+      claims.push(claim);
+    }
+
+    let a = res['gas'].toFixed(8);
+    Util.send.claim(claims, a);
   }
 }
 </script>
