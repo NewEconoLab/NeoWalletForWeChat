@@ -143,7 +143,7 @@ export default class Mine extends wepy.page {
   customFunction() {} // 自定义方法
 
   onLoad() {
-    let userInfo = Util.get.cache(Util.config.USER_INFO);
+    let userInfo = Util.get.cache(Util.const.USER_INFO);
     this.avatarUrl = userInfo.avatarUrl;
     this.nickName = userInfo.nickName;
     this.$apply();

@@ -1,5 +1,5 @@
 import { Nep6, Helper } from '../lib/neo-ts/index';
-import { SCRYPT, CURR_ACCOUNT, LOCAL_ACCOUNTS } from './config'
+import { SCRYPT, CURR_ACCOUNT, LOCAL_ACCOUNTS } from './const'
 import Tips from './tip';
 import Cache from './cache'
 export default class Wallet {
@@ -137,9 +137,9 @@ export default class Wallet {
         Helper.Account.GetPrivateKeyFromNep2(
             Wallet.account.nep2key,
             passphrase,
-            SCRYPT_CONFIG['N'],
-            SCRYPT_CONFIG['r'],
-            SCRYPT_CONFIG['p'],
+            SCRYPT['N'],
+            SCRYPT['r'],
+            SCRYPT['p'],
             (info, result) => {
                 if (info === 'error') {
                     Tips.alert('密码错误');

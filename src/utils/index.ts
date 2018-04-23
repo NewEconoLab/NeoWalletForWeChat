@@ -1,5 +1,5 @@
 import Coin from './coin';
-import * as Config from './config';
+import * as Const from './const';
 import * as Entity from './entity';
 import Https from './Https';
 import NNS from './nns';
@@ -62,7 +62,7 @@ export default {
         asset: (delegate: Function) => Context.assetDelegate = delegate,
         tx: (delegate: Function) => Context.txDelegate = delegate
     },
-    config: Config,
+    const: Const,
     init: {
         asset: Coin.initAllAsset,
         context: Context.init

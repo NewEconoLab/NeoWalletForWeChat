@@ -284,7 +284,7 @@ export default class Home extends wepy.page {
 
   async OnLogin() {
     let that = this;
-    const account = Util.get.cache(Util.config.CURR_ACCOUNT) || {};
+    const account = Util.get.cache(Util.const.CURR_ACCOUNT) || {};
     console.log('home');
 
     console.log(account);

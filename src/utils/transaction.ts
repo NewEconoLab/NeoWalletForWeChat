@@ -134,6 +134,7 @@ export default class Transfer {
         const pubkey = Helper.hexToBytes(Wallet.account.publickey);
         Transfer.setTran(tran, prikey, pubkey, randomStr);
     }
+    
     // /**
     //  *  nep5交易
     //  * @param {string} address 

@@ -145,7 +145,7 @@ export default class Register extends wepy.page {
         Util.show.alert('账户名不能为空');
         return;
       }
-      let wallets = Util.get.cache(Util.config.LOCAL_ACCOUNTS) || {};
+      let wallets = Util.get.cache(Util.const.LOCAL_ACCOUNTS) || {};
       if (wallets[accountlabel] !== undefined) {
         Util.show.alert('账户名已存在');
         return;
@@ -163,9 +163,9 @@ export default class Register extends wepy.page {
       Helper.Account.GetNep2FromPrivateKey(
         Helper.hexToBytes(privateKey),
         passphrase,
-        Util.config.SCRYPT.N,
-        Util.config.SCRYPT.r,
-        Util.config.SCRYPT.p,
+        Util.const.SCRYPT.N,
+        Util.const.SCRYPT.r,
+        Util.const.SCRYPT.p,
         (info, result) => {
           that.isGenerating = false;
           that.$apply();

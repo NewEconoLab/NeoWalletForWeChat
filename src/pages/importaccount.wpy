@@ -200,7 +200,7 @@ export default class ImportAccount extends wepy.page {
       Util.show.error('私钥格式错误');
       return;
     }
-    let wallets = Util.get.cache(Util.config.LOCAL_ACCOUNTS) || {};
+    let wallets = Util.get.cache(Util.const.LOCAL_ACCOUNTS) || {};
 
     if (wallets[accountlabel] !== undefined) {
       Util.show.alert('账户名已存在');
@@ -217,7 +217,7 @@ export default class ImportAccount extends wepy.page {
 
     Util.show.loading('钱包创建完成');
 
-    Util.set.cache(Util.config.LOCAL_ACCOUNTS, wallets);
+    Util.set.cache(Util.const.LOCAL_ACCOUNTS, wallets);
 
     //本地缓存新生成的账户
     Util.set.account(account);

@@ -109,11 +109,11 @@ export default class Index extends wepy.page {
     this.isSwitch = option.switch || 0;
     //获取缓存的用户信息
 
-    let userInfo = Util.get.cache(Util.config.USER_INFO);
+    let userInfo = Util.get.cache(Util.const.USER_INFO);
     if (userInfo === undefined || userInfo === '') {
       const res = await Util.get.userInfo();
       userInfo = res.userInfo;
-      Util.set.cache(Util.config.USER_INFO, userInfo);
+      Util.set.cache(Util.const.USER_INFO, userInfo);
     }
 
     this.avatarUrl = userInfo.avatarUrl;
@@ -122,15 +122,15 @@ export default class Index extends wepy.page {
 
     if (parseInt(option.switch) === 1) return;
 
-    let account = Util.get.cache(Util.config.CURR_ACCOUNT);
+    let account = Util.get.cache(Util.const.CURR_ACCOUNT);
 
     if (account !== {} && account !== undefined && account !== '') {
       try {
         //做兼容
         if (account.accounts !== undefined) {
           account = account.accounts[0];
-          Util.set.cache(Util.config.CURR_ACCOUNT, account);
-          let wallets = Util.get.cache(Util.config.LOCAL_ACCOUNTS) || {};
+          Util.set.cache(Util.const.CURR_ACCOUNT, account);
+          let wallets = Util.get.cache(Util.const.LOCAL_ACCOUNTS) || {};
           let accounts = {};
           for (let key in wallets) {
             accounts[key] = wallets[key].accounts[0];
