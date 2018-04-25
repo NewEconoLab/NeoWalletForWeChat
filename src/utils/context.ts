@@ -4,6 +4,7 @@ import Https from './Https';
 import Coin from './coin';
 import { formatTime } from './time'
 import Wallet from './wallet';
+import Transfer from './transaction';
 /**
  * 记录当前系统运行状态
  * 包括 当前账户 刷新等等
@@ -32,6 +33,7 @@ export class Context {
 
     static openid: string;
 
+    static total: number = 0;
 
     static async init(account: Nep6.nep6account) {
         // 暂时不加载历史记录
@@ -69,6 +71,8 @@ export class Context {
      */
     static async OnGetHeight() {
         const height = await Https.api_getHeight();
+        if (height === -1)
+            return;
         Context.Height = height;
     }
 
@@ -116,17 +120,19 @@ export class Context {
         if (Context.assetDelegate === null)
             return;
         let that = this;
-
+        let total: number = 0;
         for (let key in Context.Assets) {
 
             const coin = await Https.api_getCoinPrice((Context.Assets[key] as Asset).name);
             try {
                 // 更新价格
                 (Context.Assets[key] as Asset).price = parseFloat(coin[0]['price_cny']).toFixed(2);
+                let sum = (parseFloat((Context.Assets[key] as Asset).amount.toString())) *
+                    parseFloat(coin[0]['price_cny']);
+                total += sum;
                 // 更新资产
                 (Context.Assets[key] as Asset).total =
-                    ((parseFloat((Context.Assets[key] as Asset).amount.toString())) *
-                        parseFloat(coin[0]['price_cny'])).toFixed(2);
+                    sum.toFixed(2);
                 // 更新币市走向
                 if (coin[0]['percent_change_1h'][0] !== '-') (Context.Assets[key] as Asset).rise = true;
                 else (Context.Assets[key] as Asset).rise = false;
@@ -135,7 +141,8 @@ export class Context {
                 console.log(err);
             }
         }
-
+        Context.total = total;
+        
         let assets = JSON.parse(JSON.stringify(Context.Assets));
         Context.assetDelegate(assets);
     }
@@ -144,29 +151,32 @@ export class Context {
      * 获取历史交易
      */
     static async OnGetTXs(page: number) {
-        if (Context.txDelegate === null)
-            return;
-        const txs = await Https.rpc_getAddressTXs(Context.getAccount().address, 20, page);
-        console.log(txs);
-        if (txs === undefined) {
-            return;
-        }
+        // if (Context.txDelegate === null)
+        //     return;
+        // const txs = await Https.rpc_getAddressTXs(Context.getAccount().address, 20, page);
+        // console.log(txs);
+        // if (txs === undefined) {
+        //     return;
+        // }
 
-        for (let index in txs) {
-            try {
-                const date = txs[index].blocktime['$date'];
-                txs[index].blocktime['$date'] = formatTime(
-                    date,
-                    'Y/M/D h:m:s'
-                );
-            } catch (err) {
-                console.log('NET_Date_ERR');
-                console.log(err);
-            }
-            txs[index].blockindex =
-                parseInt((Context.Height - (txs[index].blockindex as number) + 1).toString());
-        }
-        Context.txDelegate(txs);
+        // for (let index in txs) {
+        //     try {
+        //         const date = txs[index].blocktime['$date'];
+        //         txs[index].blocktime['$date'] = formatTime(
+        //             date,
+        //             'Y/M/D h:m:s'
+        //         );
+        //     } catch (err) {
+        //         console.log('NET_Date_ERR');
+        //         console.log(err);
+        //     }
+        //     txs[index].blockindex =
+        //         parseInt((Context.Height - (txs[index].blockindex as number) + 1).toString());
+        // }
+        // Context.txDelegate(txs);
+        await Transfer.history();
+        console.log(Transfer.TXs);
+        
     }
 
     static getAccount(): Nep6.nep6account {

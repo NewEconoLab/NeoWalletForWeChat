@@ -9,6 +9,8 @@ export default class Https {
     // 交易通知模板id
     static templet_id: string = "2lEt8hQIzI6tbTw9ThtZhNalDG6GulckpcYEs_Ki7ZQ";
 
+    static apiaggr: string = "https://apiaggr.nel.group/api/testnet";
+
     /**
      * create Rpc Url
      * @param url string
@@ -63,8 +65,13 @@ export default class Https {
     static async  api_getHeight() {
         var str = this.makeRpcUrl(this.api, "getblockcount");
         var result = await Request.wxRequest({ "method": "get" }, str);
-        var r = result["result"];
-        var height = parseInt(r[0]["blockcount"]) - 1;
+        var height: number;
+        try {
+            var r = result["result"];
+            height = parseInt(r[0]["blockcount"]) - 1;
+        } catch (err) {
+            height = -1;
+        }
         return height;
     }
 
@@ -208,6 +215,39 @@ export default class Https {
         if (json["result"] == null)
             return null;
         var r = json["result"][0]
+        return r;
+    }
+
+    /**
+     * 获取所有交易 utxo+nep5
+     * @param address 地址
+     * @param pagesize 每页展示交易量
+     * @param pageindex 页下标
+     */
+    static async gettransbyaddress(address: string, pagesize: number = 20, pageindex: number = 1) {
+        var postdata =
+            Https.makeRpcPostBody(
+                "gettransbyaddress",
+                address,
+                pagesize,
+                pageindex
+            );
+        var r;
+        try {
+            var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
+           console.log('result1');
+           console.log(result);
+           
+           
+            r = result["result"];
+        } catch (err) {
+            console.log(err);
+
+        }
+        console.log('result');
+        
+        console.log(r);
+
         return r;
     }
 

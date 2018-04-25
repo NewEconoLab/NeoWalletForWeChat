@@ -131,7 +131,7 @@ export default class Transaction extends wepy.page {
     this.$apply();
     let outputs = this.tx.vout;
     for (let index in outputs) {
-      outputs[index].asset = CoinTool.assetID2name[outputs[index].asset];
+      outputs[index].asset = Coi.assetID2name[outputs[index].asset];
     }
     this.vout = outputs;
     this.$apply();

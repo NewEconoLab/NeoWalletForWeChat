@@ -136,7 +136,7 @@ export default class RegResult extends wepy.page {
     },
     login() {
       if (!this.accountSaved) {
-        tip.error('请先备份账户');
+        Util.show.error('请先备份账户');
         return;
       }
       wepy.reLaunch({ url: './home' });
@@ -180,7 +180,7 @@ export default class RegResult extends wepy.page {
     wx.saveImageToPhotosAlbum({
       filePath: res.tempFilePath,
       success: function(data) {
-        tip.success('备份成功');
+        Util.show.success('备份成功');
       },
       fail: function(err) {
         console.log(err);
@@ -197,7 +197,7 @@ export default class RegResult extends wepy.page {
                       '获取权限成功，给出再次点击图片保存到相册的提示。'
                     );
                   } else {
-                    tip.error('未获取相册权限');
+                    Util.show.error('未获取相册权限');
                   }
                 }
               });

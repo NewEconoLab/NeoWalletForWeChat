@@ -66,7 +66,7 @@ export class ScriptBuilder {
         if (i32 == -1) return this.Emit(OpCode.PUSHM1);
         if (i32 == 0) return this.Emit(OpCode.PUSH0);
         if (i32 > 0 && i32 <= 16) return this.Emit(OpCode.PUSH1 - 1 + i32);
-        return this.EmitPushBytes(number.toUint8Array(true));
+        return this.EmitPushBytes(number.toUint8ArrayWithSign(true));
     }
 
     public EmitPushBool(data: boolean): ScriptBuilder {

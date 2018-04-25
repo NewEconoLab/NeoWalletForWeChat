@@ -2,12 +2,14 @@ import { Helper, Neo, ThinNeo } from '../lib/neo-ts/index'
 import Tips from './tip'
 import Wallet from './wallet'
 import Https from './Https'
-import { Asset, Pay, Claim } from './entity';
+import { Asset, Pay, Claim, History } from './entity';
 import Coin from './coin';
 import { getSecureRandom } from './random'
+import { formatTime } from './time';
 export default class Transfer {
 
     static formId = [];
+    static TXs = [];
     constructor() {
     }
 
@@ -104,7 +106,11 @@ export default class Transfer {
         return tran;
     }
 
-
+    /**
+     * 领取GAS
+     * @param claims cliams 的UTXO
+     * @param sum 领取总量
+     */
     static async claimGas(claims: Claim[], sum: string) {
         var tran = new ThinNeo.Transaction();
         //交易类型为合约交易
@@ -132,79 +138,160 @@ export default class Transfer {
 
         const prikey = Helper.hexToBytes(Wallet.account.nep2key);
         const pubkey = Helper.hexToBytes(Wallet.account.publickey);
-        Transfer.setTran(tran, prikey, pubkey, randomStr);
+        return await Transfer.setTran(tran, prikey, pubkey, randomStr);
     }
-    
-    // /**
-    //  *  nep5交易
-    //  * @param {string} address 
-    //  * @param {string} tatgeraddr 
-    //  * @param {string} asset 
-    //  * @param {string} amount 
-    //  */
-    // static async nep5Transaction(address, tatgeraddr, asset, amount) {
-    //     let res = await Https.getNep5Asset(asset);
 
-    //     var decimals = res["decimals"];// as number;
-    //     var numarr = amount.split(".");
-    //     decimals -= (numarr.length == 1 ? 0 : numarr[1].length);
-
-    //     var v = 1;
-    //     for (var i = 0; i < decimals; i++) {
-    //         v *= 10;
-    //     }
-
-    //     var bnum = new Neo.BigInteger(amount.replace(".", ""));
-    //     var intv = bnum.multiply(v).toString();
-
-    //     var sb = new ThinNeo.ScriptBuilder();
-    //     var scriptaddress = Helper.hexToBytes(asset).reverse();
-    //     sb.EmitParamJson(["(address)" + address, "(address)" + tatgeraddr, "(integer)" + intv]);//第二个参数是个数组
-    //     sb.EmitPushString("transfer");//第一个参数
-    //     sb.EmitAppCall(scriptaddress);  //资产合约
-
-    //     //交易脚本构造完成
-    //     //接下来构造交易
-    //     return sb.ToArray();
-    // }
 
     /**
-    //  *  合约调用交易
-    //  * @param {Uint8Array} script 
-    //  */
-    // static async contractInvokeTrans(script: Uint8Array) {
-    //     var addr = current.address;
-    //     var tran = new ThinNeo.Transaction();
-    //     //合约类型
-    //     tran.inputs = [];
-    //     tran.outputs = [];
-    //     tran.type = ThinNeo.TransactionType.InvocationTransaction;
-    //     tran.extdata = new ThinNeo.InvokeTransData();
+     * nep5转账
+     * @param address 自己的地址
+     * @param tatgeraddr 转账的地址
+     * @param asset nep5资产id
+     * @param amount 转账数额
+     */
+    static async nep5Transaction(tatgeraddr, asset: string, amount: string) {
+        let res = await Https.getNep5Asset(asset);
+        var decimals = res["decimals"] as number;
+        var numarr = amount.split(".");
+        decimals -= (numarr.length == 1 ? 0 : numarr[1].length);
 
-    //     //塞入脚本
-    //     tran.extdata.script = script;
-    //     tran.attributes = [];
-    //     tran.attributes[0] = new ThinNeo.Attribute();
-    //     tran.attributes[0].usage = ThinNeo.TransactionAttributeUsage.Script;
-    //     tran.attributes[0].data = Helper.Account.GetPublicKeyScriptHash_FromAddress(addr);
-    //     if (tran.witnesses == null)
-    //         tran.witnesses = [];
+        const address = Wallet.account.address;
+        var v = 1;
+        for (var i = 0; i < decimals; i++)
+            v *= 10;
+        var bnum = new Neo.BigInteger(amount.replace(".", ""));
+        var intv = bnum.multiply(v).toString();
 
-    //     var msg = tran.GetMessage();
-    //     var pubkey = current.pubkey;
-    //     var prekey = current.prikey;
-    //     var signdata = Helper.Account.Sign(msg, prekey);
-
-    //     //添加见证人
-    //     tran.AddWitness(signdata, pubkey, addr);
-    //     var data = tran.GetRawData();//: Uint8Array
-
-    //     var res = new Result();
-    //     var result = await Https.rpc_postRawTransaction(data);
-    //     res.err = !result;
-    //     res.info = "成功";
-    //     return res;
-    // }
+        var sb = new ThinNeo.ScriptBuilder();
+        var scriptaddress = Helper.hexToBytes(asset).reverse();
+        sb.EmitParamJson(["(address)" + address, "(address)" + tatgeraddr, "(integer)" + intv]);//第二个参数是个数组
+        sb.EmitPushString("transfer");//第一个参数
+        sb.EmitAppCall(scriptaddress);  //资产合约
+        var result = await Transfer.contractInvoke(sb.ToArray())
+        return result;
+    }
 
 
+    /**
+     * invokeTrans 方式调用合约塞入attributes
+     * @param script 合约的script
+     */
+    static async contractInvoke(script: Uint8Array) {
+        var addr = Wallet.account.address;
+        var tran: ThinNeo.Transaction = new ThinNeo.Transaction();
+        //合约类型
+        tran.inputs = [];
+        tran.outputs = [];
+        tran.type = ThinNeo.TransactionType.InvocationTransaction;
+        tran.extdata = new ThinNeo.InvokeTransData();
+        //塞入脚本
+        (tran.extdata as ThinNeo.InvokeTransData).script = script;
+        tran.attributes = new Array<ThinNeo.Attribute>(1);
+        tran.attributes[0] = new ThinNeo.Attribute();
+        tran.attributes[0].usage = ThinNeo.TransactionAttributeUsage.Script;
+        tran.attributes[0].data = Helper.Account.GetPublicKeyScriptHash_FromAddress(addr);
+
+        let randomStr = await getSecureRandom(256);
+
+        const prikey = Helper.hexToBytes(Wallet.account.nep2key);
+        const pubkey = Helper.hexToBytes(Wallet.account.publickey);
+        return await Transfer.setTran(tran, prikey, pubkey, randomStr);
+    }
+
+    static async history() {
+console.log(Wallet.account.address);
+
+        var res = await Https.gettransbyaddress(Wallet.account.address, 20, 1);
+        console.log('交易');
+
+        console.log(res);
+
+        res = res ? res : []; //将空值转为长度0的数组
+        if (res.length > 0) {
+            Transfer.TXs = [];
+            for (let index = 0; index < res.length; index++) {
+                const tx = res[index];
+                let txid = tx["txid"];
+                let vins = tx["vin"];
+                let vouts = tx["vout"];
+                let value = tx["value"];
+                let txtype = tx["type"];
+                let assetType = tx["assetType"]
+                let blockindex = tx["blockindex"];
+                let time = JSON.parse(tx["blocktime"])["$date"];
+                time = formatTime(
+                    time,
+                    'yyyy-MM-dd hh:mm:ss'
+                );
+                if (txtype == "out") {
+                    if (vins && vins.length == 1) {
+                        const vin = vins[0];
+                        let address = vin["address"];
+                        let amount = vin["value"];
+                        let asset = vin["asset"];
+                        let assetname = "";
+                        if (assetType == "utxo")
+                            assetname = Coin.assetID2name[asset];
+                        else {
+                            let nep5 = await Https.getNep5Asset(asset);
+                            assetname = nep5["name"];
+                        }
+                        var history = new History();
+                        history.time = time;
+                        history.txid = txid;
+                        history.assetname = assetname;
+                        history.address = address;
+                        history.value = value[asset];
+                        history.txtype = txtype;
+                        Transfer.TXs.push(history);
+                    }
+                }
+                else {
+                    var arr = {}
+                    for (const index in vouts) {
+                        let i = parseInt(index);
+                        const out = vouts[i];
+                        let address = out["address"];
+                        let amount = out["value"];
+                        let asset = out["asset"];
+                        if (assetType === "utxo")
+                            asset = Coin.assetID2name[asset];
+                        else {
+                            let nep5 = await Https.getNep5Asset(asset);
+                            asset = nep5["name"];
+                        }
+                        let n = out["n"];
+                        if (address !== Wallet.account.address) {
+                            if (arr[address] && arr[address][asset]) {
+                                arr[address][asset] += amount;
+                            } else {
+                                var assets = {}
+                                assets[asset] = amount;
+                                arr[address] = assets;
+                            }
+                        }
+                    }
+                    for (const address in arr) {
+                        if (arr.hasOwnProperty(address)) {
+                            const value = arr[address];
+                            for (const asset in value) {
+                                if (value.hasOwnProperty(asset)) {
+                                    const amount = value[asset];
+                                    var history = new History();
+                                    history.time = time;
+                                    history.txid = txid;
+                                    history.assetname = asset;
+                                    history.address = address;
+                                    history.value = amount;
+                                    history.txtype = txtype;
+                                    Transfer.TXs.push(history);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
 }

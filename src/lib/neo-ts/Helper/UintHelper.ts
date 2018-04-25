@@ -31,3 +31,13 @@ export function clone(uintarr: Uint8Array): Uint8Array {
     return u8;
 }
 
+export function concat(src: Uint8Array, data: Uint8Array): Uint8Array {
+    var newarr = new Uint8Array(src.length + data.length);
+    for (var i = 0; i < src.length; i++) {
+        newarr[i] = src[i];
+    }
+    for (var i = 0; i < data.length; i++) {
+        newarr[src.length + i] = data[i];
+    }
+    return newarr;
+}

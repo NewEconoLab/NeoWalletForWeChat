@@ -253,6 +253,27 @@ export class BigInteger {
         this.clamp();
     }
 
+    public static fromUint8ArrayAutoSign(arr: Uint8Array, littleEndian = true): BigInteger {
+        var spos: number = littleEndian ? arr.length - 1 : 0;
+        var btsign = arr[spos];
+
+        var care = (btsign & 128);
+        if (care > 0) {//负数
+            var array = new Uint8Array(arr.length);
+            for (var i = 0; i < arr.length; i++) {
+                array[i] = ~arr[i];
+            }
+            //btsign &= (~0x80);//高位归零
+            //array[spos] = btsign;
+            var n = BigInteger.fromUint8Array(array, 1, littleEndian);
+            n = n.add(1);
+            n["_sign"] = -1;
+            return n;
+        }
+        return BigInteger.fromUint8Array(arr, 1, littleEndian);
+    }
+
+
     public static fromUint8Array(arr: Uint8Array, sign = 1, littleEndian = true): BigInteger {
         let bi = Object.create(BigInteger.prototype) as BigInteger;
         bi.fromUint8Array(arr, sign, littleEndian);
@@ -339,7 +360,7 @@ export class BigInteger {
     public isZero(): boolean {
         return this._sign == 0;
     }
-    
+
     public leftShift(shift: number): BigInteger {
         if (shift == 0) return this;
         let shift_units = Math.floor(shift / DB);
@@ -626,4 +647,67 @@ export class BigInteger {
             array = array.subarray(0, length);
         return array;
     }
+    
+    public toUint8ArrayWithSign(littleEndian = true, length?: number): Uint8Array {
+        if (this._sign == 0) return new Uint8Array(length || 1);
+
+
+        if (this._sign > 0) {//正数
+
+            let cb = Math.ceil((this._bits.length * DB + 1) / 8);
+            let array = new Uint8Array(length || cb);
+            for (let i = 0; i < array.length; i++) {
+                let offset = littleEndian ? i : array.length - 1 - i;
+                let cbits = i * 8;
+                let cu = Math.floor(cbits / DB);
+                if (cu <= this._bits.length) {
+
+
+                    cbits %= DB;
+                    if (DB - cbits < 8)
+                        array[offset] = (this._bits[cu] >>> cbits | this._bits[cu + 1] << (DB - cbits)) & 0xff;
+                    else
+                        array[offset] = this._bits[cu] >>> cbits & 0xff;
+                }
+                else {
+                    array[offset] = 0;
+                }
+            }
+            length = length || BigInteger.getActualLength(array);
+            if (length < array.length)
+                array = array.subarray(0, length);
+
+            if ((array[array.length - 1] & 0x80) > 0)//最高位为负数
+            {
+                var newarr = new Uint8Array(array.length + 1);
+                for (var i = 0; i < array.length; i++) {
+                    newarr[i] = array[i];
+                }
+                newarr[array.length] = 0;
+                array = newarr;
+            }
+            return array;
+        }
+        else {//负数
+
+            //+1 改符号取数据
+            var n = this.add(1);
+            if (n.sign() < 0)
+                n["_sign"] = 1;
+            var array = n.toUint8Array();
+
+            var needaddsign = (array[array.length - 1] & 0x80) > 0;//最高位为1,翻转后是0，需要特殊处理
+            var newarr = new Uint8Array(needaddsign ? array.length + 1 : array.length);
+            //全部取反
+            for (var i = 0; i < array.length; i++) {
+                newarr[i] = ~array[i];
+            }
+            if (needaddsign) {
+                newarr[i] = 0xff;
+            }
+            array = newarr;
+            return array;
+        }
+    }
+}
 }

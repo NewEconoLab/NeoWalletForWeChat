@@ -154,7 +154,12 @@ export interface Transaction {
 }
 
 export class History {
-    n: number; asset: string; value: string; address: string; assetname: string;
+    n: number;
+    asset: string;
+    value: string;
+    address: string;
+    assetname: string;
+    txtype: string;
     time: string; txid: string;
 }
 

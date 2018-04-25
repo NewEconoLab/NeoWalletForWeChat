@@ -84,14 +84,14 @@
 <script>
 import wepy from 'wepy';
 import drawQrcode from '../lib/qrcode/qr';
-import {Util} from '../utils/index';
+import Util from '../utils/index';
 export default class Receive extends wepy.page {
   customData = {}; // 自定义数据
 
   customFunction() {} // 自定义方法
 
   onLoad(option) {
-    this.account = Wallet.account;
+    this.account = Util.get.account();
     this.$apply();
     console.log(this.account);
     drawQrcode({
@@ -142,7 +142,7 @@ export default class Receive extends wepy.page {
           wepy.getClipboardData({
             success: function(res) {
               console.log(res.data); // data
-              tip.alert('地址复制成功');
+              Util.show.alert('地址复制成功');
             }
           });
         }

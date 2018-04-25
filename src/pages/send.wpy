@@ -243,17 +243,17 @@ export default class Send extends wepy.page {
       let target = e.detail.value.address;
       let amount = e.detail.value.amount;
       let password = e.detail.value.passphrase;
-      TransactionTool.formId.push(e.detail.formId);
+      Util.set.formid(e.detail.formId);
       if (target.length !== 34) {
-        tip.alert('目标地址有误');
+        Util.show.alert('目标地址有误');
         return;
       }
       if (parseFloat(amount) > parseFloat(UTXO.balance[this.checked].amount)) {
-        tip.alert('余额不足');
+        Util.show.alert('余额不足');
         return;
       }
       if (password.length <= 0 && that.hidePW === 'false') {
-        tip.alert('请输入密码');
+        Util.show.alert('请输入密码');
         return;
       }
 
@@ -296,7 +296,7 @@ export default class Send extends wepy.page {
     Wallet.decode(this.password, async (code, prikey, pubkey) => {
       wepy.hideLoading();
       if (code < 0) {
-        tip.error('密码错误');
+        Util.show.error('密码错误');
         return;
       }
       //构造并发送交易
@@ -306,12 +306,12 @@ export default class Send extends wepy.page {
   async SendTran(prikey, pubkey) {
     pubkey = Helper.hexToBytes(pubkey);
     var count = Neo.Fixed8.parse(this.amount + '');
-    let coin = this.checked === 'GAS' ? CoinTool.id_GAS : CoinTool.id_NEO;
+    let coin = this.checked === 'GAS' ? Coin.id_GAS : Coin.id_NEO;
     Util.loading('交易生成中' );
-    var tran = CoinTool.makeTran(UTXO.assets, this.targetAddr, coin, count);
+    var tran = Coin.makeTran(UTXO.assets, this.targetAddr, coin, count);
     let randomStr = await Random.getSecureRandom(256);
     Util.loading('获取交易编号');
-    const txid = await TransactionTool.setTran(tran, prikey, pubkey, randomStr);
+    const txid = await Util..setTran(tran, prikey, pubkey, randomStr);
     wepy.hideLoading();
     if (txid === 'failed') {
       wepy.showModal({

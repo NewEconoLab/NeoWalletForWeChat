@@ -68,7 +68,7 @@ export default class NNS
         sb.EmitParamJson([ "(addr)" + Wallet.account.address, "(bytes)" + Helper.toHexString(nnshash), "(str)" + subdomain ]);//第二个参数是个数组
         sb.EmitPushString("requestSubDomain");//第一个参数
         sb.EmitAppCall(scriptaddress);  //资产合约
-        var res = Transfer.contractInvokeTrans(sb.ToArray());
+        var res ='';// Transfer.contractInvokeTrans(sb.ToArray());
         return res;
     }
 

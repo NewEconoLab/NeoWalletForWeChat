@@ -36,7 +36,7 @@ export default {
     send: {
         transfer: Transfer.makeTran,
         // invoke: Transfer.nep5Transaction,
-        claim:Transfer.claimGas
+        claim: Transfer.claimGas
     },
     get: {
         random: Random.getSecureRandom,
@@ -50,7 +50,7 @@ export default {
         userInfo: Wallet.getUserInfo,
         TXs: Context.OnGetTXs,
         prikey: (wif: string): string => { return Wallet.wif2prikey(wif) },
-
+        total: () => { return Context.total }
     },
     set: {
         cache: Cache.put,
@@ -69,6 +69,6 @@ export default {
     },
     service: {
         start: Context.init,
-        update:Context.OnTimeOut,
+        update: Context.OnTimeOut,
     }
 }

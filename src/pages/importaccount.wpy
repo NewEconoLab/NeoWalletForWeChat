@@ -177,14 +177,14 @@ export default class ImportAccount extends wepy.page {
             } catch (err) {
               console.log(err);
               //在这里处理错误
-              tip.error('格式错误');
+              Util.show.error('格式错误');
               return;
             }
           }
         },
         fail: res => {
           console.log(res);
-          tip.error('解析失败');
+          Util.show.error('解析失败');
         }
       });
     }
