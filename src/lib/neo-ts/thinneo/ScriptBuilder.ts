@@ -1,5 +1,5 @@
 ﻿import { OpCode } from './opcode'
-import {Helper} from '../Helper/AccountHelper'
+import {Account} from '../Helper/AccountHelper'
 import { BigInteger } from '../neo/BigInteger'
 export class ScriptBuilder {
     writer: number[];
@@ -100,13 +100,21 @@ export class ScriptBuilder {
     }
 
     public EmitPushString(data: string): ScriptBuilder {
-        return this.EmitPushBytes(Helper.String2Bytes(data));
+        console.log('========');
+        
+        console.log(data);
+        let a = Account.String2Bytes(data)
+        console.log('=======');
+        
+        console.log(a);
+        
+        return this.EmitPushBytes(a);
     }
 
     public EmitSysCall(api: string): ScriptBuilder {
         if (api == null)
             throw new Error("ArgumentNullException");
-        var api_bytes = Helper.String2Bytes(api);
+        var api_bytes = Account.String2Bytes(api);
         if (api_bytes.length == 0 || api_bytes.length > 252)
             throw new Error("ArgumentException");
         var arg: Uint8Array = new Uint8Array(api_bytes.length + 1);

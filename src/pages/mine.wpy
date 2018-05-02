@@ -36,12 +36,42 @@
   }
 }
 
-.area-text {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 660rpx;
-  margin-top: 63rpx;
+.area-nav {
+  margin-top: 10rpx;
+  width: 100%;
+  .item {
+    border-top: 1rpx solid #dbdbdb;
+    background: #fff;
+    padding: 34rpx 28rpx;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .item:last-child {
+    border-bottom: 1rpx solid #dbdbdb;
+  }
+  .item_content {
+    display: flex;
+    align-items: center;
+    .text {
+      margin-left: 20rpx;
+      color: #1a1a1a;
+    }
+  }
+  .item_img {
+    width: 42rpx;
+    height: 42rpx;
+  }
+  .arrow {
+    color: #cccccc;
+    font-size: 32rpx;
+  }
+  .tip {
+    color: #999;
+    font-size: 24rpx;
+    margin-top: 20rpx;
+    margin-left: 60rpx;
+  }
 }
 .area-text-item {
   display: flex;
@@ -106,12 +136,33 @@
           <image class="avatar" src="{{avatarUrl}}"></image>
           <view class="info">
             <text class="nns">NNS:未设置</text>
-            <text class="label">{{account.label}}</text>
+            <text class="label">{{account.address}}</text>
           </view>
         </view>
   
-        <view class="area-text">
-          <view class="area-text-item"  @tap="copyToClip({{account.address}})">
+        <view class="area-nav">
+          <navigator class="item" url="/pages/reorder">
+            <view class="item_content">
+              <image class="item_img" src="../images/neo.png"></image>
+              <view class="text">交易历史</view>
+            </view>
+            <view class="arrow">&gt;</view>
+          </navigator>
+          <navigator class="item" url="/pages/reorder">
+            <view class="item_content">
+              <image class="item_img" src="../images/neo.png"></image>
+              <view class="text">账户管理</view>
+            </view>
+            <view class="arrow">&gt;</view>
+          </navigator>
+           <navigator class="item" url="/pages/reorder">
+            <view class="item_content">
+              <image class="item_img" src="../images/neo.png"></image>
+              <view class="text">设置</view>
+            </view>
+            <view class="arrow">&gt;</view>
+          </navigator>
+          <!-- <view class="area-text-item"  @tap="copyToClip({{account.address}})">
             <text class="text-label">地址</text>
             <text class="text-content">{{account.address}}</text>
           </view>
@@ -122,7 +173,7 @@
           <view class="area-text-item"  @tap="copyToClip({{account.nep2key}})">
             <text class="text-label">私钥{{(account.key.length===64)?'':'密文'}}</text>
             <text class="text-content">{{account.nep2key}}</text>
-          </view>
+          </view> -->
         </view>
 
         <view class="area-lower">
@@ -152,7 +203,7 @@ export default class Mine extends wepy.page {
   onShow() {
     this.account = Util.get.account();
     console.log(Util.get.account());
-    
+
     this.$apply();
   } // 只在Page中存在的页面生命周期函数
   onReady() {

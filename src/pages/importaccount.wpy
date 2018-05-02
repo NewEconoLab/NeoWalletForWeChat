@@ -133,8 +133,8 @@ export default class ImportAccount extends wepy.page {
 
   data = {
     isLoading: false,
-    prikey: '',
-    label: ''
+    prikey: 'L3tDHnEAvwnnPE4sY4oXpTvNtNhsVhbkY4gmEmWmWWf1ebJhVPVW',
+    label: 'benben'
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
   components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件

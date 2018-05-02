@@ -23,11 +23,11 @@
   width: 750rpx;
   display: flex;
   flex-direction: row;
-margin-top: 50rpx;
+  margin-top: 50rpx;
   .btn {
     width: 375rpx;
-    button{
-      width:200rpx;
+    button {
+      width: 200rpx;
     }
   }
 }
@@ -163,16 +163,18 @@ export default class Home extends wepy.page {
   components = {};
 
   data = {
-    assets:{},
+    assets: {},
     isLogin: false,
     avater: '',
-    total:'0.00'
+    total: '0.00'
   };
 
   computed = {};
 
   methods = {
     async navigate(page) {
+      Util.set.resolve();
+      return;
       if (Util.get.account() === null) {
         if (page === 'mine') {
           wepy.navigateTo({

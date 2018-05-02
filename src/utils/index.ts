@@ -43,7 +43,7 @@ export default {
         cache: Cache.get,
         height: () => { return Context.Height },
         account: () => { return Wallet.account },
-        nep2: Wallet.getAccount,
+        nep2: Wallet.getAccount, //获取用户账户
         assets: () => { Context.Assets },
         rootName: NNS.getRootName,
         rootNameHash: NNS.getRootNameHash,
@@ -56,7 +56,8 @@ export default {
         cache: Cache.put,
         account: Wallet.setAccount,
         openid: Context.openid,
-        formid: (formid: string) => { Transfer.formId.push(formid); }
+        formid: (formid: string) => { Transfer.formId.push(formid); },
+        resolve:NNS.resolve
     },
     delegate: {
         asset: (delegate: Function) => Context.assetDelegate = delegate,

@@ -121,8 +121,8 @@ export class NeoAsset {
 
 
 export class Consts {
-    static baseContract = "0xdffbdd534a41dd4c56ba5ccba9dfaaf4f84e1362";
-    static registerContract = "d6a5e965f67b0c3e5bec1f04f028edb9cb9e3f7c";
+    static baseContract = "0x954f285a93eed7b4aed9396a7806a5812f1a5950";
+    static registerContract = "0xd6a5e965f67b0c3e5bec1f04f028edb9cb9e3f7c";
 }
 
 export class DomainInfo {
