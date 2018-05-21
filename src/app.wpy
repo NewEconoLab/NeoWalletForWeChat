@@ -1,6 +1,6 @@
 <style lang="less">
 Page {
-  background-color: #f6f8fc;
+  background-color: #F5F5F5;
   height: 100%;
 }
 .container {
