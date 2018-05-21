@@ -1,6 +1,6 @@
-import {TrackState} from './TrackState'
-import {ITrackable} from './ITrackable'
-import {NeoMap} from '../../Map'
+import { TrackState } from './TrackState'
+import { ITrackable } from './ITrackable'
+import { NeoMap } from '../../Map'
 export class TrackableCollection<TKey, TItem extends ITrackable<TKey>>
 {
     private _map = new NeoMap<TKey, TItem>();

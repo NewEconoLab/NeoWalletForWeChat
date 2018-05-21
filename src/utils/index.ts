@@ -11,6 +11,7 @@ import Transfer from './transaction';
 import Cache from './cache';
 import Wallet from './wallet';
 import { Nep6 } from '../lib/neo-ts';
+import User from './user'
 
 export { Https }
 
@@ -47,7 +48,7 @@ export default {
         assets: () => { Context.Assets },
         rootName: NNS.getRootName,
         rootNameHash: NNS.getRootNameHash,
-        userInfo: Wallet.getUserInfo,
+        userInfo:async ()=> await User.getUser(),
         TXs: Context.OnGetTXs,
         prikey: (wif: string): string => { return Wallet.wif2prikey(wif) },
         total: () => { return Context.total }

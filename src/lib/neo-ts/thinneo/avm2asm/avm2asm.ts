@@ -1,6 +1,6 @@
-﻿import {Op,ParamType} from './op'
-import {ByteReader}from './byteReader'
-import {OpCode} from '../opcode'
+﻿import { Op, ParamType } from './op'
+import { ByteReader } from './byteReader'
+import { OpCode } from '../opcode'
 
 export class Avm2Asm {
     public static Trans(script: Uint8Array): Op[] {

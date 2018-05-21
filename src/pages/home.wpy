@@ -1,104 +1,238 @@
  <style lang="less">
 .area-upper {
-  height: 450rpx;
-  width: 100%;
-  background: linear-gradient(to right, #69c0fd, #a6a4fd);
+  height: 320rpx;
+  width: 690rpx;
+  background: linear-gradient(165deg, #51d2ee 3%, #21a3ff 100%);
+  box-shadow: 0 2px 5px 0 #77ccf8;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
-}
+  margin-top: 32rpx;
 
-.upper-higher {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  width: 700rpx;
-  .total {
-  }
-  .net-state {
-  }
-}
-.upper-btn {
-  width: 750rpx;
-  display: flex;
-  flex-direction: row;
-  margin-top: 50rpx;
-  .btn {
-    width: 375rpx;
-    button {
-      width: 200rpx;
-    }
-  }
-}
-.area-lower {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
-.lower-asset {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 36rpx;
-}
-.asset-block {
-  width: 660rpx;
-  display: block;
-}
-
-.asset-icon {
-  width: 60rpx;
-  height: 60rpx;
-}
-.asset-content {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 660rpx;
-  height: 95rpx;
-  margin-top: 28rpx;
-  border-radius: 5px;
-  background-color: white;
-  box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
-  .left {
+  .upper-user {
     display: flex;
     flex-direction: row;
     align-items: center;
-    .icon {
-      width: 60rpx;
-      height: 60rpx;
-    }
-    .asset {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  }
-  .right {
-    .price {
-      width: 200rpx;
-      height: 100%;
+    width: 100%;
+    margin-top: 36rpx;
+    justify-content: space-between;
+    .user {
       display: flex;
       flex-direction: row;
-      justify-content: flex-start;
       align-items: center;
-      text {
-        color: #27adf1;
-        font-size: 13px;
-        font-family: Helvetica, Arial, sans-serif;
+      margin-left: 40rpx;
+      .avater {
+        width: 60rpx;
+        height: 60rpx;
+        border-radius: 50%;
+      }
+      .name {
+        margin-left: 16rpx;
+        font-family: PingFangSC-Medium;
+        font-size: 14px;
+        color: #ffffff;
+        letter-spacing: 0;
+        line-height: 14px;
+      }
+    }
+
+    .qrcode {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-right: 40rpx;
+      .image {
+        width: 48rpx;
+        height: 48rpx;
+      }
+      .label {
+        font-family: PingFangSC-Regular;
+        font-size: 10px;
+        color: #ffffff;
+        letter-spacing: 0;
+        margin-top: 6rpx;
       }
     }
   }
-  .label {
-    font-size: 13px;
-    color: #a3a3a3;
+
+  .upper-asset {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    margin-top: 60rpx;
     margin-left: 50rpx;
-    font-family: Helvetica, Arial, sans-serif;
+    .label {
+      font-family: PingFangSC-Regular;
+      font-size: 10px;
+      color: #ffffff;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 10px;
+    }
+    .amount {
+      font-family: PingFangSC-Medium;
+      font-size: 24px;
+      color: #ffffff;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 24px;
+      margin-left: 114rpx;
+    }
+    .icon {
+      width: 48rpx;
+      height: 48rpx;
+      margin-left: 20rpx;
+    }
+  }
+}
+
+.area-block-height {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  margin-left: 40rpx;
+  width: 100%;
+  height: 104rpx;
+  border-bottom: solid thin #f5f5f5;
+  .label {
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #9a9a9a;
+    letter-spacing: 0;
+    line-height: 12px;
+  }
+}
+.area-claim {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 146rpx;
+  .left {
+    margin-left: 30rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100%;
+    .label {
+      font-family: PingFangSC-Medium;
+      font-size: 12px;
+      color: #333333;
+      letter-spacing: 0;
+      line-height: 12px;
+      margin-top: 40rpx;
+    }
+    .amount {
+      font-family: PingFangSC-Medium;
+      font-size: 16px;
+      color: #333333;
+      letter-spacing: 0;
+      line-height: 16px;
+      margin-top: 10rpx;
+    }
+  }
+  .btn {
+    background: #b2b2b2;
+    border-radius: 3px;
+    margin-right: 30rpx;
+    height: 48rpx;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    text {
+      width: 120rpx;
+      font-family: PingFangSC-Medium;
+      font-size: 14px;
+      color: #ffffff;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 14px;
+    }
+  }
+}
+
+.area-coins {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  .label {
+    height: 104rpx;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    margin-left: 30rpx;
+    text {
+      height: 100%;
+      font-family: PingFangSC-Regular;
+      font-size: 12px;
+      color: #9a9a9a;
+      letter-spacing: 0;
+      line-height: 12px;
+    }
+  }
+
+  .coinblock {
+    width: 660rpx;
+    display: flex;
+    flex-direction: row;
+    border-radius: 5px;
+    margin: 32rpx 0 13rpx 0;
+    background-color: white;
+    box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
+    .content {
+      width: 100%;
+      height: 140rpx;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      background-color: white;
+      justify-content: space-between;
+      .coin {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        .icon {
+          width: 56rpx;
+          height: 56rpx;
+        }
+        .name {
+          font-family: PingFangSC-Medium;
+          font-size: 16px;
+          color: #333333;
+          letter-spacing: 0;
+          line-height: 16px;
+        }
+      }
+      .amount {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        margin-right: 30rpx;
+        .coin {
+          font-family: PingFangSC-Medium;
+          font-size: 16px;
+          color: #333333;
+          letter-spacing: 0;
+          text-align: right;
+          line-height: 16px;
+        }
+        .value {
+          font-family: PingFangSC-Regular;
+          font-size: 12px;
+          color: #9a9a9a;
+          letter-spacing: 0;
+          text-align: right;
+          line-height: 12px;
+          margin-top: 18rpx;
+        }
+      }
+    }
   }
 }
 </style>
@@ -107,99 +241,88 @@
     <scroll-view scroll-y class="scroll">
       <view class="inner">
         <view class="area-upper">
-          <view class="upper-higher">
-            <view class="total">
-            {{total}}
+          <view class="upper-user">
+            <view class="user">
+              <image src="{{user.avatarUrl}}" class="avater"/>
+              <text class="name">{{user.nickName}}</text>
             </view>
-            <view class="net-state">
-            测试网
+            <view class="qrcode" @tap="receive">
+              <image src="../images/QRcode.png" class="image" />
+               <text class="label">收款</text>
             </view>
+            
           </view>
-          <view class="upper-btn">
-            <view class="btn"  @tap="navigate('receive')">
-              <button>收款</button>
-            </view>
-            <view class="btn"  @tap="navigate('send')">
-              <button>转账</button>
-            </view>
+          <view class="upper-asset">
+            <text class="label">总资产</text>
+            <text class="amount">￥ 10000</text>
+            <image src="../images/Hide.png" class="icon" />
           </view>
         </view>
-  
-        <view class="area-lower">
-          <view class="lower-asset">
-            <view class="asset-block" wx:for="{{assets}}" >
-              <view class="asset-content">
-                <view class="left">
-                  <image src="../images/neo.png" class="icon"></image>
-                  <view class="asset">
-                    <text class="label" >{{item.total }} ￥</text>
-                    <text class="label">{{item.amount+ ' ' + item.name}}</text>
-                  </view>
+        <view class="area-block-height">
+          <text class="label">区块高度:100000</text>
+        </view>
+          <view class="area-claim">
+            <view class="left">
+              <text class="label">未提取GAS</text>
+              <text class="amount">0.000000000</text>
+            </view>
+            <view class="btn"><text>提取</text></view>
+          </view>
+          <view class="area-coins">
+            <view class="label">
+              <text>所有资产</text>
+            </view>
+            <view class="coinblock" wx:for="{{coins}}" >
+              <view class="content">
+                <view class="coin">
+                  <image src="../images/QRcode.png" class="icon"/>
+                  <text class="name"></text>
                 </view>
-                <view class="price">
-                  <text  style="color:{{item.rise?'#45d68a':'#f67581'}};">￥{{item.price}}</text>
+                <view class="amount">
+                  <text class="coin"></text>
+                  <text class="value"></text>
                 </view>
               </view>
             </view>
           </view>
-        </view>
-    </view>
+      </view>
   </scroll-view>
   </view>
-
 </template>
-
 <script>
 import wepy from 'wepy';
 import Util, { Https } from '../utils/index';
 import Wallet from '../utils/wallet';
 import { Claim } from '../utils/entity';
-import Identicon from 'identicon.js';
 export default class Home extends wepy.page {
   config = {
-    navigationBarTitleText: '首页'
+    navigationBarTitleText: '钱包'
   };
 
   components = {};
 
   data = {
     assets: {},
-    isLogin: false,
-    avater: '',
-    total: '0.00'
+    user: {},
+    total: '0.00',
+    coins: {}
   };
 
   computed = {};
 
   methods = {
-    async navigate(page) {
-      Util.set.resolve();
-      return;
-      if (Util.get.account() === null) {
-        if (page === 'mine') {
-          wepy.navigateTo({
-            url: '/pages/index?switch=' + 0
-          });
-        } else Util.show.error('您尚未登陆钱包账户');
-        return;
-      } else {
-        wepy.navigateTo({
-          url: '/pages/' + page
-        });
-      }
+    receive() {
+      wx.navigateTo({ url: './receive'});
     }
   };
 
   events = {};
 
-  onLoad() {}
+  async onLoad() {
+    this.user = await Util.get.userInfo();
+    this.$apply();
+  }
   async onShow() {
-    var data = new Identicon(
-      '0387419467127d60bef1e11126cb1311609319e7a50c04781950498355cb8e1ad6',
-      { size: 20, margin: 0 }
-    ).toString();
-    console.log(data.length);
-    this.avater = 'data:image/png;base64,' + data;
     this.$apply();
   }
   // 页面渲染完成

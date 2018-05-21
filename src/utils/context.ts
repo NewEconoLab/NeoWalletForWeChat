@@ -48,7 +48,6 @@ export class Context {
         await Coin.initAllAsset();
         Context.OnGetHeight();
         Context.OnTimeOut();
-
     }
 
     /**

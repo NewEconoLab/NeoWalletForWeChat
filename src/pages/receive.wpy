@@ -1,18 +1,23 @@
 <style lang="less">
-.bg {
-  background: linear-gradient(to right, #69c0fd, #a6a4fd);
+.avater {
+  position: absolute;
+  z-index: 9999;
+  width: 116rpx;
+  height: 116rpx;
+  margin-top: 42rpx;
+  box-shadow: 0 2px 10px 0 rgba(192, 192, 192, 0.5);
+  border-radius: 50%;
 }
 .area-qrcode {
   display: flex;
   flex-direction: column;
   align-items: center;
-  // justify-content: center;
-  width: 700rpx; // 750rpx
-  height: 715rpx;
-  margin-top: 120rpx;
-  background-color: white;
-  border-radius: 5px;
-  box-shadow: 10px 15px 20px rgba(100, 100, 100, 0.3);
+  width: 650rpx; // 750rpx
+  height: 650rpx;
+  margin-top: 92rpx;
+  background: #ffffff;
+  box-shadow: 0 2px 5px 0 rgba(192, 192, 192, 0.5);
+  border-radius: 3px;
 }
 
 .note-text {
@@ -22,7 +27,7 @@
 }
 
 .qrcode {
-  margin-top: 62rpx;
+  margin-top: 120rpx;
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -42,34 +47,41 @@
   justify-content: flex-start;
 }
 .address-label {
-  font-size: 16px;
-  font-family: Helvetica, Arial, sans-serif;
-  color: white;
+  font-family: PingFangSC-Regular;
+  font-size: 12px;
+  color: #9a9a9a;
+  letter-spacing: 0;
+  line-height: 12px;
 }
 .address-content {
-  margin-top: 53rpx;
-  font-size: 15px;
-  font-family: Helvetica, Arial, sans-serif;
-  word-break: break-all;
-  color: white;
-  margin-left: 20rpx;
-  padding-bottom: 5rpx;
-  // border-bottom: white thin solid;
+  font-family: PingFangSC-Medium;
+  font-size: 14px;
+  color: #22a4ff;
+  letter-spacing: 0;
+  line-height: 14px;
+  margin-top: 30rpx;
 }
 
-.bottom-line{
-  width: 700rpx;
-  height:1px;
-  color:white;
-  margin-top: 30rpx;
+.btn {
+  background: #22a4ff;
+  box-shadow: 0 2px 5px 0 rgba(119, 204, 248, 0.5);
+  border-radius: 3px;
+  text {
+    font-family: PingFangSC-Medium;
+    font-size: 14px;
+    color: #ffffff;
+    letter-spacing: 0;
+    text-align: center;
+    line-height: 14px;
+  }
 }
 </style>
 
 <template>
-  <view class="container bg">
+  <view class="container">
+    <image src="{{avatarUrl}}" class="avater"/>
     <view class="area-qrcode">
-      <text class="note-text" >点击二维码，复制地址</text>
-      <view class="qrcode" @tap="copyToClip({{account.address}})">
+      <view class="qrcode">
         <canvas class="canvas" canvas-id="address"></canvas>
       </view>
     </view>
@@ -77,8 +89,8 @@
       <text class="address-label">地址:</text>
       <text class="address-content">{{account.address}}</text>
     </view>
+    <button class="btn" @tap="copyToClip">复制地址</button>
   </view>
-  <view class="bottom-line"></view>
 </template>
 
 <script>
@@ -90,10 +102,11 @@ export default class Receive extends wepy.page {
 
   customFunction() {} // 自定义方法
 
-  onLoad(option) {
+  async onLoad(option) {
     this.account = Util.get.account();
+    const user = await Util.get.userInfo();
+    this.avatarUrl = user.avatarUrl;
     this.$apply();
-    console.log(this.account);
     drawQrcode({
       width: 230,
       height: 230,
@@ -122,7 +135,8 @@ export default class Receive extends wepy.page {
   }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
 
   data = {
-    account: {}
+    account: {},
+    avatarUrl: ''
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
   components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
@@ -134,10 +148,11 @@ export default class Receive extends wepy.page {
   watch = {}; // 声明数据watcher（详见后文介绍）
 
   methods = {
-    copyToClip(str) {
+    copyToClip() {
       let that = this;
+
       wepy.setClipboardData({
-        data: str,
+        data: that.account.address,
         success: function(res) {
           wepy.getClipboardData({
             success: function(res) {

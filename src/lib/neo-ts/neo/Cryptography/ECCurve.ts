@@ -1,6 +1,6 @@
 ﻿import { ECFieldElement } from './ECFieldElement'
-import {ECPoint} from './ECPoint'
-import {BigInteger} from '../BigInteger'
+import { ECPoint } from './ECPoint'
+import { BigInteger } from '../BigInteger'
 import * as UintHelper from '../../Helper/UintHelper'
 let _secp256k1: ECCurve;
 let _secp256r1: ECCurve;

@@ -8,7 +8,7 @@ import * as  CryptoKey from '../neo/Cryptography/CryptoKey'
 import { ECDsa } from '../neo/Cryptography/ECDsa'
 import * as UintHelper from './UintHelper'
 import { SHA256, AES, enc, mode, pad } from 'crypto-js'
-import * as scrypt from 'scrypt-async'
+import scrypt from 'scrypt-async'
 import * as StringHelper from './StringHelper'
 // export declare var scrypt: any;
 // export declare var CryptoJS: any;
@@ -264,39 +264,37 @@ export class Account {
         let that = this
         var pubkey = Account.GetPublicKeyFromPrivateKey(prikey);
         let addr = Account.GetAddressFromPublicKey(pubkey);
-        const strkey = SHA256(SHA256(addr).toString()).toString().slice(0, 4)
-        let uint8pass = this.String2Bytes(passphrase);   //new TextEncoder("utf-8").encode(passphrase);
-        // console.log('strkey = ' + strkey)
-        // console.log('strkey = '+ uint8pass)
-        console.log('strkey = ' + prikey)
-        scrypt(uint8pass, strkey, {
-            logN: 5,
+        var addresshash = Account.GetAddrHash(addr);
+
+        scrypt(passphrase, addresshash, {
+            logN: 14,
             r: r,
             p: p,
             dkLen: 64,
-            interruptStep: 1000,
-            encoding: 'hash'
+            encoding: 'hex'
         },
-            function (res) {
-                var u8dk = new Uint8Array(res);
+            function (res: string) {
+                var u8dk = UintHelper.hexToBytes(res);
                 var derivedhalf1 = u8dk.subarray(0, 32);
                 var derivedhalf2 = u8dk.subarray(32, 64);
                 var u8xor = new Uint8Array(32);
                 for (var i = 0; i < 32; i++) {
                     u8xor[i] = prikey[i] ^ derivedhalf1[i];
                 }
-                var encryptedkey = Helper.Aes256Encrypt_u8(u8xor, derivedhalf2);
+                var encryptedkey = Account.Aes256Encrypt_u8(u8xor, derivedhalf2);
                 let buffer = new Uint8Array(39);
                 buffer[0] = 0x01;
                 buffer[1] = 0x42;
                 buffer[2] = 0xe0;
-                let u8addr = that.String2Bytes(strkey)//UintHelper.hexToBytes(strkey)//new TextEncoder("utf-8").encode(addresshash);
+
                 for (var i = 3; i < 3 + 4; i++) {
-                    buffer[i] = u8addr[i - 3];
+                    buffer[i] = addresshash[i - 3];
                 }
+
                 for (var i = 7; i < 32 + 7; i++) {
                     buffer[i] = encryptedkey[i - 7];
                 }
+
                 var b1 = Sha256.computeHash(buffer);
                 b1 = Sha256.computeHash(b1);
                 var u8hash = new Uint8Array(b1);
@@ -311,11 +309,8 @@ export class Account {
                 callback("finish", base58str);
             });
         return;
-
-
     }
     public static GetPrivateKeyFromNep2(nep2: string, passphrase: string, n = 16384, r = 8, p = 8, callback: (info: string, result: string | Uint8Array) => void) {
-        let that = this
         let data = Base58.decode(nep2);
         if (data.length != 39 + 4) {
             callback("error", "data.length error");
@@ -341,41 +336,42 @@ export class Account {
         }
         var addresshash = buffer.subarray(3, 3 + 4);
         var encryptedkey = buffer.subarray(7, 7 + 32);
-        let uint8pass = this.String2Bytes(passphrase);
-        let strkey = this.Bytes2String(addresshash);
-        scrypt(uint8pass, strkey, {
-            logN: 5,
+        scrypt(passphrase, addresshash, {
+            logN: 14,
             r: r,
             p: p,
             dkLen: 64,
-            interruptStep: 1000,
-            encoding: 'hash'
+            encoding: 'hex'
         },
-            function (res) {
-                var u8dk = new Uint8Array(res);
+            function (res: string) {
+
+                var u8dk = UintHelper.hexToBytes(res) //new Uint8Array(res);
                 var derivedhalf1 = u8dk.subarray(0, 32);
                 var derivedhalf2 = u8dk.subarray(32, 64);
-                var u8xor = Helper.Aes256Decrypt_u8(encryptedkey, derivedhalf2);
+                var u8xor = Account.Aes256Decrypt_u8(encryptedkey, derivedhalf2);
                 var prikey = new Uint8Array(u8xor.length);
                 for (var i = 0; i < 32; i++) {
                     prikey[i] = u8xor[i] ^ derivedhalf1[i];
                 }
-
-                var pubkey = Helper.GetPublicKeyFromPrivateKey(prikey);
-                var script_hash = Helper.GetPublicKeyScriptHashFromPublicKey(pubkey);
-                var address = Helper.GetAddressFromScriptHash(script_hash);
-                const addrhash = SHA256(SHA256(address).toString()).toString().slice(0, 4)
-                var b2 = new Uint8Array(b1);
-
-                var addresshashgot = that.String2Bytes(addrhash)
+                var pubkey = Account.GetPublicKeyFromPrivateKey(prikey);
+                var address = Account.GetAddressFromPublicKey(pubkey);
+                var addresshashgot = Account.GetAddrHash(address);
                 for (var i = 0; i < 4; i++) {
                     if (addresshash[i] != addresshashgot[i]) {
                         callback("error", "nep2 hash not match.");
-
                         return;
                     }
                 }
                 callback("finish", prikey);
             });
+        
+    }
+
+    public static GetAddrHash(addr: string): any {
+        var buffer = new Buffer(addr);
+        let strkey = Sha256.computeHash(buffer);
+        strkey = Sha256.computeHash(strkey);
+        var addresshash = new Uint8Array(strkey);
+        return addresshash.subarray(0, 4);
     }
 }

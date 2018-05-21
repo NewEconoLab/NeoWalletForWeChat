@@ -7,7 +7,7 @@ import { Uint160 } from './Uint160'
 import { Uint256 } from './Uint256'
 import { Uint64 } from './Uint64'
 import { UintVariable } from './UintVariable'
-import {Fixed8} from './Fixed8'
+import { Fixed8 } from './Fixed8'
 
 export {
     BigInteger,

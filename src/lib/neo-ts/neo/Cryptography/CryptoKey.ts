@@ -5,15 +5,12 @@ export class CryptoKey {
     }
 }
 
-export class AesCryptoKey extends CryptoKey
-{
-    constructor(private _key_bytes: Uint8Array)
-    {
+export class AesCryptoKey extends CryptoKey {
+    constructor(private _key_bytes: Uint8Array) {
         super("secret", true, { name: "AES-CBC", length: _key_bytes.length * 8 } as any, ["encrypt", "decrypt"]);
     }
 
-    public static create(length: number): AesCryptoKey
-    {
+    public static create(length: number): AesCryptoKey {
         if (length != 128 && length != 192 && length != 256)
             throw new RangeError();
         let key = new AesCryptoKey(new Uint8Array(length / 8));
@@ -21,13 +18,11 @@ export class AesCryptoKey extends CryptoKey
         return key;
     }
 
-    public export(): Uint8Array
-    {
+    public export(): Uint8Array {
         return this._key_bytes;
     }
 
-    public static import(keyData: ArrayBuffer | ArrayBufferView): AesCryptoKey
-    {
+    public static import(keyData: ArrayBuffer | ArrayBufferView): AesCryptoKey {
         if (keyData.byteLength != 16 && keyData.byteLength != 24 && keyData.byteLength != 32)
             throw new RangeError();
         return new AesCryptoKey(UintHelper.fromArrayBuffer(keyData));

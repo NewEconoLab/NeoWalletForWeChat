@@ -2,7 +2,7 @@
 .area-uppper {
   width: 100%;
   height: 406rpx;
-  background: linear-gradient(to right, #69c0fd, #a6a4fd);
+ 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,10 +10,11 @@
 
 .upper-avatar {
   border-radius: 50%;
-  width: 160rpx;
-  height: 160rpx;
+  width: 116rpx;
+  height: 116rpx;
   margin-top: 70rpx;
 }
+
 .upper-nickName {
   font-family: '黑体', Helvetica, sans-serif;
   font-size: 15px;
@@ -26,36 +27,30 @@
   flex-direction: column;
   align-items: center;
   margin-top: 100rpx;
-  width: 660rpx;
+  width:710rpx;
+  height:818rpx;
   margin-top: 70rpx;
+  background-color: white;
 }
 
-.login-item {
-  width: 100%;
-  height: 95rpx;
-  background-color: #69c0fd;
+.lower-nav{
+  width:100%;
+  height:100rpx;
+  background-color:gray;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  border-radius: 5px;
-  margin-bottom: 55rpx;
-  justify-content: center;
-  box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
-  .name {
-    color: white;
-    font-family: '黑体', Helvetica, sans-serif;
-    font-size: 16px;
-  }
 }
 </style>
 <template>
-  <view class="container">
+  <view class="container" style="background: linear-gradient(to bottom, #51D2EE 0%, #21A3FF 100%);">
     <view class="area-uppper">
       <image class="upper-avatar" src="{{avatarUrl}}"></image>
       <text class="upper-nickName">{{nickName}}</text>
     </view>
     <view class="area-lower">
-      <view class="login-item" @tap="register()" >
+      <view class="lower-nav">
+        <view class="login-item" @tap="register()" >
         <text class="name" style="color:white;">创建账户</text>
       </view>
       <view class="login-item" style="background-color: white;" @tap="loginImport()">
@@ -64,6 +59,8 @@
       <view class="login-item" style="background-color: white;" @tap="loginAccounts()">
         <text class="name" style="color:gray;">账户列表</text>
       </view>
+      </view>
+      
     </view>
   </view>
 </template>

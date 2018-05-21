@@ -22,7 +22,7 @@ export class Asset {
         this.amount = '0';
         this.total = '0.00';
     }
-
+ 
     /**
      * 添加UTXO
      *  检查下这个UTXO是否在已花费的列表中，如果有，而且高度已经超过了两个，那么就从spent移除，添加到utxo

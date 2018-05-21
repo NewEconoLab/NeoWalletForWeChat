@@ -182,40 +182,44 @@ export default class Https {
      * @param asset 
      */
     static async getNep5Asset(asset: string) {
-        var postdata = this.makeRpcPostBody("getnep5asset", asset);
-        var result = await fetch(this.api, { "method": "post", "body": JSON.stringify(postdata) });
-        var json = await result.json();
-        var r = json["result"][0];
-        return r;
+        // var postdata = this.makeRpcPostBody("getnep5asset", asset);
+        // var result = await fetch(this.api, { "method": "post", "body": JSON.stringify(postdata) });
+        // var json = await result.json();
+        // var r = json["result"][0];
+        // return  r;
+        return null;
     }
 
     static async api_getnep5Balance(address: string) {
-        var str = this.makeRpcUrl(this.api, "getallnep5assetofaddress", address, 1);
-        var result = await fetch(str, { "method": "get" });
-        var json = await result.json();
-        var r = json["result"];
-        return r;
+        // var str = this.makeRpcUrl(this.api, "getallnep5assetofaddress", address, 1);
+        // var result = await fetch(str, { "method": "get" });
+        // var json = await result.json();
+        // var r = json["result"];
+        // return r;
+        return null;
     }
 
 
     static async  rpc_getStorage(scripthash: Uint8Array, key: Uint8Array): Promise<string> {
-        var str = this.makeRpcUrl(this.api, "getstorage", Helper.toHexString(scripthash), Helper.toHexString(key));
-        var result = await fetch(str, { "method": "get" });
-        var json = await result.json();
-        if (json["result"] == null)
-            return null;
-        var r = json["result"] as string;
-        return r;
+        // var str = this.makeRpcUrl(this.api, "getstorage", Helper.toHexString(scripthash), Helper.toHexString(key));
+        // var result = await fetch(str, { "method": "get" });
+        // var json = await result.json();
+        // if (json["result"] == null)
+        //     return null;
+        // var r = json["result"] as string;
+        // return r;
+        return null;
     }
 
     static async rpc_getInvokescript(scripthash: Uint8Array): Promise<any> {
-        var str = this.makeRpcUrl(this.api, "invokescript", Helper.toHexString(scripthash));
-        var result = await fetch(str, { "method": "get" });
-        var json = await result.json();
-        if (json["result"] == null)
-            return null;
-        var r = json["result"][0]
-        return r;
+        // var str = this.makeRpcUrl(this.api, "invokescript", Helper.toHexString(scripthash));
+        // var result = await fetch(str, { "method": "get" });
+        // var json = await result.json();
+        // if (json["result"] == null)
+        //     return null;
+        // var r = json["result"][0]
+        // return r;
+        return null;
     }
 
     /**
@@ -259,13 +263,14 @@ export default class Https {
 
     //注册域名时塞值
     static async setnnsinfo(address: string, name: string, time: number) {
-        var str = this.makeRpcUrl(this.api, "setnnsinfo", address, name, time);
-        var result = await fetch(str, { "method": "get" });
-        var json = await result.json();
-        if (json["result"] == null)
-            return null;
-        var r = json["result"][0]
-        return r;
+        // var str = this.makeRpcUrl(this.api, "setnnsinfo", address, name, time);
+        // var result = await fetch(str, { "method": "get" });
+        // var json = await result.json();
+        // if (json["result"] == null)
+        //     return null;
+        // var r = json["result"][0]
+        // return r;
+        return null;
     }
     static async getnnsinfo(address: string) {
     }

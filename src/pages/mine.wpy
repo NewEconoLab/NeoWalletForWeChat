@@ -1,129 +1,94 @@
 <style lang="less">
-.bg {
-  background: linear-gradient(to right, #69c0fd, #a6a4fd);
+.avatar {
+  position: absolute;
+  z-index: 9999;
+  width: 116rpx;
+  height: 116rpx;
+  margin-top: 42rpx;
+  box-shadow: 0 2px 10px 0 rgba(192, 192, 192, 0.5);
+  border-radius: 50%;
 }
-
 .area-user {
   display: flex;
   flex-direction: row;
   align-items: center;
-  width: 700rpx;
-  .avatar {
-    width: 123rpx;
-    height: 123rpx;
-    margin-top: 101rpx;
-    border-radius: 50%;
-    background-color: white;
-  }
-  .info {
-    margin-top: 101rpx;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-left: 10rpx;
-  }
-  .label {
-    font-family: '黑体', Helvetica;
-    font-size: 16px;
-    margin-top: 5rpx;
-    color: white;
+  background: #ffffff;
+  box-shadow: 0 2px 5px 0 rgba(192, 192, 192, 0.5);
+  border-radius: 3px;
+  width: 710rpx;
+  height: 274rpx;
+
+  .nickName {
+    margin-top: 96rpx;
+    font-family: PingFangSC-Medium;
+    font-size: 14px;
+    color: #333333;
+    letter-spacing: 0;
+    text-align: center;
+    line-height: 14px;
   }
   .nns {
-    font-family: '黑体', Helvetica;
-    font-size: 16px;
-    margin-top: 45rpx;
-    color: white;
+    margin-bottom: 10rpx;
+    margin-top: 22rpx;
+    border-bottom: thin solid #a9a9a9;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    text {
+      font-family: PingFangSC-Medium;
+      font-size: 14px;
+      color: #333333;
+      letter-spacing: 0;
+      line-height: 14px;
+    }
+  }
+  .addr {
+    .icon {
+      width: 24rpx;
+      height: 24rpx;
+    }
+    .content {
+      font-family: PingFangSC-Regular;
+      font-size: 12px;
+      color: #a9a9a9;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 12px;
+    }
   }
 }
 
 .area-nav {
-  margin-top: 10rpx;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   .item {
-    border-top: 1rpx solid #dbdbdb;
-    background: #fff;
-    padding: 34rpx 28rpx;
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: space-between;
-  }
-  .item:last-child {
-    border-bottom: 1rpx solid #dbdbdb;
-  }
-  .item_content {
-    display: flex;
-    align-items: center;
-    .text {
-      margin-left: 20rpx;
-      color: #1a1a1a;
+    width: 100%;
+    .left {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      .icon {
+        width: 60rpx;
+        height: 60rpx;
+      }
+      .label {
+        font-family: PingFangSC-Medium;
+        font-size: 14px;
+        color: #333333;
+        letter-spacing: 0;
+        line-height: 14px;
+      }
     }
-  }
-  .item_img {
-    width: 42rpx;
-    height: 42rpx;
-  }
-  .arrow {
-    color: #cccccc;
-    font-size: 32rpx;
-  }
-  .tip {
-    color: #999;
-    font-size: 24rpx;
-    margin-top: 20rpx;
-    margin-left: 60rpx;
-  }
-}
-.area-text-item {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  width: 100%;
-  padding-bottom: 15rpx;
-  padding-top: 15rpx;
-  border-bottom: thin solid #dddddd;
-  justify-content: center;
-}
-.text-label {
-  flex: 2.5;
-  font-size: 16px;
-  font-family: '黑体';
-  padding-left: 5px;
-  color: white;
-  justify-content: flex-end;
-  line-height: 47rpx;
-}
-.text-content {
-  flex: 8;
-  font-size: 15px;
-  font-family: Arial, Helvetica, sans-serif;
-  word-break: break-all;
-  color: white;
-  line-height: 47rpx;
-  align-items: flex-end;
-}
-.area-lower {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 660rpx;
-  margin-top: 145rpx;
-}
-
-.button-item {
-  width: 660rpx;
-  height: 95rpx;
-  background-color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-radius: 5px;
-  justify-content: center;
-  margin-bottom: 100rpx;
-  box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
-  .name {
-    color: #a3a3a3;
-    font-family: '黑体';
-    font-size: 16px;
+    .arrow {
+      width: 48rpx;
+      height: 48rpx;
+    }
   }
 }
 </style>
@@ -132,15 +97,20 @@
   <view class="container bg">
     <scroll-view scroll-y class="scroll">
       <view class="inner">
+         <image class="avatar" src="{{avatarUrl}}"/>
         <view class= "area-user">
-          <image class="avatar" src="{{avatarUrl}}"></image>
-          <view class="info">
-            <text class="nns">NNS:未设置</text>
-            <text class="label">{{account.address}}</text>
+          <text class="nickName">{{account.nickName}}</text>
+         <view class="nns">
+           <text>abcd.neo</text>
+         </view>
+          <view class="addr">
+            <image src="../images/Pointer.png" class="icon"/>
+            <text class="content">hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh</text>
           </view>
         </view>
   
         <view class="area-nav">
+
           <navigator class="item" url="/pages/reorder">
             <view class="item_content">
               <image class="item_img" src="../images/neo.png"></image>
@@ -162,18 +132,6 @@
             </view>
             <view class="arrow">&gt;</view>
           </navigator>
-          <!-- <view class="area-text-item"  @tap="copyToClip({{account.address}})">
-            <text class="text-label">地址</text>
-            <text class="text-content">{{account.address}}</text>
-          </view>
-          <view class="area-text-item"  @tap="copyToClip({{account.publickey}})">
-            <text class="text-label">公钥</text>
-            <text class="text-content">{{account.publickey}}</text>
-          </view>
-          <view class="area-text-item"  @tap="copyToClip({{account.nep2key}})">
-            <text class="text-label">私钥{{(account.key.length===64)?'':'密文'}}</text>
-            <text class="text-content">{{account.nep2key}}</text>
-          </view> -->
         </view>
 
         <view class="area-lower">

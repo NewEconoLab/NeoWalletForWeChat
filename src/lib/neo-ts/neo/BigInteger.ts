@@ -647,7 +647,7 @@ export class BigInteger {
             array = array.subarray(0, length);
         return array;
     }
-    
+
     public toUint8ArrayWithSign(littleEndian = true, length?: number): Uint8Array {
         if (this._sign == 0) return new Uint8Array(length || 1);
 
@@ -709,5 +709,4 @@ export class BigInteger {
             return array;
         }
     }
-}
 }

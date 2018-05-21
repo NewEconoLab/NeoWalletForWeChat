@@ -33,7 +33,7 @@ export class ECDsa {
             let k: BigInteger;
             do {
                 do {
-                    k = BigInteger.random(this.key.publicKey.curve.N.bitLength(),randomStr);
+                    k = BigInteger.random(this.key.publicKey.curve.N.bitLength(), randomStr);
                 }
                 while (k.sign() == 0 || k.compareTo(this.key.publicKey.curve.N) >= 0);
                 let p = ECPoint.multiply(this.key.publicKey.curve.G, k);

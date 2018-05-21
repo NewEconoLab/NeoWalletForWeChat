@@ -61,34 +61,34 @@ export default class extends wepy.app {
       navigationBarTextStyle: 'black'
     },
     tabBar: {
-      color: '#cccccc',
-      selectedColor: '#27adf1',
+      color: '#A9A9A9',
+      selectedColor: '#333333',
       backgroundColor: '#ffffff',
       borderStyle: 'black',
       list: [
         {
           pagePath: 'pages/home',
-          text: '首页',
-          iconPath: 'images/home.png',
-          selectedIconPath: 'images/home_tap.png'
+          text: '钱包',
+          iconPath: 'images/Wallet.png',
+          selectedIconPath: 'images/Wallet_s.png'
         },
         {
           pagePath: 'pages/watchonly',
-          text: '观察',
-          iconPath: 'images/watch.png',
-          selectedIconPath: 'images/watch_tap.png'
+          text: '转账',
+          iconPath: 'images/Transfer.png',
+          selectedIconPath: 'images/Transfer_s.png'
         },
         {
           pagePath: 'pages/nns',
           text: 'NNS',
-          iconPath: 'images/neo.png',
-          selectedIconPath: 'images/neo.png'
+          iconPath: 'images/NNS.png',
+          selectedIconPath: 'images/NNS_s.png'
         },
         {
           pagePath: 'pages/mine',
           text: '个人',
-          iconPath: 'images/mine.png',
-          selectedIconPath: 'images/mine_tap.png'
+          iconPath: 'images/Mine.png',
+          selectedIconPath: 'images/Mine_s.png'
         }
       ]
     }

@@ -1,5 +1,4 @@
-﻿/// <reference path="Stream.ts"/>
-import { Stream, SeekOrigin } from './Stream'
+﻿import { Stream, SeekOrigin } from './Stream'
 import * as Arrayhelper from '../../Helper/Arrayhelper'
 const BufferSize = 1024;
 
