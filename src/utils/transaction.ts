@@ -223,7 +223,6 @@ export default class Transfer {
 
         var currentAddress = Wallet.account.address;
         var res = await Https.gettransbyaddress(currentAddress, 20, 1);
-
         if (res.length > 0) {
             this.TXs = [];
             for (let index = 0; index < res.length; index++) {
@@ -235,17 +234,13 @@ export default class Transfer {
                 let vouts = tx["vout"];
                 let value = tx["value"];
                 let txtype = tx["txType"];
-                if(txtype.search("Transaction") != -1){
-                    console.log('------');
-                    
-                     txtype = txtype.replace('Transaction','');
+                if (txtype.search("Transaction") != -1) {
+                    txtype = txtype.replace('Transaction', '');
                 }
                 let assetType = tx["assetType"]
                 let blockindex = tx["blockindex"];
                 let time: string = tx["blocktime"].includes("$date") ? JSON.parse(tx["blocktime"])["$date"] : tx["blocktime"] + "000";
-                console.log(time);
-                
-                let date: string = formatTime(parseInt(time),'Y/M/D h:m:s');
+                let date: string = formatTime(parseInt(time), 'Y/M/D h:m:s');
 
                 if (type == "out") {
                     if (vins && vins.length == 1) {
@@ -260,7 +255,7 @@ export default class Transfer {
                         else {
                             let nep5 = await Https.getNep5Asset(asset);
                             console.log(nep5);
-                            
+
                             assetname = 'jjj'//nep5["name"];
                         }
                         var history = new History();
@@ -271,6 +266,9 @@ export default class Transfer {
                         history.value = parseFloat(amount).toString();
                         history.txtype = txtype;
                         history.type = type;
+                        history.vin = vins;
+                        history.vout = vouts;
+                        history.block =blockindex;
                         this.TXs.push(history);
                     }
                 }
@@ -335,6 +333,9 @@ export default class Transfer {
                                     history.value = parseFloat(amount).toString();
                                     history.txtype = txtype;
                                     history.type = type;
+                                    history.vin = vins;
+                                    history.vout = vouts;
+                                    history.block = blockindex;
                                     this.TXs.push(history);
                                 }
                             }

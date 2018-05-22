@@ -164,6 +164,9 @@ export class History {
     type:string;
     time: string;
     txid: string;
+    vin:any;
+    vout:any;
+    block:number;
 }
 
 export class Claim {

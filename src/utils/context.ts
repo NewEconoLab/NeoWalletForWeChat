@@ -150,10 +150,8 @@ export class Context {
      * 获取历史交易
      */
     static async OnGetTXs(page: number) {
-        console.log(';;;;;www;');
         if (Context.txDelegate === null)
             return;
-        console.log(';;;;;;');
 
         await Transfer.history();
         console.log(Transfer.TXs);

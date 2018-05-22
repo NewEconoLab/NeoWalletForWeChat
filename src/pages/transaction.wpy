@@ -1,99 +1,127 @@
 <style lang="less">
-.bg {
-  background: linear-gradient(to right, #69c0fd, #a6a4fd);
-  // padding-top: 96rpx;
+.tx-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  background-color: white;
+  .icon {
+    margin-top: 40rpx;
+    width: 60rpx;
+    height: 60rpx;
+    border-radius: 50%;
+  }
+  .type {
+    font-family: PingFangSC-Medium;
+    font-size: 16px;
+    color: #333333;
+    letter-spacing: 0;
+    line-height: 16px;
+    margin-top: 20rpx;
+  }
+  .date {
+    font-family: PingFangSC-Regular;
+    font-size: 10px;
+    color: #9a9a9a;
+    letter-spacing: 0;
+    text-align: center;
+    line-height: 10px;
+    margin-top: 30rpx;
+    margin-bottom: 40rpx;
+  }
 }
 
 .item {
   display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  border-bottom: thin #dddddd solid;
-  width: 678rpx;
+  flex-direction: column;
+  align-items: flex-start;
   justify-content: center;
-  padding: 20rpx 0 20rpx 0;
-  .label {
-    flex: 3;
-    font-size: 16px;
-    font-weight: bold;
-    font-family: '黑体';
-    color: white;
-    justify-content: flex-end;
-  }
+  margin-top: 2rpx;
+  width: 100%;
+  background-color: white;
   .content {
-    flex: 8;
-    font-size: 15px;
     word-break: break-all;
-    font-family: Arial, Helvetica, sans-serif;
-    color: white;
+    font-family: PingFangSC-Medium;
+    font-size: 14px;
+    color: #333333;
+    letter-spacing: 0;
+    line-height: 14px;
+    margin: 0 30rpx 40rpx 30rpx;
   }
 
   .vin-out {
-    flex: 8;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
+    margin: 1rpx 30rpx 0 30rpx;
     .upper {
-      padding: 0 20rpx 20rpx 0;
-      font-size: 15px;
-      word-break: break-all;
-      font-family: Arial, Helvetica, sans-serif;
-      color: white;
-      border-bottom: thin solid #dddddd;
+      font-family: PingFangSC-Medium;
+      font-size: 14px;
+      color: #333333;
+      letter-spacing: 0;
+      line-height: 14px;
     }
     .lower {
-      padding: 20rpx 20rpx 0 0;
-      font-size: 15px;
-      font-family: Arial, Helvetica, sans-serif;
-      color: white;
+      font-family: PingFangSC-Medium;
+      font-size: 14px;
+      color: #151515;
+      letter-spacing: 0;
+      line-height: 14px;
+      margin-top: 30rpx;
+      margin-bottom: 40rpx;
     }
   }
 }
 </style>
 <template>
-<view class="container bg">
+<view class="container">
   <scroll-view scroll-y class="scroll">
     <view class="inner">
+      <view class="tx-info">
+        <image src="../images/{{tx.txtype}}.png" class="icon"/>
+        <text class="type">{{tx.txtype}}</text>
+        <text class="date">{{tx.time}}</text>
+      </view>
     <view class="item">
-        <text class="label">交易编号</text>
-        <text class="content">{{tx.txid}}</text>
+      <view class="function-title">
+          <text class="text">交易编号</text>
+      </view>
+      <text class="content">0x{{tx.txid}}</text>
     </view>
      <view class="item">
-        <text class="label">区块高度</text>
-        <text class="content">{{tx.blockindex}}</text>
+       <view class="function-title">
+          <text class="text">手续费</text>
+      </view>
+        <text class="content">0 GAS</text>
     </view>
      <view class="item">
-        <text class="label">手续费</text>
-        <text class="content">{{tx.net_fee}}</text>
-    </view>
-     <view class="item">
-        <text class="label">系统费</text>
-        <text class="content">{{tx.sys_fee}}</text>
-    </view>
-     <view class="item">
-        <text class="label">大小</text>
-        <text class="content">{{tx.size}}</text>
+       <view class="function-title">
+          <text class="text">系统费</text>
+      </view>
+        <text class="content">0 GAS</text>
     </view>
     <view class="item">
-        <text class="label">交易类型</text>
-        <text class="content">{{tx.type}}</text>
+      <view class="function-title">
+        <text class="text">区块高度</text>
+      </view>
+      <text class="content">{{tx.block}}</text>
     </view>
-    <view class="item">
-        <text class="label">交易脚本</text>
-        <view class="content">{{tx.scripts[0].invocation}}</view>
-    </view>
-    <view class="item" wx:for="{{tx.vin}}">
-      <text class="label">交易输入</text>
-      <view class="vin-out">
-        <text class="upper">{{item.txid}}</text>
-        <text class="lower">VOUT：{{item.vout}}</text>
+    <view class="item" style="margin-top:20rpx;">
+       <view class="function-title">
+        <text class="text">交易输入</text>
+      </view>
+      <view class="vin-out" wx:for="{{tx.vin}}" >
+        <text class="upper">{{item.address}}</text>
+        <text class="lower">{{item.value}} {{tx.assetname}}</text>
       </view>
     </view>
-    <view class="item" wx:for="{{vout}}">
-      <text class="label">交易输出</text>
-      <view class="vin-out">
+    <view class="item" style="margin-top:20rpx;">
+      <view class="function-title">
+        <text class="text">交易输出</text>
+      </view>
+      <view class="vin-out" wx:for="{{tx.vout}}" >
         <text class="upper">{{item.address}}</text>
-        <text class="lower">{{item.asset}} ：{{ item.value}}</text>
+        <text class="lower">{{ item.value}} {{tx.assetname}}</text>
       </view>
     </view>
     </view>
@@ -102,13 +130,13 @@
 </template>
 <script>
 import wepy from 'wepy';
-import {Util} from '../utils/index';
+import { Util } from '../utils/index';
 export default class Transaction extends wepy.page {
   config = {
     navigationBarTitleText: '交易详情'
   };
   data = {
-    txid: '',
+    tx: {},
     vout: [],
     tx: {}
   };
@@ -117,25 +145,25 @@ export default class Transaction extends wepy.page {
 
   methods = {};
   onLoad(option) {
-    this.txid = option.txid;
+    console.log(option.tx);
+
+    this.tx = JSON.parse(option.tx);
     this.$apply();
-    this.OnLoadTX(this.txid);
+    console.log(this.tx.vin);
+
+    this.OnLoadTX(this.tx);
   }
   async onShow() {
     // Service.add('transaction',this)
   }
 
-  async OnLoadTX(txid) {
-    const r = await WWW.rpc_getRawTransaction(txid);
-    this.tx = r['0'];
-    this.$apply();
-    let outputs = this.tx.vout;
+  async OnLoadTX(tx) {
+    let outputs = tx.vout;
     for (let index in outputs) {
-      outputs[index].asset = Coi.assetID2name[outputs[index].asset];
+      outputs[index].asset = Coin.assetID2name[outputs[index].asset];
     }
     this.vout = outputs;
     this.$apply();
-    console.log(r);
   }
 }
 </script>

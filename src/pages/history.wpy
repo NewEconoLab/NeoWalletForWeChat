@@ -75,14 +75,14 @@
   <view class="container">
     <text class="empty" hidden="{{notEmpty}}">还没有交易记录哦！</text>
     <view class="history-block" wx:for="{{TXs}}" >
-      <view class="content">
+      <view class="content" @tap="OnDetail({{item}})">
         <image src="../images/{{item.txtype}}.png" class="icon"/>
         <view class="right">
           <view class="area-head">
             <text class="label">{{item.txtype}}</text>
             <text class="time">{{item.time}}</text>
           </view>
-          <view class ="area-txid" @tap="OnDetail(item.txid)">
+          <view class ="area-txid">
             <text class="txid">{{item.txid}}</text>
           </view>
         </view>
@@ -114,8 +114,11 @@ export default class History extends wepy.page {
   computed = {};
 
   methods = {
-    async OnDetail(txid) {
-      wepy.navigateTo({ url: './transaction?txid=' + txid });
+    async OnDetail(tx) {
+      console.log(tx);
+      
+      let that  = this;
+      wepy.navigateTo({ url: './transaction?tx=' + JSON.stringify(tx)});
     }
   };
 
