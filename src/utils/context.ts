@@ -141,7 +141,7 @@ export class Context {
             }
         }
         Context.total = total;
-        
+
         let assets = JSON.parse(JSON.stringify(Context.Assets));
         Context.assetDelegate(assets);
     }
@@ -150,32 +150,17 @@ export class Context {
      * 获取历史交易
      */
     static async OnGetTXs(page: number) {
-        // if (Context.txDelegate === null)
-        //     return;
-        // const txs = await Https.rpc_getAddressTXs(Context.getAccount().address, 20, page);
-        // console.log(txs);
-        // if (txs === undefined) {
-        //     return;
-        // }
+        console.log(';;;;;www;');
+        if (Context.txDelegate === null)
+            return;
+        console.log(';;;;;;');
 
-        // for (let index in txs) {
-        //     try {
-        //         const date = txs[index].blocktime['$date'];
-        //         txs[index].blocktime['$date'] = formatTime(
-        //             date,
-        //             'Y/M/D h:m:s'
-        //         );
-        //     } catch (err) {
-        //         console.log('NET_Date_ERR');
-        //         console.log(err);
-        //     }
-        //     txs[index].blockindex =
-        //         parseInt((Context.Height - (txs[index].blockindex as number) + 1).toString());
-        // }
-        // Context.txDelegate(txs);
         await Transfer.history();
         console.log(Transfer.TXs);
+        Context.txDelegate(Transfer.TXs);
+        console.log(Context.txDelegate);
         
+        return Transfer.TXs;
     }
 
     static getAccount(): Nep6.nep6account {

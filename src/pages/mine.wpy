@@ -130,7 +130,7 @@
             <image class="arrow" src="../images/Arrow.png"/>
           </navigator>
 
-           <navigator class="item" url="/pages/reorder">
+           <navigator class="item" url="/pages/history">
             <view class="left">
               <image class="icon" src="../images/M_history.png"/>
               <view class="label">交易历史</view>

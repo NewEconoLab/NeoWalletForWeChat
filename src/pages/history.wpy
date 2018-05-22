@@ -3,12 +3,10 @@
   color: gray;
 }
 .history-block {
-  width: 695rpx;
+  width: 750rpx;
   display: block;
   flex-direction: column;
-  border-radius: 5px;
-  margin-top: 32rpx;
-  margin-bottom: 18rpx;
+  margin-top: 1rpx;
   background-color: white;
   justify-content: center;
 }
@@ -16,8 +14,19 @@
 .content {
   width: 100%;
   display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.icon {
+  height: 60rpx;
+  width: 60rpx;
+  margin-left: 30rpx;
+}
+.right {
+  display: flex;
   flex-direction: column;
   align-items: center;
+  margin-left: 30rpx;
 }
 //头部
 .area-head {
@@ -25,78 +34,66 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-end;
-  width: 625rpx;
-  margin: 30rpx 0 0 0;
+  margin-top: 40rpx;
+  width: 600rpx;
   .label {
-    font-size: 17px;
-    font-family: '黑体';
-    color: #a3a3a3;
+    font-family: PingFangSC-Medium;
+    font-size: 16px;
+    color: #333333;
+    letter-spacing: 0;
+    line-height: 16px;
   }
   .time {
-    font-size: 14px;
-    font-family: '黑体';
-    color: #a3a3a3;
+    font-family: PingFangSC-Regular;
+    font-size: 10px;
+    color: #9a9a9a;
+    letter-spacing: 0;
+    text-align: right;
+    line-height: 10px;
   }
 }
 //交易ID
 .area-txid {
   display: flex;
   flex-direction: column;
-  width: 625rpx;
   height: wrap;
-  border-bottom: thin rgb(230, 230, 230) solid;
+  width: 600rpx;
+  margin-top: 32rpx;
   .txid {
     display: block;
     word-break: break-all;
-    font-size: 15px;
-    color: #a3a3a3;
-    margin: 34rpx 0 30rpx 0;
-  }
-}
-//确认高度
-.area-confirm {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-  margin: 20rpx 20rpx 20rpx 20rpx;
-  width: 625rpx;
-  .label {
-    font-size: 16px;
-    color: #69c0fd;
-    font-family: '黑体';
-  }
-  .count {
-    font-size: 16px;
-    padding-right: 5px;
-    color: #69c0fd;
+    font-family: PingFangSC-Medium;
+    font-size: 10px;
+    color: #a9a9a9;
+    letter-spacing: 0;
+    line-height: 12px;
+    margin-bottom: 40rpx;
   }
 }
 </style>
 <template>
   <view class="container">
     <text class="empty" hidden="{{notEmpty}}">还没有交易记录哦！</text>
-   <view class="history-block" wx:for="{{TXs}}" >
-     <view class="content">
-      <view class="area-head">
-       <text class="label">交易编号</text>
-       <text class="time">{{item.blocktime['$date']}}</text>
+    <view class="history-block" wx:for="{{TXs}}" >
+      <view class="content">
+        <image src="../images/{{item.txtype}}.png" class="icon"/>
+        <view class="right">
+          <view class="area-head">
+            <text class="label">{{item.txtype}}</text>
+            <text class="time">{{item.time}}</text>
+          </view>
+          <view class ="area-txid" @tap="OnDetail(item.txid)">
+            <text class="txid">{{item.txid}}</text>
+          </view>
+        </view>
       </view>
-      <view class ="area-txid" @tap="OnDetail({{item.txid}})">
-        <text class="txid">{{item.txid}}</text>
-      </view>
-      <view class="area-confirm">
-        <text class="label"> 确认高度：</text>
-        <text class="count">{{item.blockindex}}</text>
-      </view>
-     </view>
     </view>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy';
-import {Util} from '../utils/index';
+import Util from '../utils/index';
 
 export default class History extends wepy.page {
   config = {
@@ -130,22 +127,22 @@ export default class History extends wepy.page {
   }
   onShow() {
     let that = this;
-    Util.get.TXs(1);
-    Util.delegate.tx = function(txs) {
+    Util.delegate.tx(txs => {
       that.TXs = txs;
       that.$apply();
-    };
+    });
+    Util.get.TXs(1);
   }
   onUnload() {
-    Util.delegate.tx = null;
+    Util.delegate.tx(null);
   }
   async onPullDownRefresh() {
     if (this.isLoading) return;
     this.page = 1;
     this.$apply();
     await this.OnLoadTXs();
-    wx.hideNavigationBarLoading(); //完成停止加载
-    wx.stopPullDownRefresh(); //停止下拉刷新
+    wx.hideNavigationBarLoading(); // 完成停止加载
+    wx.stopPullDownRefresh(); // 停止下拉刷新
   }
 
   async OnLoadTXs() {

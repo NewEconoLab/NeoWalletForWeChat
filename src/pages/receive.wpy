@@ -62,19 +62,6 @@
   margin-top: 30rpx;
 }
 
-.btn {
-  background: #22a4ff;
-  box-shadow: 0 2px 5px 0 rgba(119, 204, 248, 0.5);
-  border-radius: 3px;
-  text {
-    font-family: PingFangSC-Medium;
-    font-size: 14px;
-    color: #ffffff;
-    letter-spacing: 0;
-    text-align: center;
-    line-height: 14px;
-  }
-}
 </style>
 
 <template>

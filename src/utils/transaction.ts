@@ -201,11 +201,10 @@ export default class Transfer {
      * invokeTrans 方式调用合约塞入attributes
      * @param script 合约的script
      */
-    static async contractInvokeTrans(script: Uint8Array,asset:Asset)
-    {
+    static async contractInvokeTrans(script: Uint8Array, asset: Asset, height: number) {
         var addr = Wallet.account.address;
         //let _count = Neo.Fixed8.Zero;   //十个gas内都不要钱滴
-        let tran = Transfer.makeTran(null, asset/*Context.Assets['GAS']*/, Neo.Fixed8.Zero,Context.Height);
+        let tran = Transfer.makeTran(null, asset/*Context.Assets['GAS']*/, Neo.Fixed8.Zero, height);
 
         tran.type = ThinNeo.TransactionType.InvocationTransaction;
         tran.extdata = new ThinNeo.InvokeTransData();
@@ -221,92 +220,122 @@ export default class Transfer {
     }
 
     static async history() {
-        console.log(Wallet.account.address);
 
-        var res = await Https.gettransbyaddress(Wallet.account.address, 20, 1);
-        console.log('交易');
+        var currentAddress = Wallet.account.address;
+        var res = await Https.gettransbyaddress(currentAddress, 20, 1);
 
-        console.log(res);
-
-        res = res ? res : []; //将空值转为长度0的数组
         if (res.length > 0) {
-            Transfer.TXs = [];
+            this.TXs = [];
             for (let index = 0; index < res.length; index++) {
                 const tx = res[index];
-                let txid = tx["txid"];
+                let txid = tx["txid"] as string;
+                txid = txid.replace('0x', '');
                 let vins = tx["vin"];
+                let type = tx["type"];
                 let vouts = tx["vout"];
                 let value = tx["value"];
-                let txtype = tx["type"];
+                let txtype = tx["txType"];
+                if(txtype.search("Transaction") != -1){
+                    console.log('------');
+                    
+                     txtype = txtype.replace('Transaction','');
+                }
                 let assetType = tx["assetType"]
                 let blockindex = tx["blockindex"];
-                let time = JSON.parse(tx["blocktime"])["$date"];
-                time = formatTime(
-                    time,
-                    'yyyy-MM-dd hh:mm:ss'
-                );
-                if (txtype == "out") {
+                let time: string = tx["blocktime"].includes("$date") ? JSON.parse(tx["blocktime"])["$date"] : tx["blocktime"] + "000";
+                console.log(time);
+                
+                let date: string = formatTime(parseInt(time),'Y/M/D h:m:s');
+
+                if (type == "out") {
                     if (vins && vins.length == 1) {
-                        const vin = vins[0];
-                        let address = vin["address"];
-                        let amount = vin["value"];
-                        let asset = vin["asset"];
                         let assetname = "";
-                        if (assetType == "utxo")
+                        const vin = vins[0];
+                        let asset = vin["asset"];
+                        let amount = value[asset];
+                        let address = vin["address"];
+                        if (assetType == "utxo") {
                             assetname = Coin.assetID2name[asset];
+                        }
                         else {
                             let nep5 = await Https.getNep5Asset(asset);
-                            assetname = nep5["name"];
+                            console.log(nep5);
+                            
+                            assetname = 'jjj'//nep5["name"];
                         }
                         var history = new History();
-                        history.time = time;
+                        history.time = date;
                         history.txid = txid;
                         history.assetname = assetname;
                         history.address = address;
-                        history.value = value[asset];
+                        history.value = parseFloat(amount).toString();
                         history.txtype = txtype;
-                        Transfer.TXs.push(history);
+                        history.type = type;
+                        this.TXs.push(history);
                     }
                 }
                 else {
                     var arr = {}
+                    let currcount = 0;
                     for (const index in vouts) {
                         let i = parseInt(index);
                         const out = vouts[i];
                         let address = out["address"];
                         let amount = out["value"];
                         let asset = out["asset"];
-                        if (assetType === "utxo")
-                            asset = Coin.assetID2name[asset];
-                        else {
-                            let nep5 = await Https.getNep5Asset(asset);
-                            asset = nep5["name"];
-                        }
-                        let n = out["n"];
-                        if (address !== Wallet.account.address) {
-                            if (arr[address] && arr[address][asset]) {
-                                arr[address][asset] += amount;
+                        let assetname = "";
+
+                        if (address != currentAddress) {
+                            if (assetType == "utxo")
+                                assetname = Coin.assetID2name[asset];
+                            else {
+                                let nep5 = await Https.getNep5Asset(asset);
+                                assetname = 'kkk'//nep5["name"];
+                            }
+                            let n = out["n"];
+                            if (arr[address] && arr[address][assetname]) {
+                                arr[address][assetname] += amount;
                             } else {
                                 var assets = {}
-                                assets[asset] = amount;
+                                assets[assetname] = amount;
                                 arr[address] = assets;
+                            }
+                        } else { currcount++ }
+                    }
+                    if (currcount == vouts.length) {
+                        for (const asset in value) {
+                            if (value.hasOwnProperty(asset)) {
+                                const amount = value[asset];
+
+                                let assetname = "";
+                                if (assetType == "utxo")
+                                    assetname = Coin.assetID2name[asset];
+                                else {
+                                    let nep5 = await Https.getNep5Asset(asset);
+                                    assetname = nep5["name"];
+                                }
+
+                                var assets = {}
+                                assets[assetname] = amount;
+                                arr[currentAddress] = assets;
                             }
                         }
                     }
                     for (const address in arr) {
                         if (arr.hasOwnProperty(address)) {
-                            const value = arr[address];
-                            for (const asset in value) {
-                                if (value.hasOwnProperty(asset)) {
-                                    const amount = value[asset];
+                            const data = arr[address];
+                            for (const asset in data) {
+                                if (data.hasOwnProperty(asset)) {
+                                    const amount = data[asset];
                                     var history = new History();
-                                    history.time = time;
+                                    history.time = date;
                                     history.txid = txid;
                                     history.assetname = asset;
                                     history.address = address;
-                                    history.value = amount;
+                                    history.value = parseFloat(amount).toString();
                                     history.txtype = txtype;
-                                    Transfer.TXs.push(history);
+                                    history.type = type;
+                                    this.TXs.push(history);
                                 }
                             }
                         }
@@ -314,6 +343,5 @@ export default class Transfer {
                 }
             }
         }
-
     }
 }

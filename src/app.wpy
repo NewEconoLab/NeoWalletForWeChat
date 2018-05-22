@@ -10,6 +10,37 @@ Page {
   align-items: center;
   box-sizing: border-box;
 }
+
+.function-title {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  background-color: white;
+  height: 104rpx;
+  margin-top: 1rpx;
+  .text {
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #9a9a9a;
+    letter-spacing: 0;
+    line-height: 12px;
+    margin-left: 30rpx;
+    align-content: center;
+  }
+}
+
+.btn {
+  background: #22a4ff;
+  box-shadow: 0 2px 5px 0 rgba(119, 204, 248, 0.5);
+  border-radius: 3px;
+  width: 690rpx;
+  height: 108rpx;
+  color:white;
+  font-size: 14px;
+  margin-top: 200rpx;
+}
+
 .scroll {
   width: 100%;
   height: 100%;
@@ -52,7 +83,9 @@ export default class extends wepy.app {
       'pages/transaction',
       'pages/watchonly',
       'pages/watch',
-      'pages/registerwatch'
+      'pages/registerwatch',
+      'pages/gas2sgas',
+      'pages/startbidding'
     ],
     window: {
       backgroundTextStyle: 'light',

@@ -139,7 +139,7 @@
       margin-top: 10rpx;
     }
   }
-  .btn {
+  .btn-claim {
     background: #b2b2b2;
     border-radius: 3px;
     margin-right: 30rpx;
@@ -271,7 +271,7 @@
               <text class="label">未提取GAS</text>
               <text class="amount">0.000000000</text>
             </view>
-            <view class="btn"><text>提取</text></view>
+            <view class="btn-claim"><text>提取</text></view>
           </view>
           <view class="area-coins">
             <view class="label">

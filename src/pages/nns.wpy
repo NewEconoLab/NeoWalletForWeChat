@@ -1,23 +1,4 @@
  <style lang="less">
-.label {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  align-items: center;
-  background-color: white;
-  height: 104rpx;
-  margin-top: 1rpx;
-  .text {
-    font-family: PingFangSC-Regular;
-    font-size: 12px;
-    color: #9a9a9a;
-    letter-spacing: 0;
-    line-height: 12px;
-    margin-left: 30rpx;
-    align-content: center;
-  }
-}
-
 .area-function {
   display: flex;
   flex-direction: column;
@@ -61,29 +42,71 @@
   flex-direction: column;
   align-items: center;
   width: 100%;
-  margin-top: 1rpx;
+  margin-top: 20rpx;
 
   .search {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     width: 100%;
     height: 160rpx;
     justify-content: center;
     background-color: white;
     margin-top: 1rpx;
-    .input {
-      width: 602rpx;
-      border-bottom: thin solid #A9A9A9;
-      margin-left: 30rpx;
+    .text {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: 100%;
+      .input {
+        width: 602rpx;
+        border-bottom: thin solid #a9a9a9;
+        margin-left: 30rpx;
+      }
+      .domain {
+        margin-left: 20rpx;
+        margin-right: 30rpx;
+        font-family: PingFangSC-Medium;
+        font-size: 14px;
+        color: #333333;
+        letter-spacing: 0;
+        line-height: 14px;
+      }
     }
-    .domain {
-      margin-left: 20rpx;
-      font-family: PingFangSC-Medium;
+    .loading {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      image {
+        width: 24rpx;
+        height: 24rpx;
+        margin-left: 30rpx;
+        margin-top: 10rpx;
+      }
+    }
+  }
+}
+.area-description {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 750rpx;
+  margin-top: 20rpx;
+  .description {
+    background-color: white;
+    margin-top: 1rpx;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    .text {
+      padding:0 30rpx 10rpx 30rpx;
+      font-family: PingFangSC-Regular;
       font-size: 14px;
       color: #333333;
       letter-spacing: 0;
-      line-height: 14px;
+      text-align: justify;
     }
   }
 }
@@ -93,36 +116,61 @@
     <scroll-view scroll-y class="scroll">
         <view class="inner">
            <view class="area-function">
-             <view class="label">
+             <view class="function-title">
                <text class="text">功能</text>
              </view>
              <view class="nav">
-               <view class="item" style="margin-left:30rpx;">
+               <navigator class="item" style="margin-left:30rpx;" url="/pages/gas2sgas" >
                   <image class="icon" src="../images/N_G2S.png" />
                   <text class="content">兑换SGAS</text>
-               </view>
-                <view class="item">
+               </navigator>
+                <navigator class="item" url="/pages/reorder">
                   <image class="icon" src="../images/N_bid.png"/>
                   <text class="content">我的竞拍</text>
-               </view>
-                <view class="item">
+               </navigator>
+                <navigator class="item" url="/pages/reorder">
                   <image class="icon" src="../images/N_NNS.png"/>
                   <text class="content">我的NNS</text>
-               </view>
-                <view class="item" style="margin-right:30rpx;">
+               </navigator>
+              <navigator class="item" url="/pages/reorder">
+                  <image class="icon" src="../images/N_bonus.png"/>
+                  <text class="content">我的分红</text>
+               </navigator>
+                <navigator class="item" style="margin-right:30rpx;" url="/pages/reorder">
                   <image class="icon" src="../images/N_message.png"/>
                   <text class="content">竞拍消息</text>
-               </view>
+               </navigator>
              </view>
            </view>
            <view class="area-bid">
-              <view class="label">
+              <view class="function-title">
                <text class="text">NNS域名拍卖</text>
-             </view>
+              </view>
 
              <view class="search">
-               <input name="domain"  class="input"/>
-               <text class="domain">.neo</text>
+                <view class="text">
+                  <input name="domain"  class="input"/>
+                  <text class="domain">.neo</text>
+                </view>
+                <view class="loading">
+                  <image class="icon" src="../images/Loading.png" animation="{{animation}}" />
+                </view>
+             </view>
+           </view>
+           <view class="area-description">
+             <view class="function-title">
+               <text class="text">NNS域名拍卖说明</text>
+             </view>
+             <view class="description">
+               <text class="text">
+                 · 竞拍域名所需SGas资产，该资产由NeoGas以1:1的比例互相兑换。
+
+· 域名竞拍注册时对域名进行出价，出价使用SGas，最小出价0.1SGas,出价最高者获得域名，支付的SGas会进入奖池，竞拍失败的参与者会收取5%的手续费进入奖池。
+
+· 竞拍到的域名具有1年的有效期，在距离过期3个月之前，我们会发出消息通知您，您可以在“我的NNS”页面点击新出现的续约按钮进行续约，我们会为您延续1年的有效期。
+
+· 所有奖池收入会按NNC持有量重新分配给持币人，NNC持有人不需要锁仓，奖励是累积的，您可以在“我的分红”页面领取分红。
+               </text>
              </view>
            </view>
         </view>
@@ -140,7 +188,9 @@ export default class NNS extends wepy.page {
 
   components = {};
 
-  data = {};
+  data = {
+    animation: {}
+  };
 
   computed = {};
 
@@ -159,6 +209,8 @@ export default class NNS extends wepy.page {
       path: '/pages/nns'
     };
   }
+
+  OnLoading() {}
 }
 </script>
  

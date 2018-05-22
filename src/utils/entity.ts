@@ -103,6 +103,7 @@ export class Utxo {
     }
 }
 
+
 export class Result {
     err: boolean;
     info: any;
@@ -160,7 +161,9 @@ export class History {
     address: string;
     assetname: string;
     txtype: string;
-    time: string; txid: string;
+    type:string;
+    time: string;
+    txid: string;
 }
 
 export class Claim {
