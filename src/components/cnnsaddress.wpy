@@ -1,0 +1,73 @@
+<style lang="less">
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.nns {
+  border-bottom: thin solid #a9a9a9;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 630rpx;
+  text {
+    font-family: PingFangSC-Medium;
+    font-size: 14px;
+    color: #333333;
+    letter-spacing: 0;
+    line-height: 14px;
+    margin-bottom: 10rpx;
+    align-items: flex-start;
+  }
+}
+.addr {
+  width: 630rpx;
+  .icon {
+    width: 24rpx;
+    height: 24rpx;
+  }
+  .text {
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #a9a9a9;
+    letter-spacing: 0;
+    text-align: center;
+    line-height: 12px;
+    margin-left: 10rpx;
+  }
+}
+</style>
+
+<template>
+<view class="content">
+    <view class="nns">
+        <text>abcd.neo</text>
+    </view>
+    <view class="addr">
+        <image src="../images/Pointer.png" class="icon"/>
+        <text class="text">hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh</text>
+    </view>
+</view>
+</template>
+<script>
+import wepy from 'wepy';
+import Util from '../utils/index';
+export default class CNNSAddress extends wepy.component {
+  props = {
+    addr: {}
+  };
+  components = {};
+
+  data = {};
+
+  methods = {
+    showNNS(addr) {
+      this.addr = addr;
+      this.$apply();
+      //  wx:if="{{showNNS==1}}"
+    }
+  };
+
+  async onLoad() {}
+}
+</script>

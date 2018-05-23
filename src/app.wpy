@@ -36,7 +36,6 @@ Page {
   justify-content: center;
   margin-top: 2rpx;
   width: 100%;
-  background-color: white;
   .content {
     word-break: break-all;
     font-family: PingFangSC-Medium;
@@ -44,6 +43,7 @@ Page {
     color: #333333;
     letter-spacing: 0;
     line-height: 14px;
+    background-color: white;
     margin: 0 30rpx 40rpx 30rpx;
   }
 }
@@ -125,7 +125,7 @@ export default class extends wepy.app {
           selectedIconPath: 'images/Wallet_s.png'
         },
         {
-          pagePath: 'pages/watchonly',
+          pagePath: 'pages/send',
           text: '转账',
           iconPath: 'images/Transfer.png',
           selectedIconPath: 'images/Transfer_s.png'
