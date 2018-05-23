@@ -1,0 +1,115 @@
+ <style lang="less">
+.area-button {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  .item {
+    height: 88rpx;
+    width: 375rpx;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    text {
+      font-family: PingFangSC-Medium;
+      font-size: 14px;
+      color: #ffffff;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 14px;
+    }
+  }
+}
+</style>
+<template>
+  <view class="container">
+    <scroll-view scroll-y class="scroll">
+        <view class="inner">
+            <userinfo></userinfo>
+
+            <view class="text-item" style="margin-top:20rpx;">
+                <view class="function-title">
+                    <text class="text">帐户名</text>
+                </view>
+                <text class="content">{{account.label}}</text>
+            </view>
+             <view class="text-item">
+                <view class="function-title">
+                    <text class="text">地址</text>
+                </view>
+                <text class="content">{{account.address}}</text>
+            </view>
+             <view class="text-item">
+                <view class="function-title">
+                    <text class="text">公钥</text>
+                </view>
+                <text class="content">{{account.publickey}}</text>
+            </view>
+             <view class="text-item">
+                <view class="function-title">
+                    <text class="text">密钥/密文</text>
+                </view>
+                <text class="content">{{account.nep2key}}</text>
+            </view>
+            <view class="area-button">
+                <view class="item" style="background-color:#22A4FF" @tap="logOut()"><text>登出账号</text></view>
+                <view class="item" style="background-color:#FC7A7A" @tap="delAccount()"><text>删除账号</text></view>
+            </view>
+        </view>
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import Util from '../utils/index';
+import CUserInfo from '../components/cuserinfo';
+export default class NNS extends wepy.page {
+  config = {
+    navigationBarTitleText: 'NNS'
+  };
+
+  components = {
+    userinfo: CUserInfo
+  };
+
+  data = {
+    account: {}
+  };
+
+  computed = {};
+
+  methods = {
+    logOut() {},
+    delAccount() {}
+  };
+
+  events = {};
+
+  async onLoad() {
+    this.account = Util.get.account();
+    this.$apply();
+    console.log(this.account);
+
+    this.$invoke('userinfo', 'showNNS', 0);
+    const user = await Util.get.userInfo();
+    this.$invoke('userinfo', 'showUser', user);
+  }
+  async onShow() {}
+  // 页面渲染完成
+  async onReady() {}
+
+  onShareAppMessage() {
+    return {
+      title: 'NNS',
+      path: '/pages/nns'
+    };
+  }
+
+  OnLoading() {}
+}
+</script>
+ 

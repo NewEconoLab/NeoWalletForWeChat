@@ -29,6 +29,24 @@ Page {
     align-content: center;
   }
 }
+.text-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  margin-top: 2rpx;
+  width: 100%;
+  background-color: white;
+  .content {
+    word-break: break-all;
+    font-family: PingFangSC-Medium;
+    font-size: 14px;
+    color: #333333;
+    letter-spacing: 0;
+    line-height: 14px;
+    margin: 0 30rpx 40rpx 30rpx;
+  }
+}
 
 .btn {
   background: #22a4ff;
@@ -74,6 +92,7 @@ export default class extends wepy.app {
       'pages/receive',
       'pages/regresult',
       'pages/accounts',
+      'pages/account',
       'pages/importaccount',
       'pages/home',
       'pages/send',

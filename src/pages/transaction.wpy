@@ -31,45 +31,26 @@
   }
 }
 
-.item {
+.vin-out {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: center;
-  margin-top: 2rpx;
-  width: 100%;
-  background-color: white;
-  .content {
-    word-break: break-all;
+  margin: 1rpx 30rpx 0 30rpx;
+  .upper {
     font-family: PingFangSC-Medium;
     font-size: 14px;
     color: #333333;
     letter-spacing: 0;
     line-height: 14px;
-    margin: 0 30rpx 40rpx 30rpx;
   }
-
-  .vin-out {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin: 1rpx 30rpx 0 30rpx;
-    .upper {
-      font-family: PingFangSC-Medium;
-      font-size: 14px;
-      color: #333333;
-      letter-spacing: 0;
-      line-height: 14px;
-    }
-    .lower {
-      font-family: PingFangSC-Medium;
-      font-size: 14px;
-      color: #151515;
-      letter-spacing: 0;
-      line-height: 14px;
-      margin-top: 30rpx;
-      margin-bottom: 40rpx;
-    }
+  .lower {
+    font-family: PingFangSC-Medium;
+    font-size: 14px;
+    color: #151515;
+    letter-spacing: 0;
+    line-height: 14px;
+    margin-top: 30rpx;
+    margin-bottom: 40rpx;
   }
 }
 </style>
@@ -82,31 +63,31 @@
         <text class="type">{{tx.txtype}}</text>
         <text class="date">{{tx.time}}</text>
       </view>
-    <view class="item">
+    <view class="text-item">
       <view class="function-title">
           <text class="text">交易编号</text>
       </view>
       <text class="content">0x{{tx.txid}}</text>
     </view>
-     <view class="item">
+     <view class="text-item">
        <view class="function-title">
           <text class="text">手续费</text>
       </view>
         <text class="content">0 GAS</text>
     </view>
-     <view class="item">
+     <view class="text-item">
        <view class="function-title">
           <text class="text">系统费</text>
       </view>
         <text class="content">0 GAS</text>
     </view>
-    <view class="item">
+    <view class="text-item">
       <view class="function-title">
         <text class="text">区块高度</text>
       </view>
       <text class="content">{{tx.block}}</text>
     </view>
-    <view class="item" style="margin-top:20rpx;">
+    <view class="text-item" style="margin-top:20rpx;">
        <view class="function-title">
         <text class="text">交易输入</text>
       </view>
@@ -115,7 +96,7 @@
         <text class="lower">{{item.value}} {{tx.assetname}}</text>
       </view>
     </view>
-    <view class="item" style="margin-top:20rpx;">
+    <view class="text-item" style="margin-top:20rpx;">
       <view class="function-title">
         <text class="text">交易输出</text>
       </view>
