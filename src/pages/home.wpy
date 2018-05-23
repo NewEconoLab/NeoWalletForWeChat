@@ -164,83 +164,6 @@
     background: #b2b2b2;
   }
 }
-
-.area-coins {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-top: 20rpx;
-}
-
-.coinblock {
-  width: 750rpx;
-  display: block;
-  flex-direction: column;
-  margin-top: 1rpx;
-  justify-content: center;
-  .content {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    background-color: white;
-    justify-content: space-between;
-    .coin {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      margin-top: 56rpx;
-      .icon {
-        width: 56rpx;
-        height: 56rpx;
-        border-radius: 50rpx;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-around;
-        border: thin solid #f5f5f5;
-        margin-left: 30rpx;
-        image {
-          width: 37rpx;
-          height: 37rpx;
-        }
-      }
-      .name {
-        font-family: PingFangSC-Medium;
-        font-size: 16px;
-        color: #333333;
-        letter-spacing: 0;
-        line-height: 16px;
-        margin-left: 42rpx;
-      }
-    }
-    .amount {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      margin-right: 30rpx;
-      .coin {
-        font-family: PingFangSC-Medium;
-        font-size: 16px;
-        color: #333333;
-        letter-spacing: 0;
-        text-align: right;
-        line-height: 16px;
-      }
-      .value {
-        font-family: PingFangSC-Regular;
-        font-size: 12px;
-        color: #9a9a9a;
-        letter-spacing: 0;
-        text-align: right;
-        line-height: 12px;
-        margin-top: 18rpx;
-        margin-bottom: 26rpx;
-      }
-    }
-  }
-}
 </style>
 <template>
   <view class="container">
@@ -274,23 +197,7 @@
             </view>
             <view class="btn-claim {{claim.total === '0.00000000'?'invalid':''}} "><text>提取</text></view>
           </view>
-          <view class="area-coins">
-            <view class="function-title">
-              <text  class="text" >所有资产</text>
-            </view>
-            <view class="coinblock" wx:for="{{coins}}" >
-              <view class="content">
-                <view class="coin">
-                  <view class="icon"><image src="../images/neo.png" /></view>
-                  <text class="name">{{item.name}}</text>
-                </view>
-                <view class="amount">
-                  <text class="coin">{{item.amount}}</text>
-                  <text class="value">≈ {{item.total}}</text>
-                </view>
-              </view>
-            </view>
-          </view>
+        <cassets></cassets>
       </view>
   </scroll-view>
   </view>
@@ -300,12 +207,15 @@ import wepy from 'wepy';
 import Util, { Https } from '../utils/index';
 import Wallet from '../utils/wallet';
 import { Claims } from '../utils/entity';
+import CAssets from '../components/cassets';
 export default class Home extends wepy.page {
   config = {
     navigationBarTitleText: '钱包'
   };
 
-  components = {};
+  components = {
+    cassets: CAssets
+  };
 
   data = {
     assets: {},
@@ -346,7 +256,7 @@ export default class Home extends wepy.page {
       assets['GAS'].amount = parseFloat(assets['GAS'].amount).toFixed(4);
       assets['NEO'].amount = parseFloat(assets['NEO'].amount).toFixed(0);
       that.coins = assets;
-
+      that.$invoke('cassets', 'LoadCoins', assets);
       that.total = Util.get.total().toFixed(2);
       that.Block = Util.get.height();
       that.claim = Util.get.claim();
