@@ -1,6 +1,6 @@
  <style lang="less">
 .area-button {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   width: 100%;
   display: flex;
@@ -23,6 +23,9 @@
     }
   }
 }
+.item-bg{
+  background-color: white;
+}
 </style>
 <template>
   <view class="container">
@@ -30,25 +33,25 @@
         <view class="inner">
             <userinfo></userinfo>
 
-            <view class="text-item" style="margin-top:20rpx;">
+            <view class="text-item item-bg" style="margin-top:20rpx;">
                 <view class="function-title">
                     <text class="text">帐户名</text>
                 </view>
                 <text class="content">{{account.label}}</text>
             </view>
-             <view class="text-item">
+             <view class="text-item item-bg">
                 <view class="function-title">
                     <text class="text">地址</text>
                 </view>
                 <text class="content">{{account.address}}</text>
             </view>
-             <view class="text-item">
+             <view class="text-item item-bg">
                 <view class="function-title">
                     <text class="text">公钥</text>
                 </view>
                 <text class="content">{{account.publickey}}</text>
             </view>
-             <view class="text-item">
+             <view class="text-item item-bg">
                 <view class="function-title">
                     <text class="text">密钥/密文</text>
                 </view>

@@ -149,7 +149,7 @@
 <script>
 import wepy from 'wepy';
 import { Helper, ThinNeo, Neo } from '../lib/neo-ts/index';
-import { Util } from '../utils/index';
+import Util from '../utils/index';
 export default class Send extends wepy.page {
   config = {
     navigationBarTitleText: '转账'
@@ -234,7 +234,7 @@ export default class Send extends wepy.page {
     let that = this;
     Util.loading('密码验证中');
 
-    //如果当前账户直接使用私钥
+    //如果当前账户直接使用私钥 
     if (Wallet.account.nep2key.length === 64) {
       //构造并发送交易
       that.SendTran(Wallet.account.nep2key, Wallet.account.publickey);

@@ -1,0 +1,30 @@
+<style lang="less">
+</style>
+
+<template>
+ 
+</template>
+<script>
+import wepy from 'wepy';
+export default class CAssets extends wepy.component {
+  props = {
+    TXs: {}
+  };
+  components = {};
+
+  data = {};
+
+  methods = {
+    LoadTXs(txs) {
+      this.TXs = txs;
+      this.$apply();
+    },
+    async OnDetail(tx) {
+      let that = this;
+      wepy.navigateTo({ url: './transaction?tx=' + JSON.stringify(tx) });
+    }
+  };
+
+  onLoad() {}
+}
+</script>
