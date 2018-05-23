@@ -237,6 +237,8 @@ export default class Transfer {
                 if (txtype.search("Transaction") != -1) {
                     txtype = txtype.replace('Transaction', '');
                 }
+                if (txtype === 'nep5')
+                    txtype = 'Invocation'
                 let assetType = tx["assetType"]
                 let blockindex = tx["blockindex"];
                 let time: string = tx["blocktime"].includes("$date") ? JSON.parse(tx["blocktime"])["$date"] : tx["blocktime"] + "000";
@@ -268,8 +270,8 @@ export default class Transfer {
                         history.type = type;
                         history.vin = vins;
                         history.vout = vouts;
-                        history.block =blockindex;
-                        this.TXs.push(history);
+                        history.block = blockindex;
+                        Transfer.TXs.push(history);
                     }
                 }
                 else {
@@ -336,7 +338,7 @@ export default class Transfer {
                                     history.vin = vins;
                                     history.vout = vouts;
                                     history.block = blockindex;
-                                    this.TXs.push(history);
+                                    Transfer.TXs.push(history);
                                 }
                             }
                         }

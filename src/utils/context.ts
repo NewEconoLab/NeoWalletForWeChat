@@ -35,14 +35,14 @@ export class Context {
 
     static total: number = 0;
 
-    static claim:Claims;
+    static claim: Claims;
 
     static async init(account: Nep6.nep6account) {
         // 暂时不加载历史记录
         this.txDelegate = null;
         Wallet.setAccount(account);
-        let neo = new Asset('NEO','');
-        let gas = new Asset('GAS','');
+        let neo = new Asset('NEO', '');
+        let gas = new Asset('GAS', '');
 
         Context.Assets['NEO'] = neo;
         Context.Assets['GAS'] = gas;
@@ -167,16 +167,13 @@ export class Context {
             return;
 
         await Transfer.history();
-        console.log(Transfer.TXs);
         Context.txDelegate(Transfer.TXs);
-        console.log(Context.txDelegate);
-
         return Transfer.TXs;
     }
 
     static async OnGetClaims() {
 
-        let res = await Https.api_getclaimgas(Wallet.account.address,0);
+        let res = await Https.api_getclaimgas(Wallet.account.address, 0);
 
         console.log(res);
         let claims = [];
@@ -186,8 +183,8 @@ export class Context {
         }
 
         let a = res['gas'].toFixed(8);
-        
-        Context.claim = new Claims(claims,a);
+
+        Context.claim = new Claims(claims, a);
     }
 
     static getAccount(): Nep6.nep6account {

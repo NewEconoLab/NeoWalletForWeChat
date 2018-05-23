@@ -1,12 +1,7 @@
  <style lang="less">
-.empty {
-  color: gray;
-}
 
 .area-uppper {
-  height: 250rpx;
   width: 100%;
-  background: linear-gradient(to right, #69c0fd, #a6a4fd);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -208,75 +203,78 @@
 </style>
 <template>
   <view class="container">
-      <scroll-view scroll-y class="scroll">
-         <view class="inner">
-    <view class="area-uppper">
-      <view class="upper-navigator">
-          <view class="upper-item {{selected==0?'selected':''}}"  @tap="navigate('account')">
-            <image src="../images/overview{{selected==0?'':'_gray'}}.png" class="icon"></image>
-            <text class="label">账户概览</text>
+    <scroll-view scroll-y class="scroll">
+      <view class="inner">
+        <view class="area-uppper">
+          <view class="function-title">
+            <text class="text">功能</text>
           </view>
-          <view class="upper-item {{selected==1?'selected':''}}"  @tap="navigate('history')" >
-            <image src="../images/historys{{selected==1?'':'_gray'}}.png" class="icon"></image>
-            <text class="label">交易历史</text>
+          <view class="upper-navigator">
+            <view class="upper-item {{selected==0?'selected':''}}"  @tap="navigate('account')">
+              <image src="../images/W_asset{{selected==0?'_s':''}}.png" class="icon"/>
+              <text class="label">账户概览</text>
+            </view>
+            <view class="upper-item {{selected==1?'selected':''}}"  @tap="navigate('history')" >
+              <image src="../images/W_history{{selected==1?'_s':''}}.png" class="icon"/>
+              <text class="label">交易历史</text>
+            </view>
+            <view class="upper-item {{selected==2?'selected':''}}"  @tap="navigate('manager')">
+              <image src="../images/W_account{{selected==2?'_s':''}}.png" class="icon"/>
+              <text class="label">账户管理</text>
+            </view>
           </view>
-          <view class="upper-item {{selected==2?'selected':''}}"  @tap="navigate('manager')">
-            <image src="../images/manager{{selected==2?'':'_gray'}}.png" class="icon"></image>
-            <text class="label">账户管理</text>
-          </view>
-      </view>
-    </view>
-    <view class="area-lower">
-      <view wx:if="{{selected==0}}">
-        <view class="asset-block" wx:for="{{assets}}" >
-          <view class="content">
-            <view class="content-left">
-              <view class="content-icon">
-                <image src="../images/neo.png"></image>
+        </view>
+      <view class="area-lower">
+        <view wx:if="{{selected==0}}">
+          <view class="asset-block" wx:for="{{assets}}" >
+            <view class="content">
+              <view class="content-left">
+                <view class="content-icon">
+                  <image src="../images/neo.png"></image>
+                </view>
+                <view class="content-middle">
+                  <text class="asset">{{item.amount+" "+item.type}}</text>
+                  <text class="price" style="color:{{item.rise?'#45d68a':'#f67581'}};">{{item.price}}￥</text>
+                </view>
               </view>
-              <view class="content-middle">
-                <text class="asset">{{item.amount+" "+item.type}}</text>
-                <text class="price" style="color:{{item.rise?'#45d68a':'#f67581'}};">{{item.price}}￥</text>
+              <view class="content-total">
+                <text >{{item.total}}￥</text>
               </view>
             </view>
-            <view class="content-total">
-              <text >{{item.total}}￥</text>
+          </view>
+        </view>
+        <view wx:elif="{{selected==1}}">
+          <text class="empty" hide="{{notEmpty}}">还没有交易记录哦！</text>
+          <view class="history-block" wx:for="{{TXs}}" >
+            <view class="tx-content">
+              <view class="area-head">
+                <text class="label">交易编号</text>
+                <text class="time">{{item.blocktime['$date']}}</text>
+              </view>
+              <view class ="area-txid" @tap="OnDetail({{item.txid}})">
+                <text class="txid">{{item.txid}}</text>
+              </view>
+              <view class="area-confirm">
+                <text class="label"> 确认高度：</text>
+                <text class="count">{{item.blockindex}}</text>
+              </view>
             </view>
           </view>
         </view>
-      </view>
-      <view wx:elif="{{selected==1}}">
-        <text class="empty" hide="{{notEmpty}}">还没有交易记录哦！</text>
-        <view class="history-block" wx:for="{{TXs}}" >
-          <view class="tx-content">
-            <view class="area-head">
-              <text class="label">交易编号</text>
-              <text class="time">{{item.blocktime['$date']}}</text>
-            </view>
-            <view class ="area-txid" @tap="OnDetail({{item.txid}})">
-              <text class="txid">{{item.txid}}</text>
-            </view>
-            <view class="area-confirm">
-              <text class="label"> 确认高度：</text>
-              <text class="count">{{item.blockindex}}</text>
-            </view>
+        <view wx:else>
+          <view class="manage-btn">
+            <button type="primary" style="background-color:#69c0fd;width: 660rpx;" @tap="manage('normal')">正常登陆模式</button>
+          </view>
+          <view class="manage-btn">
+            <button type="primary" style="background-color:#69c0fd;width: 660rpx;" @tap="manage('switch')">切换观察账户</button>
+          </view>
+          <view class="manage-btn">
+            <button type="primary" style="background-color:#f67581;width: 660rpx;" @tap="manage('delete')">删除当前账户</button>
           </view>
         </view>
       </view>
-      <view wx:else>
-        <view class="manage-btn">
-          <button type="primary" style="background-color:#69c0fd;width: 660rpx;" @tap="manage('normal')">正常登陆模式</button>
-        </view>
-        <view class="manage-btn">
-          <button type="primary" style="background-color:#69c0fd;width: 660rpx;" @tap="manage('switch')">切换观察账户</button>
-        </view>
-        <view class="manage-btn">
-          <button type="primary" style="background-color:#f67581;width: 660rpx;" @tap="manage('delete')">删除当前账户</button>
-        </view>
       </view>
-    </view>
-        </view>
-  </scroll-view>
+    </scroll-view>
   </view>
 </template>
 

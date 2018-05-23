@@ -2,106 +2,27 @@
 .empty {
   color: gray;
 }
-.history-block {
-  width: 750rpx;
-  display: block;
-  flex-direction: column;
-  margin-top: 1rpx;
-  background-color: white;
-  justify-content: center;
-}
-
-.content {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-.icon {
-  height: 60rpx;
-  width: 60rpx;
-  margin-left: 30rpx;
-}
-.right {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-left: 30rpx;
-}
-//头部
-.area-head {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-top: 40rpx;
-  width: 600rpx;
-  .label {
-    font-family: PingFangSC-Medium;
-    font-size: 16px;
-    color: #333333;
-    letter-spacing: 0;
-    line-height: 16px;
-  }
-  .time {
-    font-family: PingFangSC-Regular;
-    font-size: 10px;
-    color: #9a9a9a;
-    letter-spacing: 0;
-    text-align: right;
-    line-height: 10px;
-  }
-}
-//交易ID
-.area-txid {
-  display: flex;
-  flex-direction: column;
-  height: wrap;
-  width: 600rpx;
-  margin-top: 32rpx;
-  .txid {
-    display: block;
-    word-break: break-all;
-    font-family: PingFangSC-Medium;
-    font-size: 10px;
-    color: #a9a9a9;
-    letter-spacing: 0;
-    line-height: 12px;
-    margin-bottom: 40rpx;
-  }
-}
 </style>
 <template>
   <view class="container">
     <text class="empty" hidden="{{notEmpty}}">还没有交易记录哦！</text>
-    <view class="history-block" wx:for="{{TXs}}" >
-      <view class="content" @tap="OnDetail({{item}})">
-        <image src="../images/{{item.txtype}}.png" class="icon"/>
-        <view class="right">
-          <view class="area-head">
-            <text class="label">{{item.txtype}}</text>
-            <text class="time">{{item.time}}</text>
-          </view>
-          <view class ="area-txid">
-            <text class="txid">{{item.txid}}</text>
-          </view>
-        </view>
-      </view>
-    </view>
+    <history></history>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy';
 import Util from '../utils/index';
-
+import CHistory from '../components/chistory';
 export default class History extends wepy.page {
   config = {
     navigationBarTitleText: '交易历史',
     enablePullDownRefresh: true
   };
 
-  components = {};
+  components = {
+    history: CHistory
+  };
 
   data = {
     TXs: [],
@@ -113,9 +34,7 @@ export default class History extends wepy.page {
 
   computed = {};
 
-  methods = {
-   
-  };
+  methods = {};
 
   events = {};
 
@@ -126,10 +45,9 @@ export default class History extends wepy.page {
   onShow() {
     let that = this;
     Util.delegate.tx(txs => {
-      that.TXs = txs;
-      that.$apply();
+      that.$invoke('history', 'LoadTXs', txs);
     });
-    Util.get.TXs(1);
+    this.OnLoadTXs();
   }
   onUnload() {
     Util.delegate.tx(null);
@@ -138,7 +56,7 @@ export default class History extends wepy.page {
     if (this.isLoading) return;
     this.page = 1;
     this.$apply();
-    await this.OnLoadTXs();
+    this.OnLoadTXs();
     wx.hideNavigationBarLoading(); // 完成停止加载
     wx.stopPullDownRefresh(); // 停止下拉刷新
   }
@@ -147,15 +65,13 @@ export default class History extends wepy.page {
     if (this.isLoading) return;
     this.isLoading = true;
     this.$apply();
-    const TXs = await Util.get.TXs(1);
+   const TXs = await Util.get.TXs(1);
     if (TXs === null) {
       this.notEmpty = 'false';
     } else {
       this.notEmpty = 'true';
-      this.TXs = TXs;
-      this.isLoading = false;
     }
-
+    this.isLoading = false;
     this.$apply();
   }
 }

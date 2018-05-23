@@ -188,10 +188,13 @@ export default class Https {
      * @param asset 
      */
     static async getNep5Asset(asset: string) {
-        var postdata = Https.makeRpcPostBody("getnep5asset", asset);
-        var result = await fetch(Https.api, { "method": "post", "body": JSON.stringify(postdata) });
-        var json = await result.json();
-        var r = json["result"][0];
+        var postdata = Https.makeRpcUrl(this.api,"getnep5asset", asset);
+        var result = await Request.Request( { "method": "get"},postdata);
+        console.log('========================');
+        
+        console.log(result);
+        
+        var r = result["result"][0];
         return r;
     }
 

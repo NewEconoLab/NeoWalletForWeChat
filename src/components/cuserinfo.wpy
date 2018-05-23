@@ -79,7 +79,7 @@
 <script>
 import wepy from 'wepy';
 import Util from '../utils/index';
-export default class User_Info extends wepy.component {
+export default class CUserInfo extends wepy.component {
   props = {
       user:{},
       showNNS: 1

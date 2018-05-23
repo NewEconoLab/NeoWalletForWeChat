@@ -1,80 +1,51 @@
 <style lang="less">
 .wallet-block {
-  width: 660rpx;
-  display: flex;
-  flex-direction: row;
-  border-radius: 5px;
-  margin: 32rpx 0 13rpx 0;
-  background-color: white;
-  box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
-}
-.content {
-  width: 660rpx;
-  height: 182rpx;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background-color: white;
-}
-.area-icon {
-  width: 80rpx;
-  height: 80rpx;
-  margin-left: 32rpx;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  image {
-    width: 80rpx;
-    height: 80rpx;
-    background-color: white;
-    border-radius: 50%;
-  }
-}
-
-.area-info {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  // margin-top: 44rpx;
-  margin-left: 28rpx;
+  align-items: flex-start;
+  justify-content: center;
+  margin-top: 20rpx;
   width: 100%;
 }
-.info-name {
-  font-size: 17px;
+.content {
   width: 100%;
-  margin-top: 44rpx;
-  color: #a3a3a3;
-}
-.info-addr {
-  font-size: 11px;
-  width: 100%;
-  margin-top: 30rpx;
-  color: #cccccc;
-  margin-bottom: 45rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: white;
+  margin-top: 1rpx;
+  .text {
+    width: 100%;
+    margin: 30rpx 0 40rpx 30rpx;
+    font-family: PingFangSC-Medium;
+    font-size: 14px;
+    color: #333333;
+    letter-spacing: 0;
+    line-height: 14px;
+  }
 }
 </style>
 
 <template>
   <view class="container">
-   <view class="wallet-block" wx:for="{{wallets}}" >
-     <view class="content">
-      <view class="area-icon">
-        <image  src="../images/icon.png" />
+    <scroll-view scroll-y class="scroll">
+      <view class="inner">
+        <view class="wallet-block" wx:for="{{wallets}}" >
+          <view class="function-title">
+            <text class="text">{{item.label}}</text>
+          </view>
+          <view class="content" @tap="OnSelect({{item.label}})">
+              <text class="text">{{item.address}}</text>
+          </view>
+        </view>
       </view>
-      <view class="area-info" @tap="OnSelect({{item.label}})">
-        <text class="info-name"> {{item.label}}</text>
-        <text class="info-addr">{{item.address}}</text>
-      </view>
-      </view>
-    </view>
+    </scroll-view>
   </view>
 </template>
-
 <script>
 import wepy from 'wepy';
 import Util from '../utils/index';
-export default class LoginAccounts extends wepy.page {
+export default class Accounts extends wepy.page {
   customData = {}; // 自定义数据
 
   customFunction() {} // 自定义方法
@@ -82,7 +53,10 @@ export default class LoginAccounts extends wepy.page {
   onLoad() {} // 在Page和Component共用的生命周期函数
 
   async onShow() {
-    let wals =Util.get.cache(Util.const.LOCAL_ACCOUNTS) || {};
+    let wals = Util.get.cache(Util.const.LOCAL_ACCOUNTS) || {};
+    console.log('...........................');
+    console.log(wals);
+
     let temp_wal = [];
     for (const key in wals) {
       temp_wal.push(wals[key]);
@@ -111,11 +85,11 @@ export default class LoginAccounts extends wepy.page {
   methods = {
     async OnSelect(e) {
       const selected = this.wals[e];
-console.log('<<<<<<<<<<');
+      console.log('<<<<<<<<<<');
 
       //设置内存中的当前账户
       await Util.set.account(selected);
-console.log('>>>>>>>>>>>>>>>');
+      console.log('>>>>>>>>>>>>>>>');
 
       wepy.reLaunch({ url: './home' });
     }

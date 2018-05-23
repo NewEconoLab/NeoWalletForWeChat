@@ -73,7 +73,7 @@ export default class extends wepy.app {
       'pages/register',
       'pages/receive',
       'pages/regresult',
-      'pages/loginaccounts',
+      'pages/accounts',
       'pages/importaccount',
       'pages/home',
       'pages/send',

@@ -87,7 +87,7 @@
 </template>
 <script>
 import wepy from 'wepy';
-export default class History extends wepy.component {
+export default class CHistory extends wepy.component {
   props = {
     TXs: {}
   };
@@ -101,8 +101,6 @@ export default class History extends wepy.component {
       this.$apply();
     },
     async OnDetail(tx) {
-      console.log(tx);
-
       let that = this;
       wepy.navigateTo({ url: './transaction?tx=' + JSON.stringify(tx) });
     }

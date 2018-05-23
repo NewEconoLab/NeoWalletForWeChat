@@ -78,7 +78,7 @@
             <image class="arrow" src="../images/Arrow.png"/>
           </navigator>
 
-           <navigator class="item" url="/pages/reorder" style="border-bottom: thin solid #F5F5F5;">
+           <navigator class="item" url="/pages/accounts" style="border-bottom: thin solid #F5F5F5;">
             <view class="left">
               <image class="icon" src="../images/M_change.png"/>
               <view class="label">切换账户</view>
@@ -86,7 +86,7 @@
             <image class="arrow" src="../images/Arrow.png"/>
           </navigator>
 
-          <navigator class="item" url="/pages/reorder">
+          <navigator class="item" url="/pages/watch">
             <view class="left">
               <image class="icon" src="../images/M_watchonly.png"/>
               <view class="label">观察模式</view>
@@ -101,7 +101,7 @@
 <script>
 import wepy from 'wepy';
 import Util from '../utils/index';
-import User_Info from '../components/user_info';
+import CUserInfo from '../components/cuserinfo';
 export default class Mine extends wepy.page {
   customData = {}; // 自定义数据
 
@@ -131,7 +131,7 @@ export default class Mine extends wepy.page {
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
   components = {
-    userinfo: User_Info
+    userinfo: CUserInfo
   }; // 声明页面中所引用的组件，或声明组件中所引用的子组件
 
   mixins = []; // 声明页面所引用的Mixin实例
