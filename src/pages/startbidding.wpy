@@ -1,0 +1,79 @@
+ <style lang="less">
+
+.center {
+  .icon {
+    width: 160rpx;
+    height: 160rpx;
+    border-radius: 50rpx;
+    margin-top: 258rpx;
+  }
+  .congratulation {
+    font-family: PingFangSC-Medium;
+    font-size: 14px;
+    color: #333333;
+    letter-spacing: 0;
+    text-align: center;
+    line-height: 14px;
+  }
+  .description {
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #a9a9a9;
+    letter-spacing: 0;
+    text-align: center;
+    line-height: 12px;
+  }
+}
+
+</style>
+<template>
+  <view class="container">
+    <scroll-view scroll-y class="scroll">
+        <view class="inner">
+            <view class="">
+                <image src="../images/ss.png" class="icon"/>
+                <text class="congratulation"></text>
+                <text class="description"></text>
+            </view>
+        </view>
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import { Util } from '../utils/index';
+export default class StartBidding extends wepy.page {
+  config = {
+    navigationBarTitleText: 'NNS'
+  };
+
+  components = {};
+
+  data = {
+    isSuccess:false,
+    words:[{icon:'',cong:'',desc:''},{icon:'',cong:'开标成功',desc:'请点击下方的“参与竞拍”按钮进行竞拍吧～'}],
+  };
+
+  computed = {};
+
+  methods = {};
+
+  events = {};
+
+  onLoad() {}
+  async onShow() {}
+  // 页面渲染完成
+  async onReady() {}
+
+  onShareAppMessage() {
+    return {
+      title: 'NNS',
+      path: '/pages/nns'
+    };
+  }
+
+  OnLoading() {}
+}
+</script>
+ 

@@ -1,7 +1,4 @@
 <style lang="less">
-.empty {
-  color: gray;
-}
 .history-block {
   width: 750rpx;
   display: block;
@@ -71,10 +68,9 @@
   }
 }
 </style>
+
 <template>
-  <view class="container">
-    <text class="empty" hidden="{{notEmpty}}">还没有交易记录哦！</text>
-    <view class="history-block" wx:for="{{TXs}}" >
+ <view class="history-block" wx:for="{{TXs}}" >
       <view class="content" @tap="OnDetail({{item}})">
         <image src="../images/{{item.txtype}}.png" class="icon"/>
         <view class="right">
@@ -88,75 +84,30 @@
         </view>
       </view>
     </view>
-  </view>
 </template>
-
 <script>
 import wepy from 'wepy';
-import Util from '../utils/index';
-
-export default class History extends wepy.page {
-  config = {
-    navigationBarTitleText: '交易历史',
-    enablePullDownRefresh: true
+export default class History extends wepy.component {
+  props = {
+    TXs: {}
   };
-
   components = {};
 
-  data = {
-    TXs: [],
-    page: 1,
-    address: '',
-    isLoading: false,
-    notEmpty: 'true'
-  };
-
-  computed = {};
+  data = {};
 
   methods = {
-   
+    LoadTXs(txs) {
+      this.TXs = txs;
+      this.$apply();
+    },
+    async OnDetail(tx) {
+      console.log(tx);
+
+      let that = this;
+      wepy.navigateTo({ url: './transaction?tx=' + JSON.stringify(tx) });
+    }
   };
 
-  events = {};
-
-  onLoad() {
-    this.address = Util.get.account().address;
-    this.$apply();
-  }
-  onShow() {
-    let that = this;
-    Util.delegate.tx(txs => {
-      that.TXs = txs;
-      that.$apply();
-    });
-    Util.get.TXs(1);
-  }
-  onUnload() {
-    Util.delegate.tx(null);
-  }
-  async onPullDownRefresh() {
-    if (this.isLoading) return;
-    this.page = 1;
-    this.$apply();
-    await this.OnLoadTXs();
-    wx.hideNavigationBarLoading(); // 完成停止加载
-    wx.stopPullDownRefresh(); // 停止下拉刷新
-  }
-
-  async OnLoadTXs() {
-    if (this.isLoading) return;
-    this.isLoading = true;
-    this.$apply();
-    const TXs = await Util.get.TXs(1);
-    if (TXs === null) {
-      this.notEmpty = 'false';
-    } else {
-      this.notEmpty = 'true';
-      this.TXs = TXs;
-      this.isLoading = false;
-    }
-
-    this.$apply();
-  }
+  onLoad() {}
 }
 </script>
