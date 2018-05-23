@@ -1,67 +1,4 @@
 <style lang="less">
-.avatar {
-  position: absolute;
-  z-index: 9999;
-  width: 116rpx;
-  height: 116rpx;
-  margin-top: -58rpx;
-  border-radius: 50%;
-  border: 12rpx solid #f5f5f5;
-}
-.area-user {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: #ffffff;
-  box-shadow: 0 2px 5px 0 rgba(192, 192, 192, 0.5);
-  border-radius: 3px;
-  width: 710rpx;
-  height: 274rpx;
-  margin-top: 90rpx;
-  .nickName {
-    margin-top: 96rpx;
-    font-family: PingFangSC-Medium;
-    font-size: 14px;
-    color: #333333;
-    letter-spacing: 0;
-    text-align: center;
-    line-height: 14px;
-  }
-  .nns {
-    margin-top: 22rpx;
-    border-bottom: thin solid #a9a9a9;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    width: 630rpx;
-    text {
-      font-family: PingFangSC-Medium;
-      font-size: 14px;
-      color: #333333;
-      letter-spacing: 0;
-      line-height: 14px;
-      margin-bottom: 10rpx;
-      align-items: flex-start;
-    }
-  }
-  .addr {
-    width: 630rpx;
-    .icon {
-      width: 24rpx;
-      height: 24rpx;
-    }
-    .content {
-      font-family: PingFangSC-Regular;
-      font-size: 12px;
-      color: #a9a9a9;
-      letter-spacing: 0;
-      text-align: center;
-      line-height: 12px;
-      margin-left: 10rpx;
-    }
-  }
-}
-
 .area-nav {
   width: 100%;
   display: flex;
@@ -105,23 +42,10 @@
 
 <template>
   <view class="container">
-     
     <scroll-view scroll-y class="scroll">
       <view class="inner">
-        <view class= "area-user">
-          <image class="avatar" src="{{user.avatarUrl}}"/>
-          <text class="nickName">{{user.nickName}}</text>
-         <view class="nns">
-           <text>abcd.neo</text>
-         </view>
-          <view class="addr">
-            <image src="../images/Pointer.png" class="icon"/>
-            <text class="content">hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh</text>
-          </view>
-        </view>
-  
+        <userinfo></userinfo>
         <view class="area-nav">
-
           <navigator class="item" url="/pages/reorder" style="border-bottom: thin solid #F5F5F5;">
             <view class="left" >
               <image class="icon" src="../images/M_contact.png"/>
@@ -169,8 +93,6 @@
             </view>
             <image class="arrow" src="../images/Arrow.png"/>
           </navigator>
-        
-           
         </view>
       </view>
     </scroll-view>
@@ -179,20 +101,22 @@
 <script>
 import wepy from 'wepy';
 import Util from '../utils/index';
+import User_Info from '../components/user_info';
 export default class Mine extends wepy.page {
   customData = {}; // 自定义数据
 
   customFunction() {} // 自定义方法
 
   async onLoad() {
-     this.user = await Util.get.userInfo();
-    this.$apply();
   } // 在Page和Component共用的生命周期函数
 
-  onShow() {
+  async onShow() {
     this.account = Util.get.account();
 
     this.$apply();
+    this.$invoke('userinfo', 'showNNS', 1);
+    const user =await Util.get.userInfo();
+    this.$invoke('userinfo','showUser',user);
   } // 只在Page中存在的页面生命周期函数
   onReady() {
     this.$apply();
@@ -203,10 +127,12 @@ export default class Mine extends wepy.page {
 
   data = {
     account: {},
-    user:{}
+    user: {}
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
-  components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
+  components = {
+    userinfo: User_Info
+  }; // 声明页面中所引用的组件，或声明组件中所引用的子组件
 
   mixins = []; // 声明页面所引用的Mixin实例
 

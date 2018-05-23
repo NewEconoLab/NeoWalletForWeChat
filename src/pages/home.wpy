@@ -189,12 +189,22 @@
     .coin {
       display: flex;
       flex-direction: row;
-      align-items: flex-start;
+      align-items: center;
       margin-top: 56rpx;
       .icon {
         width: 56rpx;
         height: 56rpx;
-        border-radius: 50%;
+        border-radius: 50rpx;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+        border: thin solid #f5f5f5;
+        margin-left: 30rpx;
+        image {
+          width: 37rpx;
+          height: 37rpx;
+        }
       }
       .name {
         font-family: PingFangSC-Medium;
@@ -202,6 +212,7 @@
         color: #333333;
         letter-spacing: 0;
         line-height: 16px;
+        margin-left: 42rpx;
       }
     }
     .amount {
@@ -270,12 +281,12 @@
             <view class="coinblock" wx:for="{{coins}}" >
               <view class="content">
                 <view class="coin">
-                  <image src="../images/QRcode.png" class="icon"/>
+                  <view class="icon"><image src="../images/neo.png" /></view>
                   <text class="name">{{item.name}}</text>
                 </view>
                 <view class="amount">
                   <text class="coin">{{item.amount}}</text>
-                  <text class="value">{{item.total}}</text>
+                  <text class="value">≈ {{item.total}}</text>
                 </view>
               </view>
             </view>
@@ -302,7 +313,7 @@ export default class Home extends wepy.page {
     total: '0.00',
     coins: {},
     Block: '0',
-    claim: {total:'0.00000000'}
+    claim: { total: '0.00000000' }
   };
 
   computed = {};
