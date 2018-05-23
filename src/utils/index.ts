@@ -45,7 +45,7 @@ export default {
         height: () => { return Context.Height },
         account: () => { return Wallet.account },
         nep2: Wallet.getAccount, //获取用户账户
-        assets: () => { Context.Assets },
+        assets: () => { return Context.Assets },
         rootName: NNS.getRootName,
         rootNameHash: NNS.getRootNameHash,
         userInfo: async () => await User.getUser(),

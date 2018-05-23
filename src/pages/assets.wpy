@@ -1,0 +1,56 @@
+ <style lang="less">
+</style>
+<template>
+  <view class="container">
+    <scroll-view scroll-y class="scroll">
+        <view class="inner">
+            <cassets @changeCoin.user="handleChange"></cassets>
+        </view>
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import Util from '../utils/index';
+import CAssets from '../components/cassets';
+export default class Assets extends wepy.page {
+  config = {
+    navigationBarTitleText: '更换资产类型'
+  };
+
+  components = {
+    cassets: CAssets
+  };
+
+  data = {};
+
+  computed = {};
+
+  methods = {
+      handleChange(coin){
+          console.log(JSON.stringify(coin));          
+      }
+  };
+
+  events = {};
+
+  onLoad() {}
+  onShow() {
+    const assets = Util.get.assets();
+    this.$invoke('cassets', 'LoadCoins', assets);
+  }
+  // 页面渲染完成
+  async onReady() {}
+
+  onShareAppMessage() {
+    return {
+      title: 'NNS',
+      path: '/pages/nns'
+    };
+  }
+
+  OnLoading() {}
+}
+</script>
+ 

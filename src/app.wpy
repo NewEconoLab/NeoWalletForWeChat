@@ -104,7 +104,8 @@ export default class extends wepy.app {
       'pages/watch',
       'pages/registerwatch',
       'pages/gas2sgas',
-      'pages/startbidding'
+      'pages/startbidding',
+      'pages/assets'
     ],
     window: {
       backgroundTextStyle: 'light',

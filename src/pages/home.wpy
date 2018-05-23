@@ -221,7 +221,6 @@ export default class Home extends wepy.page {
     assets: {},
     user: {},
     total: '0.00',
-    coins: {},
     Block: '0',
     claim: { total: '0.00000000' }
   };
@@ -255,7 +254,6 @@ export default class Home extends wepy.page {
     Util.delegate.asset(assets => {
       assets['GAS'].amount = parseFloat(assets['GAS'].amount).toFixed(4);
       assets['NEO'].amount = parseFloat(assets['NEO'].amount).toFixed(0);
-      that.coins = assets;
       that.$invoke('cassets', 'LoadCoins', assets);
       that.total = Util.get.total().toFixed(2);
       that.Block = Util.get.height();

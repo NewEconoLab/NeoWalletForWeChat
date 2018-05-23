@@ -83,7 +83,7 @@
               <text  class="text" >所有资产</text>
         </view>
         <view class="coinblock" wx:for="{{coins}}" >
-            <view class="content">
+            <view class="content" @tap="OnSelected({{item}})">
                 <view class="coin">
                     <view class="icon"><image src="../images/neo.png" /></view>
                     <text class="name">{{item.name}}</text>
@@ -111,9 +111,9 @@ export default class CAssets extends wepy.component {
       this.coins = coins;
       this.$apply();
     },
-    async OnDetail(tx) {
-      let that = this;
-      wepy.navigateTo({ url: './transaction?tx=' + JSON.stringify(tx) });
+    async OnSelected(coin) {
+      this.$emit('changeCoin', coin)
+      
     }
   };
 

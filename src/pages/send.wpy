@@ -165,7 +165,9 @@ export default class Send extends wepy.page {
   computed = {};
 
   methods = {
-    changeCoin() {},
+    changeCoin() {
+      wx.navigateTo({ url: './assets' });
+    },
     OnScan() {
       let that = this;
       wepy.scanCode({
