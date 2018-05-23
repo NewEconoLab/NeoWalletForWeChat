@@ -208,3 +208,13 @@ export class Claim {
         this.value = json['value'];
     }
 }
+
+export class Claims{
+     claims:Claim[];
+     total:string;
+
+     constructor(claims:Claim[],total:string){
+         this.claims = claims;
+         this.total = total;
+     }
+}

@@ -258,7 +258,7 @@ export default class NNS
         sb.EmitAppCall(scriptaddress);
         var data = sb.ToArray();
         // console.log(data.toHexString())
-        let res = await Transfer.contractInvokeTrans(data);
+        // let res = await Transfer.contractInvokeTrans(data);
         return;
     }
 
@@ -429,7 +429,7 @@ export default class NNS
         sb.EmitAppCall(scriptaddress);
         var data = sb.ToArray();
         // console.log(data.toHexString())
-        let res = await Transfer.contractInvokeTrans(data);
+        // let res = await Transfer.contractInvokeTrans(data);
         return;
     }
     static async resolveData(domain: string, resolver: Uint8Array)
@@ -453,4 +453,7 @@ export default class NNS
     }
 
 
+    static async gas2Sgas(){
+        
+    }
 }

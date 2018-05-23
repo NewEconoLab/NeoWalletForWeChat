@@ -311,7 +311,7 @@ export default class Send extends wepy.page {
     var tran = Coin.makeTran(UTXO.assets, this.targetAddr, coin, count);
     let randomStr = await Random.getSecureRandom(256);
     Util.loading('获取交易编号');
-    const txid = await Util..setTran(tran, prikey, pubkey, randomStr);
+    const txid = await Util.setTran(tran, prikey, pubkey, randomStr);
     wepy.hideLoading();
     if (txid === 'failed') {
       wepy.showModal({

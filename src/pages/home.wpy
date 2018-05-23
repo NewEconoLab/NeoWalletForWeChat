@@ -80,6 +80,7 @@
       text-align: center;
       line-height: 24px;
       margin-left: 114rpx;
+      justify-content: center;
     }
     .icon {
       width: 48rpx;
@@ -136,17 +137,19 @@
       color: #333333;
       letter-spacing: 0;
       line-height: 16px;
-      margin-top: 10rpx;
+      margin-top: 15rpx;
     }
   }
+
   .btn-claim {
-    background: #b2b2b2;
+    background: #22a4ff;
     border-radius: 3px;
     margin-right: 30rpx;
     height: 48rpx;
     display: flex;
     flex-direction: row;
     align-items: center;
+
     text {
       width: 120rpx;
       font-family: PingFangSC-Medium;
@@ -157,6 +160,9 @@
       line-height: 14px;
     }
   }
+  .invalid {
+    background: #b2b2b2;
+  }
 }
 
 .area-coins {
@@ -165,65 +171,65 @@
   flex-direction: column;
   align-items: flex-start;
   margin-top: 20rpx;
-  }
+}
 
-  .coinblock {
-    width: 750rpx;
-    display: block;
-    flex-direction: column;
-    margin-top: 1rpx;
-    justify-content: center;
-    .content {
-      width: 100%;
+.coinblock {
+  width: 750rpx;
+  display: block;
+  flex-direction: column;
+  margin-top: 1rpx;
+  justify-content: center;
+  .content {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: white;
+    justify-content: space-between;
+    .coin {
       display: flex;
       flex-direction: row;
-      align-items: center;
-      background-color: white;
-      justify-content: space-between;
-      .coin {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-        margin-top: 56rpx;
-        .icon {
-          width: 56rpx;
-          height: 56rpx;
-          border-radius: 50%;
-        }
-        .name {
-          font-family: PingFangSC-Medium;
-          font-size: 16px;
-          color: #333333;
-          letter-spacing: 0;
-          line-height: 16px;
-        }
+      align-items: flex-start;
+      margin-top: 56rpx;
+      .icon {
+        width: 56rpx;
+        height: 56rpx;
+        border-radius: 50%;
       }
-      .amount {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        margin-right: 30rpx;
-        .coin {
-          font-family: PingFangSC-Medium;
-          font-size: 16px;
-          color: #333333;
-          letter-spacing: 0;
-          text-align: right;
-          line-height: 16px;
-        }
-        .value {
-          font-family: PingFangSC-Regular;
-          font-size: 12px;
-          color: #9a9a9a;
-          letter-spacing: 0;
-          text-align: right;
-          line-height: 12px;
-          margin-top: 18rpx;
-          margin-bottom: 26rpx;
-        }
+      .name {
+        font-family: PingFangSC-Medium;
+        font-size: 16px;
+        color: #333333;
+        letter-spacing: 0;
+        line-height: 16px;
+      }
+    }
+    .amount {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      margin-right: 30rpx;
+      .coin {
+        font-family: PingFangSC-Medium;
+        font-size: 16px;
+        color: #333333;
+        letter-spacing: 0;
+        text-align: right;
+        line-height: 16px;
+      }
+      .value {
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #9a9a9a;
+        letter-spacing: 0;
+        text-align: right;
+        line-height: 12px;
+        margin-top: 18rpx;
+        margin-bottom: 26rpx;
       }
     }
   }
+}
 </style>
 <template>
   <view class="container">
@@ -253,9 +259,9 @@
           <view class="area-claim">
             <view class="left">
               <text class="label">未提取GAS</text>
-              <text class="amount">0.000000000</text>
+              <text class="amount">{{claim.total}}</text>
             </view>
-            <view class="btn-claim"><text>提取</text></view>
+            <view class="btn-claim {{claim.total === '0.00000000'?'invalid':''}} "><text>提取</text></view>
           </view>
           <view class="area-coins">
             <view class="function-title">
@@ -282,7 +288,7 @@
 import wepy from 'wepy';
 import Util, { Https } from '../utils/index';
 import Wallet from '../utils/wallet';
-import { Claim } from '../utils/entity';
+import { Claims } from '../utils/entity';
 export default class Home extends wepy.page {
   config = {
     navigationBarTitleText: '钱包'
@@ -295,7 +301,8 @@ export default class Home extends wepy.page {
     user: {},
     total: '0.00',
     coins: {},
-    Block:'0'
+    Block: '0',
+    claim: {total:'0.00000000'}
   };
 
   computed = {};
@@ -303,6 +310,9 @@ export default class Home extends wepy.page {
   methods = {
     receive() {
       wx.navigateTo({ url: './receive' });
+    },
+    claim() {
+      Util.send.claim(this.claim.claims, this.claim.total);
     }
   };
 
@@ -328,8 +338,10 @@ export default class Home extends wepy.page {
 
       that.total = Util.get.total().toFixed(2);
       that.Block = Util.get.height();
-      
+      that.claim = Util.get.claim();
+
       that.$apply();
+      console.log(that.claim);
     });
   }
 

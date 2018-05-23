@@ -48,17 +48,18 @@ export default {
         assets: () => { Context.Assets },
         rootName: NNS.getRootName,
         rootNameHash: NNS.getRootNameHash,
-        userInfo:async ()=> await User.getUser(),
+        userInfo: async () => await User.getUser(),
         TXs: Context.OnGetTXs,
         prikey: (wif: string): string => { return Wallet.wif2prikey(wif) },
-        total: () => { return Context.total }
+        total: () => { return Context.total },
+        claim: () => { return Context.claim }
     },
     set: {
         cache: Cache.put,
         account: Wallet.setAccount,
         openid: Context.openid,
         formid: (formid: string) => { Transfer.formId.push(formid); },
-        resolve:NNS.resolve
+        resolve: NNS.resolve
     },
     delegate: {
         asset: (delegate: Function) => Context.assetDelegate = delegate,

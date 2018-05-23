@@ -1,5 +1,5 @@
 import { Nep6, Neo, ThinNeo } from '../lib/neo-ts/index'
-import { Asset, Utxo, Nep5, Claim } from './entity';
+import { Asset, Utxo, Nep5, Claim, Claims } from './entity';
 import Https from './Https';
 import Coin from './coin';
 import { formatTime } from './time'
@@ -35,12 +35,14 @@ export class Context {
 
     static total: number = 0;
 
+    static claim:Claims;
+
     static async init(account: Nep6.nep6account) {
         // 暂时不加载历史记录
         this.txDelegate = null;
         Wallet.setAccount(account);
-        let neo = new Asset('NEO');
-        let gas = new Asset('GAS');
+        let neo = new Asset('NEO','');
+        let gas = new Asset('GAS','');
 
         Context.Assets['NEO'] = neo;
         Context.Assets['GAS'] = gas;
@@ -63,6 +65,7 @@ export class Context {
         Context.OnGetPrice();
         Context.OnGetTXs(1);
         Context.OnGetHeight();
+        Context.OnGetClaims();
     }
 
     /**
@@ -183,9 +186,10 @@ export class Context {
         }
 
         let a = res['gas'].toFixed(8);
-        // Util.send.claim(claims, a);
-
+        
+        Context.claim = new Claims(claims,a);
     }
+
     static getAccount(): Nep6.nep6account {
         return Wallet.account;
     }

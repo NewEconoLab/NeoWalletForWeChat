@@ -4,9 +4,9 @@
   z-index: 9999;
   width: 116rpx;
   height: 116rpx;
-  margin-top: -52rpx;
-  box-shadow: 0 2px 10px 0 rgba(192, 192, 192, 0.5);
+  margin-top: -58rpx;
   border-radius: 50%;
+  border: 12rpx solid #f5f5f5;
 }
 .area-user {
   display: flex;
@@ -109,8 +109,8 @@
     <scroll-view scroll-y class="scroll">
       <view class="inner">
         <view class= "area-user">
-          <image class="avatar" src="{{avatarUrl}}"/>
-          <text class="nickName">{{nickName}}</text>
+          <image class="avatar" src="{{user.avatarUrl}}"/>
+          <text class="nickName">{{user.nickName}}</text>
          <view class="nns">
            <text>abcd.neo</text>
          </view>
@@ -184,10 +184,8 @@ export default class Mine extends wepy.page {
 
   customFunction() {} // 自定义方法
 
-  onLoad() {
-    let userInfo = Util.get.cache(Util.const.USER_INFO);
-    this.avatarUrl = userInfo.avatarUrl;
-    this.nickName = userInfo.nickName;
+  async onLoad() {
+     this.user = await Util.get.userInfo();
     this.$apply();
   } // 在Page和Component共用的生命周期函数
 
@@ -205,8 +203,7 @@ export default class Mine extends wepy.page {
 
   data = {
     account: {},
-    avatarUrl: '',
-    nickName: ''
+    user:{}
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
   components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
