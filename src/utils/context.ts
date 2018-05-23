@@ -1,5 +1,5 @@
 import { Nep6, Neo, ThinNeo } from '../lib/neo-ts/index'
-import { Asset, Utxo } from './entity';
+import { Asset, Utxo, Nep5, Claim } from './entity';
 import Https from './Https';
 import Coin from './coin';
 import { formatTime } from './time'
@@ -91,16 +91,26 @@ export class Context {
         if (this.lock === true) return;
         //加锁
         this.lock = true;
+        let nep5s = await Https.api_getnep5Balance(Context.getAccount().address);
 
+        for (var i in nep5s) {
+            for (var i in nep5s) {
+                var item = nep5s[i];
+                let nep5: Nep5 = new Nep5(item);
+                // let type = Coin.assetID2name[nep5.id];
+                if (Context.Assets[nep5.name] === undefined) {
+                    Context.Assets[nep5.name] = new Asset(nep5.name, nep5.id, nep5.count);
+                }
+            }
+        }
         var utxos = await Https.api_getUTXO(Context.getAccount().address);
         for (var i in utxos) {
             var item = utxos[i];
             let utxo: Utxo = new Utxo(item);
             let type = Coin.assetID2name[utxo.asset];
             if (Context.Assets[type] === undefined) {
-                Context.Assets[type] = new Asset(type);
+                Context.Assets[type] = new Asset(type, utxo.asset);
             }
-
 
             if (Context.Assets[type] !== null)
                 (Context.Assets[type] as Asset).addUTXO(utxo, Context.Height);
@@ -157,10 +167,25 @@ export class Context {
         console.log(Transfer.TXs);
         Context.txDelegate(Transfer.TXs);
         console.log(Context.txDelegate);
-        
+
         return Transfer.TXs;
     }
 
+    static async OnGetClaims() {
+
+        let res = await Https.api_getclaimgas(Wallet.account.address,0);
+
+        console.log(res);
+        let claims = [];
+        for (let i in res['claims']) {
+            let claim = new Claim(res.claims[i]);
+            claims.push(claim);
+        }
+
+        let a = res['gas'].toFixed(8);
+        // Util.send.claim(claims, a);
+
+    }
     static getAccount(): Nep6.nep6account {
         return Wallet.account;
     }

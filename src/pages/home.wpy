@@ -93,7 +93,7 @@
   display: flex;
   align-items: center;
   flex-direction: row;
- 
+
   width: 100%;
   height: 104rpx;
   border-bottom: solid thin #f5f5f5;
@@ -102,7 +102,7 @@
     font-family: PingFangSC-Regular;
     font-size: 12px;
     color: #9a9a9a;
-     margin-left: 40rpx;
+    margin-left: 40rpx;
     letter-spacing: 0;
     line-height: 12px;
   }
@@ -162,37 +162,19 @@
 .area-coins {
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: flex-start;
   margin-top: 20rpx;
-  background-color: white;
-  .label {
-    height: 104rpx;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-left: 30rpx;
-    text {
-      font-family: PingFangSC-Regular;
-      font-size: 12px;
-      color: #9a9a9a;
-      letter-spacing: 0;
-      line-height: 12px;
-    }
   }
 
   .coinblock {
-    width: 660rpx;
-    display: flex;
-    flex-direction: row;
-    border-radius: 5px;
-    margin: 32rpx 0 13rpx 0;
-    background-color: white;
-    box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
+    width: 750rpx;
+    display: block;
+    flex-direction: column;
+    margin-top: 1rpx;
+    justify-content: center;
     .content {
       width: 100%;
-      height: 140rpx;
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -202,9 +184,11 @@
         display: flex;
         flex-direction: row;
         align-items: flex-start;
+        margin-top: 56rpx;
         .icon {
           width: 56rpx;
           height: 56rpx;
+          border-radius: 50%;
         }
         .name {
           font-family: PingFangSC-Medium;
@@ -235,11 +219,11 @@
           text-align: right;
           line-height: 12px;
           margin-top: 18rpx;
+          margin-bottom: 26rpx;
         }
       }
     }
   }
-}
 </style>
 <template>
   <view class="container">
@@ -259,12 +243,12 @@
           </view>
           <view class="upper-asset">
             <text class="label">总资产</text>
-            <text class="amount">￥ 10000</text>
+            <text class="amount">￥ {{total}}</text>
             <image src="../images/Hide.png" class="icon" />
           </view>
         </view>
         <view class="area-block-height">
-          <text class="label">区块高度:100000</text>
+          <text class="label">区块高度:{{Block}}</text>
         </view>
           <view class="area-claim">
             <view class="left">
@@ -274,18 +258,18 @@
             <view class="btn-claim"><text>提取</text></view>
           </view>
           <view class="area-coins">
-            <view class="label">
-              <text>所有资产</text>
+            <view class="function-title">
+              <text  class="text" >所有资产</text>
             </view>
             <view class="coinblock" wx:for="{{coins}}" >
               <view class="content">
                 <view class="coin">
                   <image src="../images/QRcode.png" class="icon"/>
-                  <text class="name"></text>
+                  <text class="name">{{item.name}}</text>
                 </view>
                 <view class="amount">
-                  <text class="coin"></text>
-                  <text class="value"></text>
+                  <text class="coin">{{item.amount}}</text>
+                  <text class="value">{{item.total}}</text>
                 </view>
               </view>
             </view>
@@ -310,14 +294,15 @@ export default class Home extends wepy.page {
     assets: {},
     user: {},
     total: '0.00',
-    coins: {}
+    coins: {},
+    Block:'0'
   };
 
   computed = {};
 
   methods = {
     receive() {
-      wx.navigateTo({ url: './receive'});
+      wx.navigateTo({ url: './receive' });
     }
   };
 
@@ -339,9 +324,11 @@ export default class Home extends wepy.page {
     Util.delegate.asset(assets => {
       assets['GAS'].amount = parseFloat(assets['GAS'].amount).toFixed(4);
       assets['NEO'].amount = parseFloat(assets['NEO'].amount).toFixed(0);
-      that.assets = assets;
+      that.coins = assets;
+
       that.total = Util.get.total().toFixed(2);
       that.Block = Util.get.height();
+      
       that.$apply();
     });
   }
@@ -364,19 +351,6 @@ export default class Home extends wepy.page {
       title: 'NEO钱包',
       path: '/pages/index'
     };
-  }
-  async claim() {
-    let res = await Https.api_getclaimgas(Util.get.account().address);
-
-    console.log(res);
-    let claims = [];
-    for (let i in res['claims']) {
-      let claim = new Claim(res.claims[i]);
-      claims.push(claim);
-    }
-
-    let a = res['gas'].toFixed(8);
-    Util.send.claim(claims, a);
   }
 }
 </script>

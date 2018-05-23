@@ -6,8 +6,8 @@ export default class Cache {
      * @param {any} value 
      */
     static async put(key, value) {
-        console.log('key = ' + key);
-        console.log('value = '+value);
+        // console.log('key = ' + key);
+        // console.log('value = '+value);
         if (key === null || key === undefined)
             return;
 

@@ -2,27 +2,33 @@ import { Neo, Helper } from '../lib/neo-ts/index';
 
 export class Asset {
     id: string;      // asset id
-    amount: string = '0';  // 货币持有量
+    public amount: string = '0';  // 货币持有量
     claim: string;    // 如果是gas 需要有claim量
     price: string = '0.00';   // 价格
     total: string = '0.00';   // 持有的总价值
     name: string;    // 币名
-    utxos: any;       // utxo 只有NEO和GAS才有
+    utxos: any;       // utxo 
     rise: boolean;     //币价走向
-
-    constructor(name) {
+    isnep5: boolean = false;
+    constructor(name: string, id:string,count: number = -1) {
         this.name = name;
+        this.id = id;
         this.utxos = {};
+        if (count !== -1) {
+            this.isnep5 = true;
+            this.amount = count + '';
+        }
     }
-
     /**
      * 每轮刷新的时候 总资产，总价值都需要重新计算
      */
     public init() {
         this.amount = '0';
-        this.total = '0.00';
+        if (!this.isnep5) {
+            this.total = '0.00';
+        }
     }
- 
+
     /**
      * 添加UTXO
      *  检查下这个UTXO是否在已花费的列表中，如果有，而且高度已经超过了两个，那么就从spent移除，添加到utxo
@@ -102,7 +108,17 @@ export class Utxo {
         this.count = parseFloat(utxo.value);
     }
 }
+export class Nep5 {
+    id: string = ''; //资产id
+    name: string = '';// 资产名
+    count: number = 0; //资产数量
 
+    constructor(nep5: any) {
+        this.id = nep5.assetid;
+        this.name = nep5.symbol;
+        this.count = parseFloat(nep5.balance)
+    }
+}
 
 export class Result {
     err: boolean;
@@ -161,12 +177,12 @@ export class History {
     address: string;
     assetname: string;
     txtype: string;
-    type:string;
+    type: string;
     time: string;
     txid: string;
-    vin:any;
-    vout:any;
-    block:number;
+    vin: any;
+    vout: any;
+    block: number;
 }
 
 export class Claim {
