@@ -31,6 +31,7 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      width: 375rpx;
       .name {
         font-family: PingFangSC-Medium;
         font-size: 16px;
@@ -74,30 +75,6 @@
     }
   }
 }
-.area-address {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  align-items: center;
-  height: 104rpx;
-  margin-top: 20rpx;
-  .text {
-    font-family: PingFangSC-Regular;
-    font-size: 12px;
-    color: #9a9a9a;
-    letter-spacing: 0;
-    line-height: 12px;
-    margin-left: 30rpx;
-    align-content: center;
-  }
-
-  .right {
-    .icon {
-      image {
-      }
-    }
-  }
-}
 
 .area-amount {
   display: flex;
@@ -117,6 +94,34 @@
     align-content: center;
   }
 }
+.send-addr {
+  margin-top: 20rpx;
+}
+.send-addr-content {
+  margin-top: 1rpx;
+}
+
+.amount {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 1rpx;
+  background-color: white;
+  width: 750rpx;
+  .input {
+    font-family: PingFangSC-Medium;
+    font-size: 14px;
+    color: #333333;
+    letter-spacing: 0;
+    line-height: 14px;
+    width: 690rpx;
+    border-bottom: thin solid #a9a9a9;
+    margin-left: 30rpx;
+    margin-top: 50rpx;
+    padding-left: 10rpx;
+    margin-bottom: 30rpx;
+  }
+}
 </style>
 <template>
   <form bindsubmit="formSubmit" class="form" report-submit ="true">
@@ -131,17 +136,27 @@
               <view class="left">
                 <view class="icon"><image src="../images/neo.png" /></view>
                 <view class="coin">
-                  <text class="name">NEO</text>
+                  <text class="name">{{coin.name}}</text>
                   <view class="amount">
-                    <text>可用数量:</text>
-                    <text style="color:#22A4FF;">98</text>
+                    <text>可用数量: </text>
+                    <text style="color:#22A4FF;">{{coin.amount}}</text>
                   </view>
                 </view>
               </view>
               <view class="switch-btn" @tap="changeCoin()"><text>更换</text></view>
             </view>
           </view>
+          <claddr class="send-addr" @onEmit.user="handleEmit"/>
+          <caddress class="send-addr-content"/>
+
+          <clamount class="send-addr"/>
+          <view class="amount">
+            <input class="input" name="amount" />
+          </view>
+        <view class="foot-button">
+          <button type="primary" @tap="formSubmit()">转账</button>
         </view>
+      </view>
     </scroll-view>
     </view>
   </form>
@@ -150,36 +165,45 @@
 import wepy from 'wepy';
 import { Helper, ThinNeo, Neo } from '../lib/neo-ts/index';
 import Util from '../utils/index';
+import CLabel from '../components/clabel';
+import CNNSAddress from '../components/cnnsaddress';
 export default class Send extends wepy.page {
   config = {
     navigationBarTitleText: '转账'
   };
 
-  components = {};
+  components = {
+    claddr: CLabel,
+    clamount: CLabel,
+    caddress: CNNSAddress
+  };
 
   data = {
     targetAddr: '',
-    assets: {}
+    assets: {},
+    coin: {}
   };
 
   computed = {};
 
   methods = {
+    handleEmit(param) {
+      let that = this;
+      console.log(param);
+      switch (param) {
+        case 'scan':
+          that.OnScan();
+          break;
+        case 'contact':
+          break;
+        case 'add':
+          break;
+        default:
+          break;
+      }
+    },
     changeCoin() {
       wx.navigateTo({ url: './assets' });
-    },
-    OnScan() {
-      let that = this;
-      wepy.scanCode({
-        success: res => {
-          console.log(res);
-          that.targetAddr = res.result;
-          that.$apply();
-        },
-        fail: res => {
-          console.log(res);
-        }
-      });
     },
     radioChange(e) {
       this.checked = e.detail.value;
@@ -188,6 +212,8 @@ export default class Send extends wepy.page {
       this.$apply();
     },
     async formSubmit(e) {
+      console.log(e);
+
       const that = this;
       let target = e.detail.value.address;
       let amount = e.detail.value.amount;
@@ -215,13 +241,30 @@ export default class Send extends wepy.page {
   };
 
   events = {};
-
+  onShow() {
+    // sendCoin
+    this.$invoke(
+      'claddr',
+      'Show',
+      JSON.stringify({
+        title: '收款人地址',
+        show: {
+          scan: 1,
+          contact: 1
+        }
+      })
+    );
+    this.$invoke(
+      'clamount',
+      'Show',
+      JSON.stringify({ title: '转账数量', show: {} })
+    );
+  }
   onLoad() {
-    try {
-      this.balance = UTXO.balance['GAS'].amount;
+    if (this.coin === {}) {
+      const assets = Util.get.assets();
+      this.coin = assets['NEO'];
       this.$apply();
-    } catch (err) {
-      console.log(err);
     }
   }
   onReady() {
@@ -231,12 +274,25 @@ export default class Send extends wepy.page {
       that.$apply();
     }
   }
+  OnScan() {
+    let that = this;
+    wepy.scanCode({
+      success: res => {
+        console.log(res);
+        that.targetAddr = res.result;
+        that.$apply();
+      },
+      fail: res => {
+        console.log(res);
+      }
+    });
+  }
   //构造并发送交易
   async OnSend() {
     let that = this;
     Util.loading('密码验证中');
 
-    //如果当前账户直接使用私钥 
+    //如果当前账户直接使用私钥
     if (Wallet.account.nep2key.length === 64) {
       //构造并发送交易
       that.SendTran(Wallet.account.nep2key, Wallet.account.publickey);

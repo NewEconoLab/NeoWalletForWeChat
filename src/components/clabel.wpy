@@ -1,0 +1,102 @@
+<style lang="less">
+.cl-content {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  background-color: white;
+  height: 104rpx;
+  margin-top: 1rpx;
+  justify-content: space-between;
+  .label {
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #9a9a9a;
+    letter-spacing: 0;
+    line-height: 12px;
+    margin-left: 30rpx;
+    align-content: center;
+  }
+
+  .right {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    margin-right: 30rpx;
+    .icon {
+      width: 48rpx;
+      height: 48rpx;
+      border-radius: 50%;
+      margin-left: 40rpx;
+    }
+    .button {
+      background: #22a4ff;
+      border-radius: 3px;
+      height: 48rpx;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: 120rpx;
+      text {
+        width: 120rpx;
+        font-family: PingFangSC-Medium;
+        font-size: 14px;
+        color: #ffffff;
+        letter-spacing: 0;
+        text-align: center;
+        line-height: 14px;
+      }
+    }
+  }
+}
+</style>
+
+<template>
+<view class="cl-content">
+    <text class="label">{{show.title}}</text>
+    <view class="right">
+        <image wx:if="{{show.add==1}}" class="icon" src="../images/L_add.png" @tap="onEmit(add)"/>
+        <image wx:if="{{show.contact==1}}" class="icon" src="../images/L_contact.png" @tap="onEmit(contact)"/>
+        <image wx:if="{{show.scan==1}}" class="icon" src="../images/L_scan.png" @tap="onEmit(scan)"/>
+        <view class="button" wx:if="{{show.button==1}}" @tap="onEmit(btn)"><text>提取</text></view>
+    </view>
+</view>
+</template>
+<script>
+import wepy from 'wepy';
+import Util from '../utils/index';
+export default class CLabel extends wepy.component {
+  props = {
+    show: {}
+  };
+  components = {};
+
+  data = {};
+
+  methods = {
+    onEmit(param) {
+      this.$emit('onEmit', param);
+    },
+    Show(param) {
+      const json = JSON.parse(param);
+      let scan = json.show.scan || 0; //扫描按钮是否显示
+      let contact = json.show.contact || 0; //通讯录按钮是否显示
+      let button = json.show.button || 0; //按钮是否显示
+      let add = json.show.add || 0; //添加按钮是否显示
+      let title = json.title;
+      const show = {
+        scan: scan,
+        contact: contact,
+        button: button,
+        add: add,
+        title: title
+      };
+      this.show = show;
+
+      this.$apply();
+    }
+  };
+
+  async onLoad() {}
+}
+</script>

@@ -76,6 +76,25 @@ Page {
   height: 0;
   color: transparent;
 }
+
+.foot-button {
+  margin-top: 55rpx;
+  margin-bottom: 100rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  button {
+    font-size: 14px;
+    height: 98rpx;
+    width: 690rpx;
+    background-color: #22a4ff;
+    line-height: 98rpx;
+  }
+  button::after {
+    border: none;
+  }
+}
+
 </style>
 
 <script>

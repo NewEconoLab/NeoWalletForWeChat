@@ -86,7 +86,7 @@
             <image class="arrow" src="../images/Arrow.png"/>
           </navigator>
 
-          <navigator class="item" url="/pages/watch">
+          <navigator class="item" url="/pages/watchonly">
             <view class="left">
               <image class="icon" src="../images/M_watchonly.png"/>
               <view class="label">观察模式</view>

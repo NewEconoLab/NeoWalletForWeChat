@@ -36,7 +36,7 @@
         <image class="avatar" src="{{user.avatarUrl}}"/>
         <text class="nickName">{{user.nickName}}</text>
         <cnnsaddr></cnnsaddr>
-        <view style="margin-bottom:40rpx;"></view>
+        <view style="margin-bottom:20rpx;"></view>
     </view>
 </template>
 <script>

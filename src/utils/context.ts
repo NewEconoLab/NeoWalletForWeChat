@@ -123,6 +123,7 @@ export class Context {
         this.lock = false;
         let assets = JSON.parse(JSON.stringify(Context.Assets));
         Context.assetDelegate(assets);
+        Transfer.coin = assets['NEO'];
     }
 
     /**
@@ -149,8 +150,8 @@ export class Context {
                 if (coin[0]['percent_change_1h'][0] !== '-') (Context.Assets[key] as Asset).rise = true;
                 else (Context.Assets[key] as Asset).rise = false;
             } catch (err) {
-                console.log('NET_ERR');
-                console.log(err);
+                console.log('NET_ERR:price');
+                // console.log(err);
             }
         }
         Context.total = total;

@@ -37,7 +37,8 @@ export default {
     send: {
         transfer: Transfer.makeTran,
         // invoke: Transfer.nep5Transaction,
-        claim: Transfer.claimGas
+        claim: Transfer.claimGas,
+        
     },
     get: {
         random: Random.getSecureRandom,
@@ -52,14 +53,16 @@ export default {
         TXs: Context.OnGetTXs,
         prikey: (wif: string): string => { return Wallet.wif2prikey(wif) },
         total: () => { return Context.total },
-        claim: () => { return Context.claim }
+        claim: () => { return Context.claim },
+        sendCoin:()=>{return Transfer.coin}
     },
     set: {
         cache: Cache.put,
         account: Wallet.setAccount,
         openid: Context.openid,
         formid: (formid: string) => { Transfer.formId.push(formid); },
-        resolve: NNS.resolve
+        resolve: NNS.resolve,
+        sendCoin: (coin: Entity.Asset) => { Transfer.coin = coin }
     },
     delegate: {
         asset: (delegate: Function) => Context.assetDelegate = delegate,

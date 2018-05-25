@@ -1,15 +1,18 @@
 <style lang="less">
-.content {
+.addr-content {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  background-color: white;
 }
 .nns {
   border-bottom: thin solid #a9a9a9;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  width: 630rpx;
+  width: 90%;
+  margin-top: 40rpx;
   text {
     font-family: PingFangSC-Medium;
     font-size: 14px;
@@ -21,7 +24,8 @@
   }
 }
 .addr {
-  width: 630rpx;
+  width: 90%;
+  margin-bottom: 20rpx;
   .icon {
     width: 24rpx;
     height: 24rpx;
@@ -39,7 +43,7 @@
 </style>
 
 <template>
-<view class="content">
+<view class="addr-content">
     <view class="nns">
         <text>abcd.neo</text>
     </view>

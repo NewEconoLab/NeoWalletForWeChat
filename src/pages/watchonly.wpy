@@ -53,14 +53,7 @@
   color: #cccccc;
   margin-bottom: 45rpx;
 }
-.foot-button {
-  width: 600rpx;
-  margin-top: 55rpx;
-  margin-bottom: 100rpx;
-  button::after {
-    border: none;
-  }
-}
+
 </style>
 
 <template>
@@ -77,14 +70,14 @@
       </view>
     </view>
       <view class="foot-button">
-        <button type="primary" style="background-color:#69c0fd;" @tap="registerWatch()">添加观察账户</button>
+        <button type="primary" @tap="registerWatch()">添加观察账户</button>
       </view>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy';
-import Util,{Https} from '../utils/index'
+import Util, { Https } from '../utils/index';
 export default class WatchOnly extends wepy.page {
   customData = {}; // 自定义数据
 

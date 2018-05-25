@@ -10,8 +10,9 @@ export default class Transfer {
 
     static formId = [];
     static TXs = [];
-    constructor() {
-    }
+    static coin:Asset;
+    constructor() {};
+    
 
 
     /**
@@ -39,6 +40,7 @@ export default class Transfer {
 
         return res;
     }
+
     /**
      * 发送utxo交易
      * @param targetaddr 目的地址
