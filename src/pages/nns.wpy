@@ -153,7 +153,7 @@
                   <text class="domain">.neo</text>
                 </view>
                 <view class="loading">
-                  <image class="icon" src="../images/Loading.png" animation="{{animation}}" />
+                  <image class="icon" src="../images/Loading.png" animation="{{animationData}}" />
                 </view>
              </view>
            </view>
@@ -189,7 +189,7 @@ export default class NNS extends wepy.page {
   components = {};
 
   data = {
-    animation: {}
+    animationData: {}
   };
 
   computed = {};
@@ -207,7 +207,10 @@ export default class NNS extends wepy.page {
 
   events = {};
 
-  onLoad() {}
+  onLoad() {
+    // Util.get.wantBy('benben',Util.get.assets()['GAS']);
+    this.OnLoading();
+  }
   async onShow() {}
   // 页面渲染完成
   async onReady() {}
@@ -219,7 +222,24 @@ export default class NNS extends wepy.page {
     };
   }
 
-  OnLoading() {}
+  OnLoading() {
+    let that = this;
+    let animation = wx.createAnimation({
+      duration: 1500,
+      timingFunction: 'ease'
+    });
+
+    var n = 0;
+    setInterval(
+      function() {
+        n = n + 1;
+        animation.rotate(360 * n).step();
+        that.animationData = animation.export();
+        that.$apply();
+      }.bind(this),
+      800
+    );
+  }
 }
 </script>
  

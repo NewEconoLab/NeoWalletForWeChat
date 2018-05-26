@@ -37,4 +37,4 @@ export const DAPP_SGAS = Helper.hexToBytes('0x4ac464f84f50d3f902c2f0ca1658bfaa45
 export const DAPP_COIN_POOL = Helper.hexToBytes("0x5d6b91ee7cde1f8bb1868d36d4bf134f6887d231").reverse();//coinpool 新合约地址
 export const DAPP_NNS = Helper.hexToBytes("0x954f285a93eed7b4aed9396a7806a5812f1a5950").reverse();//nns 合约地址
 
-export const DOMAIN_ROOT: string = '.test';
+export const DOMAIN_ROOT: string = 'sell';

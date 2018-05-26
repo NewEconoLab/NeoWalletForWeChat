@@ -141,6 +141,10 @@ export default class Https {
     static async rpc_getInvokescript(scripthash: Uint8Array): Promise<any> {
         var str = this.makeRpcUrl(this.api, "invokescript", Helper.toHexString(scripthash));
         var result = await Request.Request({ "method": "get" }, str);
+        console.log('result');
+        
+        console.log(result);
+        
         if (result["result"] == null)
             return null;
         var r = result["result"][0]

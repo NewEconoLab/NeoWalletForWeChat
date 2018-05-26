@@ -236,15 +236,19 @@ export default class NNS {
         let nnshash = Common.nameHashArray(arr);
         let nnshashstr = Helper.toHexString(nnshash.reverse());
 
-        var sb = new ThinNeo.ScriptBuilder();
-        sb.EmitParamJson([
-            "(str)addr",
-            "(hex256)0x" + nnshashstr,
-            "(str)1"
-        ]);
-        sb.EmitPushString("resolve");
-        sb.EmitAppCall(scriptaddress);
-        var data = sb.ToArray();
+        // var sb = new ThinNeo.ScriptBuilder();
+        // sb.EmitParamJson([
+        //     "(str)addr",
+        //     "(hex256)0x" + nnshashstr,
+        //     "(str)1"
+        // ]);
+        // sb.EmitPushString("resolve");
+        // sb.EmitAppCall(scriptaddress);
+        var data = Common.buildScript(scriptaddress, "resolve",
+            new Array("(str)addr",
+                "(hex256)0x" + nnshashstr,
+                "(str)1")) //sb.ToArray();
+
         let res = await Https.rpc_getInvokescript(data);
         console.log('====================,,,,,,,,,,,,,,,,,,,');
         console.log(res);

@@ -12,6 +12,7 @@ import Cache from './cache';
 import Wallet from './wallet';
 import { Nep6 } from '../lib/neo-ts';
 import User from './user'
+import Auction from './auctioin';
 
 export { Https }
 
@@ -46,8 +47,9 @@ export default {
         total: () => { return Context.total },
         claim: () => { return Context.claim },
         sendCoin: () => { return Transfer.coin },
-        addrByDomain:async(domain:string)=>{return await NNS.resolveData(domain)},
-        domainByAddr:NNS.getDomainsByAddr
+        addrByDomain: async (domain: string) => { return await NNS.resolveData(domain) },
+        wantBy:Auction.wantBy,
+        domainByAddr: NNS.getDomainsByAddr
     },
     set: {
         cache: Cache.put,
@@ -64,7 +66,8 @@ export default {
     init: {
         asset: Coin.initAllAsset,
         context: Context.init,
-        nns:async ()=>{ await NNS.initRootDomain(); 
+        nns: async () => {
+            await NNS.initRootDomain();
             // NNS.nnsRegister('jinghui')
             NNS.getDomainsByAddr();
         }

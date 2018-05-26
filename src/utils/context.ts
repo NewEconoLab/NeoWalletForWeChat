@@ -42,12 +42,6 @@ export class Context {
         // 暂时不加载历史记录
         this.txDelegate = null;
         Wallet.setAccount(account);
-
-        console.log('============================');
-
-        console.log(a);
-        console.log('///////////////////////////////');
-
         let neo = new Asset('NEO', '');
         let gas = new Asset('GAS', '');
 

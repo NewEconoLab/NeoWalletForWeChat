@@ -52,7 +52,7 @@ export default class Transfer {
      * @param sendcount 转账金额
      * @param height 区块高度 -- 用于管理已花费的utxo
      */
-    static makeTran(targetaddr, asset: Asset, sendcount: Neo.Fixed8, height: number): ThinNeo.Transaction {
+     static makeTran(targetaddr, asset: Asset, sendcount: Neo.Fixed8, height: number): ThinNeo.Transaction {
         //新建交易对象
         var tran = new ThinNeo.Transaction();
         //交易类型为合约交易
@@ -75,11 +75,11 @@ export default class Transfer {
             tran.inputs.push(input);
         }
 
-        if (pay.sum.compareTo(sendcount) >= 0 && targetaddr != null)//输入大于等于输出
+        if (pay.sum.compareTo(sendcount) >= 0)//输入大于等于输出
         {
             tran.outputs = [];
             //输出
-            if (sendcount.compareTo(Neo.Fixed8.Zero) > 0) {
+            if (targetaddr !== null && sendcount.compareTo(Neo.Fixed8.Zero) > 0) {
                 var output = new ThinNeo.TransactionOutput();
                 //资产类型
                 output.assetId = Helper.hexToBytes(pay.assetid).reverse();
