@@ -101,7 +101,7 @@
     flex-direction: row;
     align-items: flex-start;
     .text {
-      padding:0 30rpx 10rpx 30rpx;
+      padding: 0 30rpx 10rpx 30rpx;
       font-family: PingFangSC-Regular;
       font-size: 14px;
       color: #333333;
@@ -149,7 +149,7 @@
 
              <view class="search">
                 <view class="text">
-                  <input name="domain"  class="input"/>
+                  <input name="domain" class="input" bindconfirm="confirm"/>
                   <text class="domain">.neo</text>
                 </view>
                 <view class="loading">
@@ -180,7 +180,7 @@
 
 <script>
 import wepy from 'wepy';
-import { Util } from '../utils/index';
+import Util from '../utils/index';
 export default class NNS extends wepy.page {
   config = {
     navigationBarTitleText: 'NNS'
@@ -194,7 +194,16 @@ export default class NNS extends wepy.page {
 
   computed = {};
 
-  methods = {};
+  methods = {
+    async confirm(event) {
+      console.log(event.detail.value);
+      let res = await Util.get.addrByDomain(event.detail.value + '.test');
+      if (res.state) {
+        let addr = res.addr;
+      }
+      // Util.get.addrByDomain('jinghui.test');
+    }
+  };
 
   events = {};
 

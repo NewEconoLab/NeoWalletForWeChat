@@ -57,7 +57,7 @@
 <view class="addr-content">
   <view class="nns">
     <text wx:if="{{type=='text'}}">{{value}}</text>
-    <input wx:if="{{type=='input'}}" name="amount" value="abcdefg" bindinput='watchInput'/>
+    <input wx:if="{{type=='input'}}" name="amount" value="abcdefg" bindconfirm="confirm" bindinput='watchInput'/>
   </view>
   <view class="addr">
     <image src="../images/Pointer.png" class="icon"/>
@@ -95,6 +95,10 @@ export default class CNNSAddress extends wepy.component {
       const value = event.detail.value;
       if (value.length === 34 && value[0] === 'A')
         console.log(event.detail.value);
+    },
+    confirm(e) {
+      console.log(e.detail.value);
+      this.$emit('confirm',e.detail.value);
     }
   };
 

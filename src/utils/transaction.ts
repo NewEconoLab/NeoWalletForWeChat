@@ -200,10 +200,10 @@ export default class Transfer {
      * invokeTrans 方式调用合约塞入attributes
      * @param script 合约的script
      */
-    static async contractInvokeTrans(script: Uint8Array, asset: Asset, height: number) {
+    static async contractInvokeTrans(target:string,script: Uint8Array, asset: Asset,count:number, height: number) {
         var addr = Wallet.account.address;
         //let _count = Neo.Fixed8.Zero;   //十个gas内都不要钱滴
-        let tran = Transfer.makeTran(null, asset/*Context.Assets['GAS']*/, Neo.Fixed8.Zero, height);
+        let tran = Transfer.makeTran(target, asset/*Context.Assets['GAS']*/, Neo.Fixed8.parse(count.toFixed(8)), height);
 
         tran.type = ThinNeo.TransactionType.InvocationTransaction;
         tran.extdata = new ThinNeo.InvokeTransData();

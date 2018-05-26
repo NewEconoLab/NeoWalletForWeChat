@@ -284,7 +284,7 @@ export default class Https {
     //获取地址下所有的域名
     static async getnnsinfo(address: string): Promise<string[]> {
 
-        var postdata = Https.makeRpcPostBody("getdomainbyaddress2", address);
+        var postdata = Https.makeRpcPostBody("getdomainbyaddress", address);
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
         // var result = await fetch(WWW.apiaggr, { "method": "post", "body": JSON.stringify(postdata) });
         // var json = await result.json();

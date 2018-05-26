@@ -40,15 +40,13 @@ export default {
         account: () => { return Wallet.account },
         nep2: Wallet.getAccount, //获取用户账户
         assets: () => { return Context.Assets },
-        rootName: NNS.getRootName,
-        rootNameHash: NNS.getRootNameHash,
         userInfo: async () => await User.getUser(),
         TXs: Context.OnGetTXs,
         prikey: (wif: string): string => { return Wallet.wif2prikey(wif) },
         total: () => { return Context.total },
         claim: () => { return Context.claim },
         sendCoin: () => { return Transfer.coin },
-        addrByDomain:(domain:string)=>{},
+        addrByDomain:async(domain:string)=>{return await NNS.resolveData(domain)},
         domainByAddr:NNS.getDomainsByAddr
     },
     set: {
@@ -56,7 +54,6 @@ export default {
         account: Wallet.setAccount,
         openid: Context.openid,
         formid: (formid: string) => { Transfer.formId.push(formid); },
-        resolve: NNS.resolve,
         sendCoin: (coin: Entity.Asset) => { Transfer.coin = coin }
     },
     delegate: {
