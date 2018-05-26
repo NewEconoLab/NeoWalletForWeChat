@@ -5,6 +5,7 @@ import Coin from './coin';
 import { formatTime } from './time'
 import Wallet from './wallet';
 import Transfer from './transaction';
+import NNS from './nns';
 /**
  * 记录当前系统运行状态
  * 包括 当前账户 刷新等等
@@ -41,6 +42,12 @@ export class Context {
         // 暂时不加载历史记录
         this.txDelegate = null;
         Wallet.setAccount(account);
+
+        console.log('============================');
+
+        console.log(a);
+        console.log('///////////////////////////////');
+
         let neo = new Asset('NEO', '');
         let gas = new Asset('GAS', '');
 

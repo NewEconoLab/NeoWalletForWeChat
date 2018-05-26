@@ -10,7 +10,7 @@ export class Asset {
     utxos: any;       // utxo 
     rise: boolean;     //币价走向
     isnep5: boolean = false;
-    constructor(name: string, id:string,count: number = -1) {
+    constructor(name: string, id: string, count: number = -1) {
         this.name = name;
         this.id = id;
         this.utxos = {};
@@ -146,7 +146,7 @@ export class DomainInfo {
     owner: Uint8Array//所有者
     register: Uint8Array//注册器
     resolver: Uint8Array//解析器
-    ttl: Neo.BigInteger//到期时间
+    ttl: string//到期时间
 }
 
 export class RootDomainInfo extends DomainInfo {
@@ -156,6 +156,51 @@ export class RootDomainInfo extends DomainInfo {
         super();
     }
 }
+
+export class Domainmsg {
+    domainname: string;
+    resolver: string;
+    mapping: string;
+    time: string;
+    isExpiration: boolean;
+    await_resolver: boolean;
+    await_mapping: boolean;
+    await_register: boolean;
+}
+
+export class DomainStatus {
+    domainname: string;
+    resolver: string;
+    mapping: string;
+    await_mapping: boolean;
+    await_register: boolean;
+    await_resolver: boolean;
+
+    static setStatus(domain: DomainStatus) {
+        // var arr = {};
+        // if (str) {
+        //     arr = JSON.parse(str);
+        //     let msg = arr[domain.domainname] as DomainStatus;
+        //     msg ? msg : msg = new DomainStatus();
+        //     domain.await_mapping ? msg["await_mapping"] = domain.await_mapping : "";
+        //     domain.await_register ? msg["await_register"] = domain.await_register : "";
+        //     domain.await_resolver ? msg["await_resolver"] = domain.await_resolver : "";
+        //     domain.mapping ? msg["mapping"] = domain.mapping : "";
+        //     domain.resolver ? msg["resolver"] = domain.resolver.replace("0x", "") : "";
+        //     arr[domain.domainname] = msg;
+        // } else {
+        //     arr[domain.domainname] = domain;
+        // }
+        // sessionStorage.setItem("domain-status", JSON.stringify(arr));
+    }
+    static getStatus() {
+        // let str = sessionStorage.getItem("domain-status");
+        let obj = {};
+        // str ? obj = JSON.parse(sessionStorage.getItem("domain-status")) : {};
+        return obj;
+    }
+}
+
 
 export class Transactionforaddr {
     addr: string;
@@ -209,12 +254,12 @@ export class Claim {
     }
 }
 
-export class Claims{
-     claims:Claim[];
-     total:string;
+export class Claims {
+    claims: Claim[];
+    total: string;
 
-     constructor(claims:Claim[],total:string){
-         this.claims = claims;
-         this.total = total;
-     }
+    constructor(claims: Claim[], total: string) {
+        this.claims = claims;
+        this.total = total;
+    }
 }

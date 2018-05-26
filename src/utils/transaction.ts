@@ -10,9 +10,9 @@ export default class Transfer {
 
     static formId = [];
     static TXs = [];
-    static coin:Asset;
-    constructor() {};
-    
+    static coin: Asset;
+    constructor() { };
+
 
 
     /**
@@ -20,13 +20,17 @@ export default class Transfer {
      * @param {ThinNeo.Transaction} tran 
      * @param {string} randomStr
      */
-    static async setTran(tran: ThinNeo.Transaction, prikey: Uint8Array, pubkey, randomStr: string) {
+    static async signAndSend(tran: ThinNeo.Transaction) {
+
+        const prikey = Helper.hexToBytes(Wallet.account.nep2key);
+        const pubkey = Helper.hexToBytes(Wallet.account.publickey);
+
         tran.witnesses = [];
 
         Tips.loading('获取交易哈希');
         let txid = Helper.toHexString(Helper.clone(tran.GetHash()).reverse())
         var msg = tran.GetMessage();
-
+        let randomStr = await getSecureRandom(256);
         Tips.loading('签名中');
         var signdata = Helper.Account.Sign(msg, prikey, randomStr);
 
@@ -135,11 +139,8 @@ export default class Transfer {
         output.value = Neo.Fixed8.parse(sum);
         tran.outputs = [];
         tran.outputs.push(output);
-        let randomStr = await getSecureRandom(256);
 
-        const prikey = Helper.hexToBytes(Wallet.account.nep2key);
-        const pubkey = Helper.hexToBytes(Wallet.account.publickey);
-        return await Transfer.setTran(tran, prikey, pubkey, randomStr);
+        return await Transfer.signAndSend(tran);
     }
 
 
@@ -192,11 +193,7 @@ export default class Transfer {
         tran.attributes[0].usage = ThinNeo.TransactionAttributeUsage.Script;
         tran.attributes[0].data = Helper.Account.GetPublicKeyScriptHash_FromAddress(addr);
 
-        let randomStr = await getSecureRandom(256);
-
-        const prikey = Helper.hexToBytes(Wallet.account.nep2key);
-        const pubkey = Helper.hexToBytes(Wallet.account.publickey);
-        return await Transfer.setTran(tran, prikey, pubkey, randomStr);
+        return await Transfer.signAndSend(tran);
     }
 
     /**
@@ -214,13 +211,12 @@ export default class Transfer {
         (tran.extdata as ThinNeo.InvokeTransData).script = script;
         // (tran.extdata as ThinNeo.InvokeTransData).gas = Neo.Fixed8.fromNumber(1.0);
 
-        let randomStr = await getSecureRandom(256);
-
-        const prikey = Helper.hexToBytes(Wallet.account.nep2key);
-        const pubkey = Helper.hexToBytes(Wallet.account.publickey);
-        return await Transfer.setTran(tran, prikey, pubkey, randomStr);
+        return await Transfer.signAndSend(tran);
     }
 
+    /**
+     * 交易历史
+     */
     static async history() {
 
         var currentAddress = Wallet.account.address;

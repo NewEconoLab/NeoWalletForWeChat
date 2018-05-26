@@ -22,6 +22,17 @@
     margin-bottom: 10rpx;
     align-items: flex-start;
   }
+
+  input {
+    font-family: PingFangSC-Medium;
+    font-size: 14px;
+    color: #333333;
+    letter-spacing: 0;
+    line-height: 14px;
+    width: 100%rpx;
+    align-content: flex-start;
+    margin-bottom: 10rpx;
+  }
 }
 .addr {
   width: 90%;
@@ -44,13 +55,14 @@
 
 <template>
 <view class="addr-content">
-    <view class="nns">
-        <text>abcd.neo</text>
-    </view>
-    <view class="addr">
-        <image src="../images/Pointer.png" class="icon"/>
-        <text class="text">hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh</text>
-    </view>
+  <view class="nns">
+    <text wx:if="{{type=='text'}}">{{value}}</text>
+    <input wx:if="{{type=='input'}}" name="amount" value="abcdefg" bindinput='watchInput'/>
+  </view>
+  <view class="addr">
+    <image src="../images/Pointer.png" class="icon"/>
+    <text class="text">hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh</text>
+  </view>
 </view>
 </template>
 <script>
@@ -58,7 +70,16 @@ import wepy from 'wepy';
 import Util from '../utils/index';
 export default class CNNSAddress extends wepy.component {
   props = {
-    addr: {}
+    addr: {},
+    type: {
+      type: String,
+      default: 'text'
+    },
+    value: {
+      type: String,
+      default: 'addresskkkk',
+      twoWay: true
+    }
   };
   components = {};
 
@@ -67,11 +88,20 @@ export default class CNNSAddress extends wepy.component {
   methods = {
     showNNS(addr) {
       this.addr = addr;
+      this.value = 'llllllll';
       this.$apply();
-      //  wx:if="{{showNNS==1}}"
+    },
+    watchInput(event) {
+      const value = event.detail.value;
+      if (value.length === 34 && value[0] === 'A')
+        console.log(event.detail.value);
     }
   };
 
-  async onLoad() {}
+  async onLoad() {
+    this.addr = 'addr';
+    this.value = 'llllllll';
+    this.$apply();
+  }
 }
 </script>

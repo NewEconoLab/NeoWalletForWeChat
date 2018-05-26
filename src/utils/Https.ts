@@ -90,12 +90,11 @@ export default class Https {
 
     }
 
-    static async api_getBalance(address: string)
-    {
+    static async api_getBalance(address: string) {
         var str = Https.makeRpcUrl(Https.api, "getbalance", address);
-        var value = await Request.Request({ "method": "get" },str);
+        var value = await Request.Request({ "method": "get" }, str);
 
-        var r = value[ "result" ];
+        var r = value["result"];
         return r;
     }
 
@@ -120,7 +119,7 @@ export default class Https {
     }
 
     /**
-     *  发送交易
+     *  发送交易 需要签名
      * @param {uint8array} data 
      */
     static async rpc_postRawTransaction(data: Uint8Array) {
@@ -133,6 +132,19 @@ export default class Https {
             return result["result"][0]['txid'] || ''//[]
         }
         return 'failed';
+    }
+
+    /**
+     * 调用合约 不需要签名
+     * @param scripthash 脚本
+     */
+    static async rpc_getInvokescript(scripthash: Uint8Array): Promise<any> {
+        var str = this.makeRpcUrl(this.api, "invokescript", Helper.toHexString(scripthash));
+        var result = await Request.Request({ "method": "get" }, str);
+        if (result["result"] == null)
+            return null;
+        var r = result["result"][0]
+        return r;
     }
 
     /**
@@ -188,12 +200,12 @@ export default class Https {
      * @param asset 
      */
     static async getNep5Asset(asset: string) {
-        var postdata = Https.makeRpcUrl(this.api,"getnep5asset", asset);
-        var result = await Request.Request( { "method": "get"},postdata);
+        var postdata = Https.makeRpcUrl(this.api, "getnep5asset", asset);
+        var result = await Request.Request({ "method": "get" }, postdata);
         console.log('========================');
-        
+
         console.log(result);
-        
+
         var r = result["result"][0];
         return r;
     }
@@ -204,9 +216,9 @@ export default class Https {
      */
     static async api_getnep5Balance(address: string) {
         var str = Https.makeRpcUrl(Https.api, "getallnep5assetofaddress", address, 1);
-        var result = await Request.Request({ "method": "get" },str);
+        var result = await Request.Request({ "method": "get" }, str);
         console.log(result);
-        
+
         // var json = await result.json();
         var r = result["result"];
         return r;
@@ -220,17 +232,6 @@ export default class Https {
         // if (json["result"] == null)
         //     return null;
         // var r = json["result"] as string;
-        // return r;
-        return null;
-    }
-
-    static async rpc_getInvokescript(scripthash: Uint8Array): Promise<any> {
-        // var str = this.makeRpcUrl(this.api, "invokescript", Helper.toHexString(scripthash));
-        // var result = await fetch(str, { "method": "get" });
-        // var json = await result.json();
-        // if (json["result"] == null)
-        //     return null;
-        // var r = json["result"][0]
         // return r;
         return null;
     }
@@ -280,7 +281,19 @@ export default class Https {
         // return r;
         return null;
     }
-    static async getnnsinfo(address: string) {
+    //获取地址下所有的域名
+    static async getnnsinfo(address: string): Promise<string[]> {
+
+        var postdata = Https.makeRpcPostBody("getdomainbyaddress2", address);
+        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
+        // var result = await fetch(WWW.apiaggr, { "method": "post", "body": JSON.stringify(postdata) });
+        // var json = await result.json();
+        console.log(result);
+        
+        if (result["result"] == null)
+            return null;
+        var r = result["result"]
+        return r;
     }
     static async delnnsinfo(address: string, domain: string) {
     }

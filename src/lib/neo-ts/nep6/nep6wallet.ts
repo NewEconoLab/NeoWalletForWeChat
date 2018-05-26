@@ -12,6 +12,7 @@ export class nep6account {
     public label: string;
     public publickey: string;
     public contract: contract;
+    public domains:string[];
 
     public getPrivateKey(scrypt: nep6ScryptParameters, password: string, callback: (info: string, result: string | Uint8Array) => void): void {
         var cb = (i, r) => {

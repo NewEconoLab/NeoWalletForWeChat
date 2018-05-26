@@ -75,7 +75,9 @@
       <text class="address-label">地址:</text>
       <text class="address-content">{{account.address}}</text>
     </view>
-    <button class="btn" @tap="copyToClip">复制地址</button>
+    <view class="foot-button">
+      <button type="primary" @tap="copyToClip()">复制地址</button>
+    </view>
   </view>
 </template>
 

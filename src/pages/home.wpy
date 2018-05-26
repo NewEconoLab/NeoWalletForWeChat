@@ -250,6 +250,7 @@ export default class Home extends wepy.page {
     const that = this;
     await this.OnLogin();
 
+    await Util.init.nns();
     // 设置资产更新回调
     Util.delegate.asset(assets => {
       assets['GAS'].amount = parseFloat(assets['GAS'].amount).toFixed(4);

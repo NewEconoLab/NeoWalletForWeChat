@@ -16,12 +16,6 @@ import User from './user'
 export { Https }
 
 export default {
-    util: {
-        Https: Https,
-        Context: Context,
-        Time: Time,
-        NNS: NNS,
-    },
     show: {
         loading: Tips.loading,
         success: Tips.success,
@@ -38,7 +32,6 @@ export default {
         transfer: Transfer.makeTran,
         // invoke: Transfer.nep5Transaction,
         claim: Transfer.claimGas,
-        
     },
     get: {
         random: Random.getSecureRandom,
@@ -54,7 +47,9 @@ export default {
         prikey: (wif: string): string => { return Wallet.wif2prikey(wif) },
         total: () => { return Context.total },
         claim: () => { return Context.claim },
-        sendCoin:()=>{return Transfer.coin}
+        sendCoin: () => { return Transfer.coin },
+        addrByDomain:(domain:string)=>{},
+        domainByAddr:NNS.getDomainsByAddr
     },
     set: {
         cache: Cache.put,
@@ -71,7 +66,11 @@ export default {
     const: Const,
     init: {
         asset: Coin.initAllAsset,
-        context: Context.init
+        context: Context.init,
+        nns:async ()=>{ await NNS.initRootDomain(); 
+            // NNS.nnsRegister('jinghui')
+            NNS.getDomainsByAddr();
+        }
     },
     service: {
         start: Context.init,

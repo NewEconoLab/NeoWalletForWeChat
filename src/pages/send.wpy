@@ -147,14 +147,13 @@
             </view>
           </view>
           <claddr class="send-addr" @onEmit.user="handleEmit"/>
-          <caddress class="send-addr-content"/>
-
+          <caddress :type.sync="addrType" :value.sync="address" class="send-addr-content" />
           <clamount class="send-addr"/>
           <view class="amount">
             <input class="input" name="amount" />
           </view>
         <view class="foot-button">
-          <button type="primary" @tap="formSubmit()">转账</button>
+          <button type="primary" form-type="submit">转账</button>
         </view>
       </view>
     </scroll-view>
@@ -181,7 +180,9 @@ export default class Send extends wepy.page {
   data = {
     targetAddr: '',
     assets: {},
-    coin: {}
+    coin: {},
+    address: '',
+    addrType:'input'
   };
 
   computed = {};
@@ -205,19 +206,18 @@ export default class Send extends wepy.page {
     changeCoin() {
       wx.navigateTo({ url: './assets' });
     },
-    radioChange(e) {
-      this.checked = e.detail.value;
-      this.balance = UTXO.balance[e.detail.value].amount;
-      this.amount = '';
-      this.$apply();
-    },
     async formSubmit(e) {
+      console.log('======================');
+
       console.log(e);
 
       const that = this;
-      let target = e.detail.value.address;
-      let amount = e.detail.value.amount;
-      let password = e.detail.value.passphrase;
+      let target = this.address; //e.detail.value.address;
+      console.log(target);
+      console.log('---------------------------------');
+
+      let amount = ''; // e.detail.value.amount;
+      let password = ''; // e.detail.value.passphrase;
       Util.set.formid(e.detail.formId);
       if (target.length !== 34) {
         Util.show.alert('目标地址有误');
