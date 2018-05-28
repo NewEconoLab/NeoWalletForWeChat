@@ -1,50 +1,16 @@
 <style lang="less">
-.wallet-block {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  margin-top: 20rpx;
-  width: 100%;
-}
-.content {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background-color: white;
-  margin-top: 1rpx;
-  .text {
-    width: 100%;
-    margin: 30rpx 0 40rpx 30rpx;
-    font-family: PingFangSC-Medium;
-    font-size: 14px;
-    color: #333333;
-    letter-spacing: 0;
-    line-height: 14px;
-  }
-}
+
 </style>
 
 <template>
   <view class="container">
-    <scroll-view scroll-y class="scroll">
-      <view class="inner">
-        <view class="wallet-block" wx:for="{{wallets}}" >
-          <view class="function-title">
-            <text class="text">{{item.label}}</text>
-          </view>
-          <view class="content" @tap="OnSelect({{item.label}})">
-              <text class="text">{{item.address}}</text>
-          </view>
-        </view>
-      </view>
-    </scroll-view>
+   <caccounts @changeAccount.user="OnSelect"/>
   </view>
 </template>
 <script>
 import wepy from 'wepy';
 import Util from '../utils/index';
+import CAccounts from '../components/login/caccounts'
 export default class Accounts extends wepy.page {
   customData = {}; // 自定义数据
 
@@ -53,17 +19,7 @@ export default class Accounts extends wepy.page {
   onLoad() {} // 在Page和Component共用的生命周期函数
 
   async onShow() {
-    let wals = Util.get.cache(Util.const.LOCAL_ACCOUNTS) || {};
-    console.log('...........................');
-    console.log(wals);
-
-    let temp_wal = [];
-    for (const key in wals) {
-      temp_wal.push(wals[key]);
-    }
-    this.wals = wals;
-    this.wallets = temp_wal;
-    this.$apply();
+    
   } // 只在Page中存在的页面生命周期函数
 
   config = { navigationBarTitleText: '本地账户' }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
@@ -74,7 +30,9 @@ export default class Accounts extends wepy.page {
     wals: {}
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
-  components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
+  components = {
+    caccounts:CAccounts
+  }; // 声明页面中所引用的组件，或声明组件中所引用的子组件
 
   mixins = []; // 声明页面所引用的Mixin实例
 
@@ -83,14 +41,11 @@ export default class Accounts extends wepy.page {
   watch = {}; // 声明数据watcher（详见后文介绍）
 
   methods = {
-    async OnSelect(e) {
-      const selected = this.wals[e];
-      console.log('<<<<<<<<<<');
-
-      //设置内存中的当前账户
-      await Util.set.account(selected);
-      console.log('>>>>>>>>>>>>>>>');
-
+     OnSelect(account) {
+       console.log('..................');
+       
+       console.log(account);
+       
       wepy.reLaunch({ url: './home' });
     }
   }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明

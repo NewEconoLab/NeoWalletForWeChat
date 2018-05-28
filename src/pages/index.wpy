@@ -1,8 +1,6 @@
 <style lang="less">
 .area-uppper {
   width: 100%;
-  height: 406rpx;
- 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,57 +8,94 @@
 
 .upper-avatar {
   border-radius: 50%;
-  width: 116rpx;
-  height: 116rpx;
-  margin-top: 70rpx;
+  width: 108rpx;
+  height: 108rpx;
+  margin-top: 32rpx;
 }
 
 .upper-nickName {
-  font-family: '黑体', Helvetica, sans-serif;
-  font-size: 15px;
-  margin-top: 50rpx;
-  color: white;
+  font-family: PingFangSC-Medium;
+  font-size: 14px;
+  color: #ffffff;
+  letter-spacing: 0;
+  text-align: center;
+  line-height: 14px;
+  margin-top: 36rpx;
 }
 
 .area-lower {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 100rpx;
-  width:710rpx;
-  height:818rpx;
-  margin-top: 70rpx;
-  background-color: white;
+  width: 697rpx;
+  height: 818rpx;
+  margin-top: 94rpx;
+  box-shadow: 0 2px 5px 0 rgba(164, 164, 164, 0.5);
+  border-radius: 5px;
 }
 
-.lower-nav{
-  width:100%;
-  height:100rpx;
-  background-color:gray;
+.lower-nav {
+  width: 100%;
+  height: 110rpx;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.login-item {
+  height: 80rpx;
   display: flex;
   flex-direction: row;
   align-items: center;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  background-color: #dddddd;
+  box-shadow: 0 2px 5px 0 rgba(164, 164, 164, 0.5);
+  .name {
+    font-family: PingFangSC-Medium;
+    font-size: 14px;
+    width: 233rpx;
+    color: #333333;
+    letter-spacing: 0;
+    text-align: center;
+    line-height: 14px;
+  }
+}
+.login-content {
+  background-color: white;
+  width: 100%;
+  height: 700rpx;
+  padding-top: 30rpx;
+}
+.selected {
+  height: 90rpx;
+  background-color: white;
 }
 </style>
 <template>
   <view class="container" style="background: linear-gradient(to bottom, #51D2EE 0%, #21A3FF 100%);">
     <view class="area-uppper">
-      <image class="upper-avatar" src="{{avatarUrl}}"></image>
+      <image class="upper-avatar" src="{{avatarUrl}}"/>
       <text class="upper-nickName">{{nickName}}</text>
     </view>
     <view class="area-lower">
       <view class="lower-nav">
-        <view class="login-item" @tap="register()" >
-        <text class="name" style="color:white;">创建账户</text>
+        <view class="login-item {{isSelected==0?'selected':''}}" @tap="register()" >
+          <text class="name">创建账户</text>
+        </view>
+        <view class="login-item {{isSelected==1?'selected':''}}"  @tap="loginImport()">
+          <text class="name" >导入账户</text>
+        </view>
+        <view class="login-item  {{isSelected==2?'selected':''}}"  @tap="loginAccounts()">
+          <text class="name" >账户列表</text>
+        </view>
       </view>
-      <view class="login-item" style="background-color: white;" @tap="loginImport()">
-        <text class="name" style="color:gray;">导入账户</text>
+      <view class="login-content">
+        <caccounts wx:if="{{isSelected==2}}" @changeAccount.user="OnSelect" />
+        <cimport wx:if="{{isSelected==1}}"/>
       </view>
-      <view class="login-item" style="background-color: white;" @tap="loginAccounts()">
-        <text class="name" style="color:gray;">账户列表</text>
-      </view>
-      </view>
-      
     </view>
   </view>
 </template>
@@ -68,34 +103,53 @@
 <script>
 import wepy from 'wepy';
 import Util from '../utils/index';
+import CAccounts from '../components/login/caccounts';
+import CImport from '../components/login/cimport';
 export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: '账户'
   };
 
-  components = {};
+  components = {
+    caccounts: CAccounts,
+    cimport:CImport
+  };
 
   data = {
     avatarUrl: '',
     nickName: '',
-    isSwitch: false
+    isSwitch: false,
+    isSelected: 0
   };
 
   computed = {};
 
   methods = {
     register() {
-      wx.navigateTo({ url: './register' });
+      this.isSelected = 0;
+      this.$apply();
+      // wx.navigateTo({ url: './register' });
     },
     loginImport() {
-      wepy.navigateTo({
-        url: './importaccount'
-      });
+      this.isSelected = 1;
+      this.$apply();
+      // wepy.navigateTo({
+      //   url: './importaccount'
+      // });
     },
     loginAccounts() {
-      wepy.navigateTo({
-        url: './loginaccounts'
-      });
+      this.isSelected = 2;
+      this.$apply();
+      // wepy.navigateTo({
+      //   url: './loginaccounts'
+      // });
+    },
+    OnSelect(account) {
+      console.log('..................');
+
+      console.log(account);
+
+      wepy.reLaunch({ url: './home' });
     }
   };
 
@@ -106,16 +160,11 @@ export default class Index extends wepy.page {
     this.isSwitch = option.switch || 0;
     //获取缓存的用户信息
 
-    let userInfo = Util.get.cache(Util.const.USER_INFO);
-    if (userInfo === undefined || userInfo === '') {
-      const res = await Util.get.userInfo();
-      userInfo = res.userInfo;
-      Util.set.cache(Util.const.USER_INFO, userInfo);
-    }
-
+    const userInfo = await Util.get.userInfo();
     this.avatarUrl = userInfo.avatarUrl;
     this.nickName = userInfo.nickName;
     this.$apply();
+    return;
 
     if (parseInt(option.switch) === 1) return;
 
