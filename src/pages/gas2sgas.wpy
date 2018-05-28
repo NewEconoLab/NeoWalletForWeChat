@@ -62,8 +62,8 @@
         flex-direction: row;
         align-items: center;
         justify-content: space-around;
-        border:thin solid #F5F5F5;
-        image{
+        border: thin solid #f5f5f5;
+        image {
           display: block;
           width: 40rpx;
           height: 40rpx;
@@ -216,14 +216,15 @@ export default class Gas2Sgas extends wepy.page {
     onExchange() {},
     selected(option) {
       console.log(option);
+      option = parseInt(option);
       this.sgasSelected = option;
       if (option === 0) {
         this.config = {
           from: { name: 'GAS', icon: 'neo' },
           to: { name: 'SGAS', icon: 'Sgas' }
         };
-      }else{
-         this.config = {
+      } else {
+        this.config = {
           from: { name: 'SGAS', icon: 'Sgas' },
           to: { name: 'GAS', icon: 'neo' }
         };
