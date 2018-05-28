@@ -1,11 +1,12 @@
 import { Nep6, Neo, ThinNeo } from '../lib/neo-ts/index'
-import { Asset, Utxo, Nep5, Claim, Claims } from './entity';
+import { Asset, Utxo, Nep5, Claim, Claims, UserInfo } from './entity';
 import Https from './Https';
 import Coin from './coin';
 import { formatTime } from './time'
 import Wallet from './wallet';
 import Transfer from './transaction';
 import NNS from './nns';
+import User from './user';
 /**
  * 记录当前系统运行状态
  * 包括 当前账户 刷新等等
@@ -37,6 +38,8 @@ export class Context {
     static total: number = 0;
 
     static claim: Claims;
+
+    static user: UserInfo = null;
 
     static async init(account: Nep6.nep6account) {
         // 暂时不加载历史记录
@@ -197,4 +200,15 @@ export class Context {
         Wallet.account = account;
     }
 
+    static async getUser() {
+        if (Context.user === undefined || Context.user === null) {
+            let a = (await User.getUser() as UserInfo);
+            let user = new UserInfo();
+            user.avatarUrl = a.avatarUrl;
+            user.nickName = a.nickName;
+            Context.user = user;
+        }
+
+        return Context.user;
+    }
 }

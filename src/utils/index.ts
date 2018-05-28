@@ -41,14 +41,14 @@ export default {
         account: () => { return Wallet.account },
         nep2: Wallet.getAccount, //获取用户账户
         assets: () => { return Context.Assets },
-        userInfo: async () => await User.getUser(),
+        userInfo: async () => { return await Context.getUser() },
         TXs: Context.OnGetTXs,
         prikey: (wif: string): string => { return Wallet.wif2prikey(wif) },
         total: () => { return Context.total },
         claim: () => { return Context.claim },
         sendCoin: () => { return Transfer.coin },
         addrByDomain: async (domain: string) => { return await NNS.resolveData(domain) },
-        wantBy:Auction.wantBy,
+        wantBy: Auction.wantBy,
         domainByAddr: NNS.getDomainsByAddr
     },
     set: {

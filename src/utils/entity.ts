@@ -1,5 +1,9 @@
 import { Neo, Helper } from '../lib/neo-ts/index';
 
+export class UserInfo {
+    public avatarUrl: string;
+    public nickName: string;
+}
 export class Asset {
     id: string;      // asset id
     public amount: string = '0';  // 货币持有量

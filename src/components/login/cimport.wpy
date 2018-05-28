@@ -12,12 +12,17 @@
 }
 </style>
 <template>
+  <form bindsubmit="onImport" class="form" report-submit ="true">
 <view class="area-import">
     <clname @onEmit.user="handleScan"/>
-     <input class="input" name="name" />
-    <clpassphrase/>
-     <input class="input" name="passphrase" />
+    <input class="input" name="name" />
+    <clprikey/>
+    <input class="input" name="prikey" />
+    <view class="foot-button">
+      <button type="primary" style="width:600rpx;"  form-type="submit">导入账户</button>
+    </view>
 </view>
+  </form>
 </template>
 <script>
 import wepy from 'wepy';
@@ -27,7 +32,7 @@ export default class CImport extends wepy.component {
   props = {};
   components = {
     clname: CLabel,
-    clpassphrase: CLabel
+    clprikey: CLabel
   };
 
   data = {};
@@ -62,6 +67,11 @@ export default class CImport extends wepy.component {
           Util.show.error('解析失败');
         }
       });
+    },
+    onImport(e) {
+      let name = e.detail.value.name;
+      let prikey = e.detail.value.prikey;
+      this.$emit('onImport', { name: 'abc', prikey: 'ced' });
     }
   };
 
@@ -81,7 +91,7 @@ export default class CImport extends wepy.component {
       })
     );
     this.$invoke(
-      'clpassphrase',
+      'clprikey',
       'Show',
       JSON.stringify({ title: '输入私钥/WIF', show: {} })
     );

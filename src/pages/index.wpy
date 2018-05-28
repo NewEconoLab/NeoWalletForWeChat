@@ -28,7 +28,7 @@
   flex-direction: column;
   align-items: center;
   width: 697rpx;
-  height: 818rpx;
+  height: 820rpx;
   margin-top: 94rpx;
   box-shadow: 0 2px 5px 0 rgba(164, 164, 164, 0.5);
   border-radius: 5px;
@@ -36,7 +36,7 @@
 
 .lower-nav {
   width: 100%;
-  height: 110rpx;
+  height: 90rpx;
   display: flex;
   flex-direction: row;
   align-items: flex-end;
@@ -94,7 +94,7 @@
       </view>
       <view class="login-content">
         <caccounts wx:if="{{isSelected==2}}" @changeAccount.user="OnSelect" />
-        <cimport wx:if="{{isSelected==1}}"/>
+        <cimport wx:if="{{isSelected==1}}" @onImport.user="onImport"/>
       </view>
     </view>
   </view>
@@ -112,7 +112,7 @@ export default class Index extends wepy.page {
 
   components = {
     caccounts: CAccounts,
-    cimport:CImport
+    cimport: CImport
   };
 
   data = {
@@ -150,6 +150,11 @@ export default class Index extends wepy.page {
       console.log(account);
 
       wepy.reLaunch({ url: './home' });
+    },
+    onImport(param) {
+      console.log('param');
+
+      console.log(param);
     }
   };
 
@@ -159,7 +164,6 @@ export default class Index extends wepy.page {
     //是否是切换账号
     this.isSwitch = option.switch || 0;
     //获取缓存的用户信息
-
     const userInfo = await Util.get.userInfo();
     this.avatarUrl = userInfo.avatarUrl;
     this.nickName = userInfo.nickName;

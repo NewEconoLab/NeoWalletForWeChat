@@ -1,16 +1,17 @@
-export default class User{
+import { UserInfo } from "./entity";
 
-     static  s_Instance = null;
+export default class User {
 
-     static async getUser(){
-         if (User.s_Instance === null) {
-             await User.getLoginCode();
-             User.s_Instance = await User.getUserInfo();
-         }
-         return User.s_Instance;
-     }
+    static async getUser() {
+        await User.getLoginCode();
+        let user = await User.getUserInfo();
+        let userInfo = new UserInfo();
+        userInfo.avatarUrl = user.avatarUrl;
+        userInfo.nickName = user.nickName;
+        return userInfo;
+    }
 
-     static getLoginCode() {
+    static getLoginCode() {
         return new Promise((resolve, reject) => {
             wx.login({
                 success: function (res) {
