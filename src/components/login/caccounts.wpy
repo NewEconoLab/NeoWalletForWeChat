@@ -1,0 +1,82 @@
+<style lang="less">
+.wallet-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  margin-top: 20rpx;
+  width: 90%;
+  background: #ffffff;
+  box-shadow: 0 2px 5px 0 rgba(164, 164, 164, 0.5);
+  border-radius: 0 0 3px 3px;
+  margin-top: 10rpx;
+}
+.content {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: white;
+  margin-top: 1rpx;
+  .text {
+    width: 100%;
+    margin: 30rpx 0 40rpx 30rpx;
+    font-family: PingFangSC-Medium;
+    font-size: 12px;
+    color: #333333;
+    letter-spacing: 0;
+    line-height: 14px;
+  }
+}
+</style>
+
+<template>
+   <scroll-view scroll-y class="scroll">
+      <view class="inner">
+        <view class="wallet-block" wx:for="{{accounts}}" >
+          <view class="function-title">
+            <text class="text">{{item.label}}</text>
+          </view>
+          <view class="content" @tap="OnSelected({{item.label}})">
+              <text class="text">{{item.address}}</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+</template>
+<script>
+import wepy from 'wepy';
+import Util from '../../utils/index';
+export default class CAccounts extends wepy.component {
+  props = {};
+  components = {};
+
+  data = {
+    accounts: {},
+    wals: {}
+  };
+
+  methods = {
+    async OnSelected(account) {
+      const selected = this.wals[account];
+      //设置内存中的当前账户
+      await Util.set.account(selected);
+      this.$emit('changeAccount', selected);
+    }
+  };
+
+  onLoad() {
+    let wals = Util.get.cache(Util.const.LOCAL_ACCOUNTS) || {};
+    console.log('...........................');
+    console.log(wals);
+
+    let temp_wal = [];
+    for (const key in wals) {
+      temp_wal.push(wals[key]);
+    }
+    this.wals = wals;
+    this.accounts = temp_wal;
+    this.$apply();
+  }
+}
+</script>

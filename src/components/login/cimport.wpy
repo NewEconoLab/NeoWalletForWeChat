@@ -1,0 +1,90 @@
+<style lang="less">
+.area-import {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .input {
+    margin: 10rpx 30rpx 10rpx 30rpx;
+    border-bottom: thin solid #a9a9a9;
+    width: 90%;
+  }
+}
+</style>
+<template>
+<view class="area-import">
+    <clname @onEmit.user="handleScan"/>
+     <input class="input" name="name" />
+    <clpassphrase/>
+     <input class="input" name="passphrase" />
+</view>
+</template>
+<script>
+import wepy from 'wepy';
+import Util from '../../utils/index';
+import CLabel from '../clabel';
+export default class CImport extends wepy.component {
+  props = {};
+  components = {
+    clname: CLabel,
+    clpassphrase: CLabel
+  };
+
+  data = {};
+
+  methods = {
+    handleScan() {
+      let that = this;
+      wepy.scanCode({
+        success: res => {
+          console.log(res);
+          res = res.result;
+          if (res.length === 64 || res.length == 52) {
+            that.prikey = res;
+            that.$apply();
+          } else {
+            try {
+              const account = JSON.parse(res);
+              that.prikey = account['nep2key'];
+              that.label = account['label'];
+              that.$apply();
+              that.OnParseJson(account);
+            } catch (err) {
+              console.log(err);
+              //在这里处理错误
+              Util.show.error('格式错误');
+              return;
+            }
+          }
+        },
+        fail: res => {
+          console.log(res);
+          Util.show.error('解析失败');
+        }
+      });
+    }
+  };
+
+  onLoad() {
+    this.onSetLabel();
+  }
+
+  onSetLabel() {
+    this.$invoke(
+      'clname',
+      'Show',
+      JSON.stringify({
+        title: '账户名称',
+        show: {
+          scan: 1
+        }
+      })
+    );
+    this.$invoke(
+      'clpassphrase',
+      'Show',
+      JSON.stringify({ title: '输入私钥/WIF', show: {} })
+    );
+  }
+}
+</script>
