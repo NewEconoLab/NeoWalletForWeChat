@@ -207,15 +207,8 @@ export default class Send extends wepy.page {
       wx.navigateTo({ url: './assets' });
     },
     async formSubmit(e) {
-      console.log('======================');
-
-      console.log(e);
-
       const that = this;
       let target = this.address; //e.detail.value.address;
-      console.log(target);
-      console.log('---------------------------------');
-
       let amount = ''; // e.detail.value.amount;
       let password = ''; // e.detail.value.passphrase;
       Util.set.formid(e.detail.formId);

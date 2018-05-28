@@ -101,14 +101,7 @@ export class ScriptBuilder {
     }
 
     public EmitPushString(data: string): ScriptBuilder {
-        console.log('========');
-
-        console.log(data);
         let a = Account.String2Bytes(data)
-        console.log('=======');
-
-        console.log(a);
-
         return this.EmitPushBytes(a);
     }
 

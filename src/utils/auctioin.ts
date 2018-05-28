@@ -27,9 +27,6 @@ export default class Auction {
             "(str)" + domain));
 
         res = await Transfer.contractInvokeTrans(null, script, asset, 0, 1000000);
-        console.log(',.,.,.,.,.,.,.');
-
-        console.log(res);
     }
 
 

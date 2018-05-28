@@ -4,12 +4,16 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  margin-top: 20rpx;
-  width: 90%;
+  width: 100%;
   background: #ffffff;
+  margin-top: 1rpx;
+}
+.login {
+  width: 90%;
   box-shadow: 0 2px 5px 0 rgba(164, 164, 164, 0.5);
   border-radius: 0 0 3px 3px;
   margin-top: 10rpx;
+  margin-top: 20rpx;
 }
 .content {
   width: 100%;
@@ -33,7 +37,7 @@
 <template>
    <scroll-view scroll-y class="scroll">
       <view class="inner">
-        <view class="wallet-block" wx:for="{{accounts}}" >
+        <view class="wallet-block {{login==1?'login':''}}" wx:for="{{accounts}}" >
           <view class="function-title">
             <text class="text">{{item.label}}</text>
           </view>
@@ -48,7 +52,11 @@
 import wepy from 'wepy';
 import Util from '../../utils/index';
 export default class CAccounts extends wepy.component {
-  props = {};
+  props = {
+    login: {
+      default: 0
+    }
+  };
   components = {};
 
   data = {
@@ -67,9 +75,6 @@ export default class CAccounts extends wepy.component {
 
   onLoad() {
     let wals = Util.get.cache(Util.const.LOCAL_ACCOUNTS) || {};
-    console.log('...........................');
-    console.log(wals);
-
     let temp_wal = [];
     for (const key in wals) {
       temp_wal.push(wals[key]);

@@ -93,8 +93,9 @@
         </view>
       </view>
       <view class="login-content">
-        <caccounts wx:if="{{isSelected==2}}" @changeAccount.user="OnSelect" />
         <cimport wx:if="{{isSelected==1}}" @onImport.user="onImport"/>
+        <ccreate wx:if="{{isSelected==0}}" @onCreate.user="onCreate"/>
+        <caccounts wx:if="{{isSelected==2}}" :login.sync='login' @changeAccount.user="OnSelect"/>
       </view>
     </view>
   </view>
@@ -105,6 +106,7 @@ import wepy from 'wepy';
 import Util from '../utils/index';
 import CAccounts from '../components/login/caccounts';
 import CImport from '../components/login/cimport';
+import CCreate from '../components/login/ccreate';
 export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: '账户'
@@ -112,14 +114,16 @@ export default class Index extends wepy.page {
 
   components = {
     caccounts: CAccounts,
-    cimport: CImport
+    cimport: CImport,
+    ccreate: CCreate
   };
 
   data = {
     avatarUrl: '',
     nickName: '',
     isSwitch: false,
-    isSelected: 0
+    isSelected: 0,
+    login:1
   };
 
   computed = {};
@@ -145,17 +149,14 @@ export default class Index extends wepy.page {
       // });
     },
     OnSelect(account) {
-      console.log('..................');
-
-      console.log(account);
-
       wepy.reLaunch({ url: './home' });
     },
     onImport(param) {
       console.log('param');
 
       console.log(param);
-    }
+    },
+    onCreate(param) {}
   };
 
   events = {};

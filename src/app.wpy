@@ -181,7 +181,6 @@ export default class extends wepy.app {
     // 登陆获取用户code
     wx.login({
       success: async function(res) {
-        console.log(res);
         const code = res['code'];
         if (code) {
           // 获取用户openid

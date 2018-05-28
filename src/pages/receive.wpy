@@ -72,7 +72,7 @@
       </view>
     </view>
     <view class="area-address">
-      <text class="address-label">地址:</text>
+      <text class="address-label">我的地址:</text>
       <text class="address-content">{{account.address}}</text>
     </view>
     <view class="foot-button">
