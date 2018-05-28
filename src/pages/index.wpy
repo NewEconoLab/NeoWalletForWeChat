@@ -107,6 +107,7 @@ import Util from '../utils/index';
 import CAccounts from '../components/login/caccounts';
 import CImport from '../components/login/cimport';
 import CCreate from '../components/login/ccreate';
+import { Helper } from '../lib/neo-ts/index';
 export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: '账户'
@@ -123,7 +124,7 @@ export default class Index extends wepy.page {
     nickName: '',
     isSwitch: false,
     isSelected: 0,
-    login:1
+    login: 1
   };
 
   computed = {};
@@ -151,12 +152,67 @@ export default class Index extends wepy.page {
     OnSelect(account) {
       wepy.reLaunch({ url: './home' });
     },
-    onImport(param) {
+    async onImport(param) {
       console.log('param');
-
       console.log(param);
     },
-    onCreate(param) {}
+    async onCreate(e) {
+      let label = e.name;
+      let passphrase = e.passphrase;
+      let confirm = e.confirm;
+
+      if (passphrase === '' || passphrase !== confirm) {
+        Util.show.alert('两次密码不同');
+        return;
+      }
+      if (label === '') {
+        Util.show.alert('账户名不能为空');
+        return;
+      }
+      let wallets = Util.get.cache(Util.const.LOCAL_ACCOUNTS) || {};
+      if (wallets[label] !== undefined) {
+        Util.show.alert('账户名已存在');
+        return;
+      }
+
+      Util.show.loading('私钥生成中');
+
+      let privateKey = await Util.get.random(64);
+
+      var account = Util.get.nep2(label, privateKey);
+
+      setTimeout(function() {
+        Util.hide.loading();
+      }, 1000);
+
+      Helper.Account.GetNep2FromPrivateKey(
+        Helper.hexToBytes(privateKey),
+        passphrase,
+        Util.const.SCRYPT.N,
+        Util.const.SCRYPT.r,
+        Util.const.SCRYPT.p,
+        (info, result) => {
+          that.isGenerating = false;
+          that.$apply();
+          if (info == 'finish') {
+            account.nep2key = result;
+            wallets[label] = account;
+
+            Util.show.loading('钱包创建完成');
+            Util.set.cache(LOCAL_ACCOUNTS, wallets);
+            //本地缓存新生成的账户
+            Util.set.account(account);
+
+            var jsonstr = JSON.stringify(account.toJson());
+            Util.hide.loading();
+            that.$redirect('./regresult?wallet=' + jsonstr);
+          } else {
+            //TODO: alert for encoding error
+            Util.show.error('私钥加密失败');
+          }
+        }
+      );
+    }
   };
 
   events = {};
