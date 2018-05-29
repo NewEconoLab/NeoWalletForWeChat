@@ -1,0 +1,74 @@
+ <style lang="less">
+.clabel {
+  display: block;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1rpx;
+}
+</style>
+<template>
+  <view class="container">
+    
+    <view class="clabel">
+      <clabel @onEmit.user="handleEmit"/>
+       
+    </view>
+   <ccontact />
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import Util from '../utils/index';
+import CContact from '../components/ccontact';
+import CLabel from '../components/clabel';
+export default class Contact extends wepy.page {
+  config = {
+    navigationBarTitleText: 'NNS'
+  };
+
+  components = {
+    ccontact: CContact,
+    clabel: CLabel
+  };
+
+  data = {
+    animation: {}
+  };
+
+  computed = {};
+
+  methods = {
+    handleEmit(e) {}
+  };
+
+  events = {};
+
+  onLoad() {
+    this.$invoke(
+      'clabel',
+      'Show',
+      JSON.stringify({
+        title: '通讯录',
+        show: {
+          add: 1
+        }
+      })
+    );
+  }
+  async onShow() {}
+  // 页面渲染完成
+  async onReady() {}
+
+  onShareAppMessage() {
+    return {
+      title: 'NNS',
+      path: '/pages/nns'
+    };
+  }
+
+  OnLoading() {}
+}
+</script>
+ 

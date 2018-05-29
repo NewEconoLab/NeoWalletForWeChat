@@ -267,3 +267,17 @@ export class Claims {
         this.total = total;
     }
 }
+
+export class WatchOnlyAccount {
+    public nns: string;
+    public address: string;
+    public label: string;
+
+    constructor(label: string, address: string, nns: string = null) {
+        this.nns = nns;
+        this.label = label;
+        if (nns !== null)
+            this.nns = nns;
+
+    }
+}

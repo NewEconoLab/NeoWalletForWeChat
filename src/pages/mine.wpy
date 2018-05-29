@@ -46,7 +46,7 @@
       <view class="inner">
         <userinfo></userinfo>
         <view class="area-nav">
-          <navigator class="item" url="/pages/reorder" style="border-bottom: thin solid #F5F5F5;">
+          <navigator class="item" url="/pages/contact" style="border-bottom: thin solid #F5F5F5;">
             <view class="left" >
               <image class="icon" src="../images/M_contact.png"/>
               <view class="label">通讯录</view>
