@@ -24,6 +24,25 @@
         width: 60rpx;
         height: 60rpx;
       }
+      .message {
+        height: 32rpx;
+        border-radius: 50%;
+        background-color: #ff6161;
+        position: absolute;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        right: 30rpx;
+        text {
+          margin-left: 10rpx;
+          margin-right: 13rpx;
+          font-family: PingFangSC-Medium;
+          font-size: 10px;
+          color: #ffffff;
+          letter-spacing: 0;
+          line-height: 10px;
+        }
+      }
       .content {
         font-family: PingFangSC-Medium;
         font-size: 10px;
@@ -137,6 +156,7 @@
                   <text class="content">我的分红</text>
                </navigator>
                 <navigator class="item" style="margin-right:30rpx;" url="/pages/reorder">
+                <view class="message"><text>99</text></view>
                   <image class="icon" src="../images/N_message.png"/>
                   <text class="content">竞拍消息</text>
                </navigator>
