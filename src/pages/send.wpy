@@ -196,6 +196,7 @@ export default class Send extends wepy.page {
           that.OnScan();
           break;
         case 'contact':
+        wx.navigateTo({ url: './contact' });
           break;
         case 'add':
           break;

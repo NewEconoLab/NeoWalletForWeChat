@@ -19,12 +19,12 @@
     flex-direction: row;
     align-items: center;
     background-color: white;
+    height: 140rpx;
     justify-content: space-between;
     .coin {
       display: flex;
       flex-direction: row;
       align-items: center;
-      margin-top: 56rpx;
       .icon {
         width: 56rpx;
         height: 56rpx;
@@ -54,6 +54,7 @@
       flex-direction: column;
       align-items: flex-end;
       margin-right: 30rpx;
+      margin-top: 40rpx;
       .coin {
         font-family: PingFangSC-Medium;
         font-size: 16px;
@@ -112,7 +113,7 @@ export default class CAssets extends wepy.component {
       this.$apply();
     },
     async OnSelected(coin) {
-      this.$emit('changeCoin', coin)
+      this.$emit('changeCoin', coin);
     }
   };
 
