@@ -183,8 +183,8 @@
           </view>
           <view class="upper-asset">
             <text class="label">总资产</text>
-            <text class="amount">￥ {{total}}</text>
-            <image src="../images/Hide.png" class="icon" />
+            <text class="amount">￥ {{totalShow}}</text>
+            <image src="../images/{{showAsset==0?'Hide':'Show'}}.png" class="icon" @tap="onShowAsset()" />
           </view>
         </view>
         <view class="area-block-height">
@@ -221,8 +221,10 @@ export default class Home extends wepy.page {
     assets: {},
     user: {},
     total: '0.00',
+    totalShow: '',
     Block: '0',
-    claim: { total: '0.00000000' }
+    claim: { total: '0.00000000' },
+    showAsset: false
   };
 
   computed = {};
@@ -233,6 +235,11 @@ export default class Home extends wepy.page {
     },
     claim() {
       Util.send.claim(this.claim.claims, this.claim.total);
+    },
+    onShowAsset() {
+      this.showAsset = !this.showAsset;
+      this.$apply();
+      this.onShowAsset();
     }
   };
 
@@ -259,9 +266,9 @@ export default class Home extends wepy.page {
       that.total = Util.get.total().toFixed(2);
       that.Block = Util.get.height();
       that.claim = Util.get.claim();
-
       that.$apply();
       console.log(that.claim);
+      that.onShowAsset();
     });
   }
 
@@ -283,6 +290,12 @@ export default class Home extends wepy.page {
       title: 'NEO钱包',
       path: '/pages/index'
     };
+  }
+  onShowAsset() {
+    if (this.showAsset === false) {
+      this.totalShow = this.total.replace(/[0-9]/g, '*');
+    } else this.totalShow = this.total;
+    this.$apply();
   }
 }
 </script>
