@@ -221,7 +221,7 @@ export default class Home extends wepy.page {
     assets: {},
     user: {},
     total: '0.00',
-    totalShow: '',
+    totalShow: '*.**',
     Block: '0',
     claim: { total: '0.00000000' },
     showAsset: false

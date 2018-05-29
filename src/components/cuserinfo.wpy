@@ -27,7 +27,6 @@
     line-height: 14px;
     margin-bottom: 22rpx;
   }
-
 }
 </style>
 
@@ -42,19 +41,19 @@
 <script>
 import wepy from 'wepy';
 import Util from '../utils/index';
-import CNNSAddress from './cnnsaddress'
+import CNNSAddress from './cnnsaddress';
 export default class CUserInfo extends wepy.component {
   props = {
-      user:{},
-      showNNS: 1
+    user: {},
+    showNNS: 1
   };
   components = {
-    cnnsaddr:CNNSAddress
+    cnnsaddr: CNNSAddress
   };
 
   data = {
-      addrType:'text',
-      address:'kkkk'
+    addrType: 'text',
+    address: 'kkkk'
   };
 
   methods = {

@@ -43,14 +43,25 @@
     letter-spacing: 0;
     line-height: 14px;
   }
+  .blue {
+    color: #22a4ff;
+  }
   .lower {
-    font-family: PingFangSC-Medium;
-    font-size: 14px;
-    color: #151515;
-    letter-spacing: 0;
-    line-height: 14px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
     margin-top: 30rpx;
     margin-bottom: 40rpx;
+    text {
+      font-family: PingFangSC-Medium;
+      font-size: 14px;
+      color: #151515;
+      letter-spacing: 0;
+      line-height: 14px;
+    }
+    .blue {
+      color: #22a4ff;
+    }
   }
 }
 </style>
@@ -93,7 +104,10 @@
       </view>
       <view class="vin-out" wx:for="{{tx.vin}}" >
         <text class="upper">{{item.address}}</text>
-        <text class="lower">{{item.value}} {{tx.assetname}}</text>
+        <view class="lower">
+          <text class="blue">{{item.value+' '}} </text>
+          <text> {{tx.assetname}}</text>
+        </view>
       </view>
     </view>
     <view class="text-item" style="margin-top:20rpx;">
@@ -101,8 +115,11 @@
         <text class="text">交易输出</text>
       </view>
       <view class="vin-out" wx:for="{{tx.vout}}" >
-        <text class="upper">{{item.address}}</text>
-        <text class="lower">{{ item.value}} {{tx.assetname}}</text>
+        <text class="upper {{addr==item.address?'blue':''}}">{{item.address}}</text>
+         <view class="lower">
+          <text class="blue">{{item.value+' '}}</text>
+          <text>  {{tx.assetname}}</text>
+        </view>
       </view>
     </view>
     </view>
@@ -111,7 +128,7 @@
 </template>
 <script>
 import wepy from 'wepy';
-import { Util } from '../utils/index';
+import Util from '../utils/index';
 export default class Transaction extends wepy.page {
   config = {
     navigationBarTitleText: '交易详情'
@@ -119,7 +136,8 @@ export default class Transaction extends wepy.page {
   data = {
     tx: {},
     vout: [],
-    tx: {}
+    tx: {},
+    addr: ''
   };
 
   components = {};
@@ -129,6 +147,7 @@ export default class Transaction extends wepy.page {
     console.log(option.tx);
 
     this.tx = JSON.parse(option.tx);
+    this.addr = Util.get.account().address;
     this.$apply();
     console.log(this.tx.vin);
 
