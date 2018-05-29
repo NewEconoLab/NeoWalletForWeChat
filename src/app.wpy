@@ -125,7 +125,8 @@ export default class extends wepy.app {
       'pages/gas2sgas',
       'pages/startbidding',
       'pages/assets',
-      'pages/contact'
+      'pages/contact',
+      'pages/addcontact'
     ],
     window: {
       backgroundTextStyle: 'light',

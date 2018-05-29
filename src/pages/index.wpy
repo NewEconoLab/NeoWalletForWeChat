@@ -62,6 +62,9 @@
     text-align: center;
     line-height: 14px;
   }
+  .text-color {
+    color: #a9a9a9;
+  }
 }
 .login-content {
   background-color: white;
@@ -83,13 +86,13 @@
     <view class="area-lower">
       <view class="lower-nav">
         <view class="login-item {{isSelected==0?'selected':''}}" @tap="register()" >
-          <text class="name">创建账户</text>
+          <text class="name {{isSelected==0?'':'text-color'}}" >创建账户</text>
         </view>
         <view class="login-item {{isSelected==1?'selected':''}}"  @tap="loginImport()">
-          <text class="name" >导入账户</text>
+          <text class="name {{isSelected==1?'':'text-color'}}" >导入账户</text>
         </view>
         <view class="login-item  {{isSelected==2?'selected':''}}"  @tap="loginAccounts()">
-          <text class="name" >账户列表</text>
+          <text class="name {{isSelected==2?'':'text-color'}}">账户列表</text>
         </view>
       </view>
       <view class="login-content">

@@ -1,35 +1,28 @@
  <style lang="less">
-.clabel {
-  display: block;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 1rpx;
-}
 </style>
 <template>
   <view class="container">
-    
-    <view class="clabel">
-      <clabel @onEmit.user="handleEmit"/>
-    </view>
-   <ccontact />
+    <scroll-view scroll-y class="scroll">
+        <view class="inner">
+            <clname/>
+            <claddr @onEmit.user="handleEmit"/>
+        </view>
+    </scroll-view>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy';
 import Util from '../utils/index';
-import CContact from '../components/ccontact';
 import CLabel from '../components/clabel';
-export default class Contact extends wepy.page {
+export default class AddContact extends wepy.page {
   config = {
-    navigationBarTitleText: '通讯录'
+    navigationBarTitleText: '添加联系人'
   };
 
   components = {
-    ccontact: CContact,
-    clabel: CLabel
+    clname: CLabel,
+    claddr: CLabel
   };
 
   data = {
@@ -39,23 +32,27 @@ export default class Contact extends wepy.page {
   computed = {};
 
   methods = {
-    handleEmit(e) {
-       wepy.navigateTo({
-        url: './addcontact'
-      });
-    }
+    handleEmit(e) {}
   };
 
   events = {};
 
   onLoad() {
     this.$invoke(
-      'clabel',
+      'clname',
       'Show',
       JSON.stringify({
-        title: '通讯录',
+        title: '名称',
+        show: {}
+      })
+    );
+    this.$invoke(
+      'claddr',
+      'Show',
+      JSON.stringify({
+        title: 'NNS或地址',
         show: {
-          add: 1
+          scan: 1
         }
       })
     );
