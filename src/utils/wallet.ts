@@ -117,6 +117,11 @@ export default class Wallet {
 
         return strkey;
     }
+
+    static prikey2Wif(prikey: string): string {
+        return Helper.Account.GetWifFromPrivateKey(Helper.hexToBytes(prikey));
+    }
+    
     /**
      * decode nep2 to get private key
      * @param {string} passphrase 

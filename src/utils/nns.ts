@@ -32,8 +32,6 @@ export default class NNS {
                 console.log(Helper.toHexString(domains.register));
                 console.log(Helper.toHexString(domains.resolver));
 
-
-
                 let copare = new Neo.BigInteger(timestamp).compareTo(new Neo.BigInteger(domains.ttl).multiply(1000));
                 if (copare < 0) {
                     console.log('域名已到期');
@@ -91,8 +89,8 @@ export default class NNS {
     }
 
     /**
- * 获得域名列表
- */
+     * 获得域名列表
+     */
     static async getDomainsByAddr() {
         console.log(Wallet.account.address);
 

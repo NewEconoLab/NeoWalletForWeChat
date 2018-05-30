@@ -49,7 +49,8 @@ export default {
         sendCoin: () => { return Transfer.coin },
         addrByDomain: async (domain: string) => { return await NNS.resolveData(domain) },
         wantBy: Auction.wantBy,
-        domainByAddr: NNS.getDomainsByAddr
+        domainByAddr: NNS.getDomainsByAddr,
+        wif:Wallet.prikey2Wif
     },
     set: {
         cache: Cache.put,

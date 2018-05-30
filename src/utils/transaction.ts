@@ -13,8 +13,6 @@ export default class Transfer {
     static coin: Asset;
     constructor() { };
 
-
-
     /**
      * 构造并发送交易
      * @param {ThinNeo.Transaction} tran 
