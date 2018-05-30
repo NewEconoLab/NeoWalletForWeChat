@@ -1,12 +1,8 @@
 import { Nep6, Neo, ThinNeo, Helper } from '../lib/neo-ts/index'
 import * as Const from './const'
-import { Account } from '../lib/neo-ts/Helper';
 import Transfer from './transaction';
 import { Asset } from './entity';
-import { getSecureRandom } from './random';
-import { Https } from '.';
 import Wallet from './wallet';
-import { Fixed8 } from '../lib/neo-ts/neo';
 export default class SGAS {
 
     constructor() { }
@@ -34,7 +30,7 @@ export default class SGAS {
      * @param amount 退回数量
      */
     public static refund(amount: number, GAS: Asset) {
-        let scriptHash: Uint8Array = Account.GetPublicKeyScriptHash_FromAddress(Wallet.account.address);
+        let scriptHash: Uint8Array =  Helper.Account.GetPublicKeyScriptHash_FromAddress(Wallet.account.address);
         let tran: ThinNeo.Transaction = null;
         {
             let script: Uint8Array = null;

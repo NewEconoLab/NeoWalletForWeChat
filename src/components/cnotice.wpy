@@ -1,0 +1,58 @@
+<style lang="less">
+.notice {
+  position: absolute;
+  top: -30px;
+  width: 100%;
+  background-color: #90d1ff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text {
+    height: 30px;
+    font-family: PingFangSC-Medium;
+    font-size: 14px;
+    color: #ffffff;
+    letter-spacing: 0;
+    text-align: center;
+    line-height: 30px;
+  }
+}
+</style>
+
+<template>
+<view class="notice" animation="{{animation}}">
+  <text>{{label}}</text>
+</view>
+</template>
+<script>
+import wepy from 'wepy';
+// import Util from '../../utils/index';
+export default class CNotice extends wepy.component {
+  props = {};
+  components = {};
+
+  data = {
+    animation: {},
+    label: ''
+  };
+
+  methods = {
+    show(e) {
+      let that = this;
+      this.label = e;
+      var animation = wx.createAnimation({ duration: 500 });
+      animation.translateY(30).step({ duration: 500 });
+      this.animation = animation.export();
+      this.$apply();
+      setTimeout(() => {
+        var animation = wx.createAnimation({ duration: 500 });
+        animation.translateY(-30).step({ duration: 500 });
+        that.animation = animation.export();
+        that.$apply();
+      }, 5000);
+    }
+  };
+
+  onLoad() {}
+}
+</script>

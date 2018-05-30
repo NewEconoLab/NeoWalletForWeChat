@@ -200,6 +200,7 @@
         <cassets></cassets>
       </view>
   </scroll-view>
+  <cnotice/>
   </view>
 </template>
 <script>
@@ -208,13 +209,15 @@ import Util, { Https } from '../utils/index';
 import Wallet from '../utils/wallet';
 import { Claims } from '../utils/entity';
 import CAssets from '../components/cassets';
+import CNotice from '../components/cnotice';
 export default class Home extends wepy.page {
   config = {
     navigationBarTitleText: '钱包'
   };
 
   components = {
-    cassets: CAssets
+    cassets: CAssets,
+    cnotice:CNotice
   };
 
   data = {
@@ -250,7 +253,7 @@ export default class Home extends wepy.page {
     this.$apply();
   }
   async onShow() {
-    this.$apply();
+    this.$invoke('cnotice','show','这是个大提示');
   }
   // 页面渲染完成
   async onReady() {
