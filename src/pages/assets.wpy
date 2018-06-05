@@ -37,8 +37,9 @@ export default class Assets extends wepy.page {
       var prevPage = pages[pages.length - 2]; //上一个页面
 
       //直接调用上一个页面的setData()方法，把数据存到上一个页面中去
+      let coin0 = JSON.stringify(coin);
       prevPage.setData({
-        coin: coin
+        coin: JSON.parse(coin0)
       });
 
       wx.navigateBack({

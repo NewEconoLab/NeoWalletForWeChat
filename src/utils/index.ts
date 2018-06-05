@@ -70,11 +70,9 @@ export default {
     init: {
         asset: Coin.initAllAsset,
         context: Context.init,
-        nns: async () => {
-            await NNS.initRootDomain();
+        nns:NNS.initRootDomain
             // NNS.nnsRegister('jinghui')
-            NNS.getDomainsByAddr();
-        }
+            //NNS.getDomainsByAddr();
     },
     service: {
         start: Context.init,

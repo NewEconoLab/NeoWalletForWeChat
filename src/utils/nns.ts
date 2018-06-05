@@ -158,9 +158,11 @@ export default class NNS {
      * @param scriptaddress 合约地址
      */
     static async getOwnerInfo(domain: Neo.Uint256, appcall: Neo.Uint160): Promise<DomainInfo> {
+        console.log(appcall);
+        
         let info: DomainInfo = new DomainInfo();
         var sb = new ThinNeo.ScriptBuilder();
-        sb.EmitParamJson(["(bytes)" + domain.toString()]);//第二个参数是个数组
+        sb.EmitParamJson(["(hex256)" + domain.toString()]);//第二个参数是个数组
         sb.EmitPushString("getOwnerInfo");
         sb.EmitAppCall(appcall);
         var data = sb.ToArray();

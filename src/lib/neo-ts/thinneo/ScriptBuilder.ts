@@ -2,7 +2,7 @@
 import { Account } from '../Helper/AccountHelper'
 import { BigInteger } from '../neo/BigInteger'
 import { hexToBytes } from '../Helper/UintHelper';
-import { Neo } from '..';
+import { Uint160 } from '../neo/Uint160';
 export class ScriptBuilder {
     writer: number[];
     Offset: number = 0;
@@ -51,10 +51,12 @@ export class ScriptBuilder {
         return this;
     }
 
-    public EmitAppCall(scriptHash: Uint8Array | Neo.Uint160, useTailCall: boolean = false): ScriptBuilder {
+    public EmitAppCall(scriptHash: Uint8Array | Uint160, useTailCall: boolean = false): ScriptBuilder {
         let hash: Uint8Array = null;
-        if (scriptHash instanceof Neo.Uint160) {
+        if (scriptHash instanceof Uint160) {
+
             hash = new Uint8Array(scriptHash.bits.buffer);
+            console.log(hash);
         } else if (scriptHash.length != 20)
             throw new Error("error scriptHash length");
         else {

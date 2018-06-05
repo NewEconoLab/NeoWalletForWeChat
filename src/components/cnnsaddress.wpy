@@ -8,7 +8,6 @@
 }
 .nns {
   border-bottom: thin solid #a9a9a9;
-  display: flex;
   flex-direction: row;
   align-items: flex-start;
   width: 90%;
@@ -57,11 +56,11 @@
 <view class="addr-content">
   <view class="nns">
     <text wx:if="{{type=='text'}}">{{value}}</text>
-    <input wx:if="{{type=='input'}}" name="amount" value="abcdefg" bindconfirm="confirm" bindinput='watchInput'/>
+    <input wx:if="{{type=='input'}}" name="address" value="ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F" bindconfirm="confirm" bindinput='watchInput' bindchange='change'/>
   </view>
   <view class="addr">
     <image src="../images/Pointer.png" class="icon"/>
-    <text class="text">hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh</text>
+    <text class="text">{{addr}}</text>
   </view>
 </view>
 </template>
@@ -77,7 +76,7 @@ export default class CNNSAddress extends wepy.component {
     },
     value: {
       type: String,
-      default: 'addresskkkk',
+      default: 'address',
       twoWay: true
     }
   };
@@ -88,17 +87,22 @@ export default class CNNSAddress extends wepy.component {
   methods = {
     showNNS(addr) {
       this.addr = addr;
-      this.value = 'llllllll';
+      this.value = '';
       this.$apply();
     },
     watchInput(event) {
-      const value = event.detail.value;
-      if (value.length === 34 && value[0] === 'A')
-        console.log(event.detail.value);
+      const address = event.detail.address;
+      if (address.length === 34 && address[0] === 'A') {
+        console.log(event.detail.address);
+        //TODO: 如果判断结果为domain，查找地址
+      }
     },
     confirm(e) {
-      console.log(e.detail.value);
-      this.$emit('confirm',e.detail.value);
+      console.log(e.detail.address);
+      this.$emit('confirm', e.detail.address);
+    },
+    change(e){
+      //失去焦点的时候触发
     }
   };
 

@@ -261,18 +261,7 @@ export default class Home extends wepy.page {
     await this.OnLogin();
 
     await Util.init.nns();
-    // 设置资产更新回调
-    Util.delegate.asset(assets => {
-      assets['GAS'].amount = parseFloat(assets['GAS'].amount).toFixed(4);
-      assets['NEO'].amount = parseFloat(assets['NEO'].amount).toFixed(0);
-      that.$invoke('cassets', 'LoadCoins', assets);
-      that.total = Util.get.total().toFixed(2);
-      that.Block = Util.get.height();
-      that.claim = Util.get.claim();
-      that.$apply();
-      console.log(that.claim);
-      that.onShowAsset();
-    });
+
   }
 
   async OnLogin() {
@@ -284,14 +273,12 @@ export default class Home extends wepy.page {
         this.isLogin = true;
         this.$apply();
         Util.set.account(account);
+        that.onSetDelegate();
         Util.service.start(account);
       }
     } catch (err) {
       console.log(err);
     }
-    console.log('////////////////////////////');
-
-    console.log(Util.const.DAPP_SGAS.toString());
   }
   onShareAppMessage() {
     return {
@@ -304,6 +291,21 @@ export default class Home extends wepy.page {
       this.totalShow = this.total.replace(/[0-9]/g, '*');
     } else this.totalShow = this.total;
     this.$apply();
+  }
+  onSetDelegate(){
+    let that = this;
+     // 设置资产更新回调
+    Util.delegate.asset(assets => {
+      assets['GAS'].amount = parseFloat(assets['GAS'].amount).toFixed(4);
+      assets['NEO'].amount = parseFloat(assets['NEO'].amount).toFixed(0);
+      that.$invoke('cassets', 'LoadCoins', assets);
+      that.total = Util.get.total().toFixed(2);
+      that.Block = Util.get.height();
+      that.claim = Util.get.claim();
+      that.$apply();
+      console.log(that.claim);
+      that.onShowAsset();
+    });
   }
 }
 </script>

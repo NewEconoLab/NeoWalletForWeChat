@@ -147,10 +147,10 @@
             </view>
           </view>
           <claddr class="send-addr" @onEmit.user="handleEmit"/>
-          <caddress :type.sync="addrType" :value.sync="address" class="send-addr-content" />
+          <caddress :type.sync="addrType" :address.sync="address" class="send-addr-content" />
           <clamount class="send-addr"/>
           <view class="amount">
-            <input class="input" name="amount" />
+            <input class="input" name="amount" value='{{amount}}'/>
           </view>
         <view class="foot-button">
           <button type="primary" form-type="submit">转账</button>
@@ -180,9 +180,9 @@ export default class Send extends wepy.page {
   data = {
     targetAddr: '',
     assets: {},
-    coin: {},
-    address: '',
-    addrType:'input'
+    address: 'ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F',
+    addrType: 'input',
+    amount: 0.001
   };
 
   computed = {};
@@ -196,7 +196,7 @@ export default class Send extends wepy.page {
           that.OnScan();
           break;
         case 'contact':
-        wx.navigateTo({ url: './contact' });
+          wx.navigateTo({ url: './contact' });
           break;
         case 'add':
           break;
@@ -236,6 +236,13 @@ export default class Send extends wepy.page {
 
   events = {};
   onShow() {
+    if (this.coin === undefined || this.coin === null) {
+      const assets = Util.get.assets();
+      this.coin = assets['NEO'];
+      this.$apply();
+    }
+  }
+  onLoad() {
     // sendCoin
     this.$invoke(
       'claddr',
@@ -254,16 +261,11 @@ export default class Send extends wepy.page {
       JSON.stringify({ title: '转账数量', show: {} })
     );
   }
-  onLoad() {
-    if (this.coin === {}) {
-      const assets = Util.get.assets();
-      this.coin = assets['NEO'];
-      this.$apply();
-    }
-  }
   onReady() {
     const that = this;
-    if (Wallet.account.nep2key.length === 64) {
+    console.log(Util.get.account());
+
+    if (Util.get.account().nep2key.length === 64) {
       that.hidePW = 'true';
       that.$apply();
     }
@@ -287,11 +289,12 @@ export default class Send extends wepy.page {
     Util.loading('密码验证中');
 
     //如果当前账户直接使用私钥
-    if (Wallet.account.nep2key.length === 64) {
+    if (Util.get.account().nep2key.length === 64) {
       //构造并发送交易
       that.SendTran(Wallet.account.nep2key, Wallet.account.publickey);
       return;
     }
+
     Wallet.decode(this.password, async (code, prikey, pubkey) => {
       wepy.hideLoading();
       if (code < 0) {
