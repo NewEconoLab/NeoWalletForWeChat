@@ -15,9 +15,9 @@
   <form bindsubmit="onImport" class="form" report-submit ="true">
 <view class="area-import">
     <clname @onEmit.user="handleScan"/>
-    <input class="input" name="name" />
+    <input class="input" name="name" value='{{label}}'/>
     <clprikey/>
-    <input class="input" name="prikey" />
+    <input class="input" style="font-size:11px;" name="prikey" value='{{prikey}}' />
     <view class="foot-button">
       <button type="primary" style="width:600rpx;"  form-type="submit">导入账户</button>
     </view>
@@ -35,14 +35,21 @@ export default class CImport extends wepy.component {
     clprikey: CLabel
   };
 
-  data = {};
+  data = {
+    label: '',
+    prikey: '',
+    account:{}
+  };
 
   methods = {
     handleScan() {
       let that = this;
+      Util.show.loading('账户识别中');
       wepy.scanCode({
         success: res => {
+          Util.hide.loading();
           console.log(res);
+
           res = res.result;
           if (res.length === 64 || res.length == 52) {
             that.prikey = res;
@@ -50,10 +57,10 @@ export default class CImport extends wepy.component {
           } else {
             try {
               const account = JSON.parse(res);
+              that.account = account;
               that.prikey = account['nep2key'];
               that.label = account['label'];
               that.$apply();
-              that.OnParseJson(account);
             } catch (err) {
               console.log(err);
               //在这里处理错误
@@ -64,6 +71,7 @@ export default class CImport extends wepy.component {
         },
         fail: res => {
           console.log(res);
+          Util.hide.loading();
           Util.show.error('解析失败');
         }
       });
@@ -71,7 +79,7 @@ export default class CImport extends wepy.component {
     onImport(e) {
       let name = e.detail.value.name;
       let prikey = e.detail.value.prikey;
-      this.$emit('onImport', { name: 'abc', prikey: 'ced' });
+      this.$emit('onImport', this.account);
     }
   };
 

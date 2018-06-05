@@ -21,16 +21,20 @@ export default class NNS {
         domain = domain.toLowerCase().trim();
 
         let verify = /^[a-zA-Z0-9]{1,32}$/;
+        console.log('2222222222222222222222');
+
         if (verify.test(domain)) {
+            console.log('44444444444444444444444444444444444');
 
             let domains = await NNS.queryDomainInfo(domain + ".test")
+            console.log('6666666666666666666666666666666666');
 
 
             if (domains.register && domains.ttl) {
                 var timestamp = new Date().getTime();
                 console.log(timestamp);
-                console.log(Helper.toHexString(domains.register));
-                console.log(Helper.toHexString(domains.resolver));
+                console.log(domains.register.toString());
+                console.log(domains.resolver.toString());
 
                 let copare = new Neo.BigInteger(timestamp).compareTo(new Neo.BigInteger(domains.ttl).multiply(1000));
                 if (copare < 0) {
@@ -52,8 +56,14 @@ export default class NNS {
         var test = new RootDomainInfo();
         test.roothash = Common.nameHash("test");
         test.rootname = "test";
-        var scriptaddress = Helper.hexToBytes(Consts.baseContract).reverse();
-        var domain = await NNS.getOwnerInfo(test.roothash, scriptaddress);
+
+        var domain = await NNS.getOwnerInfo(test.roothash, Consts.baseContract);
+
+
+        console.log('initRootDomain:');
+
+        console.log(domain);
+
         test.owner = domain.owner;
         test.register = domain.register;
         test.resolver = domain.resolver;
@@ -67,10 +77,15 @@ export default class NNS {
      * @param domain 域名
      */
     static async nnsRegister(domain: string) {
-        NNS.verifyDomain(domain);
+        // NNS.verifyDomain(domain);
         if (domain) {
             try {
+                console.log('---------------------;;;;;;;;;');
+
                 let res = await NNS.registerDomain(domain);
+                console.log('reg-----------------------------------');
+
+                console.log(res);
 
                 if (res.err) {
                     console.error(res.info);
@@ -83,6 +98,8 @@ export default class NNS {
                     // this.btn_register = true;
                 }
             } catch (error) {
+                console.log(error);
+
                 // mui.alert(error.message);
             }
         }
@@ -126,12 +143,12 @@ export default class NNS {
     static async queryDomainInfo(doamin: string) {
         var domainarr: string[] = doamin.split('.');
         var subdomain: string = domainarr[0];
-        var nnshash: Uint8Array = Common.nameHashArray(domainarr);
-        let doamininfo = await NNS.getOwnerInfo(nnshash, Helper.hexToBytes(Consts.baseContract).reverse());
-        console.log(DomainInfo);
+        var nnshash: Neo.Uint256 = Common.nameHashArray(domainarr);
+        let doamininfo = await NNS.getOwnerInfo(nnshash, Consts.baseContract);
+        console.log(doamininfo);
         console.log('....................................');
 
-        var owner = Helper.toHexString(doamininfo.owner);
+        // var owner = Helper.toHexString(doamininfo.owner);
         return doamininfo;
     }
 
@@ -140,12 +157,12 @@ export default class NNS {
      * @param domain 域名哈希
      * @param scriptaddress 合约地址
      */
-    static async getOwnerInfo(domain: Uint8Array, scriptaddress: Uint8Array): Promise<DomainInfo> {
+    static async getOwnerInfo(domain: Neo.Uint256, appcall: Neo.Uint160): Promise<DomainInfo> {
         let info: DomainInfo = new DomainInfo();
         var sb = new ThinNeo.ScriptBuilder();
-        sb.EmitParamJson(["(bytes)" + Helper.toHexString(domain)]);//第二个参数是个数组
+        sb.EmitParamJson(["(bytes)" + domain.toString()]);//第二个参数是个数组
         sb.EmitPushString("getOwnerInfo");
-        sb.EmitAppCall(scriptaddress);
+        sb.EmitAppCall(appcall);
         var data = sb.ToArray();
 
         let result = await Https.rpc_getInvokescript(data);
@@ -163,13 +180,13 @@ export default class NNS {
             if (stackarr[0].type == "Array") {
                 var stack = stackarr[0].value as any[];
                 if (stack[0].type == "ByteArray") {
-                    info.owner = Helper.hexToBytes(stack[0].value as string);
+                    info.owner =  Neo.Uint160.parse(stack[0].value as string);
                 }
                 if (stack[1].type == "ByteArray") {
-                    info.register = Helper.hexToBytes(stack[1].value as string);
+                    info.register = Neo.Uint256.parse(stack[1].value as string);
                 }
                 if (stack[2].type == "ByteArray") {
-                    info.resolver = Helper.hexToBytes(stack[2].value as string);
+                    info.resolver = Neo.Uint256.parse(stack[2].value as string);
                 }
                 if (stack[3].type == "Integer") {
                     info.ttl = new Neo.BigInteger(stack[3].value as string).toString();
@@ -203,17 +220,18 @@ export default class NNS {
      * @param doamin 域名字符串
      */
     static async registerDomain(doamin: string) {
-        var nnshash: Uint8Array = Common.nameHash(NNS.root_test.rootname);
+        var nnshash: Neo.Uint256 = Common.nameHash(NNS.root_test.rootname);
         var address = Wallet.account.address;
         var sb = new ThinNeo.ScriptBuilder();
         var scriptaddress = NNS.root_test.register;
 
-        sb.EmitParamJson(["(addr)" + address, "(bytes)" + Helper.toHexString(nnshash), "(str)" + doamin]);//第二个参数是个数组
+        sb.EmitParamJson(["(addr)" + address, "(hex256)" + nnshash.toString(), "(str)" + doamin]);//第二个参数是个数组
         sb.EmitPushString("requestSubDomain");
         sb.EmitAppCall(scriptaddress);
         var data = sb.ToArray();
         var res = await Transfer.contractInvoke_attributes(data);
         console.log('========================');
+        console.log('{{{{{{{{{{{{{{{{{{{{{{{{{{{{');
 
         console.log(Helper.toHexString(res));
 
@@ -225,27 +243,15 @@ export default class NNS {
         return res;
     }
 
-
-
-
     static async resolveData(domain: string) {
-        var scriptaddress = Helper.hexToBytes(Consts.baseContract).reverse();
+        var scriptaddress = Consts.baseContract;
         let arr = domain.split(".");
-        let nnshash = Common.nameHashArray(arr);
-        let nnshashstr = Helper.toHexString(nnshash.reverse());
+        let nnshash: Neo.Uint256 = Common.nameHashArray(arr);
 
-        // var sb = new ThinNeo.ScriptBuilder();
-        // sb.EmitParamJson([
-        //     "(str)addr",
-        //     "(hex256)0x" + nnshashstr,
-        //     "(str)1"
-        // ]);
-        // sb.EmitPushString("resolve");
-        // sb.EmitAppCall(scriptaddress);
         var data = Common.buildScript(scriptaddress, "resolve",
             new Array("(str)addr",
-                "(hex256)0x" + nnshashstr,
-                "(str)1")) //sb.ToArray();
+                "(hex256)" + nnshash.toString(),
+                "(str)1"))
 
         let res = await Https.rpc_getInvokescript(data);
         console.log('====================,,,,,,,,,,,,,,,,,,,');

@@ -72,14 +72,15 @@
     <view class="area-btn">
       <button type="primary" style="background-color: white; color:#a3a3a3;" @tap="login()">登陆</button>
     </view>
-    <text class="warnning">账户信息非常重要，请点击二维码备份。</text>
+    <text class="warnning">账户信息仅本地保存，请备份。</text>
   </view>
 </template>
 
 <script>
 import wepy from 'wepy';
 import drawQrcode from '../lib/qrcode/index';
-import {Util} from '../utils/index';
+import Util from '../utils/index';
+import { formatTime } from '../utils/time';
 export default class RegResult extends wepy.page {
   customData = {}; // 自定义数据
 
@@ -87,16 +88,18 @@ export default class RegResult extends wepy.page {
 
   onLoad(option) {
     let that = this;
-    //this.account = JSON.parse(option.wallet)['accounts'][0];
+    this.account = JSON.parse(option.account);
     this.$apply();
-   Util.loading('二维码生成中' );
+    console.log(this.account);
+
+    Util.show.loading('二维码生成中');
     wx.getSystemInfo({
       //获取系统信息成功，将系统窗口的宽高赋给页面的宽高
       success: function(res) {
         that.width = res.windowWidth;
         that.height = res.windowHeight;
         that.canvasWH = res.windowWidth * 0.91;
-        const t = TimeHelper.formatTime(new Date(), 'Y/M/D h:m:s');
+        const t = formatTime(new Date(), 'Y/M/D h:m:s');
         that.currTime = t;
         that.$apply();
         that.OnDraw();
@@ -150,11 +153,11 @@ export default class RegResult extends wepy.page {
     await drawQrcode({
       WH: that.width,
       CWH: that.canvasWH,
-      name: 'hhhhh',//that.account.label,
-      addr: 'jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj',//that.account.address,
+      name: that.account.label,
+      addr: that.account.address,
       currTime: that.currTime,
       canvasId: 'nep2Key',
-      text: 'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh'//JSON.stringify(this.account)
+      text: JSON.stringify(that.account)
     });
     wepy.hideLoading();
     that.backUpAccount();

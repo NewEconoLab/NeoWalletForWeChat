@@ -15,11 +15,11 @@
   <form bindsubmit="onCreate" class="form" report-submit ="true">
 <view class="area-create">
     <clname/>
-    <input class="input" name="name" />
+    <input class="input" name="name" value='test8'/>
     <clpassphrase/>
-    <input class="input" name="passphrase" />
+    <input class="input" name="passphrase" value='test' password="true"/>
      <clconfirm/>
-    <input class="input" name="confirm" />
+    <input class="input" name="confirm" password="true" value='test'/>
     <view class="foot-button">
       <button type="primary" style="width:600rpx;"  form-type="submit">创建账户</button>
     </view>
@@ -76,9 +76,9 @@ export default class CCreate extends wepy.component {
       let passphrase = e.detail.value.passphrase;
       let confirm = e.detail.value.confirm;
       this.$emit('onCreate', {
-        name: 'abc',
-        passphrase: 'ced',
-        confirm: 'confirm'
+        name: name,
+        passphrase: passphrase,
+        confirm: confirm
       });
     }
   };

@@ -1,4 +1,4 @@
-import { Helper } from "../lib/neo-ts/index";
+import { Helper, Neo } from "../lib/neo-ts/index";
 
 /**
  * 用户code 换取 session_key
@@ -33,8 +33,8 @@ export const NET_STATE: any = {
 }
 
 
-export const DAPP_SGAS = Helper.hexToBytes('0x4ac464f84f50d3f902c2f0ca1658bfaa454ddfbf').reverse();//sgas 新合约地址
-export const DAPP_COIN_POOL = Helper.hexToBytes("0x5d6b91ee7cde1f8bb1868d36d4bf134f6887d231").reverse();//coinpool 新合约地址
-export const DAPP_NNS = Helper.hexToBytes("0x954f285a93eed7b4aed9396a7806a5812f1a5950").reverse();//nns 合约地址
+export const DAPP_SGAS = Neo.Uint160.parse('4ac464f84f50d3f902c2f0ca1658bfaa454ddfbf');//sgas 新合约地址
+export const DAPP_COIN_POOL = Neo.Uint160.parse("5d6b91ee7cde1f8bb1868d36d4bf134f6887d231");//coinpool 新合约地址
+export const DAPP_NNS = Neo.Uint160.parse("954f285a93eed7b4aed9396a7806a5812f1a5950");//nns 合约地址
 
 export const DOMAIN_ROOT: string = 'sell';

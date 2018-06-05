@@ -86,8 +86,27 @@ export default class NNS extends wepy.page {
   computed = {};
 
   methods = {
-    logOut() {},
-    delAccount() {}
+    logOut() {
+      wepy.reLaunch({ url: './index' });
+    },
+    delAccount() {
+      wx.showModal({
+        title: '提示',
+        content: '账户删除后只能通过重新导入来恢复',
+        showCancel: true,
+        success: res => {
+          //确认删除
+          if (res.confirm) {
+            Util.delete.account();
+            wx.navigateBack();
+          } else if (res.cancel) {
+          }
+        },
+        fail: res => {
+          reject(payload);
+        }
+      });
+    }
   };
 
   events = {};

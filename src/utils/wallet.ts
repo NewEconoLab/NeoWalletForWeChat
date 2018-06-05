@@ -107,6 +107,9 @@ export default class Wallet {
         return this.account.address;
     }
 
+    static test() {
+
+    }
     /**
      * wif 转私钥
      * @param {string} wif 
@@ -121,7 +124,7 @@ export default class Wallet {
     static prikey2Wif(prikey: string): string {
         return Helper.Account.GetWifFromPrivateKey(Helper.hexToBytes(prikey));
     }
-    
+
     /**
      * decode nep2 to get private key
      * @param {string} passphrase 

@@ -50,7 +50,7 @@ export default {
         addrByDomain: async (domain: string) => { return await NNS.resolveData(domain) },
         wantBy: Auction.wantBy,
         domainByAddr: NNS.getDomainsByAddr,
-        wif:Wallet.prikey2Wif
+        wif: Wallet.prikey2Wif
     },
     set: {
         cache: Cache.put,
@@ -58,6 +58,9 @@ export default {
         openid: Context.openid,
         formid: (formid: string) => { Transfer.formId.push(formid); },
         sendCoin: (coin: Entity.Asset) => { Transfer.coin = coin }
+    },
+    delete: {
+        account: Wallet.removeWallet
     },
     delegate: {
         asset: (delegate: Function) => Context.assetDelegate = delegate,
@@ -76,5 +79,8 @@ export default {
     service: {
         start: Context.init,
         update: Context.OnTimeOut,
+    },
+    reg: {
+        domain: NNS.nnsRegister
     }
 }

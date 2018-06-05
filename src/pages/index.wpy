@@ -158,8 +158,12 @@ export default class Index extends wepy.page {
     async onImport(param) {
       console.log('param');
       console.log(param);
+
+      await Util.set.account(param);
+      wepy.reLaunch({ url: './home' });
     },
     async onCreate(e) {
+      let that = this;
       let label = e.name;
       let passphrase = e.passphrase;
       let confirm = e.confirm;
@@ -202,13 +206,13 @@ export default class Index extends wepy.page {
             wallets[label] = account;
 
             Util.show.loading('钱包创建完成');
-            Util.set.cache(LOCAL_ACCOUNTS, wallets);
+            Util.set.cache(Util.const.LOCAL_ACCOUNTS, wallets);
             //本地缓存新生成的账户
             Util.set.account(account);
 
             var jsonstr = JSON.stringify(account.toJson());
             Util.hide.loading();
-            that.$redirect('./regresult?wallet=' + jsonstr);
+            that.$redirect('./regresult?account=' + jsonstr);
           } else {
             //TODO: alert for encoding error
             Util.show.error('私钥加密失败');

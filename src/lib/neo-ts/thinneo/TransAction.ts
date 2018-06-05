@@ -452,10 +452,14 @@ export class Transaction {
         }
 
         var _witnesses;
+        console.log('...444444444444444444');
+
         if (this.witnesses)
             _witnesses = this.witnesses;
         else
             _witnesses = [];
+        console.log('Transaction 461');
+
         _witnesses.push(newwit);
         _witnesses.sort((a, b) => {
             var hash_a = Account.GetScriptHashFromScript(a.VerificationScript);
@@ -468,6 +472,8 @@ export class Transaction {
             }
             return 0;
         });
+        console.log('4444444444444444444444');
+
         this.witnesses = _witnesses;
     }
 

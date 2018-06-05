@@ -2,6 +2,7 @@
 import { Account } from '../Helper/AccountHelper'
 import { BigInteger } from '../neo/BigInteger'
 import { hexToBytes } from '../Helper/UintHelper';
+import { Neo } from '..';
 export class ScriptBuilder {
     writer: number[];
     Offset: number = 0;
@@ -50,10 +51,16 @@ export class ScriptBuilder {
         return this;
     }
 
-    public EmitAppCall(scriptHash: Uint8Array, useTailCall: boolean = false): ScriptBuilder {
-        if (scriptHash.length != 20)
+    public EmitAppCall(scriptHash: Uint8Array | Neo.Uint160, useTailCall: boolean = false): ScriptBuilder {
+        let hash: Uint8Array = null;
+        if (scriptHash instanceof Neo.Uint160) {
+            hash = new Uint8Array(scriptHash.bits.buffer);
+        } else if (scriptHash.length != 20)
             throw new Error("error scriptHash length");
-        return this.Emit(useTailCall ? OpCode.TAILCALL : OpCode.APPCALL, scriptHash);
+        else {
+            hash = scriptHash;
+        }
+        return this.Emit(useTailCall ? OpCode.TAILCALL : OpCode.APPCALL, hash);
     }
 
     public EmitJump(op: OpCode, offset: number): ScriptBuilder {
@@ -64,8 +71,8 @@ export class ScriptBuilder {
 
     public EmitPushNumber(number: BigInteger): ScriptBuilder {
         var i32 = number.toInt32();
-        if (i32 == -1) return this.Emit(OpCode.PUSHM1);
-        if (i32 == 0) return this.Emit(OpCode.PUSH0);
+        if (i32 === -1) return this.Emit(OpCode.PUSHM1);
+        if (i32 === 0) return this.Emit(OpCode.PUSH0);
         if (i32 > 0 && i32 <= 16) return this.Emit(OpCode.PUSH1 - 1 + i32);
         return this.EmitPushBytes(number.toUint8ArrayWithSign(true));
     }
@@ -75,7 +82,7 @@ export class ScriptBuilder {
     }
 
     public EmitPushBytes(data: Uint8Array): ScriptBuilder {
-        if (data == null)
+        if (data === null)
             throw new Error("ArgumentNullException");
         if (data.length <= OpCode.PUSHBYTES75) {
             this._WriteUint8(data.length);
@@ -106,10 +113,10 @@ export class ScriptBuilder {
     }
 
     public EmitSysCall(api: string): ScriptBuilder {
-        if (api == null)
+        if (api === null)
             throw new Error("ArgumentNullException");
         var api_bytes = Account.String2Bytes(api);
-        if (api_bytes.length == 0 || api_bytes.length > 252)
+        if (api_bytes.length === 0 || api_bytes.length > 252)
             throw new Error("ArgumentException");
         var arg: Uint8Array = new Uint8Array(api_bytes.length + 1);
         arg[0] = api_bytes.length;
@@ -158,63 +165,63 @@ export class ScriptBuilder {
             if (str[0] != '(')
                 throw new Error("must start with:(str) or (hex) or (hexrev) or (addr)or(int)");
             //(string) or(str) 开头，表示是个字符串，utf8编码为bytes
-            if (str.indexOf("(string)") == 0) {
+            if (str.indexOf("(string)") === 0) {
                 this.EmitPushString(str.substr(8));
             }
-            if (str.indexOf("(str)") == 0) {
+            if (str.indexOf("(str)") === 0) {
                 this.EmitPushString(str.substr(5));
             }
             //(bytes) or([])开头，表示就是一个bytearray
-            else if (str.indexOf("(bytes)") == 0) {
+            else if (str.indexOf("(bytes)") === 0) {
                 var hex = hexToBytes(str.substr(7));
                 this.EmitPushBytes(hex);
             }
-            else if (str.indexOf("([])") == 0) {
+            else if (str.indexOf("([])") === 0) {
                 var hex = hexToBytes(str.substr(4));
                 this.EmitPushBytes(hex);
             }
             //(address) or(addr)开头，表示是一个地址，转换为脚本hash
-            else if (str.indexOf("(address)") == 0) {
+            else if (str.indexOf("(address)") === 0) {
                 var addr = (str.substr(9));
                 var hex = Account.GetPublicKeyScriptHash_FromAddress(addr);
                 this.EmitPushBytes(hex);
             }
-            else if (str.indexOf("(addr)") == 0) {
+            else if (str.indexOf("(addr)") === 0) {
                 var addr = (str.substr(6));
                 var hex = Account.GetPublicKeyScriptHash_FromAddress(addr);
                 this.EmitPushBytes(hex);
             }
             //(integer) or(int) 开头，表示是一个大整数
-            else if (str.indexOf("(integer)") == 0) {
+            else if (str.indexOf("(integer)") === 0) {
                 var num = new BigInteger(str.substr(9));
                 this.EmitPushNumber(num);
             }
-            else if (str.indexOf("(int)") == 0) {
+            else if (str.indexOf("(int)") === 0) {
                 var num = new BigInteger(str.substr(5));
                 this.EmitPushNumber(num);
             }
             //(hexinteger) or (hexint) or (hex) 开头，表示是一个16进制表示的大整数，转换为bytes就是反序
-            else if (str.indexOf("(hexinteger)") == 0) {
+            else if (str.indexOf("(hexinteger)") === 0) {
                 var hex = hexToBytes(str.substr(12));
                 this.EmitPushBytes(hex.reverse());
             }
-            else if (str.indexOf("(hexint)") == 0) {
+            else if (str.indexOf("(hexint)") === 0) {
                 var hex = hexToBytes(str.substr(8));
                 this.EmitPushBytes(hex.reverse());
             }
-            else if (str.indexOf("(hex)") == 0) {
+            else if (str.indexOf("(hex)") === 0) {
                 var hex = hexToBytes(str.substr(5));
                 this.EmitPushBytes(hex.reverse());
             }
             //(int256) or (hex256) 开头,表示是一个定长的256位 16进制大整数
-            else if (str.indexOf("(int256)") == 0 || str.indexOf("(hex256)") == 0) {
+            else if (str.indexOf("(int256)") === 0 || str.indexOf("(hex256)") === 0) {
                 var hex = hexToBytes(str.substr(8));
                 if (hex.length != 32)
                     throw new Error("not a int256");
                 this.EmitPushBytes(hex.reverse());
             }
             //(int160) or (hex160) 开头,表示是一个定长的160位 16进制大整数
-            else if (str.indexOf("(int160)") == 0 || str.indexOf("(hex160)") == 0) {
+            else if (str.indexOf("(int160)") === 0 || str.indexOf("(hex160)") === 0) {
                 var hex = hexToBytes(str.substr(8));
                 if (hex.length != 20)
                     throw new Error("not a int160");

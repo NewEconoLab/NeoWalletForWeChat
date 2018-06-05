@@ -8,7 +8,7 @@ import * as  CryptoKey from '../neo/Cryptography/CryptoKey'
 import { ECDsa } from '../neo/Cryptography/ECDsa'
 import * as UintHelper from './UintHelper'
 import { SHA256, AES, enc, mode, pad } from 'crypto-js'
-import scrypt from 'scrypt-async'
+import * as scrypt from 'scrypt-async'
 import * as StringHelper from './StringHelper'
 // export declare var scrypt: any;
 // export declare var CryptoJS: any;
@@ -368,7 +368,7 @@ export class Account {
     }
 
     public static GetAddrHash(addr: string): any {
-        var buffer = new Buffer(addr);
+        var buffer =  Account.String2Bytes(addr);
         let strkey = Sha256.computeHash(buffer);
         strkey = Sha256.computeHash(strkey);
         var addresshash = new Uint8Array(strkey);

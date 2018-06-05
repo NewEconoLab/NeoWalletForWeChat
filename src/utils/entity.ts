@@ -142,20 +142,20 @@ export class NeoAsset {
 
 
 export class Consts {
-    static baseContract = "0x954f285a93eed7b4aed9396a7806a5812f1a5950";
-    static registerContract = "0xd6a5e965f67b0c3e5bec1f04f028edb9cb9e3f7c";
+    static baseContract = Neo.Uint160.parse("954f285a93eed7b4aed9396a7806a5812f1a5950");
+    static registerContract =  Neo.Uint160.parse("d6a5e965f67b0c3e5bec1f04f028edb9cb9e3f7c");
 }
 
 export class DomainInfo {
-    owner: Uint8Array//所有者
-    register: Uint8Array//注册器
-    resolver: Uint8Array//解析器
+    owner: Neo.Uint160//所有者
+    register: Neo.Uint256//注册器
+    resolver: Neo.Uint256//解析器
     ttl: string//到期时间
 }
 
 export class RootDomainInfo extends DomainInfo {
     rootname: string;
-    roothash: Uint8Array;
+    roothash: Neo.Uint256;
     constructor() {
         super();
     }

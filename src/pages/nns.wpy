@@ -231,8 +231,12 @@ export default class NNS extends wepy.page {
 
   events = {};
 
-  onLoad() {
+  async onLoad() {
     // Util.get.wantBy('benben',Util.get.assets()['GAS']);
+    console.log('....................]]]]]]]]]]]]]]]]]]]]]]');
+    
+    let res = await Util.get.addrByDomain('jinghui.test');
+    await Util.reg.domain('nuanbing');
     this.OnLoading();
   }
   async onShow() {}

@@ -31,8 +31,10 @@ export default class Transfer {
         let randomStr = await getSecureRandom(256);
         Tips.loading('签名中');
         var signdata = Helper.Account.Sign(msg, prikey, randomStr);
+        console.log('../././././/22222222222222222');
 
         tran.AddWitness(signdata, pubkey, Wallet.account.address);
+        console.log('23232323232323232');
 
         Tips.loading('交易发送中');
         console.log(Helper.toHexString(tran.GetRawData()));
@@ -50,7 +52,7 @@ export default class Transfer {
      * @param sendcount 转账金额
      * @param height 区块高度 -- 用于管理已花费的utxo
      */
-     static makeTran(targetaddr, asset: Asset, sendcount: Neo.Fixed8, height: number): ThinNeo.Transaction {
+    static makeTran(targetaddr, asset: Asset, sendcount: Neo.Fixed8, height: number): ThinNeo.Transaction {
         //新建交易对象
         var tran = new ThinNeo.Transaction();
         //交易类型为合约交易
@@ -198,7 +200,7 @@ export default class Transfer {
      * invokeTrans 方式调用合约塞入attributes
      * @param script 合约的script
      */
-    static async contractInvokeTrans(target:string,script: Uint8Array, asset: Asset,count:number, height: number) {
+    static async contractInvokeTrans(target: string, script: Uint8Array, asset: Asset, count: number, height: number) {
         var addr = Wallet.account.address;
         //let _count = Neo.Fixed8.Zero;   //十个gas内都不要钱滴
         let tran = Transfer.makeTran(target, asset/*Context.Assets['GAS']*/, Neo.Fixed8.parse(count.toFixed(8)), height);

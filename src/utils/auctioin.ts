@@ -29,5 +29,6 @@ export default class Auction {
         res = await Transfer.contractInvokeTrans(null, script, asset, 0, 1000000);
     }
 
+    
 
 }

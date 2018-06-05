@@ -12,7 +12,7 @@ export class nep6account {
     public label: string;
     public publickey: string;
     public contract: contract;
-    public domains:string[];
+    public domains: string[];
 
     public getPrivateKey(scrypt: nep6ScryptParameters, password: string, callback: (info: string, result: string | Uint8Array) => void): void {
         var cb = (i, r) => {
@@ -44,6 +44,17 @@ export class nep6account {
         jsonacc["extra"] = null;
         jsonacc["contract"] = this.contract;
         return jsonacc;
+    }
+    constructor(account: {}) {
+        try {
+            this.address = account["address"]
+            this.publickey = account["publickey"]
+            this.label = account["label"]
+            this.nep2key = account["nep2key"]
+            //TODO: 域名解析
+        } catch (error) {
+            console.log(error);
+        }
     }
 }
 

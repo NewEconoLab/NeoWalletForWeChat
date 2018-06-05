@@ -217,7 +217,7 @@ export default class Home extends wepy.page {
 
   components = {
     cassets: CAssets,
-    cnotice:CNotice
+    cnotice: CNotice
   };
 
   data = {
@@ -253,7 +253,7 @@ export default class Home extends wepy.page {
     this.$apply();
   }
   async onShow() {
-    this.$invoke('cnotice','show','这是个大提示');
+    this.$invoke('cnotice', 'show', '这是个大提示');
   }
   // 页面渲染完成
   async onReady() {
@@ -286,7 +286,12 @@ export default class Home extends wepy.page {
         Util.set.account(account);
         Util.service.start(account);
       }
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
+    console.log('////////////////////////////');
+
+    console.log(Util.const.DAPP_SGAS.toString());
   }
   onShareAppMessage() {
     return {
