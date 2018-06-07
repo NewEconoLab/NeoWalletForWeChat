@@ -18,6 +18,8 @@ export class Asset {
         this.name = name;
         this.id = id;
         this.utxos = {};
+
+        // 只有nep5才可以在初始化的时候就知道余额
         if (count !== -1) {
             this.isnep5 = true;
             this.amount = count + '';
@@ -39,22 +41,15 @@ export class Asset {
      * @param utxo 新的UTXO
      * @param height 当前区块高度
      */
-    public addUTXO(utxo: Utxo, height: number) {
+    public addUTXO(utxo: Utxo) {
         //已存在且已花费
-        if ((this.utxos[utxo.txid] as Utxo) !== undefined && (this.utxos[utxo.txid] as Utxo).isSpent) {
+        if ((this.utxos[utxo.txid] as Utxo) === undefined) {
             //判断交易高度是否已经超过两个 判断交易失败，spent状态取消
-            if (height - (this.utxos[utxo.txid] as Utxo).spent >= 2) {
-                (this.utxos[utxo.txid] as Utxo).isSpent = false;
-                (this.utxos[utxo.txid] as Utxo).spent = 0;
-            }
-        } else { //新的UTXO
             this.utxos[utxo.txid] = utxo;
+            this.amount = (parseFloat(this.amount) + utxo.count).toFixed(8);
         }
-        this.amount = (parseFloat(this.amount) + utxo.count).toFixed(8);
     }
-    public ss() {
-        console.log('====');
-    }
+
     /**
      * 获取支付用的utxo
      * @param amount 需要的总金额
@@ -143,7 +138,7 @@ export class NeoAsset {
 
 export class Consts {
     static baseContract = Neo.Uint160.parse("954f285a93eed7b4aed9396a7806a5812f1a5950");
-    static registerContract =  Neo.Uint160.parse("d6a5e965f67b0c3e5bec1f04f028edb9cb9e3f7c");
+    static registerContract = Neo.Uint160.parse("d6a5e965f67b0c3e5bec1f04f028edb9cb9e3f7c");
 }
 
 export class DomainInfo {

@@ -1,7 +1,9 @@
 import { Nep6, Helper } from '../lib/neo-ts/index';
-import { SCRYPT, CURR_ACCOUNT, LOCAL_ACCOUNTS } from './const'
+import { SCRYPT, CURR_ACCOUNT, LOCAL_ACCOUNTS, id_GAS } from './const'
 import Tips from './tip';
 import Cache from './cache'
+import Https from './Https';
+import { Utxo, Asset } from './entity';
 export default class Wallet {
     //当前账户钱包
     static wallet: Nep6.nep6wallet = null
@@ -96,20 +98,48 @@ export default class Wallet {
             Tips.alert('密钥格式错误，重新登陆')
             return;
         }
-
-        // if (this.address === null) {
-        //     if (this.publickey === null) {
-        //         const prikey = NEL.helper.UintHelper.hexToBytes(this.privatekey);
-        //         this.publickey = NEL.helper.Helper.GetPublicKeyFromPrivateKey(prikey);
-        //     }
-        //     this.address = NEL.helper.Helper.GetAddressFromPublicKey(this.publickey);
-        // }
         return this.account.address;
+    }
+
+
+    /**
+     * 获取私钥
+     * @param passphrase nep2解密密码
+     */
+    public static async getPrikey(passphrase?: string) /*Uint8Array*/ {
+        return new Promise((resolve, rejet) => {
+
+            //私钥登陆
+            if (this.account.nep2key.length === 64)
+                resolve(this.account.nep2key);
+            else {
+
+            }
+        })
     }
 
     static test() {
 
     }
+
+    /**
+     * 获取地址UTXO
+     * @param addr 目标地址
+     */
+    public static async getUTXO_GAS(addr: string):Promise<Asset> {
+        let utxos = await Https.api_getUTXO(addr);
+        let GAS = new Asset('GAS',id_GAS);
+
+        for (const index in utxos) {
+            let utxo: Utxo = new Utxo(utxos[index]);
+
+            if (utxo["asset"] === id_GAS) {
+                GAS.addUTXO(utxo);
+            }
+        }
+        return GAS;
+    }
+
     /**
      * wif 转私钥
      * @param {string} wif 

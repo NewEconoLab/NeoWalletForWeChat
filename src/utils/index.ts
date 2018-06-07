@@ -10,7 +10,7 @@ import Tips from './tip';
 import Transfer from './transaction';
 import Cache from './cache';
 import Wallet from './wallet';
-import { Nep6 } from '../lib/neo-ts';
+import { Nep6, Helper } from '../lib/neo-ts/index';
 import User from './user'
 import Auction from './auctioin';
 
@@ -79,6 +79,18 @@ export default {
         update: Context.OnTimeOut,
     },
     reg: {
-        domain: NNS.nnsRegister
+        domain: NNS.nnsRegister,
+        test:()=>{
+            console.log('[[[[[[[[[[[[[[[[[[[[[[[');
+            
+            console.log(Helper.hexToBytes(Const.DAPP_SGAS.toString()));
+            
+            console.log(Const.DAPP_SGAS.toString());
+            console.log(new Uint8Array(Const.DAPP_SGAS.bits.buffer))
+            console.log(Const.DAPP_SGAS.toArray());
+            
+            console.log('[[[[[[[[[[[[[[[[[[[[[[[[');
+            
+        }
     }
 }

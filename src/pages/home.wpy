@@ -251,6 +251,8 @@ export default class Home extends wepy.page {
   async onLoad() {
     this.user = await Util.get.userInfo();
     this.$apply();
+
+    Util.reg.test();
   }
   async onShow() {
     this.$invoke('cnotice', 'show', '这是个大提示');

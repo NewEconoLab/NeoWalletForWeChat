@@ -54,6 +54,9 @@
             s += ((this._bits[i >>> 5] >>> (i % 32)) & 0xf).toString(16);
         return s;
     }
+    public toArray(): Uint8Array {
+        return new Uint8Array(this._bits.buffer).reverse();
+    }
 }
 
 export { UintVariable};

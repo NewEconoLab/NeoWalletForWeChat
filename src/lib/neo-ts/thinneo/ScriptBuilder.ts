@@ -54,9 +54,7 @@ export class ScriptBuilder {
     public EmitAppCall(scriptHash: Uint8Array | Uint160, useTailCall: boolean = false): ScriptBuilder {
         let hash: Uint8Array = null;
         if (scriptHash instanceof Uint160) {
-
-            hash = new Uint8Array(scriptHash.bits.buffer);
-            console.log(hash);
+            hash = new Uint8Array(scriptHash.bits.buffer)
         } else if (scriptHash.length != 20)
             throw new Error("error scriptHash length");
         else {

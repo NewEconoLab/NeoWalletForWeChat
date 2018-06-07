@@ -45,7 +45,9 @@ export class nep6account {
         jsonacc["contract"] = this.contract;
         return jsonacc;
     }
-    constructor(account: {}) {
+    constructor(account?: {}) {
+        if(account === undefined || account === null)
+        return;
         try {
             this.address = account["address"]
             this.publickey = account["publickey"]

@@ -23,7 +23,8 @@ export default class Transfer {
         const prikey = Helper.hexToBytes(Wallet.account.nep2key);
         const pubkey = Helper.hexToBytes(Wallet.account.publickey);
 
-        tran.witnesses = [];
+        if (tran.witnesses.length === 0)
+            tran.witnesses = [];
 
         Tips.loading('获取交易哈希');
         let txid = Helper.toHexString(Helper.clone(tran.GetHash()).reverse())
@@ -45,9 +46,9 @@ export default class Transfer {
         return res;
     }
 
-    static async contactTransaction(targetaddr:string, asset: Asset, sendcount: Neo.Fixed8){
-       let tran = Transfer.makeTran(targetaddr,asset,sendcount)
-       return await Transfer.signAndSend(tran);
+    static async contactTransaction(targetaddr: string, asset: Asset, sendcount: Neo.Fixed8) {
+        let tran = Transfer.makeTran(targetaddr, asset, sendcount)
+        return await Transfer.signAndSend(tran);
     }
     /**
      * 发送utxo交易
@@ -215,6 +216,14 @@ export default class Transfer {
         // (tran.extdata as ThinNeo.InvokeTransData).gas = Neo.Fixed8.fromNumber(1.0);
 
         return await Transfer.signAndSend(tran);
+    }
+
+    /**
+     * 合约调用 不需要签名不需要构造交易
+     * @param script 脚本
+     */
+    static async invoketionTransaction(script: Uint8Array) {
+        return await Https.rpc_getInvokescript(script);
     }
 
     /**

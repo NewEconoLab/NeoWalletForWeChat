@@ -10,7 +10,7 @@ import * as UintHelper from './UintHelper'
 import { SHA256, AES, enc, mode, pad } from 'crypto-js'
 import * as scrypt from 'scrypt-async'
 import * as StringHelper from './StringHelper'
-import {Uint160} from '../neo/Uint160'
+import { Uint160 } from '../neo/Uint160'
 // export declare var scrypt: any;
 // export declare var CryptoJS: any;
 var scrypt_loaded: boolean = false;
@@ -88,7 +88,7 @@ export class Account {
 
     }
 
-    public static GetAddressFromScriptHash(scripthash: Uint8Array| Uint160): string {
+    public static GetAddressFromScriptHash(scripthash: Uint8Array | Uint160): string {
         var script_hash: Uint8Array;
         if (scripthash instanceof Uint160) {
             script_hash = new Uint8Array(scripthash.bits.buffer);
@@ -371,11 +371,11 @@ export class Account {
                 }
                 callback("finish", prikey);
             });
-        
+
     }
 
     public static GetAddrHash(addr: string): any {
-        var buffer =  Account.String2Bytes(addr);
+        var buffer = Account.String2Bytes(addr);
         let strkey = Sha256.computeHash(buffer);
         strkey = Sha256.computeHash(strkey);
         var addresshash = new Uint8Array(strkey);

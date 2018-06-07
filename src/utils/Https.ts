@@ -200,6 +200,16 @@ export default class Https {
      * *********************************************************/
 
     /**
+     * 获取合约脚本
+     */
+    static async api_getcontractstate(scriptaddr: string)
+    {
+        var str = Https.makeRpcUrl(this.api, "getcontractstate", scriptaddr);
+        var value = await Request.Request({ "method": "get" },str);
+        return value[ "result" ]['script'];
+    }
+
+    /**
      * 获取nep5 代币详情
      * @param asset 
      */
