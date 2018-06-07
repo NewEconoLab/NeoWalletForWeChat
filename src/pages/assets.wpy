@@ -38,6 +38,8 @@ export default class Assets extends wepy.page {
 
       //直接调用上一个页面的setData()方法，把数据存到上一个页面中去
       let coin0 = JSON.stringify(coin);
+      console.log(prevPage);
+      
       prevPage.setData({
         coin: JSON.parse(coin0)
       });

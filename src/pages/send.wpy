@@ -210,14 +210,14 @@ export default class Send extends wepy.page {
     async formSubmit(e) {
       const that = this;
       let target = this.address; //e.detail.value.address;
-      let amount = ''; // e.detail.value.amount;
+      let amount = e.detail.value.amount;
       let password = ''; // e.detail.value.passphrase;
       Util.set.formid(e.detail.formId);
       if (target.length !== 34) {
         Util.show.alert('目标地址有误');
         return;
       }
-      if (parseFloat(amount) > parseFloat(UTXO.balance[this.checked].amount)) {
+      if (parseFloat(amount) > parseFloat(this.coin.amount)) {
         Util.show.alert('余额不足');
         return;
       }
@@ -308,9 +308,8 @@ export default class Send extends wepy.page {
   async SendTran(prikey, pubkey) {
     pubkey = Helper.hexToBytes(pubkey);
     var count = Neo.Fixed8.parse(this.amount + '');
-    let coin = this.checked === 'GAS' ? Coin.id_GAS : Coin.id_NEO;
     Util.loading('交易生成中');
-    var tran = Coin.makeTran(UTXO.assets, this.targetAddr, coin, count);
+    var tran = Coin.makeTran(this.targetAddr, this.coin, count);
     let randomStr = await Random.getSecureRandom(256);
     Util.loading('获取交易编号');
     const txid = await Util.setTran(tran, prikey, pubkey, randomStr);

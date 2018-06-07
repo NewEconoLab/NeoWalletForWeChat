@@ -45,14 +45,17 @@ export default class Transfer {
         return res;
     }
 
+    static async contactTransaction(targetaddr:string, asset: Asset, sendcount: Neo.Fixed8){
+       let tran = Transfer.makeTran(targetaddr,asset,sendcount)
+       return await Transfer.signAndSend(tran);
+    }
     /**
      * 发送utxo交易
      * @param targetaddr 目的地址
      * @param asset 资产对象
      * @param sendcount 转账金额
-     * @param height 区块高度 -- 用于管理已花费的utxo
      */
-    static makeTran(targetaddr, asset: Asset, sendcount: Neo.Fixed8, height: number): ThinNeo.Transaction {
+    static makeTran(targetaddr, asset: Asset, sendcount: Neo.Fixed8): ThinNeo.Transaction {
         //新建交易对象
         var tran = new ThinNeo.Transaction();
         //交易类型为合约交易
@@ -62,7 +65,7 @@ export default class Transfer {
         tran.attributes = [];
         tran.inputs = [];
 
-        var pay: Pay = asset.pay(sendcount, height);
+        var pay: Pay = asset.pay(sendcount);
 
         //交易输入
         for (var i = 0; i < pay.utxos.length; i++) {
@@ -200,10 +203,10 @@ export default class Transfer {
      * invokeTrans 方式调用合约塞入attributes
      * @param script 合约的script
      */
-    static async contractInvokeTrans(target: string, script: Uint8Array, asset: Asset, count: number, height: number) {
+    static async contractInvokeTrans(target: string, script: Uint8Array, asset: Asset, count: number) {
         var addr = Wallet.account.address;
         //let _count = Neo.Fixed8.Zero;   //十个gas内都不要钱滴
-        let tran = Transfer.makeTran(target, asset/*Context.Assets['GAS']*/, Neo.Fixed8.parse(count.toFixed(8)), height);
+        let tran = Transfer.makeTran(target, asset/*Context.Assets['GAS']*/, Neo.Fixed8.parse(count.toFixed(8)));
 
         tran.type = ThinNeo.TransactionType.InvocationTransaction;
         tran.extdata = new ThinNeo.InvokeTransData();

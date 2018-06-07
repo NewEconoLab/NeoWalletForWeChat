@@ -60,7 +60,7 @@ export class Asset {
      * @param amount 需要的总金额
      * @param height 当前区块高度
      */
-    public pay(amount: Neo.Fixed8, height: number): any {
+    public pay(amount: Neo.Fixed8): any {
         let count: Neo.Fixed8 = Neo.Fixed8.Zero;
         let outputs: Utxo[] = [];
         for (let key in this.utxos) {
@@ -68,8 +68,8 @@ export class Asset {
             // 总额未够且 未花费
             if (count.compareTo(amount) < 0 && !utxo.spent) {
                 count.add(Neo.Fixed8.parse(utxo.count));
-                (this.utxos[key] as Utxo).spent = height;
-                (this.utxos[key] as Utxo).isSpent = true;
+                // (this.utxos[key] as Utxo).spent = height;
+                // (this.utxos[key] as Utxo).isSpent = true;
                 outputs.push(utxo);
             }
         }

@@ -1,8 +1,6 @@
 import Https from './Https';
+import {id_GAS, id_NEO} from './const'
 export default class Coin {
-    static id_GAS = "0x602c79718b16e442de58778e148d0b1084e3b2dffd5de6b7b16cee7969282de7";
-    static id_NEO = "0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b";
-
     static assetID2name = {};
     static name2assetID = {};
     static async initAllAsset() {
@@ -13,10 +11,10 @@ export default class Coin {
             var id = asset.id;
             var name = "";
 
-            if (id === Coin.id_GAS) {
+            if (id === id_GAS) {
                 name = 'GAS';
             }
-            else if (id === Coin.id_NEO) {
+            else if (id === id_NEO) {
                 name = 'NEO';
             }
             else {

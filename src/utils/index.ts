@@ -30,7 +30,7 @@ export default {
         loading: Tips.loaded
     },
     send: {
-        transfer: Transfer.makeTran,
+        transfer: Transfer.contactTransaction,
         // invoke: Transfer.nep5Transaction,
         claim: Transfer.claimGas,
     },
