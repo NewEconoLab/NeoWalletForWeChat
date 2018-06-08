@@ -236,6 +236,7 @@ export default class NNS extends wepy.page {
     console.log('....................]]]]]]]]]]]]]]]]]]]]]]');
     
     let res = await Util.get.addrByDomain('jinghui.test');
+      res = await Util.get.addrByDomain2('jinghui.test');
     await Util.reg.domain('nuanbing');
     this.OnLoading();
   }

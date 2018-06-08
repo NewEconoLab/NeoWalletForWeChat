@@ -55,7 +55,7 @@
         return s;
     }
     public toArray(): Uint8Array {
-        return new Uint8Array(this._bits.buffer).reverse();
+        return new Uint8Array(this._bits.buffer);
     }
 }
 

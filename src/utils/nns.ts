@@ -21,15 +21,8 @@ export default class NNS {
         domain = domain.toLowerCase().trim();
 
         let verify = /^[a-zA-Z0-9]{1,32}$/;
-        console.log('2222222222222222222222');
-
         if (verify.test(domain)) {
-            console.log('44444444444444444444444444444444444');
-
             let domains = await NNS.queryDomainInfo(domain + ".test")
-            console.log('6666666666666666666666666666666666');
-
-
             if (domains.register && domains.ttl) {
                 var timestamp = new Date().getTime();
                 console.log(timestamp);
@@ -80,13 +73,7 @@ export default class NNS {
         // NNS.verifyDomain(domain);
         if (domain) {
             try {
-                console.log('---------------------;;;;;;;;;');
-
                 let res = await NNS.registerDomain(domain);
-                console.log('reg-----------------------------------');
-
-                console.log(res);
-
                 if (res.err) {
                     console.error(res.info);
                 } else {
@@ -95,11 +82,9 @@ export default class NNS {
                     state.domainname = domain + ".test";
                     DomainStatus.setStatus(state);
                     NNS.getDomainsByAddr();
-                    // this.btn_register = true;
                 }
             } catch (error) {
                 console.log(error);
-
                 // mui.alert(error.message);
             }
         }
@@ -146,8 +131,6 @@ export default class NNS {
         var nnshash: Neo.Uint256 = Common.nameHashArray(domainarr);
         let doamininfo = await NNS.getOwnerInfo(nnshash, Consts.baseContract);
         console.log(doamininfo);
-        console.log('....................................');
-
         // var owner = Helper.toHexString(doamininfo.owner);
         return doamininfo;
     }
@@ -168,10 +151,6 @@ export default class NNS {
         var data = sb.ToArray();
 
         let result = await Https.rpc_getInvokescript(data);
-        console.log('<><><><><><>><<<>><><><><');
-
-        console.log(result);
-
         try {
             var state = result.state as string;
             // info2.textContent = "";
@@ -232,21 +211,14 @@ export default class NNS {
         sb.EmitAppCall(scriptaddress);
         var data = sb.ToArray();
         var res = await Transfer.contractInvoke_attributes(data);
-        console.log('========================');
-        console.log('{{{{{{{{{{{{{{{{{{{{{{{{{{{{');
-
-        console.log(Helper.toHexString(res));
-
-        console.log('==========================');
-
         if (!res.err) {
             // WWW.setnnsinfo(address,doamin,);
         }
         return res;
     }
 
-    static async resolveData(domain: string) {
-        var scriptaddress = Consts.baseContract;
+    static async resolveData2(domain:string){
+        var scriptaddress = Helper.hexToBytes("954f285a93eed7b4aed9396a7806a5812f1a5950").reverse()//Consts.baseContract;
         let arr = domain.split(".");
         let nnshash: Neo.Uint256 = Common.nameHashArray(arr);
 
@@ -256,9 +228,6 @@ export default class NNS {
                 "(str)1"))
 
         let res = await Https.rpc_getInvokescript(data);
-        console.log('====================,,,,,,,,,,,,,,,,,,,');
-        console.log(res);
-        console.log('................................,,,,,,,,,,,,,,,,');
         let ret = {}
         try {
             var state = res.state as string;
@@ -271,10 +240,42 @@ export default class NNS {
                     if (stack[0].value as string != "00") {
                         let value = Helper.hexToBytes(stack[0].value as string);
                         let addr = Account.Bytes2String(value);
-                        console.log('././././././././././');
+                        ret = { state: true, addr: addr };
 
-                        console.log('hhhhhhhhhh' + addr);
-                        console.log('././././..//./.');
+
+                    }
+                }
+            }
+        }
+        catch (e) {
+            console.log(e);
+            ret = { state: false };
+        }
+        return ret;
+    }
+    static async resolveData(domain: string) {
+        var scriptaddress = Consts.baseContract;
+        let arr = domain.split(".");
+        let nnshash: Neo.Uint256 = Common.nameHashArray(arr);
+
+        var data = Common.buildScript(scriptaddress, "resolve",
+            new Array("(str)addr",
+                "(hex256)" + nnshash.toString(),
+                "(str)1"))
+
+        let res = await Https.rpc_getInvokescript(data);
+        let ret = {}
+        try {
+            var state = res.state as string;
+            // info2.textContent = "";
+            if (state.includes("HALT, BREAK")) {
+                // info2.textContent += "Succ\n";
+                var stack = res.stack as any[];
+                //find name 他的type 有可能是string 或者ByteArray
+                if (stack[0].type == "ByteArray") {
+                    if (stack[0].value as string != "00") {
+                        let value = Helper.hexToBytes(stack[0].value as string);
+                        let addr = Account.Bytes2String(value);
                         ret = { state: true, addr: addr };
 
 
