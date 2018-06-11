@@ -1,4 +1,4 @@
-import { DomainInfo, Consts, RootDomainInfo, DomainStatus, Domainmsg } from './entity';
+import { DomainInfo, Consts, RootDomainInfo, DomainStatus, Domainmsg,DataType, NNSResult,ResultItem } from './entity';
 import { ThinNeo, Helper, Neo } from '../lib/neo-ts/index'
 import Https from "./Https";
 import Coin from './coin';
@@ -217,42 +217,6 @@ export default class NNS {
         return res;
     }
 
-    static async resolveData2(domain:string){
-        var scriptaddress = Helper.hexToBytes("954f285a93eed7b4aed9396a7806a5812f1a5950").reverse()//Consts.baseContract;
-        let arr = domain.split(".");
-        let nnshash: Neo.Uint256 = Common.nameHashArray(arr);
-
-        var data = Common.buildScript(scriptaddress, "resolve",
-            new Array("(str)addr",
-                "(hex256)" + nnshash.toString(),
-                "(str)1"))
-
-        let res = await Https.rpc_getInvokescript(data);
-        let ret = {}
-        try {
-            var state = res.state as string;
-            // info2.textContent = "";
-            if (state.includes("HALT, BREAK")) {
-                // info2.textContent += "Succ\n";
-                var stack = res.stack as any[];
-                //find name 他的type 有可能是string 或者ByteArray
-                if (stack[0].type == "ByteArray") {
-                    if (stack[0].value as string != "00") {
-                        let value = Helper.hexToBytes(stack[0].value as string);
-                        let addr = Account.Bytes2String(value);
-                        ret = { state: true, addr: addr };
-
-
-                    }
-                }
-            }
-        }
-        catch (e) {
-            console.log(e);
-            ret = { state: false };
-        }
-        return ret;
-    }
     static async resolveData(domain: string) {
         var scriptaddress = Consts.baseContract;
         let arr = domain.split(".");
@@ -271,8 +235,15 @@ export default class NNS {
             if (state.includes("HALT, BREAK")) {
                 // info2.textContent += "Succ\n";
                 var stack = res.stack as any[];
+                let rest =new NNSResult();
+                rest.textInfo = res;
+                console.log('..');
+                console.log(stack);
+                
+                rest.value = ResultItem.FromJson(DataType.Array, stack);
+                console.log(rest)
                 //find name 他的type 有可能是string 或者ByteArray
-                if (stack[0].type == "ByteArray") {
+                if (stack[0].type == DataType.ByteArray) {
                     if (stack[0].value as string != "00") {
                         let value = Helper.hexToBytes(stack[0].value as string);
                         let addr = Account.Bytes2String(value);

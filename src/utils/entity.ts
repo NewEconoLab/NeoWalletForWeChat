@@ -276,3 +276,84 @@ export class WatchOnlyAccount {
 
     }
 }
+
+export class DataType {
+    public static Array = 'Array';
+    public static ByteArray = 'ByteArray';
+    public static Integer = 'Integer';
+    public static Boolean = 'Boolean';
+    public static String = 'String';
+}
+
+export class ResultItem {
+    public data: Uint8Array;
+    public subItem: ResultItem[];
+
+    public static FromJson(type: string, value: any): ResultItem {
+        let item: ResultItem = new ResultItem();
+        console.log(value);
+        if (type === DataType.Array) {
+            item.subItem = []//new ResultItem[(value as Array<any>).length];
+            for (let i = 0; i < (value as any[]).length; i++) {
+                let subjson = ((value as any)[i] as Map<string, any>);
+                let subtype = (subjson["type"] as string);
+                item.subItem.push(ResultItem.FromJson(subtype, subjson["value"]));
+            }
+        }
+        else if (type === DataType.ByteArray) {
+            item.data = Helper.hexToBytes(value as string);
+        }
+        else if (type === DataType.Integer) {
+            item.data = Neo.BigInteger.parse(value as string).toUint8Array();
+        }
+        else if (type === DataType.Boolean) {
+            if ((value as number) != 0)
+                item.data = new Uint8Array(0x01);
+            else
+                item.data = new Uint8Array(0x00);
+        }
+        else if (type === DataType.String) {
+            item.data = new Buffer(value as string);
+        }
+        else {
+            console.log("not support type:" + type);
+        }
+        return item;
+    }
+
+
+    public AsHexString(): string {
+        return Helper.toHexString(this.data);
+    }
+    public AsHashString(): string {
+        return "0x" + Helper.toHexString(this.data.reverse());
+    }
+    public AsString(): string {
+        return String.fromCharCode.apply(null, this.data);
+    }
+    public AsHash160(): Neo.Uint160 {
+        if (this.data.length === 0)
+            return null;
+        return new Neo.Uint160(this.data.buffer);
+    }
+
+    public AsHash256(): Neo.Uint256 {
+        if (this.data.length === 0)
+            return null;
+        return new Neo.Uint256(this.data.buffer);
+    }
+    public AsBoolean(): boolean {
+        if (this.data.length === 0 || this.data[0] === 0)
+            return false;
+        return true;
+    }
+
+    public AsInteger(): Neo.BigInteger {
+        return new Neo.BigInteger(this.data);
+    }
+}
+
+export class NNSResult {
+    public textInfo: string;
+    public value: any; //不管什么类型统一转byte[]
+}

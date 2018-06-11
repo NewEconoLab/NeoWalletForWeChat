@@ -6,6 +6,7 @@ import { Asset, Pay, Claim, History } from './entity';
 import Coin from './coin';
 import { getSecureRandom } from './random'
 import { formatTime } from './time';
+import * as Const from './const'
 export default class Transfer {
 
     static formId = [];
@@ -138,7 +139,7 @@ export default class Transfer {
             (tran.extdata as ThinNeo.ClaimTransData).claims.push(input);
         }
         var output = new ThinNeo.TransactionOutput();
-        output.assetId = Helper.hexToBytes(Coin.id_GAS).reverse();
+        output.assetId = Helper.hexToBytes(Const.id_GAS).reverse();
         output.toAddress = Helper.Account.GetPublicKeyScriptHash_FromAddress(Wallet.account.address);
         output.value = Neo.Fixed8.parse(sum);
         tran.outputs = [];
