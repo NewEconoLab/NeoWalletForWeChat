@@ -32,18 +32,27 @@ export default class Wallet {
      * @param {string} key prikey
      */
     static getAccount(label: string, key: string): Nep6.nep6account {
-        let privateKey = Helper.hexToBytes(key);
+        let privateKey;
+        if (key !== null && key.length === 52 && key.charAt(0) === 'K') {
+            privateKey =Helper.hexToBytes(Wallet.wif2prikey(key));
+        } else {
+            privateKey = Helper.hexToBytes(key);
+        }
+
+        console.log('000')
         Tips.loading('公钥计算中');
         const publicKey = Helper.Account.GetPublicKeyFromPrivateKey(privateKey);
-
+        console.log('1111')
         Tips.loading('地址计算中');
         const address = Helper.Account.GetAddressFromPublicKey(publicKey);
         let account: Nep6.nep6account = new Nep6.nep6account();
-
+        console.log('3333')
         account.address = address;
         account.label = label;
         account.nep2key = key;
         account.publickey = Helper.toHexString(publicKey);
+        console.log('4444')
+        console.log(account)
         return account;
     }
 
@@ -57,15 +66,23 @@ export default class Wallet {
         }
 
         let account = new Nep6.nep6account();
-        account.address = json['address'];
-        account.label = json['label'];
-        account.nep2key = json['nep2key'];
-        account.publickey = json['publickey'];
+        const key = json['nep2key'];
+        const addr = json['address'];
+
+        if (addr === undefined) {
+            account = Wallet.getAccount(label, key);
+        } else {
+            account.address = addr;
+            account.label = json['label'];
+            account.publickey = json['publickey'];
+            account.nep2key = json['nep2key'];
+        }
 
         Wallet.setAccount(account);
         accounts[label] = account;
         Cache.put(LOCAL_ACCOUNTS, accounts);
     }
+
     /**
      * 缓存账户
      * @param {object} wallet 
@@ -126,9 +143,9 @@ export default class Wallet {
      * 获取地址UTXO
      * @param addr 目标地址
      */
-    public static async getUTXO_GAS(addr: string):Promise<Asset> {
+    public static async getUTXO_GAS(addr: string): Promise<Asset> {
         let utxos = await Https.api_getUTXO(addr);
-        let GAS = new Asset('GAS',id_GAS);
+        let GAS = new Asset('GAS', id_GAS);
 
         for (const index in utxos) {
             let utxo: Utxo = new Utxo(utxos[index]);

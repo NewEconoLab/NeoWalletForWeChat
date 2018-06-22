@@ -13,7 +13,6 @@
   flex-direction: column;
   align-items: center;
   width: 650rpx; // 750rpx
-  height: 700rpx;
   margin-top: 92rpx;
   background: #ffffff;
   box-shadow: 0 2px 5px 0 rgba(192, 192, 192, 0.5);
@@ -33,16 +32,17 @@
   flex-direction: column;
   align-items: center;
   .canvas {
-    width: 230px;
-    height: 230px;
+    width: 500rpx;
+    height: 500rpx;
   }
+  margin-bottom: 40rpx;
 }
 
 .area-address {
   display: flex;
   flex-direction: column;
   align-items: left;
-  margin: 79rpx 15px 20px 27rpx;
+  margin: 50rpx 15px 20px 27rpx;
   width: 682rpx;
   justify-content: flex-start;
 }
@@ -59,7 +59,7 @@
   color: #22a4ff;
   letter-spacing: 0;
   line-height: 14px;
-  margin-top: 30rpx;
+  margin-top: 10rpx;
 }
 </style>
 
@@ -95,12 +95,7 @@ export default class Receive extends wepy.page {
     const user = await Util.get.userInfo();
     this.avatarUrl = user.avatarUrl;
     this.$apply();
-    drawQrcode({
-      width: 230,
-      height: 230,
-      canvasId: 'address',
-      text: this.account.address
-    });
+    this.onGetSystemInfo()
   } // 在Page和Component共用的生命周期函数
 
   onShow() {
@@ -138,7 +133,6 @@ export default class Receive extends wepy.page {
   methods = {
     copyToClip() {
       let that = this;
-
       wepy.setClipboardData({
         data: that.account.address,
         success: function(res) {
@@ -177,6 +171,27 @@ export default class Receive extends wepy.page {
         console.log(res);
       }
     };
+  }
+  onGetSystemInfo() {
+    let that = this;
+    wx.getSystemInfo({
+      success: function(res) {
+        console.log(res.model);
+        console.log(res.pixelRatio);
+        console.log(res.windowWidth);
+        console.log(res.windowHeight);
+        console.log(res.language);
+        console.log(res.version);
+        console.log(res.platform);
+
+        drawQrcode({
+          width: res.windowWidth*(2.0/3),
+          height: res.windowWidth*(2.0/3),
+          canvasId: 'address',
+          text: that.account.address
+        });
+      }
+    });
   }
 }
 </script>

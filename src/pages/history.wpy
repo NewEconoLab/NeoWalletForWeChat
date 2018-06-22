@@ -65,7 +65,9 @@ export default class History extends wepy.page {
     if (this.isLoading) return;
     this.isLoading = true;
     this.$apply();
-   const TXs = await Util.get.TXs(1);
+    Util.show.loading('历史数据加载中');
+    const TXs = await Util.get.TXs(1);
+    Util.hide.loading();
     if (TXs === null) {
       this.notEmpty = 'false';
     } else {

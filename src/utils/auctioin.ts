@@ -10,7 +10,7 @@ export default class Auction {
     constructor() { }
 
     public static async wantBy(domain: string, asset: Asset) {
-        var roothash = Helper.toHexString(Common.nameHash(DOMAIN_ROOT).reverse());
+        var roothash = Common.nameHash(DOMAIN_ROOT);
 
         //得到注册器
         var sb = Common.buildScript(DAPP_NNS, "getOwnerInfo", new Array("(hex256)" + roothash));
@@ -26,7 +26,7 @@ export default class Auction {
             "(hex256)" + roothash,
             "(str)" + domain));
 
-        res = await Transfer.contractInvokeTrans(null, script, asset, 0, 1000000);
+        res = await Transfer.contractInvokeTrans(null, script, asset, 0);
     }
 
     

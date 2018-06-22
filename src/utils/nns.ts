@@ -12,7 +12,7 @@ import Common from './common';
  * @method initRootDomain_初始化根域名信息
  */
 export default class NNS {
-    static root_test: RootDomainInfo;
+    static root: RootDomainInfo;
 
     /**
      * 校验域名
@@ -61,7 +61,7 @@ export default class NNS {
         test.register = domain.register;
         test.resolver = domain.resolver;
         test.ttl = domain.ttl;
-        NNS.root_test = test;
+        NNS.root = test;
     }
 
 
@@ -69,11 +69,11 @@ export default class NNS {
      * 注册域名
      * @param domain 域名
      */
-    static async nnsRegister(domain: string) {
+    static async nnsRegister(domain: string,prikey:string) {
         // NNS.verifyDomain(domain);
         if (domain) {
             try {
-                let res = await NNS.registerDomain(domain);
+                let res = await NNS.registerDomain(domain,prikey);
                 if (res.err) {
                     console.error(res.info);
                 } else {
@@ -200,17 +200,17 @@ export default class NNS {
      * 注册域名
      * @param doamin 域名字符串
      */
-    static async registerDomain(doamin: string) {
-        var nnshash: Neo.Uint256 = Common.nameHash(NNS.root_test.rootname);
+    static async registerDomain(doamin: string,prikey:string) {
+        var nnshash: Neo.Uint256 = Common.nameHash(NNS.root.rootname);
         var address = Wallet.account.address;
         var sb = new ThinNeo.ScriptBuilder();
-        var scriptaddress = NNS.root_test.register;
+        var scriptaddress = NNS.root.register;
 
         sb.EmitParamJson(["(addr)" + address, "(hex256)" + nnshash.toString(), "(str)" + doamin]);//第二个参数是个数组
         sb.EmitPushString("requestSubDomain");
         sb.EmitAppCall(scriptaddress);
         var data = sb.ToArray();
-        var res = await Transfer.contractInvoke_attributes(data);
+        var res = await Transfer.contractInvoke_attributes(data,prikey);
         if (!res.err) {
             // WWW.setnnsinfo(address,doamin,);
         }
@@ -237,8 +237,6 @@ export default class NNS {
                 var stack = res.stack as any[];
                 let rest =new NNSResult();
                 rest.textInfo = res;
-                console.log('..');
-                console.log(stack);
                 
                 rest.value = ResultItem.FromJson(DataType.Array, stack);
                 console.log(rest)

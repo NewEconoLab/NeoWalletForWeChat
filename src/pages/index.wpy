@@ -159,7 +159,7 @@ export default class Index extends wepy.page {
       console.log('param');
       console.log(param);
 
-      await Util.set.account(param);
+      await Util.set.account_json(param);
       wepy.reLaunch({ url: './home' });
     },
     async onCreate(e) {

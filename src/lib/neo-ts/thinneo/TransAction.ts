@@ -457,8 +457,8 @@ export class Transaction {
             _witnesses = [];
         _witnesses.push(newwit);
         _witnesses.sort((a, b) => {
-            var hash_a = Account.GetScriptHashFromScript(a.VerificationScript);
-            var hash_b = Account.GetScriptHashFromScript(b.VerificationScript);
+            var hash_a = ThinNeo.Helper.GetScriptHashFromScript(a.VerificationScript);
+            var hash_b = ThinNeo.Helper.GetScriptHashFromScript(b.VerificationScript);
             for (let i = (hash_a.length - 1); i >= 0; i--) {
                 if (hash_a[i] > hash_b[i])
                     return 1;

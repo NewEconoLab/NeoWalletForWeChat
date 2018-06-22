@@ -3,16 +3,11 @@ import { Helper, Neo, ThinNeo } from "../lib/neo-ts/index";
 export default class Common {
     constructor() { }
 
-    static buildScript(appCall: Neo.Uint160 | Uint8Array, method: string, param: string[]): Uint8Array {
+    static buildScript(appCall: Neo.Uint160, method: string, param: string[]): Uint8Array {
         var sb = new ThinNeo.ScriptBuilder();
         sb.EmitParamJson(param);//第二个参数是个数组
         sb.EmitPushString(method);
-        if (appCall instanceof Uint8Array) {
-            sb.EmitAppCall(appCall)
-        }
-        else {
-            sb.EmitAppCall(new Uint8Array(appCall.bits.buffer));
-        }
+        sb.EmitAppCall(appCall);
         return sb.ToArray();
     }
 
@@ -58,5 +53,5 @@ export default class Common {
         return hash;
     }
 
-    
+
 }

@@ -182,7 +182,8 @@ export default class Send extends wepy.page {
     assets: {},
     address: 'ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F',
     addrType: 'input',
-    amount: 0.001
+    amount: 0.001,
+    coin:{}
   };
 
   computed = {};
@@ -213,7 +214,8 @@ export default class Send extends wepy.page {
       let amount = e.detail.value.amount;
       let password = ''; // e.detail.value.passphrase;
       Util.set.formid(e.detail.formId);
-      if (target.length !== 34) {
+
+      if (target.length !== 34 || target.charAt(0) !=='A') {
         Util.show.alert('目标地址有误');
         return;
       }
@@ -229,6 +231,7 @@ export default class Send extends wepy.page {
       this.amount = amount;
       this.hiddenmodalput = false;
       this.password = password;
+      this.targetAddr = target;
       this.$apply();
       this.OnSend();
     }
@@ -236,9 +239,18 @@ export default class Send extends wepy.page {
 
   events = {};
   onShow() {
-    if (this.coin === undefined || this.coin === null) {
+    console.log('send onShow');
+    
+    if (this.coin === null) {
+      console.log('send onShow coin null');
       const assets = Util.get.assets();
       this.coin = assets['NEO'];
+      this.$apply();
+    }else{
+      console.log('send onShow change coin');
+      console.log(Util.get.sendCoin());
+      
+      this.coin = Util.get.sendCoin();
       this.$apply();
     }
   }
@@ -286,34 +298,41 @@ export default class Send extends wepy.page {
   //构造并发送交易
   async OnSend() {
     let that = this;
-    Util.loading('密码验证中');
+
+    let key = Util.get.account().nep2key;
 
     //如果当前账户直接使用私钥
-    if (Util.get.account().nep2key.length === 64) {
+    console.log(key.length);
+    console.log(key.charCodeAt(0));
+
+    if (key.length === 52 && key.charAt(0) === 'K') {
+      console.log('send key')
       //构造并发送交易
-      that.SendTran(Wallet.account.nep2key, Wallet.account.publickey);
+      console.log(key)
+      that.SendTran(key);
       return;
     }
-
-    Wallet.decode(this.password, async (code, prikey, pubkey) => {
+    Util.show.loading('密码验证中');
+    Wallet.decode(this.password, async (code, key, pubkey) => {
       wepy.hideLoading();
       if (code < 0) {
         Util.show.error('密码错误');
         return;
       }
       //构造并发送交易
-      that.SendTran(prikey, pubkey);
+      that.SendTran(prikey);
     });
   }
-  async SendTran(prikey, pubkey) {
-    pubkey = Helper.hexToBytes(pubkey);
-    var count = Neo.Fixed8.parse(this.amount + '');
-    Util.loading('交易生成中');
-    var tran = Coin.makeTran(this.targetAddr, this.coin, count);
-    let randomStr = await Random.getSecureRandom(256);
-    Util.loading('获取交易编号');
-    const txid = await Util.setTran(tran, prikey, pubkey, randomStr);
-    wepy.hideLoading();
+  async SendTran(prikey) {
+    // pubkey = Helper.hexToBytes(pubkey);
+    var count =parseFloat(this.amount+'');
+    Util.show.loading('交易生成中');
+    // var tran = Coin.makeTran(this.targetAddr, this.coin, count);
+    // let randomStr = await Random.getSecureRandom(256);
+    // Util.show.loading('获取交易编号');
+    console.log(this.coin)
+    const txid = await Util.send.transfer(prikey, this.targetAddr,this.coin.name, count); //setTran(tran, prikey, pubkey, randomStr);
+    Util.hide.loading();
     if (txid === 'failed') {
       wepy.showModal({
         title: '提示',
@@ -326,7 +345,7 @@ export default class Send extends wepy.page {
         }
       });
     } else {
-      TransactionTool.unconfirmed.push(txid);
+      // TransactionTool.unconfirmed.push(txid);
       wepy.showModal({
         title: '交易发送成功',
         content: txid,

@@ -29,20 +29,21 @@ export default class Assets extends wepy.page {
 
   methods = {
     handleChange(coin) {
+      console.log('handleChange')
       console.log(JSON.stringify(coin));
-      // Util.set.sendCoin(coin);
+      Util.set.sendCoin(coin);
 
-      var pages = getCurrentPages();
-      var currPage = pages[pages.length - 1]; //当前页面
-      var prevPage = pages[pages.length - 2]; //上一个页面
+      // var pages = getCurrentPages();
+      // var currPage = pages[pages.length - 1]; //当前页面
+      // var prevPage = pages[pages.length - 2]; //上一个页面
 
-      //直接调用上一个页面的setData()方法，把数据存到上一个页面中去
-      let coin0 = JSON.stringify(coin);
-      console.log(prevPage);
+      // //直接调用上一个页面的setData()方法，把数据存到上一个页面中去
+      // let coin0 = JSON.stringify(coin);
+      // console.log(prevPage);
       
-      prevPage.setData({
-        coin: JSON.parse(coin0)
-      });
+      // prevPage.setData({
+      //   coin: JSON.parse(coin0)
+      // });
 
       wx.navigateBack({
         delta: 1

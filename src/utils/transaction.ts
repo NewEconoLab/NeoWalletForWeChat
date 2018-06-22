@@ -19,12 +19,16 @@ export default class Transfer {
      * @param {ThinNeo.Transaction} tran 
      * @param {string} randomStr
      */
-    static async signAndSend(tran: ThinNeo.Transaction) {
-
-        const prikey = Helper.hexToBytes(Wallet.account.nep2key);
+    static async signAndSend(tran: ThinNeo.Transaction, prikey: string) {
+        console.log('prikey');
+        console.log(prikey);
+        if (prikey !== null && prikey.length === 52) {
+            prikey = Wallet.wif2prikey(prikey);
+        }
+        const key = Helper.hexToBytes(prikey);
         const pubkey = Helper.hexToBytes(Wallet.account.publickey);
 
-        if (tran.witnesses.length === 0)
+        if (tran.witnesses === undefined || tran.witnesses === null)
             tran.witnesses = [];
 
         Tips.loading('获取交易哈希');
@@ -32,11 +36,13 @@ export default class Transfer {
         var msg = tran.GetMessage();
         let randomStr = await getSecureRandom(256);
         Tips.loading('签名中');
-        var signdata = Helper.Account.Sign(msg, prikey, randomStr);
-        console.log('../././././/22222222222222222');
+        console.log('key');
+        console.log(key);
+        var signdata = Helper.Account.Sign(msg, key, randomStr);
+        console.log(pubkey)
+        console.log(Wallet.account.address);
 
         tran.AddWitness(signdata, pubkey, Wallet.account.address);
-        console.log('23232323232323232');
 
         Tips.loading('交易发送中');
         console.log(Helper.toHexString(tran.GetRawData()));
@@ -47,9 +53,9 @@ export default class Transfer {
         return res;
     }
 
-    static async contactTransaction(targetaddr: string, asset: Asset, sendcount: Neo.Fixed8) {
+    static async contactTransaction(prikey: string, targetaddr: string, asset: Asset, sendcount: number) {
         let tran = Transfer.makeTran(targetaddr, asset, sendcount)
-        return await Transfer.signAndSend(tran);
+        return await Transfer.signAndSend(tran, prikey);
     }
     /**
      * 发送utxo交易
@@ -57,7 +63,7 @@ export default class Transfer {
      * @param asset 资产对象
      * @param sendcount 转账金额
      */
-    static makeTran(targetaddr, asset: Asset, sendcount: Neo.Fixed8): ThinNeo.Transaction {
+    static makeTran(targetaddr, asset: Asset, sendcount: number): ThinNeo.Transaction {
         //新建交易对象
         var tran = new ThinNeo.Transaction();
         //交易类型为合约交易
@@ -66,6 +72,10 @@ export default class Transfer {
         // tran.extdata = null;
         tran.attributes = [];
         tran.inputs = [];
+        console.log(sendcount);
+        console.log('pay asset');
+        console.log(asset);
+
 
         var pay: Pay = asset.pay(sendcount);
 
@@ -79,17 +89,19 @@ export default class Transfer {
             input["_addr"] = utxo.addr;
             tran.inputs.push(input);
         }
-
-        if (pay.sum.compareTo(sendcount) >= 0)//输入大于等于输出
+        console.log(pay)
+        if (pay.sum >= sendcount)//输入大于等于输出
         {
             tran.outputs = [];
             //输出
-            if (targetaddr !== null && sendcount.compareTo(Neo.Fixed8.Zero) > 0) {
+            if (targetaddr !== null && sendcount > 0) {
                 var output = new ThinNeo.TransactionOutput();
                 //资产类型
                 output.assetId = Helper.hexToBytes(pay.assetid).reverse();
                 //交易金额
-                output.value = sendcount;
+                output.value = Neo.Fixed8.parse(sendcount + '');
+                console.log('targetaddr')
+                console.log(targetaddr)
                 //目的账户
                 output.toAddress = Helper.Account.GetPublicKeyScriptHash_FromAddress(targetaddr);
                 //添加转账交易
@@ -97,13 +109,13 @@ export default class Transfer {
             }
 
             //找零
-            var change = pay.sum.subtract(sendcount); //计算找零的额度
-            if (change.compareTo(Neo.Fixed8.Zero) > 0) {
+            var change = pay.sum - sendcount; //计算找零的额度
+            if (change > 0) {
                 var outputchange = new ThinNeo.TransactionOutput();
                 //找零地址设置为自己
                 outputchange.toAddress = Helper.Account.GetPublicKeyScriptHash_FromAddress(pay.utxos[0].addr);
                 //设置找零额度
-                outputchange.value = change;
+                outputchange.value = Neo.Fixed8.parse(change + '');
                 //找零资产类型
                 outputchange.assetId = Helper.hexToBytes(pay.assetid).reverse();
                 //添加找零交易
@@ -183,7 +195,7 @@ export default class Transfer {
      * invokeTrans 方式调用合约塞入attributes
      * @param script 合约的script
      */
-    static async contractInvoke_attributes(script: Uint8Array) {
+    static async contractInvoke_attributes(script: Uint8Array,prikey:string) {
         var addr = Wallet.account.address;
         var tran: ThinNeo.Transaction = new ThinNeo.Transaction();
         //合约类型
@@ -198,7 +210,7 @@ export default class Transfer {
         tran.attributes[0].usage = ThinNeo.TransactionAttributeUsage.Script;
         tran.attributes[0].data = Helper.Account.GetPublicKeyScriptHash_FromAddress(addr);
 
-        return await Transfer.signAndSend(tran);
+        return await Transfer.signAndSend(tran,prikey);
     }
 
     /**

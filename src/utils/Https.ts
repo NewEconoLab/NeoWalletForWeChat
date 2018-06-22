@@ -142,9 +142,9 @@ export default class Https {
         var str = this.makeRpcUrl(this.api, "invokescript", Helper.toHexString(scripthash));
         var result = await Request.Request({ "method": "get" }, str);
         console.log('result');
-        
+
         console.log(result);
-        
+
         if (result["result"] == null)
             return null;
         var r = result["result"][0]
@@ -202,11 +202,10 @@ export default class Https {
     /**
      * 获取合约脚本
      */
-    static async api_getcontractstate(scriptaddr: string)
-    {
+    static async api_getcontractstate(scriptaddr: string) {
         var str = Https.makeRpcUrl(this.api, "getcontractstate", scriptaddr);
-        var value = await Request.Request({ "method": "get" },str);
-        return value[ "result" ]['script'];
+        var value = await Request.Request({ "method": "get" }, str);
+        return value["result"]['script'];
     }
 
     /**
@@ -229,7 +228,11 @@ export default class Https {
      * @param address 账户地址
      */
     static async api_getnep5Balance(address: string) {
+        console.log(address);
+
         var str = Https.makeRpcUrl(Https.api, "getallnep5assetofaddress", address, 1);
+        console.log(str);
+
         var result = await Request.Request({ "method": "get" }, str);
         console.log(result);
 
@@ -286,30 +289,66 @@ export default class Https {
 
     //注册域名时塞值
     static async setnnsinfo(address: string, name: string, time: number) {
-        // var str = this.makeRpcUrl(this.api, "setnnsinfo", address, name, time);
-        // var result = await fetch(str, { "method": "get" });
+        var str = Https.makeRpcUrl(Https.apiaggr, "setnnsinfo", address, name, time);
+        //  var result = await fetch(str, { "method": "get" });
+        var result = await Request.Request({ "method": "get" }, str);
+        // var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
         // var json = await result.json();
-        // if (json["result"] == null)
-        //     return null;
-        // var r = json["result"][0]
-        // return r;
-        return null;
+        if (result["result"] == null)
+            return null;
+        var r = result["result"][0]["result"]
+        return r;
     }
-    //获取地址下所有的域名
-    static async getnnsinfo(address: string): Promise<string[]> {
 
-        var postdata = Https.makeRpcPostBody("getdomainbyaddress", address);
+    //获取地址下所有的域名
+    static async getnnsinfo(...params): Promise<string[]> {
+        // let data = params.join(',');
+        var postdata = Https.makeRpcPostBody("getdomainbyaddress", ...params);
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
-        // var result = await fetch(WWW.apiaggr, { "method": "post", "body": JSON.stringify(postdata) });
+        //  var result = await fetch(Https.apiaggr, { "method": "post", "body": JSON.stringify(postdata) });
         // var json = await result.json();
-        console.log(result);
-        
         if (result["result"] == null)
             return null;
         var r = result["result"]
         return r;
     }
-    static async delnnsinfo(address: string, domain: string) {
+    static async delnnsinfo(domain: string) {
+        var str = Https.makeRpcUrl(Https.apiaggr, "delnnsinfo", domain);
+        // var result = await fetch(str, { "method": "get" });
+        var result = await Request.Request({ "method": "get" }, str);
+        // var json = await result.json();
+        if (result["result"] == null)
+            return null;
+        var r = result["result"][0]["result"]
+        return r;
+    }
+
+   /**
+    * 获取竞拍列表
+    * @param address 地址
+    */
+    static async api_getBidListByAddress(address: string) {
+        var postdata = Https.makeRpcPostBody("getbidlistbyaddress", address);
+        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
+        // var result = await fetch(Https.apiaggr, { "method": "post", "body": JSON.stringify(postdata) });
+        // var json = await result.json();
+        var r = result["result"];
+        return r;
+    }
+    /**
+     * 根据域名查询竞拍详情
+     * @param domain 域名
+     * @param currentpage 
+     * @param pagesize 
+     */
+    static async api_getBidDetail(domain: string, currentpage: number, pagesize: number) {
+        var postdata = Https.makeRpcPostBody("getbiddetailbydomain", domain, currentpage, pagesize);
+        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
+
+        // var result = await fetch(Https.apiaggr, { "method": "post", "body": JSON.stringify(postdata) });
+        // var json = await result.json();
+        var r = result["result"];
+        return r;
     }
 
 

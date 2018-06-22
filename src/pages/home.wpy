@@ -211,6 +211,7 @@ import { Claims } from '../utils/entity';
 import CAssets from '../components/cassets';
 import CNotice from '../components/cnotice';
 export default class Home extends wepy.page {
+
   config = {
     navigationBarTitleText: '钱包'
   };
@@ -263,7 +264,6 @@ export default class Home extends wepy.page {
     await this.OnLogin();
 
     await Util.init.nns();
-
   }
 
   async OnLogin() {
@@ -294,9 +294,9 @@ export default class Home extends wepy.page {
     } else this.totalShow = this.total;
     this.$apply();
   }
-  onSetDelegate(){
+  onSetDelegate() {
     let that = this;
-     // 设置资产更新回调
+    // 设置资产更新回调
     Util.delegate.asset(assets => {
       assets['GAS'].amount = parseFloat(assets['GAS'].amount).toFixed(4);
       assets['NEO'].amount = parseFloat(assets['NEO'].amount).toFixed(0);

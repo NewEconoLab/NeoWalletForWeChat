@@ -89,18 +89,20 @@ export class Context {
 
         if (Context.assetDelegate === null)
             return;
-        for (let key in Context.Assets) {
-            (Context.Assets[key] as Asset).amount = '0.00';
-        }
+
         let that = this;
 
         //加锁，避免多个网络请求导致的刷新竞争
         if (this.lock === true) return;
         //加锁
         this.lock = true;
-        let nep5s = await Https.api_getnep5Balance(Context.getAccount().address);
+        try {
+            let nep5s = await Https.api_getnep5Balance(Context.getAccount().address);
 
-        for (var i in nep5s) {
+            for (let key in Context.Assets) {
+                (Context.Assets[key] as Asset).amount = '0.00';
+            }
+
             for (var i in nep5s) {
                 var item = nep5s[i];
                 let nep5: Nep5 = new Nep5(item);
@@ -109,18 +111,26 @@ export class Context {
                     Context.Assets[nep5.name] = new Asset(nep5.name, nep5.id, nep5.count);
                 }
             }
+        } catch (error) {
+            console.error(error);
+            return
         }
-        var utxos = await Https.api_getUTXO(Context.getAccount().address);
-        for (var i in utxos) {
-            var item = utxos[i];
-            let utxo: Utxo = new Utxo(item);
-            let type = Coin.assetID2name[utxo.asset];
-            if (Context.Assets[type] === undefined) {
-                Context.Assets[type] = new Asset(type, utxo.asset);
+        
+        try {
+            var utxos = await Https.api_getUTXO(Context.getAccount().address);
+            for (var i in utxos) {
+                var item = utxos[i];
+                let utxo: Utxo = new Utxo(item);
+                let type = Coin.assetID2name[utxo.asset];
+                if (Context.Assets[type] === undefined) {
+                    Context.Assets[type] = new Asset(type, utxo.asset);
+                }
+                if (Context.Assets[type] !== null)
+                    (Context.Assets[type] as Asset).addUTXO(utxo);
             }
-
-            if (Context.Assets[type] !== null)
-                (Context.Assets[type] as Asset).addUTXO(utxo, Context.Height);
+        } catch (error) {
+            console.error(error);
+            return
         }
 
         //解锁
@@ -138,6 +148,7 @@ export class Context {
             return;
         let that = this;
         let total: number = 0;
+        let isAll = true;
         for (let key in Context.Assets) {
 
             const coin = await Https.api_getCoinPrice((Context.Assets[key] as Asset).name);
@@ -153,15 +164,20 @@ export class Context {
                 // 更新币市走向
                 if (coin[0]['percent_change_1h'][0] !== '-') (Context.Assets[key] as Asset).rise = true;
                 else (Context.Assets[key] as Asset).rise = false;
+
             } catch (err) {
                 console.log('NET_ERR:price');
                 // console.log(err);
+                isAll = false;
             }
         }
-        Context.total = total;
-
-        let assets = JSON.parse(JSON.stringify(Context.Assets));
-        Context.assetDelegate(assets);
+        //只有当所有的币种都成功获取价格才更新
+        if(isAll){
+            Context.total = total;
+            let assets = JSON.parse(JSON.stringify(Context.Assets));
+            Context.assetDelegate(assets);
+        }
+       
     }
 
     /**

@@ -1,6 +1,5 @@
 import Coin from './coin';
 import * as Const from './const';
-import * as Entity from './entity';
 import Https from './Https';
 import NNS from './nns';
 import * as Random from './random';
@@ -10,9 +9,10 @@ import Tips from './tip';
 import Transfer from './transaction';
 import Cache from './cache';
 import Wallet from './wallet';
-import { Nep6, Helper } from '../lib/neo-ts/index';
+import { Nep6, Helper, Neo } from '../lib/neo-ts/index';
 import User from './user'
 import Auction from './auctioin';
+import { Asset } from './entity';
 
 export { Https }
 
@@ -30,7 +30,14 @@ export default {
         loading: Tips.loaded
     },
     send: {
-        transfer: Transfer.contactTransaction,
+        transfer: (prikey: string, targetaddr: string, asset: string, sendcount: number) => {
+            let coin: Asset = Context.Assets[asset] as Asset;
+            console.log(asset)
+            console.log(',.,.,.,.,.,..,,.,.');
+            console.log(Context.Assets)
+            console.log(coin);
+            Transfer.contactTransaction(prikey, targetaddr, coin, sendcount);
+        },
         // invoke: Transfer.nep5Transaction,
         claim: Transfer.claimGas,
     },
@@ -56,9 +63,10 @@ export default {
     set: {
         cache: Cache.put,
         account: Wallet.setAccount,
+        account_json: Wallet.importAccount,
         openid: Context.openid,
         formid: (formid: string) => { Transfer.formId.push(formid); },
-        sendCoin: (coin: Entity.Asset) => { Transfer.coin = coin }
+        sendCoin: (coin: Asset) => { Transfer.coin = coin }
     },
     delete: {
         account: Wallet.removeWallet
@@ -71,9 +79,9 @@ export default {
     init: {
         asset: Coin.initAllAsset,
         context: Context.init,
-        nns:NNS.initRootDomain
-            // NNS.nnsRegister('jinghui')
-            //NNS.getDomainsByAddr();
+        nns: NNS.initRootDomain
+        // NNS.nnsRegister('jinghui')
+        //NNS.getDomainsByAddr();
     },
     service: {
         start: Context.init,
@@ -81,17 +89,17 @@ export default {
     },
     reg: {
         domain: NNS.nnsRegister,
-        test:()=>{
+        test: () => {
             console.log('[[[[[[[[[[[[[[[[[[[[[[[');
-            
+
             console.log(Helper.hexToBytes(Const.DAPP_SGAS.toString()));
-            
+
             console.log(Const.DAPP_SGAS.toString());
             console.log(new Uint8Array(Const.DAPP_SGAS.bits.buffer))
             console.log(Const.DAPP_SGAS.toArray());
-            
+
             console.log('[[[[[[[[[[[[[[[[[[[[[[[[');
-            
+
         }
     }
 }
