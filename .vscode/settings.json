@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "*.vue": "vue",
+        "*.wpy": "vue",
+        "*.wxml": "html",
+        "*.wxss": "css"
+    },
+    "emmet.syntaxProfiles": {
+        "vue-html": "html",
+        "vue": "html"
+    }
+}
