@@ -69,14 +69,18 @@ import wepy from 'wepy';
 import Util from '../utils/index';
 export default class CNNSAddress extends wepy.component {
   props = {
-    addr: {},
+    addr: {  
+      type: String,
+      default: 'address',
+      twoWay: false
+      },
     type: {
       type: String,
       default: 'text'
     },
     value: {
       type: String,
-      default: 'address',
+      default: 'domain',
       twoWay: true
     }
   };

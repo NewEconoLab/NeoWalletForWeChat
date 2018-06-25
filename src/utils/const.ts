@@ -37,8 +37,8 @@ export const id_GAS = "0x602c79718b16e442de58778e148d0b1084e3b2dffd5de6b7b16cee7
 export const id_NEO = "0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b";
 
 
-export const DAPP_SGAS = Neo.Uint160.parse('4ac464f84f50d3f902c2f0ca1658bfaa454ddfbf');//sgas 新合约地址
+export const DAPP_SGAS = Neo.Uint160.parse('07185f19053c0f8a064921d7ca798a5e6ba957cb');//sgas 新合约地址
 export const DAPP_COIN_POOL = Neo.Uint160.parse("5d6b91ee7cde1f8bb1868d36d4bf134f6887d231");//coinpool 新合约地址
-export const DAPP_NNS = Neo.Uint160.parse("954f285a93eed7b4aed9396a7806a5812f1a5950");//nns 合约地址
-export const DAPP_NNC = Neo.Uint160.parse("d8fa0cfdd54493dfc9e908b26ba165605363137b");//nnc 合约地址
-export const DOMAIN_ROOT: string = 'sell';
+export const DAPP_NNS = Neo.Uint160.parse("77e193f1af44a61ed3613e6e3442a0fc809bb4b8");//nns 合约地址
+export const DAPP_NNC = Neo.Uint160.parse("12329843449f29a66fb05974c2fb77713eb1689a");//nnc 合约地址
+export const DOMAIN_ROOT: string = 'wei';

@@ -13,6 +13,7 @@ import { Nep6, Helper, Neo } from '../lib/neo-ts/index';
 import User from './user'
 import Auction from './auctioin';
 import { Asset } from './entity';
+import NNSSell from './nnssell';
 
 export { Https }
 
@@ -32,15 +33,12 @@ export default {
     send: {
         transfer: (prikey: string, targetaddr: string, asset: string, sendcount: number) => {
             let coin: Asset = Context.Assets[asset] as Asset;
-            console.log(asset)
-            console.log(',.,.,.,.,.,..,,.,.');
-            console.log(Context.Assets)
-            console.log(coin);
             Transfer.contactTransaction(prikey, targetaddr, coin, sendcount);
         },
         // invoke: Transfer.nep5Transaction,
         claim: Transfer.claimGas,
     },
+    auction: NNSSell,
     get: {
         random: Random.getSecureRandom,
         cache: Cache.get,
@@ -54,7 +52,7 @@ export default {
         total: () => { return Context.total },
         claim: () => { return Context.claim },
         sendCoin: () => { return Transfer.coin },
-        addrByDomain: async (domain: string) => { return await NNS.resolveData(domain) },
+        addrByDomain: async (domain: string) => { return await NNS.verifyDomain(domain) },
         //addrByDomain2: async (domain: string) => { return await NNS.resolveData2(domain) },
         wantBy: Auction.wantBy,
         domainByAddr: NNS.getDomainsByAddr,

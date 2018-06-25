@@ -183,7 +183,8 @@ export default class Send extends wepy.page {
     address: 'ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F',
     addrType: 'input',
     amount: 0.001,
-    coin:{}
+    coin:{},
+    loading:false,
   };
 
   computed = {};

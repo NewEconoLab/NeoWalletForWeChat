@@ -48,8 +48,8 @@ export class Asset {
      * @param height 当前区块高度
      */
     public addUTXO(utxo: Utxo) {
-       // console.log(this.utxos[utxo.txid] as Utxo);
-        
+        // console.log(this.utxos[utxo.txid] as Utxo);
+
         //已存在且已花费
         if ((this.utxos[utxo.txid] as Utxo) === undefined) {
             //判断交易高度是否已经超过两个 判断交易失败，spent状态取消
@@ -68,19 +68,19 @@ export class Asset {
         let outputs: Utxo[] = [];
         console.log('amount');
         console.log(amount.toString());
-        
+
         for (let key in this.utxos) {
-            
+
             let utxo = this.utxos[key];
             console.log('sum')
             console.log(utxo)
             // 总额未够且 未花费
-            if (count<amount) {
+            if (count < amount) {
                 console.log('add');
-                console.log(Neo.Fixed8.parse(utxo.count+'').toString());
+                console.log(Neo.Fixed8.parse(utxo.count + '').toString());
                 console.log(count.toString());
-                
-                count+=utxo.count;
+
+                count += utxo.count;
                 // (this.utxos[key] as Utxo).spent = height;
                 // (this.utxos[key] as Utxo).isSpent = true;
                 outputs.push(utxo);
@@ -96,7 +96,7 @@ export class Pay {
     assetid: string;
     utxos: Utxo[];
     sum: number;
-    constructor(id: string, utxos: Utxo[], sum:number) {
+    constructor(id: string, utxos: Utxo[], sum: number) {
         this.assetid = id;
         this.utxos = utxos;
         this.sum = sum;
@@ -126,6 +126,7 @@ export class Utxo {
         this.count = parseFloat(utxo.value);
     }
 }
+
 export class Nep5 {
     id: string = ''; //资产id
     name: string = '';// 资产名
@@ -160,11 +161,26 @@ export class Consts {
     static registerContract = Neo.Uint160.parse("d6a5e965f67b0c3e5bec1f04f028edb9cb9e3f7c");
 }
 
+/**
+ * 竞拍模型
+ */
+export class MyAuction {
+    auctionSpentTime: string;
+    auctionState: string;
+    blockindex: string;
+    domain: string;
+    maxBuyer: string;
+    maxPrice: string;
+    owner: string;
+    startAuctionTime: number;
+}
+
 export class DomainInfo {
-    owner: Neo.Uint160//所有者
-    register: Neo.Uint256//注册器
-    resolver: Neo.Uint256//解析器
-    ttl: string//到期时间
+    status: DomainState = null;     // 域名状态
+    owner: Neo.Uint160 = null;      // 所有者
+    register: Neo.Uint256 = null;   // 注册器
+    resolver: Neo.Uint256 = null;   // 解析器
+    ttl: string = null;             // 到期时间
 }
 
 export class RootDomainInfo extends DomainInfo {
@@ -303,85 +319,80 @@ export class DataType {
     public static Boolean = 'Boolean';
     public static String = 'String';
 }
-export class ResultItem
-{
+export class DomainState {
+    // 有owner 有ttl且没过期
+    public static Taken = 'token';
+    // 竞拍中 没owner 有ttl
+    public static Bidding = 'bidding';
+    // 已过期 不是自己的 有owner ttl过期
+    public static Avaliable = 'avaliable';
+    // 已过期 是自己的 
+    public static Renew = 'renew';
+}
+
+export class ResultItem {
     public data: Uint8Array;
     public subItem: ResultItem[];
 
-    public static FromJson(type: string, value: any): ResultItem
-    {
+    public static FromJson(type: string, value: any): ResultItem {
         let item: ResultItem = new ResultItem();
-        if (type === DataType.Array)
-        {
+        if (type === DataType.Array) {
             item.subItem = []//new ResultItem[(value as Array<any>).length];
-            for (let i = 0; i < (value as any[]).length; i++)
-            {
-                let subjson = ((value as any)[ i ] as Map<string, any>);
-                let subtype = (subjson[ "type" ] as string);
-                item.subItem.push(ResultItem.FromJson(subtype, subjson[ "value" ]));
+            for (let i = 0; i < (value as any[]).length; i++) {
+                let subjson = ((value as any)[i] as Map<string, any>);
+                let subtype = (subjson["type"] as string);
+                item.subItem.push(ResultItem.FromJson(subtype, subjson["value"]));
             }
         }
-        else if (type === DataType.ByteArray)
-        {
+        else if (type === DataType.ByteArray) {
             item.data = Helper.hexToBytes(value as string)
         }
-        else if (type === DataType.Integer)
-        {
+        else if (type === DataType.Integer) {
             item.data = Neo.BigInteger.parse(value as string).toUint8Array();
         }
-        else if (type === DataType.Boolean)
-        {
+        else if (type === DataType.Boolean) {
             if ((value as number) != 0)
                 item.data = new Uint8Array(0x01);
             else
                 item.data = new Uint8Array(0x00);
         }
-        else if (type === DataType.String)
-        {
+        else if (type === DataType.String) {
             item.data = new Buffer(value as string);
         }
-        else
-        {
+        else {
             console.log("not support type:" + type);
         }
         return item;
     }
 
 
-    public AsHexString(): string
-    {
+    public AsHexString(): string {
         return Helper.toHexString(this.data);
     }
-    public AsHashString(): string
-    {
+    public AsHashString(): string {
         return "0x" + Helper.toHexString(this.data.reverse());
     }
-    public AsString(): string
-    {
+    public AsString(): string {
         return String.fromCharCode.apply(null, this.data);
     }
-    public AsHash160(): Neo.Uint160
-    {
+    public AsHash160(): Neo.Uint160 {
         if (this.data.length === 0)
             return null;
         return new Neo.Uint160(this.data.buffer);
     }
 
-    public AsHash256(): Neo.Uint256
-    {
+    public AsHash256(): Neo.Uint256 {
         if (this.data.length === 0)
             return null;
         return new Neo.Uint256(this.data.buffer)
     }
-    public AsBoolean(): boolean
-    {
-        if (this.data.length === 0 || this.data[ 0 ] === 0)
+    public AsBoolean(): boolean {
+        if (this.data.length === 0 || this.data[0] === 0)
             return false;
         return true;
     }
 
-    public AsInteger(): Neo.BigInteger
-    {
+    public AsInteger(): Neo.BigInteger {
         return new Neo.BigInteger(this.data);
     }
 }
@@ -398,16 +409,38 @@ export class NNSResult {
  * @param maxPrice 最大出价
  * @param maxBuyer 最大出价者(地址)
  */
-export class SellDomainInfo extends DomainInfo
-{
+export class SellDomainInfo extends DomainInfo {
     id: Neo.Uint256;
     startBlockSelling: Neo.BigInteger;
     endBlock: Neo.BigInteger;
     maxPrice: Neo.BigInteger;
     lastBlock: Neo.BigInteger;
     maxBuyer: Neo.Uint160;
-    constructor()
-    {
+    constructor() {
         super();
+    }
+}
+
+export class WatchOnly {
+    nns: string;
+    name: string;
+    addr: string;
+
+    constructor(name: string, addr: string, nns: string = null) {
+        this.name = name;
+        this.addr = addr;
+        if (nns !== null)
+            this.nns = nns;
+    }
+
+    public static parse(json: {}) {
+        return new WatchOnly(json['name'], json['addr'], json['nns'])
+    }
+    public toJson() {
+        return {
+            name: this.name,
+            addr: this.addr,
+            nns: this.nns
+        }
     }
 }
