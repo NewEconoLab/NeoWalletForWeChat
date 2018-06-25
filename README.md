@@ -25,8 +25,16 @@ This project is developed with the help and support from [NEL](https://github.co
 ## ScreenCapture
 ### New Version
 <div>
+<img src="./img/index0.png" width="200" alt="首页"/>
+<img src="./img/index1.png" width="200" alt="首页"/>
+<img src="./img/index2.png" width="200" alt="首页"/>
 <img src="./img/home.png" width="200" alt="首页"/>
-<img src="./img/send.png" width="200" alt="转账"/>
+</div>
+<div>
+<img src="./img/send.png" width="200" alt="首页"/>
+<img src="./img/receive.png" width="200" alt="首页"/>
+<img src="./img/nns.png" width="200" alt="首页"/>
+<img src="./img/history.png" width="200" alt="首页"/>
 </div>
 
 ### Old Version
