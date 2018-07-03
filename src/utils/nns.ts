@@ -26,6 +26,7 @@ export default class NNS {
         if (verify.test(domain)) {
             let doamininfo: DomainInfo = await NNS.queryDomainInfo(domain + "." + DOMAIN_ROOT)
             console.log(doamininfo)
+            
             if (doamininfo.register !== null && doamininfo.ttl !== null) {
                 var timestamp = new Date().getTime();
                 console.log(timestamp);
