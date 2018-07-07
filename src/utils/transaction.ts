@@ -19,13 +19,8 @@ export default class Transfer {
      * @param {ThinNeo.Transaction} tran 
      * @param {string} randomStr
      */
-    static async signAndSend(tran: ThinNeo.Transaction, prikey: string) {
-        console.log('prikey');
-        console.log(prikey);
-        if (prikey !== null && prikey.length === 52) {
-            prikey = Wallet.wif2prikey(prikey);
-        }
-        const key = Helper.hexToBytes(prikey);
+    static async signAndSend(tran: ThinNeo.Transaction) {
+        const key = Helper.hexToBytes(Wallet.account.nep2key);
         const pubkey = Helper.hexToBytes(Wallet.account.publickey);
 
         if (tran.witnesses === undefined || tran.witnesses === null)
@@ -55,7 +50,7 @@ export default class Transfer {
 
     static async contactTransaction(prikey: string, targetaddr: string, asset: Asset, sendcount: number) {
         let tran = Transfer.makeTran(targetaddr, asset, sendcount)
-        return await Transfer.signAndSend(tran, prikey);
+        return await Transfer.signAndSend(tran);
     }
     /**
      * 发送utxo交易
@@ -157,7 +152,7 @@ export default class Transfer {
         tran.outputs = [];
         tran.outputs.push(output);
 
-        return await Transfer.signAndSend(tran, prikey);
+        return await Transfer.signAndSend(tran);
     }
 
 
@@ -186,7 +181,7 @@ export default class Transfer {
         sb.EmitParamJson(["(address)" + address, "(address)" + tatgeraddr, "(integer)" + intv]);//第二个参数是个数组
         sb.EmitPushString("transfer");//第一个参数
         sb.EmitAppCall(scriptaddress);  //资产合约
-        var result = await Transfer.contractInvoke_attributes(sb.ToArray(), prikey)
+        var result = await Transfer.contractInvoke_attributes(sb.ToArray())
         return result;
     }
 
@@ -195,7 +190,7 @@ export default class Transfer {
      * invokeTrans 方式调用合约塞入attributes
      * @param script 合约的script
      */
-    static async contractInvoke_attributes(script: Uint8Array, prikey: string) {
+    static async contractInvoke_attributes(script: Uint8Array) {
         var addr = Wallet.account.address;
         var tran: ThinNeo.Transaction = new ThinNeo.Transaction();
         //合约类型
@@ -210,7 +205,7 @@ export default class Transfer {
         tran.attributes[0].usage = ThinNeo.TransactionAttributeUsage.Script;
         tran.attributes[0].data = Helper.Account.GetPublicKeyScriptHash_FromAddress(addr);
 
-        return await Transfer.signAndSend(tran, prikey);
+        return await Transfer.signAndSend(tran);
     }
 
     /**
@@ -228,7 +223,7 @@ export default class Transfer {
         (tran.extdata as ThinNeo.InvokeTransData).script = script;
         // (tran.extdata as ThinNeo.InvokeTransData).gas = Neo.Fixed8.fromNumber(1.0);
 
-        return await Transfer.signAndSend(tran, prikey);
+        return await Transfer.signAndSend(tran);
     }
 
     /**

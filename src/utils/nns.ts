@@ -7,7 +7,7 @@ import Transfer from './transaction';
 import { Account } from '../lib/neo-ts/Helper/index';
 import Common from './common';
 import { DOMAIN_ROOT } from './const';
-
+import { getSecureRandom } from './random'
 /**
  * @name NEONameServiceTool
  * @method initRootDomain_初始化根域名信息
