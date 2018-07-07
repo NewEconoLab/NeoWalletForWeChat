@@ -129,16 +129,10 @@ export default class Wallet {
             //私钥登陆
             if (this.account.nep2key.length === 64)
                 resolve(this.account.nep2key);
-            else {
-
-            }
+            else {}
         })
     }
-
-    static test() {
-
-    }
-
+    
     /**
      * 获取地址UTXO
      * @param addr 目标地址

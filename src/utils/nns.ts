@@ -101,26 +101,27 @@ export default class NNS {
         let res = await Https.getnnsinfo(Wallet.account.address);
         console.log(res);
 
-        let arrdomain = res ? res.map(dom => { return dom + "." + DOMAIN_ROOT }) : [];
-        let arr = new Array<Domainmsg>();
-        let state = DomainStatus.getStatus() as DomainStatus;
-        // state = JSON.parse(JSON.stringify(state));
-        if (state) {
-            for (let key in state) {
-                if (state.hasOwnProperty(key)) {
-                    let inculde = arrdomain.includes(key);
-                    inculde ? "" : arrdomain.push(key);
-                }
-            }
-        }
-        for (const i in arrdomain) {
-            if (arrdomain.hasOwnProperty(i)) {
-                const n = parseInt(i)
-                const domain = arrdomain[n];
-                let a = state[domain] ? state[domain] as DomainStatus : new DomainStatus();
-                let msg = await NNS.queryDomainInfo(domain);
-            }
-        }
+        // let arrdomain = res ? res.map(dom => { return dom + "." + DOMAIN_ROOT }) : [];
+        // let arr = new Array<Domainmsg>();
+        // let state = DomainStatus.getStatus() as DomainStatus;
+        // // state = JSON.parse(JSON.stringify(state));
+        // if (state) {
+        //     for (let key in state) {
+        //         if (state.hasOwnProperty(key)) {
+        //             let inculde = arrdomain.(key);
+        //             inculde ? "" : arrdomain.push(key);
+        //         }
+        //     }
+        // }
+        
+        // for (const i in arrdomain) {
+        //     if (arrdomain.hasOwnProperty(i)) {
+        //         const n = parseInt(i)
+        //         const domain = arrdomain[n];
+        //         let a = state[domain] ? state[domain] as DomainStatus : new DomainStatus();
+        //         let msg = await NNS.queryDomainInfo(domain);
+        //     }
+        // }
     }
 
     /**
@@ -219,8 +220,6 @@ export default class NNS {
                         let value = Helper.hexToBytes(stack[0].value as string);
                         let addr = Account.Bytes2String(value);
                         ret = { state: true, addr: addr };
-
-
                     }
                 }
             }

@@ -281,6 +281,34 @@ export default class Https {
         return r;
     }
 
+    /**
+     * 两笔交易提交给服务器发送
+     * @param data1 第一笔交易数据
+     * @param data2 第二笔交易数据
+     */
+    static async rechargeandtransfer(data1: Uint8Array, data2: Uint8Array)
+    {
+        var postdata = Https.makeRpcPostBody("rechargeandtransfer", Helper.toHexString(data1), Helper.toHexString(data2));
+        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");        
+        // var json = await result.json();
+        var r = result[ "result" ][ 0 ];
+        return r;
+    }
+
+    /**
+     * 查询合约调用状态
+     * @param txid 交易id
+     */
+    static async getrechargeandtransfer(txid: string)
+    {
+        var postdata = Https.makeRpcPostBody("getrechargeandtransfer", txid);
+        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");        
+        // var json = await result.json();
+        var r = result[ "result" ][ 0 ];
+        return r;
+    }
+
+
     /********************************************************
      * 
      *  NNS注册相关
@@ -312,6 +340,7 @@ export default class Https {
         var r = result["result"]
         return r;
     }
+
     static async delnnsinfo(domain: string) {
         var str = Https.makeRpcUrl(Https.apiaggr, "delnnsinfo", domain);
         // var result = await fetch(str, { "method": "get" });

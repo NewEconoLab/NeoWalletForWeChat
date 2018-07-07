@@ -2,7 +2,7 @@ import { Helper, Neo, ThinNeo } from '../lib/neo-ts/index'
 import Tips from './tip'
 import Wallet from './wallet'
 import Https from './Https'
-import { Asset, Pay, Claim, History } from './entity';
+import { Asset, Pay, Claim, History, Utxo } from './entity';
 import Coin from './coin';
 import { getSecureRandom } from './random'
 import { formatTime } from './time';
@@ -133,7 +133,7 @@ export default class Transfer {
      * @param claims cliams 的UTXO
      * @param sum 领取总量
      */
-    static async claimGas(claims: Claim[], sum: string) {
+    static async claimGas(claims: Claim[], sum: string, prikey: string) {
         var tran = new ThinNeo.Transaction();
         //交易类型为合约交易
         tran.type = ThinNeo.TransactionType.ClaimTransaction;
@@ -157,7 +157,7 @@ export default class Transfer {
         tran.outputs = [];
         tran.outputs.push(output);
 
-        return await Transfer.signAndSend(tran);
+        return await Transfer.signAndSend(tran, prikey);
     }
 
 
@@ -168,7 +168,7 @@ export default class Transfer {
      * @param asset nep5资产id
      * @param amount 转账数额
      */
-    static async nep5Transaction(tatgeraddr, asset: string, amount: string) {
+    static async nep5Transaction(tatgeraddr: string, asset: string, amount: string, prikey: string) {
         let res = await Https.getNep5Asset(asset);
         var decimals = res["decimals"] as number;
         var numarr = amount.split(".");
@@ -186,7 +186,7 @@ export default class Transfer {
         sb.EmitParamJson(["(address)" + address, "(address)" + tatgeraddr, "(integer)" + intv]);//第二个参数是个数组
         sb.EmitPushString("transfer");//第一个参数
         sb.EmitAppCall(scriptaddress);  //资产合约
-        var result = await Transfer.contractInvoke_attributes(sb.ToArray())
+        var result = await Transfer.contractInvoke_attributes(sb.ToArray(), prikey)
         return result;
     }
 
@@ -195,7 +195,7 @@ export default class Transfer {
      * invokeTrans 方式调用合约塞入attributes
      * @param script 合约的script
      */
-    static async contractInvoke_attributes(script: Uint8Array,prikey:string) {
+    static async contractInvoke_attributes(script: Uint8Array, prikey: string) {
         var addr = Wallet.account.address;
         var tran: ThinNeo.Transaction = new ThinNeo.Transaction();
         //合约类型
@@ -210,17 +210,17 @@ export default class Transfer {
         tran.attributes[0].usage = ThinNeo.TransactionAttributeUsage.Script;
         tran.attributes[0].data = Helper.Account.GetPublicKeyScriptHash_FromAddress(addr);
 
-        return await Transfer.signAndSend(tran,prikey);
+        return await Transfer.signAndSend(tran, prikey);
     }
 
     /**
      * invokeTrans 方式调用合约塞入attributes
      * @param script 合约的script
      */
-    static async contractInvokeTrans(target: string, script: Uint8Array, asset: Asset, count: number) {
+    static async contractInvokeTrans(target: string, script: Uint8Array, asset: Asset, count: number, prikey: string) {
         var addr = Wallet.account.address;
         //let _count = Neo.Fixed8.Zero;   //十个gas内都不要钱滴
-        let tran = Transfer.makeTran(target, asset/*Context.Assets['GAS']*/, Neo.Fixed8.parse(count.toFixed(8)));
+        let tran = Transfer.makeTran(target, asset/*Context.Assets['GAS']*/, count);
 
         tran.type = ThinNeo.TransactionType.InvocationTransaction;
         tran.extdata = new ThinNeo.InvokeTransData();
@@ -228,7 +228,7 @@ export default class Transfer {
         (tran.extdata as ThinNeo.InvokeTransData).script = script;
         // (tran.extdata as ThinNeo.InvokeTransData).gas = Neo.Fixed8.fromNumber(1.0);
 
-        return await Transfer.signAndSend(tran);
+        return await Transfer.signAndSend(tran, prikey);
     }
 
     /**

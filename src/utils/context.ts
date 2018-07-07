@@ -137,6 +137,8 @@ export class Context {
         this.lock = false;
         let assets = JSON.parse(JSON.stringify(Context.Assets));
         Context.assetDelegate(assets);
+        
+        //设置默认转账币种
         Transfer.coin = assets['NEO'];
     }
 

@@ -416,8 +416,18 @@ export class SellDomainInfo extends DomainInfo {
     maxPrice: Neo.BigInteger;
     lastBlock: Neo.BigInteger;
     maxBuyer: Neo.Uint160;
-    constructor() {
+    balanceOf: Neo.BigInteger;
+    balanceOfSelling: Neo.BigInteger;
+    constructor()
+    {
         super();
+    }
+    copyDomainInfoToThis(info: DomainInfo)
+    {
+        this.owner = info.owner;
+        this.ttl = info.ttl;
+        this.register = info.register;
+        this.resolver = info.resolver;
     }
 }
 

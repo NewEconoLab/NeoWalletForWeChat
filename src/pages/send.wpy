@@ -139,7 +139,7 @@
                   <text class="name">{{coin.name}}</text>
                   <view class="amount">
                     <text>可用数量: </text>
-                    <text style="color:#22A4FF;">{{coin.amount}}</text>
+                    <text style="color:#22A4FF;margin-left:5rpx;">{{coin.amount}}</text>
                   </view>
                 </view>
               </view>

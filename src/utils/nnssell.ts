@@ -4,46 +4,78 @@ import Common from "./common";
 import NNS from './nns'
 import Https from "./Https";
 import Wallet from "./wallet";
-import { DAPP_SGAS } from "./const";
+import { DAPP_SGAS, DAPP_NNS, id_GAS } from "./const";
 import Transfer from "./transaction";
+import { getSecureRandom } from './random'
 export default class NNSSell {
     
     /**
      * 获得竞拍域名详情
      * @param domain 域名
      */
-    static async getSellingStateByDomain(domain: string) {
+      /**
+     * 获得竞拍域名详情
+     * @param domain 域名
+     */
+    static async getSellingStateByDomain(domain: string)
+    {
         // tools.nnstool.initRootDomain(domainarr.reverse[ 0 ]);
         var domainarr: string[] = domain.split('.');
         var nnshash: Neo.Uint256 = Common.nameHashArray(domainarr);
-
-        let data = Common.buildScript(NNS.root.register, "getSellingStateByFullhash", ["(hex256)" + nnshash.toString()]);
+        let data = Common.buildScript(NNS.root.register, "getSellingStateByFullhash", [ "(hex256)" + nnshash.toString() ]);
         let result = await Https.rpc_getInvokescript(data);
+        let domainInfo: DomainInfo = await NNS.getOwnerInfo(nnshash, DAPP_NNS);
         let info = new SellDomainInfo();
-        try {
+        info.copyDomainInfoToThis(domainInfo);
+        try
+        {
             var state = result.state as string;
             // info2.textContent = "";
-            if (state.includes("FAULT, BREAK")) {
+            if (state.includes("FAULT, BREAK"))
+            {
                 throw "FAULT, BREAK";
             }
             let rest = new NNSResult();
             rest.textInfo = result;
-            var stackarr = result["stack"] as any[];
-            let stack = ResultItem.FromJson(DataType.Array, stackarr).subItem[0].subItem
-            info.id = stack[0].AsHash256();
-            let parenthash = stack[1].AsHash256();
-            let domain = stack[2].AsString();
-            info.ttl = stack[3].AsInteger().toString();
-            info.startBlockSelling = stack[4].AsInteger();
-            info.endBlock = stack[5].AsInteger();
-            info.maxPrice = stack[6].AsInteger();
-            info.maxBuyer = stack[7].AsHash160();
-            info.lastBlock = stack[8].AsInteger();
+            var stackarr = result[ "stack" ] as any[];
+            let stack = ResultItem.FromJson(DataType.Array, stackarr).subItem[ 0 ].subItem
+            info.id = stack[ 0 ].AsHash256();
+            let parenthash = stack[ 1 ].AsHash256();
+            let domain = stack[ 2 ].AsString();
+            info.ttl = stack[ 3 ].AsInteger().toString();
+            info.startBlockSelling = stack[ 4 ].AsInteger();
+            info.endBlock = stack[ 5 ].AsInteger();
+            info.maxPrice = stack[ 6 ].AsInteger();
+            info.maxBuyer = stack[ 7 ].AsHash160();
+            info.lastBlock = stack[ 8 ].AsInteger();
+
             return info;
         }
-        catch (e) {
+        catch (e)
+        {
             console.error(e);
 
+        }
+    }
+
+    static async gasToRecharge(transcount: number,prikey:string)
+    {
+        let script = Common.buildScript(DAPP_SGAS, "mintTokens", []);
+        //获得sgas的合约地址
+        var sgasaddr = Helper.Account.GetAddressFromScriptHash(DAPP_SGAS);
+        try
+        {
+            let data1 = await Common.buildInvokeTransData(script, sgasaddr, id_GAS, Neo.Fixed8.fromNumber(transcount));
+            let data2 = await NNSSell.rechargeReg(transcount.toFixed(8),prikey);
+            let res = await Https.rechargeandtransfer(data1.data, data2);
+            if (res[ 'errCode' ] == '0000')
+            {
+                let txid = res[ 'txid' ];
+                return txid;
+            }
+        } catch (error)
+        {
+            throw error;
         }
     }
 
@@ -130,17 +162,114 @@ export default class NNSSell {
         return res;
     }
 
+   /**
+     * 
+     * @param time 
+     * @returns state(0:正在竞拍，1:随机时间,2:竞拍结束)
+     */
+    static compareTime(time: number)
+    {
+        let currentTime = new Date().getTime();
+        let res = currentTime - time
+        let state: number = res > 1500000 ? 0 : res < 900000 ? 1 : 2;
+        return state;
+    }
+
+
+    /**
+     * 结束竞拍
+     * @param domain 域名
+     */
+    static async endSelling(id: string,prikey:string)
+    {
+        let who = new Neo.Uint160(Helper.Account.GetPublicKeyScriptHash_FromAddress(Wallet.account.address).buffer);
+        let script = Common.buildScript(
+            NNS.root.register,
+            "endSelling",
+            [
+                "(hex160)" + who.toString(),
+                "(hex256)" + id
+            ]
+        );
+        let randomStr = await getSecureRandom(256);
+        let res = Common.buildInvokeTransData_attributes(script,Helper.hexToBytes(prikey),randomStr);
+        return res;
+    }
+
+    /**
+     * 获得领取域名
+     * @param domain 域名
+     */
+    static getsellingdomain(id: string)
+    {
+        let addr = LoginInfo.getCurrentAddress();
+        let who = new Neo.Uint160(ThinNeo.Helper.GetPublicKeyScriptHash_FromAddress(addr).buffer);
+        let script = tools.contract.buildScript_random(
+            tools.nnstool.root_neo.register,
+            "getSellingDomain",
+            [
+                "(hex160)" + who.toString(),
+                "(hex256)" + id
+            ]
+        );
+        let res = tools.contract.buildInvokeTransData_attributes(script);
+        return res;
+    }
+
+    static async getMySellingDomain(domain)
+    {
+        let info = await tools.nnssell.getSellingStateByDomain(domain);
+        if (info.endBlock.compareTo(Neo.BigInteger.Zero))
+        {
+            let data1 = this.endSelling(domain);
+        }
+        let addr = LoginInfo.getCurrentAddress();
+        let who = new Neo.Uint160(ThinNeo.Helper.GetPublicKeyScriptHash_FromAddress(addr).buffer);
+        let script = tools.contract.buildScript_random(
+            tools.nnstool.root_neo.register,
+            "getSellingDomain",
+            [
+                "(hex160)" + who.toString(),
+                "(hex256)" + info.id.toString()
+            ]
+        );
+        let res = tools.contract.contractInvokeTrans_attributes(script);
+        return res;
+    }
+
+    static async getBalanceOf()
+    {
+        let addr = LoginInfo.getCurrentAddress();
+        let who = new Neo.Uint160(ThinNeo.Helper.GetPublicKeyScriptHash_FromAddress(addr).buffer);
+        let info = await tools.contract.contractInvokeScript(
+            tools.nnstool.root_neo.register, "balanceOf", "(hex160)" + who.toString()
+        );
+
+        var stackarr = info[ "stack" ] as any[];
+        let stack = ResultItem.FromJson(DataType.Array, stackarr);
+        let num = stack.subItem[ 0 ].AsInteger();
+        let res = parseFloat(num.toString()) / 100000000;
+        // let res = num.divide(100000000).toString();
+        // new Neo.Fixed8(num)
+        // let number = (Neo.Fixed8.parse(num.toString()).getData().toNumber()) / 100000000;
+        // console.log(res);
+        return res.toString();
+    }
+
     /**
      * 取回存储器下的sgas
      */
-    getMoneyBack() {
-
+    static async getMoneyBack(amount: number)
+    {
+        let addr = LoginInfo.getCurrentAddress()
+        let transcount = amount.toFixed(8).replace(".", "");
+        let data = tools.contract.buildScript_random(
+            tools.nnstool.root_neo.register,
+            "getmoneyback",
+            [ "(addr)" + addr, "(int)" + transcount ]
+        )
+        let res = await tools.contract.contractInvokeTrans_attributes(data)
+        return res;
     }
 
-    /**
-     * 
-     */
-    getsellingdomain() {
-
-    }
 }
