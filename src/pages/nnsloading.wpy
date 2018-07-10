@@ -1,0 +1,53 @@
+ <style lang="less">
+</style>
+<template>
+  <view class="container">
+   <progress percent="{{percent}}" />
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import Util from '../utils/index';
+import CAssets from '../components/cassets';
+export default class NNSLoading extends wepy.page {
+  config = {
+    navigationBarTitleText: '更换资产类型'
+  };
+
+  components = {
+    cassets: CAssets
+  };
+
+  data = {
+      percent:0,
+      state:{
+
+      }
+  };
+
+  computed = {};
+
+  methods = {
+    
+  };
+
+  events = {};
+
+  onLoad() {}
+  onShow() {
+  }
+  // 页面渲染完成
+  async onReady() {}
+
+  onShareAppMessage() {
+    return {
+      title: 'NNS',
+      path: '/pages/nns'
+    };
+  }
+
+  OnLoading() {}
+}
+</script>
+ 

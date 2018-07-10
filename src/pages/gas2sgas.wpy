@@ -117,9 +117,11 @@
       letter-spacing: 0;
       line-height: 12px;
       margin: 10rpx 0 26rpx 30rpx;
+      font-weight: 100;
     }
   }
 }
+
 .btn {
   background: #22a4ff;
   box-shadow: 0 2px 5px 0 rgba(119, 204, 248, 0.5);
@@ -168,8 +170,8 @@
                     <text class="text">兑换数量</text>
                 </view>
                 <view class="amount">
-                    <input class="input" name="amount" />
-                    <text class="description">所需{{config.from.name}}数量：99；当前{{config.from.name}}拥有量：129</text>
+                    <input class="input" name="amount"  bindinput='inputAmount' type='digit' placeholder='0'/>
+                    <text class="description">所需{{config.from.name}}数量： {{amount}}；当前{{config.to.name}}拥有量： {{config.to.amount}}</text>
                 </view>
            </view>
 
@@ -190,18 +192,23 @@ export default class Gas2Sgas extends wepy.page {
 
   onLoad(option) {} // 在Page和Component共用的生命周期函数
 
-  onShow() {} // 只在Page中存在的页面生命周期函数
+  onShow() {
+    const assets = this.onGetAsset();
+    this.config = {
+      from: { name: 'GAS', icon: 'neo', amount: assets.gas },
+      to: { name: 'SGAS', icon: 'Sgas', amount: assets.sgas }
+    };
+    this.$apply();
+  } // 只在Page中存在的页面生命周期函数
 
   config = {
     navigationBarTitleText: '兑换SGAS'
   }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
 
   data = {
-    config: {
-      from: { name: 'GAS', icon: 'neo' },
-      to: { name: 'SGAS', icon: 'Sgas' }
-    },
-    sgasSelected: 1
+    config: {},
+    sgasSelected: 1,
+    amount: 0
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
   components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
@@ -213,24 +220,59 @@ export default class Gas2Sgas extends wepy.page {
   watch = {}; // 声明数据watcher（详见后文介绍）
 
   methods = {
-    onExchange() {},
+    onExchange() {
+      //此处调用 GAS兑换SGAS接口
+      if (option === 0) {
+
+      } else {
+        //此处调用SGAS兑换GAS接口
+      }
+      //跳转到等待结果界面
+
+    },
+    inputAmount(e) {
+      console.log(e.detail.value);
+      this.amount = e.detail.value;
+      this.$apply();
+    },
     selected(option) {
+      let that = this;
+      const assets = that.onGetAsset();
       console.log(option);
       option = parseInt(option);
       this.sgasSelected = option;
       if (option === 0) {
         this.config = {
-          from: { name: 'GAS', icon: 'neo' },
-          to: { name: 'SGAS', icon: 'Sgas' }
+          from: { name: 'GAS', icon: 'neo', amount: assets.gas },
+          to: { name: 'SGAS', icon: 'Sgas', amount: assets.sgas }
         };
       } else {
         this.config = {
-          from: { name: 'SGAS', icon: 'Sgas' },
-          to: { name: 'GAS', icon: 'neo' }
+          from: { name: 'SGAS', icon: 'Sgas', amount: assets.sgas },
+          to: { name: 'GAS', icon: 'neo', amount: assets.gas }
         };
       }
       this.$apply();
     }
   };
+
+  onGetAsset() {
+    const assets = Util.get.assets();
+    console.log(assets);
+    let gas = 0;
+    try {
+      gas = assets['GAS'].amount;
+    } catch (error) {}
+
+    let sgas = 0;
+    try {
+      sgas = assets['SGAS'].amount;
+    } catch (error) {}
+    console.log(',.,.,..,.,.,.,,.,..,.,.,');
+
+    console.log(gas);
+    console.log(sgas);
+    return { sgas: sgas, gas: gas };
+  }
 }
 </script>

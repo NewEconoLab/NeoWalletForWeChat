@@ -37,7 +37,7 @@
     "scrypt-async": "^2.0.0",
     "typescript": "^2.8.1",
     "wafer2-client-sdk": "^1.1.1",
-    "wepy": "^1.6.0",
+    "wepy": "^1.7.2",
     "wepy-async-function": "^1.4.4",
     "wepy-com-toast": "^1.0.3",
     "wepy-redux": "^1.5.3"

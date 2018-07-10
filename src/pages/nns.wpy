@@ -257,7 +257,6 @@ export default class NNS extends wepy.page {
 
   async onLoad() {
     // Util.get.wantBy('benben',Util.get.assets()['GAS']);
-    console.log('....................]]]]]]]]]]]]]]]]]]]]]]');
     this.root = Util.const.DOMAIN_ROOT;
 
     // let res2 = await Util.auction.wantbuy('abc', Util.get.account().nep2key);
