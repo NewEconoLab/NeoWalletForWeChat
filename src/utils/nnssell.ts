@@ -50,8 +50,8 @@ export default class NNSSell {
         }
         catch (e) {
             console.error(e);
-
         }
+        return null;
     }
 
     static async gasToRecharge(transcount: number, asset: Asset) {

@@ -118,6 +118,16 @@ export default class Https {
         return height;
     }
 
+    static async api_getBlockInfo(index: number)
+    {
+        var str = Https.makeRpcUrl(Https.api, "getblocktime", index);
+        var result = await Request.wxRequest({ "method": "get" }, str);
+        // var json = await result.json();
+        var r = result[ "result" ];
+        var time = parseInt(r[ 0 ][ "time" ] as string);
+        return time;
+    }
+
     /**
      *  发送交易 需要签名
      * @param {uint8array} data 

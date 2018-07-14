@@ -195,7 +195,7 @@ export default class extends wepy.app {
         }
       }
     });
-
+    Util.init.nns();
     // 循环执行代码
     setInterval(async () => {
       Util.service.update();

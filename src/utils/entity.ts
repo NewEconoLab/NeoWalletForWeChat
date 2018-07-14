@@ -319,15 +319,17 @@ export class DataType {
     public static Boolean = 'Boolean';
     public static String = 'String';
 }
-export class DomainState {
+export enum DomainState {
     // 有owner 有ttl且没过期
-    public static Taken = 'token';
+    Taken = 'taken',
     // 竞拍中 没owner 有ttl
-    public static Bidding = 'bidding';
+    Bidding = 'bidding',
     // 已过期 不是自己的 有owner ttl过期
-    public static Avaliable = 'avaliable';
+    Avaliable = 'avaliable',
+    //格式错误域名
+    Invalid = 'invalid',
     // 已过期 是自己的 
-    public static Renew = 'renew';
+    Renew = 'renew',
 }
 
 export class ResultItem {
@@ -418,12 +420,10 @@ export class SellDomainInfo extends DomainInfo {
     maxBuyer: Neo.Uint160;
     balanceOf: Neo.BigInteger;
     balanceOfSelling: Neo.BigInteger;
-    constructor()
-    {
+    constructor() {
         super();
     }
-    copyDomainInfoToThis(info: DomainInfo)
-    {
+    copyDomainInfoToThis(info: DomainInfo) {
         this.owner = info.owner;
         this.ttl = info.ttl;
         this.register = info.register;

@@ -262,8 +262,6 @@ export default class Home extends wepy.page {
   async onReady() {
     const that = this;
     await this.OnLogin();
-
-    await Util.init.nns();
   }
 
   async OnLogin() {

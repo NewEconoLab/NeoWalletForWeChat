@@ -99,10 +99,20 @@
       flex-direction: row;
       align-items: flex-start;
       image {
-        width: 24rpx;
-        height: 24rpx;
+        width: 29rpx;
+        height: 29rpx;
         margin-left: 30rpx;
         margin-top: 10rpx;
+      }
+      text {
+        margin-left: 10rpx;
+        margin-top: 10rpx;
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #a9a9a9;
+        letter-spacing: 0;
+        line-height: 12px;
+        font-weight: 10;
       }
     }
   }
@@ -173,11 +183,12 @@
               <form bindsubmit="confirm" >
                 <view class="search">
                     <view class="text">
-                      <input name="domain" class="input" confirm-type="done" bindconfirm="confirm"/>
+                      <input name="domain" class="input" confirm-type="done" bindconfirm="confirm" bindinput="domaininput"/>
                       <text class="domain">.{{root}}</text>
                     </view>
                     <view class="loading">
-                      <image class="icon" src="../images/Loading.png" animation="{{animationData}}" />
+                      <image class="icon" src="../images/{{loadingIcon}}.png" animation="{{animationData}}" />
+                      <text>{{alert}}</text>
                     </view>
                 </view>
               </form>
@@ -213,6 +224,7 @@
 <script>
 import wepy from 'wepy';
 import Util from '../utils/index';
+import { DomainState } from '../utils/entity';
 export default class NNS extends wepy.page {
   config = {
     navigationBarTitleText: 'NNS'
@@ -228,28 +240,32 @@ export default class NNS extends wepy.page {
       show: false,
       label: '开标'
     },
-    nnsloading: false
+    nnsloading: false,
+    alert: '',
+    loadingIcon: 'Loading'
   };
 
   computed = {};
 
   methods = {
     async confirm(event) {
-      // console.log('hhhuhuhuhuhuhuuhhuhuhuhu')
-      console.log(event);
-      console.log(event.detail.value);
       const domain = event.detail.value; //this.domain;
       console.log(domain);
       this.nnsloading = true;
       this.$apply();
-      let res = await Util.get.addrByDomain(domain);
+      let domainInfo = await Util.get.domainState(domain);
       this.nnsloading = false;
       this.$apply();
-      console.log(res);
-      if (res.state) {
-        let addr = res.addr;
-      }
+      this.processDomainState(domainInfo);
       // Util.get.addrByDomain('jinghui.test');
+    },
+    domaininput(event) {
+      console.log('llllllllll');
+      if (this.loadingIcon !== 'Loading') {
+        this.loadingIcon = 'Loading';
+        this.alert = '';
+        this.$apply();
+      }
     }
   };
 
@@ -298,6 +314,32 @@ export default class NNS extends wepy.page {
       }.bind(this),
       800
     );
+  }
+  /**
+   * 解析域名状态
+   */
+  processDomainState(domainInfo) {
+    switch (domainInfo.state) {
+      case DomainState.Taken:
+        this.loadingIcon = 'N_error';
+        this.alert = '该域名已经被别人拥有啦';
+        break;
+      case DomainState.Bidding:
+        this.loadingIcon = 'N_avaliable';
+        this.alert = '该域名正在进行竞拍';
+        break;
+      case DomainState.Avaliable:
+        this.loadingIcon = 'N_avaliable';
+        this.alert = '该域名可以使用';
+        break;
+      case DomainState.Invalid:
+        this.loadingIcon = 'N_error';
+        this.alert = '该域名格式错误';
+        break;
+      default:
+        break;
+    }
+    this.$apply();
   }
 }
 </script>

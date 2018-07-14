@@ -56,7 +56,8 @@ export default {
         //addrByDomain2: async (domain: string) => { return await NNS.resolveData2(domain) },
         // wantBy: Auction.wantBy,
         domainByAddr: NNS.getDomainsByAddr,
-        wif: Wallet.prikey2Wif
+        wif: Wallet.prikey2Wif,
+        domainState:Auction.queryDomainState
     },
     set: {
         cache: Cache.put,

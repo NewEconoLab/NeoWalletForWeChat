@@ -40,4 +40,4 @@ export const DAPP_SGAS = Neo.Uint160.parse('3f7420285874867c30f32e44f304fd62ad1e
 export const DAPP_COIN_POOL = Neo.Uint160.parse("5d6b91ee7cde1f8bb1868d36d4bf134f6887d231");//coinpool 新合约地址
 export const DAPP_NNS = Neo.Uint160.parse("77e193f1af44a61ed3613e6e3442a0fc809bb4b8");//nns 合约地址
 export const DAPP_NNC = Neo.Uint160.parse("7c488f873d2fa3c2ccc4c8af8dbec83678111778");//nnc 合约地址
-export const DOMAIN_ROOT: string = 'wei';
+export const DOMAIN_ROOT: string = 'neo';
