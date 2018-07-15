@@ -34,7 +34,7 @@ export default class Wallet {
     static getAccount(label: string, key: string): Nep6.nep6account {
         let privateKey;
         if (key !== null && key.length === 52 && key.charAt(0) === 'K') {
-            privateKey =Helper.hexToBytes(Wallet.wif2prikey(key));
+            privateKey = Helper.hexToBytes(Wallet.wif2prikey(key));
         } else {
             privateKey = Helper.hexToBytes(key);
         }
@@ -123,16 +123,20 @@ export default class Wallet {
      * 获取私钥
      * @param passphrase nep2解密密码
      */
-    public static async getPrikey(passphrase?: string) /*Uint8Array*/ {
-        return new Promise((resolve, rejet) => {
+    public static getPrikey(passphrase?: string): string /*Uint8Array*/ {
+        if (Wallet.account.nep2key.length === 52) {
+            return Wallet.wif2prikey(Wallet.account.nep2key);
+        }
+        return Wallet.account.nep2key;
+        // return new Promise((resolve, rejet) => {
 
-            //私钥登陆
-            if (this.account.nep2key.length === 64)
-                resolve(this.account.nep2key);
-            else {}
-        })
+        //     //私钥登陆
+        //     if (this.account.nep2key.length === 64)
+        //         resolve(this.account.nep2key);
+        //     else {}
+        // })
     }
-    
+
     /**
      * 获取地址UTXO
      * @param addr 目标地址

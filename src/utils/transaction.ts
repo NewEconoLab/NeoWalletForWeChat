@@ -20,7 +20,7 @@ export default class Transfer {
      * @param {string} randomStr
      */
     static async signAndSend(tran: ThinNeo.Transaction) {
-        const key = Helper.hexToBytes(Wallet.account.nep2key);
+        const key = Helper.hexToBytes(Wallet.getPrikey());
         const pubkey = Helper.hexToBytes(Wallet.account.publickey);
 
         if (tran.witnesses === undefined || tran.witnesses === null)
@@ -212,7 +212,7 @@ export default class Transfer {
      * invokeTrans 方式调用合约塞入attributes
      * @param script 合约的script
      */
-    static async contractInvokeTrans(target: string, script: Uint8Array, asset: Asset, count: number, prikey: string) {
+    static async contractInvokeTrans(target: string, script: Uint8Array, asset: Asset, count: number) {
         var addr = Wallet.account.address;
         //let _count = Neo.Fixed8.Zero;   //十个gas内都不要钱滴
         let tran = Transfer.makeTran(target, asset/*Context.Assets['GAS']*/, count);
