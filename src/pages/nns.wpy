@@ -368,6 +368,7 @@ export default class NNS extends wepy.page {
 
   async OpenAuction(domain) {
     let res = await Util.auction.wantbuy(this.domain);
+    
     console.log('==========');
 
     console.log(res);

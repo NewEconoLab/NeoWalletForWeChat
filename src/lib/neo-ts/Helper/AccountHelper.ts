@@ -148,8 +148,17 @@ export class Account {
         var key = new CryptoKey.ECDsaCryptoKey(PublicKey, privateKey);
         var ecdsa = new ECDsa(key);
         {
+            console.log('message');
+
+            console.log(StringHelper.toHexString(message));
+            console.log('randomStr')
+            console.log(randomStr)
             //签名
-            return new Uint8Array(ecdsa.sign(message, randomStr));
+            let cb = new Uint8Array(ecdsa.sign(message, randomStr));
+            console.log('sign')
+            console.log(StringHelper.toHexString(cb));
+            
+            return cb
         }
     }
     public static VerifySignature(message: Uint8Array, signature: Uint8Array, pubkey: Uint8Array) {
