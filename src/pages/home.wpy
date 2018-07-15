@@ -277,7 +277,7 @@ export default class Home extends wepy.page {
         Util.service.start(account);
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   }
   onShareAppMessage() {
@@ -303,7 +303,7 @@ export default class Home extends wepy.page {
       that.Block = Util.get.height();
       that.claim = Util.get.claim();
       that.$apply();
-      console.log(that.claim);
+      // console.log(that.claim);
       that.onShowAsset();
     });
   }

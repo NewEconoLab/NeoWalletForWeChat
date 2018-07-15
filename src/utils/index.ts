@@ -89,15 +89,15 @@ export default {
     reg: {
         domain: NNS.nnsRegister,
         test: () => {
-            console.log('[[[[[[[[[[[[[[[[[[[[[[[');
+            // // console.log('[[[[[[[[[[[[[[[[[[[[[[[');
 
-            console.log(Helper.hexToBytes(Const.DAPP_SGAS.toString()));
+            // // console.log(Helper.hexToBytes(Const.DAPP_SGAS.toString()));
 
-            console.log(Const.DAPP_SGAS.toString());
-            console.log(new Uint8Array(Const.DAPP_SGAS.bits.buffer))
-            console.log(Const.DAPP_SGAS.toArray());
+            // // console.log(Const.DAPP_SGAS.toString());
+            // // console.log(new Uint8Array(Const.DAPP_SGAS.bits.buffer))
+            // // console.log(Const.DAPP_SGAS.toArray());
 
-            console.log('[[[[[[[[[[[[[[[[[[[[[[[[');
+            // // console.log('[[[[[[[[[[[[[[[[[[[[[[[[');
 
         }
     }

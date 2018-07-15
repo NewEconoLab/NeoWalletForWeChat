@@ -1,4 +1,4 @@
-import { Domainmsg, DomainInfo, SellDomainInfo, NNSResult, ResultItem, DataType, Asset } from "./entity";
+import { Domainmsg, DomainInfo, SellDomainInfo, NNSResult, ResultItem, DataType, Asset, MyAuction } from "./entity";
 import { Neo, Helper, ThinNeo } from "../lib/neo-ts/index";
 import Common from "./common";
 import NNS from './nns'
@@ -7,6 +7,8 @@ import Wallet from "./wallet";
 import { DAPP_SGAS, DAPP_NNS, id_GAS } from "./const";
 import Transfer from "./transaction";
 import { getSecureRandom } from './random'
+import { formatTime } from './time'
+import Auction from "./auctioin";
 export default class NNSSell {
 
     /**
@@ -52,6 +54,55 @@ export default class NNSSell {
             console.error(e);
         }
         return null;
+    }
+
+    static async getBidList(): Promise<Array<MyAuction>> {
+        //获得加价列表
+        let res = await Https.api_getBidListByAddress(Wallet.account.address);
+        console.log('bidlist:')
+        console.log(res);
+        if(res === null){
+            return;
+        }
+        let arr = new Array<MyAuction>();
+        //获得session列表
+        let list = res ? res[0]["list"] as Array<MyAuction> : [];
+        if (res) {
+            for (let i in list) {
+                const element = list[i];
+
+                //获得当前账户该域名下的余额
+                let balanceOfSelling = await Auction.getBalanceOfSeling(Neo.Uint256.parse(element.id.replace('0x', '')));
+                element.receivedState = 0;
+                //根据余额和所有者判断当前账户是否领取过了域名或退币
+                if (element.auctionState == '0') {
+                    if (element.maxBuyer == Wallet.account.address) {
+                        element.receivedState = element.owner == Wallet.account.address ? 1 : 0
+                    } else {
+                        element.receivedState = balanceOfSelling.compareTo(Neo.BigInteger.Zero) == 0 ? 2 : 0;
+                    }
+                }
+                //开始时间日期格式化
+                element.startAuctionTime = formatTime(element.startAuctionTime, 'Y/M/D h:m:s'); // formatTime("yyyy/MM/dd hh:mm:ss", new Date(element.startAuctionTime * 1000));
+
+                element.endedState = 0;
+                element.auctionState = '3';
+                element.maxBuyer = null;
+                element.maxPrice = '0';
+                let info = await NNSSell.getSellingStateByDomain(element.domain);
+                if (info.startBlockSelling.compareTo(Neo.BigInteger.Zero) > 0) {
+                    if (info.maxPrice.compareTo(Neo.BigInteger.Zero) > 0) {
+                        element.maxBuyer = Helper.Account.GetAddressFromScriptHash(info.maxBuyer);
+                        element.maxPrice = parseInt(info.maxPrice.toString()) + '00000000';
+                    }
+                    element.auctionState = '1';
+                }
+                arr.push(element);
+            }
+        }
+        console.log('bidlist');
+        console.log(arr)
+        return arr
     }
 
     static async gasToRecharge(transcount: number, asset: Asset) {
@@ -108,7 +159,7 @@ export default class NNSSell {
         sb.EmitAppCall(NNS.root.register);
         let script = sb.ToArray();
         let res = await Transfer.contractInvoke_attributes(script)
-        // console.log(res);
+        // // console.log(res);
         return res;
     }
 
@@ -236,7 +287,7 @@ export default class NNSSell {
         // let res = num.divide(100000000).toString();
         // new Neo.Fixed8(num)
         // let number = (Neo.Fixed8.parse(num.toString()).getData().toNumber()) / 100000000;
-        // console.log(res);
+        // // console.log(res);
         return res.toString();
     }
 
@@ -253,5 +304,4 @@ export default class NNSSell {
         let res = await Common.contractInvokeTrans_attributes(data)
         return res;
     }
-
 }

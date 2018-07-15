@@ -155,7 +155,7 @@ export default class SGAS {
         let res = await Https.rpc_getInvokescript(data);
         let stack = res["stack"][0]
         let amount = ResultItem.FromJson(stack["type"], stack["value"]);
-        //console.log(amount.AsInteger().toString());
+        //// console.log(amount.AsInteger().toString());
 
         return amount.AsInteger().toString();
     }
@@ -169,7 +169,7 @@ export default class SGAS {
         );
         let data = Common.buildScript(Const.DAPP_NNC, "claim", ["(hex160)" + who.toString()]);
         let res = await Transfer.contractInvoke_attributes(data, prikey);
-        console.log(res);
+        // console.log(res);
         //prikey,Config.dapp_nnc, "claim", "(bytes)" + strhash
     }
 

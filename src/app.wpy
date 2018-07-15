@@ -95,6 +95,12 @@ Page {
     border: none;
   }
 }
+
+//按钮点击后颜色
+.btn_hover {
+  background-color: gray;
+}
+
 </style>
 
 <script>

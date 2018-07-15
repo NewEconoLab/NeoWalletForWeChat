@@ -48,7 +48,7 @@ export class Asset {
      * @param height 当前区块高度
      */
     public addUTXO(utxo: Utxo) {
-        // console.log(this.utxos[utxo.txid] as Utxo);
+        // // console.log(this.utxos[utxo.txid] as Utxo);
 
         //已存在且已花费
         if ((this.utxos[utxo.txid] as Utxo) === undefined) {
@@ -66,19 +66,19 @@ export class Asset {
     public pay(amount: number): Pay {
         let count: number = 0.0;
         let outputs: Utxo[] = [];
-        console.log('amount');
-        console.log(amount.toString());
+        // console.log('amount');
+        // console.log(amount.toString());
 
         for (let key in this.utxos) {
 
             let utxo = this.utxos[key];
-            console.log('sum')
-            console.log(utxo)
+            // console.log('sum')
+            // console.log(utxo)
             // 总额未够且 未花费
             if (count < amount) {
-                console.log('add');
-                console.log(Neo.Fixed8.parse(utxo.count + '').toString());
-                console.log(count.toString());
+                // console.log('add');
+                // console.log(Neo.Fixed8.parse(utxo.count + '').toString());
+                // console.log(count.toString());
 
                 count += utxo.count;
                 // (this.utxos[key] as Utxo).spent = height;
@@ -86,7 +86,7 @@ export class Asset {
                 outputs.push(utxo);
             }
         }
-        console.log(this)
+        // console.log(this)
         let pay = new Pay(this.id, outputs, count)
         return pay
     }
@@ -367,7 +367,7 @@ export class ResultItem {
             item.data = new Buffer(value as string);
         }
         else {
-            console.log("not support type:" + type);
+            // console.log("not support type:" + type);
         }
         return item;
     }

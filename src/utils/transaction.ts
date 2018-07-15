@@ -23,7 +23,7 @@ export default class Transfer {
         const key = Helper.hexToBytes(Wallet.getPrikey());
         const pubkey = Helper.hexToBytes(Wallet.account.publickey);
 
-        if (tran.witnesses === undefined || tran.witnesses === null)
+        if (tran.witnesses === null)
             tran.witnesses = [];
 
         Tips.loading('获取交易哈希');
@@ -31,20 +31,20 @@ export default class Transfer {
         var msg = tran.GetMessage();
         let randomStr = await getSecureRandom(256);
         Tips.loading('签名中');
-        console.log('key');
-        console.log(key);
+        // console.log('key');
+        // console.log(key);
         var signdata = Helper.Account.Sign(msg, key, randomStr);
-        console.log(pubkey)
-        console.log(Wallet.account.address);
+        // console.log(pubkey)
+        // console.log(Wallet.account.address);
 
         tran.AddWitness(signdata, pubkey, Wallet.account.address);
 
         Tips.loading('交易发送中');
-        console.log(Helper.toHexString(tran.GetRawData()));
+        // console.log(Helper.toHexString(tran.GetRawData()));
 
         const res = await Https.rpc_postRawTransaction(tran.GetRawData());
         Tips.loaded();
-
+        console.log(res)
         return res;
     }
 
@@ -67,9 +67,9 @@ export default class Transfer {
         // tran.extdata = null;
         tran.attributes = [];
         tran.inputs = [];
-        console.log(sendcount);
-        console.log('pay asset');
-        console.log(asset);
+        // console.log(sendcount);
+        // console.log('pay asset');
+        // console.log(asset);
 
 
         var pay: Pay = asset.pay(sendcount);
@@ -84,7 +84,7 @@ export default class Transfer {
             input["_addr"] = utxo.addr;
             tran.inputs.push(input);
         }
-        console.log(pay)
+        // console.log(pay)
         if (pay.sum >= sendcount)//输入大于等于输出
         {
             tran.outputs = [];
@@ -95,8 +95,8 @@ export default class Transfer {
                 output.assetId = Helper.hexToBytes(pay.assetid).reverse();
                 //交易金额
                 output.value = Neo.Fixed8.parse(sendcount + '');
-                console.log('targetaddr')
-                console.log(targetaddr)
+                // console.log('targetaddr')
+                // console.log(targetaddr)
                 //目的账户
                 output.toAddress = Helper.Account.GetPublicKeyScriptHash_FromAddress(targetaddr);
                 //添加转账交易
@@ -274,7 +274,7 @@ export default class Transfer {
                         }
                         else {
                             let nep5 = await Https.getNep5Asset(asset);
-                            console.log(nep5);
+                            // console.log(nep5);
 
                             assetname = 'jjj'//nep5["name"];
                         }

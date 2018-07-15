@@ -60,7 +60,7 @@ export class Context {
      * 定时触发
      */
     static async OnTimeOut() {
-        console.log('onTimeOut');
+        // console.log('onTimeOut');
 
         if (Context.assetDelegate === null) {
             return;
@@ -98,10 +98,6 @@ export class Context {
         this.lock = true;
         try {
             let nep5s = await Https.api_getnep5Balance(Context.getAccount().address);
-            console.log('=================');
-            console.log(nep5s);
-            console.log('=================');
-
 
             for (let key in Context.Assets) {
                 (Context.Assets[key] as Asset).amount = '0.00';
@@ -176,8 +172,8 @@ export class Context {
                 else (Context.Assets[key] as Asset).rise = false;
 
             } catch (err) {
-                console.log('NET_ERR:price');
-                // console.log(err);
+                // console.log('NET_ERR:price');
+                // // console.log(err);
                 isAll = false;
             }
         }
@@ -206,7 +202,7 @@ export class Context {
 
         let res = await Https.api_getclaimgas(Wallet.account.address, 0);
 
-        console.log(res);
+        // console.log(res);
         let claims = [];
         for (let i in res['claims']) {
             let claim = new Claim(res.claims[i]);

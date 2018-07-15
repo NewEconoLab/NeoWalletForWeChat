@@ -1,11 +1,11 @@
 import Common from "./common";
-import { DOMAIN_ROOT, DAPP_NNS } from "./const";
+import { DOMAIN_ROOT } from "./const";
 import Https from "./Https";
-import Transfer from "./transaction";
-import { Helper, ThinNeo, Neo } from "../lib/neo-ts/index";
+import { Helper, Neo } from "../lib/neo-ts/index";
 import Wallet from "./wallet";
-import { Asset, DomainState, SellDomainInfo } from "./entity";
+import { DomainState, SellDomainInfo, ResultItem, DataType } from "./entity";
 import NNSSell from "./nnssell";
+import NNS from "./nns";
 
 export default class Auction {
     constructor() { }
@@ -49,4 +49,28 @@ export default class Auction {
 
         return info;
     }
+
+
+  
+
+      /**
+     * 获得
+     * @param id 竞拍id
+     */
+    static async getBalanceOfSeling(id: Neo.Uint256)
+    {
+        let who = new Neo.Uint160(Helper.Account.GetPublicKeyScriptHash_FromAddress(Wallet.account.address).buffer);
+
+        let res = await Common.contractInvokeScript(
+            NNS.root.register,
+            "balanceOfSelling",
+            "(hex160)" + who.toString(),
+            "(hex256)" + id.toString()
+        );
+        var stackarr = res[ "stack" ] as any[];
+        let stack = ResultItem.FromJson(DataType.Array, stackarr).subItem[ 0 ];
+        let balance = stack.AsInteger();
+        return balance;
+    }
+
 }

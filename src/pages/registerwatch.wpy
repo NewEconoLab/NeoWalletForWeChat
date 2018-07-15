@@ -171,7 +171,7 @@ export default class RegisterWatch extends wepy.page {
       that.isLoading = false;
       that.$apply();
       Util.hide.loading()
-      console.log(res);
+      // console.log(res);
       
       if (res['code'] == 0) {
         Util.show.success('注册成功');
@@ -187,12 +187,12 @@ export default class RegisterWatch extends wepy.page {
       let that = this;
       wepy.scanCode({
         success: res => {
-          console.log(res);
+          // console.log(res);
           that.targetAddr = res.result;
           that.$apply();
         },
         fail: res => {
-          console.log(res);
+          // console.log(res);
         }
       });
     }

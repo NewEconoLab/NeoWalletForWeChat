@@ -27,7 +27,7 @@ export function Request(params = {}, url) {
         if (res.data) {
           resolve(res.data)
         } else {
-          // console.log('网络异常' + res.errMsg)
+          // // console.log('网络异常' + res.errMsg)
         }
       },
       fail:function(res){

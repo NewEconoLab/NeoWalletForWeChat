@@ -156,8 +156,8 @@ export default class Index extends wepy.page {
       wepy.reLaunch({ url: './home' });
     },
     async onImport(param) {
-      console.log('param');
-      console.log(param);
+      // console.log('param');
+      // console.log(param);
 
       await Util.set.account_json(param);
       wepy.reLaunch({ url: './home' });
@@ -252,7 +252,7 @@ export default class Index extends wepy.page {
           Util.set.cache(Util.config.LOCAL_ACCOUNTS, accounts);
         }
       } catch (err) {
-        console.log(err);
+        // console.log(err);
       }
 
       Util.show.loading('登陆中');
@@ -266,7 +266,7 @@ export default class Index extends wepy.page {
   }
 
   onShow() {
-    console.log(this.isSwitch);
+    // console.log(this.isSwitch);
   }
 }
 </script>

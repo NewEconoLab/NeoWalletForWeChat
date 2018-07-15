@@ -78,15 +78,23 @@ export default class Https {
     static async api_getAllAssets() {
         var str = this.makeRpcUrl(this.api, "getallasset");
         var result = await Request.wxRequest({ "method": "get" }, str);
-        var r = result["result"];
-        return r;
+        try {
+            return result["result"];
+        } catch (error) {
+            // console.log(error);
+            return null;
+        }
     }
 
     static async api_getUTXO(address) {
         var str = this.makeRpcUrl(this.api, "getutxo", address);
         var result = await Request.wxRequest({ "method": "get" }, str);
-        var r = result["result"];
-        return r;
+        try {
+            return result["result"];
+        } catch (error) {
+            // console.log(error);
+            return null;
+        }
 
     }
 
@@ -94,8 +102,12 @@ export default class Https {
         var str = Https.makeRpcUrl(Https.api, "getbalance", address);
         var value = await Request.Request({ "method": "get" }, str);
 
-        var r = value["result"];
-        return r;
+        try {
+            return value["result"];
+        } catch (error) {
+            // console.log(error);
+            return null;
+        }
     }
 
 
@@ -104,7 +116,11 @@ export default class Https {
      * @param coin 
      */
     static async api_getCoinPrice(coin) {
-        return await Request.wxRequest({ "method": "get" }, this.priceHost + coin + '/?convert=CNY');
+        try {
+            return await Request.wxRequest({ "method": "get" }, this.priceHost + coin + '/?convert=CNY');
+        } catch (error) {
+            // console.log('price error');
+        }
     }
 
     /**
@@ -118,13 +134,15 @@ export default class Https {
         return height;
     }
 
-    static async api_getBlockInfo(index: number)
-    {
+    static async api_getBlockInfo(index: number) {
         var str = Https.makeRpcUrl(Https.api, "getblocktime", index);
         var result = await Request.wxRequest({ "method": "get" }, str);
         // var json = await result.json();
-        var r = result[ "result" ];
-        var time = parseInt(r[ 0 ][ "time" ] as string);
+        console.log('get block info')
+        console.log(result);
+        
+        var r = result["result"];
+        var time = parseInt(r[0]["time"] as string);
         return time;
     }
 
@@ -134,7 +152,7 @@ export default class Https {
      */
     static async rpc_postRawTransaction(data: Uint8Array) {
         var postdata = this.makeRpcPostBody("sendrawtransaction", Helper.toHexString(data));
-        // console.log(postdata)
+        // // console.log(postdata)
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.api } }, this.proxy_server + "proxy.php");
         console.log(result);
         var r = result["result"][0]['sendrawtransactionresult'];
@@ -151,11 +169,20 @@ export default class Https {
     static async rpc_getInvokescript(scripthash: Uint8Array): Promise<any> {
         var str = this.makeRpcUrl(this.api, "invokescript", Helper.toHexString(scripthash));
         var result = await Request.Request({ "method": "get" }, str);
-        console.log('result');
-
-        console.log(result);
 
         if (result["result"] == null)
+            return null;
+        var r = result["result"][0]
+        return r;
+    }
+    /**
+     * 获取交易脚本
+     * @param txid 交易id
+     */
+    static async getrawtransaction(txid: string) {
+        var str = Https.makeRpcUrl(Https.api, "getrawtransaction", txid);
+        var result = await Request.Request({ "method": "get" }, str);
+        if (!result["result"])
             return null;
         var r = result["result"][0]
         return r;
@@ -167,11 +194,15 @@ export default class Https {
      */
     static async rpc_getRawTransaction(txid: string) {
         var postdata = this.makeRpcPostBody("getrawtransaction", txid);
-        // console.log(postdata)
+        // // console.log(postdata)
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.api } }, this.proxy_server + "proxy.php");
         // var result = await Request.wxRequest({ "method": "post", "body":JSON.stringify(postdata)}, this.rpc);
-        var r = result["result"];
-        return r;
+        try {
+            return result["result"];
+        } catch (error) {
+            // console.log(error);
+            return null;
+        }
     }
 
     /**
@@ -182,11 +213,15 @@ export default class Https {
      */
     static async rpc_getAddressTXs(addr: string, max: number = 20, page: number = 1) {
         var postdata = this.makeRpcPostBody("getaddresstxs", addr, max, page);
-        // console.log(postdata)
+        // // console.log(postdata)
         // var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.api } }, this.proxy_server + "proxy.php");
         var result = await Request.wxRequest({ "method": "post", "body": JSON.stringify(postdata) }, this.api);
-        var r = result["result"];
-        return r;
+        try {
+            return result["result"];
+        } catch (error) {
+            // console.log(error);
+            return null;
+        }
     }
 
     /**
@@ -200,7 +235,12 @@ export default class Https {
             var str = this.makeRpcUrl(this.api, "getclaimgas", address);
         // var result = await fetch(str, { "method": "get" });
         var result = await Request.wxRequest({ "method": "get" }, str);
-        return result["result"][0];
+        try {
+            return result["result"][0];
+        } catch (error) {
+            // console.log(error);
+            return null;
+        }
     }
 
     /***********************************************************
@@ -225,12 +265,14 @@ export default class Https {
     static async getNep5Asset(asset: string) {
         var postdata = Https.makeRpcUrl(this.api, "getnep5asset", asset);
         var result = await Request.Request({ "method": "get" }, postdata);
-        console.log('========================');
+        try {
+            return result["result"][0];
+        } catch (error) {
+            // console.log("getNep5Asset:");
+            // console.log(error);
 
-        console.log(result);
-
-        var r = result["result"][0];
-        return r;
+            return null;
+        }
     }
 
     /**
@@ -238,17 +280,18 @@ export default class Https {
      * @param address 账户地址
      */
     static async api_getnep5Balance(address: string) {
-        console.log(address);
+        // console.log(address);
 
         var str = Https.makeRpcUrl(Https.api, "getallnep5assetofaddress", address, 1);
-        console.log(str);
-
+        // console.log(str);
         var result = await Request.Request({ "method": "get" }, str);
-        console.log(result);
+        try {
+            return result["result"];
+        } catch (error) {
+            // console.log(error);
 
-        // var json = await result.json();
-        var r = result["result"];
-        return r;
+            return null;
+        }
     }
 
 
@@ -277,18 +320,14 @@ export default class Https {
                 pagesize,
                 pageindex
             );
-        var r;
-        try {
-            var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
-            // var result = await Request.wxRequest({ "method": "post", "body":JSON.stringify(postdata)}, this.api);
-            console.log('result1');
-            console.log(result);
 
-            r = result["result"];
+        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
+        try {
+            return result["result"];
         } catch (err) {
-            console.log(err);
+            // console.log(err);
+            return null;
         }
-        return r;
     }
 
     /**
@@ -296,26 +335,33 @@ export default class Https {
      * @param data1 第一笔交易数据
      * @param data2 第二笔交易数据
      */
-    static async rechargeandtransfer(data1: Uint8Array, data2: Uint8Array)
-    {
+    static async rechargeandtransfer(data1: Uint8Array, data2: Uint8Array) {
         var postdata = Https.makeRpcPostBody("rechargeandtransfer", Helper.toHexString(data1), Helper.toHexString(data2));
-        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");        
+        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
         // var json = await result.json();
-        var r = result[ "result" ][ 0 ];
-        return r;
+        try {
+            return result["result"][0];
+        } catch (error) {
+            // console.log(error);
+            return null;
+        }
     }
 
     /**
      * 查询合约调用状态
      * @param txid 交易id
      */
-    static async getrechargeandtransfer(txid: string)
-    {
+    static async getrechargeandtransfer(txid: string) {
         var postdata = Https.makeRpcPostBody("getrechargeandtransfer", txid);
-        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");        
+        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
         // var json = await result.json();
-        var r = result[ "result" ][ 0 ];
-        return r;
+
+        try {
+            return result["result"][0];
+        } catch (error) {
+            // console.log(error);
+            return null;
+        }
     }
 
 
@@ -334,8 +380,13 @@ export default class Https {
         // var json = await result.json();
         if (result["result"] == null)
             return null;
-        var r = result["result"][0]["result"]
-        return r;
+        try {
+            return result["result"][0]["result"]
+        } catch (error) {
+            // console.log(error);
+            return null;
+        }
+
     }
 
     //获取地址下所有的域名
@@ -362,17 +413,21 @@ export default class Https {
         return r;
     }
 
-   /**
-    * 获取竞拍列表
-    * @param address 地址
-    */
+    /**
+     * 获取竞拍列表
+     * @param address 地址
+     */
     static async api_getBidListByAddress(address: string) {
         var postdata = Https.makeRpcPostBody("getbidlistbyaddress", address);
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
         // var result = await fetch(Https.apiaggr, { "method": "post", "body": JSON.stringify(postdata) });
         // var json = await result.json();
-        var r = result["result"];
-        return r;
+        try {
+            return result["result"];
+        } catch (error) {
+            // console.log(error);
+            return null;
+        }
     }
     /**
      * 根据域名查询竞拍详情
@@ -386,8 +441,12 @@ export default class Https {
 
         // var result = await fetch(Https.apiaggr, { "method": "post", "body": JSON.stringify(postdata) });
         // var json = await result.json();
-        var r = result["result"];
-        return r;
+        try {
+            return result["result"];
+        } catch (error) {
+            // console.log(error);
+            return null;
+        }
     }
 
 

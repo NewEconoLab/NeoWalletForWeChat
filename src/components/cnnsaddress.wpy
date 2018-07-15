@@ -98,12 +98,12 @@ export default class CNNSAddress extends wepy.component {
       const address = event.detail.address;
       if (address === undefined || address === '') return;
       if (address.length === 34 && address[0] === 'A') {
-        console.log(event.detail.address);
+        // console.log(event.detail.address);
         //TODO: 如果判断结果为domain，查找地址
       }
     },
     confirm(e) {
-      console.log(e.detail.address);
+      // console.log(e.detail.address);
       this.$emit('confirm', e.detail.address);
     },
     change(e) {

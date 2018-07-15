@@ -162,7 +162,7 @@ export default class ImportAccount extends wepy.page {
       let that = this;
       wepy.scanCode({
         success: res => {
-          console.log(res);
+          // console.log(res);
           res = res.result;
           if (res.length === 64 || res.length == 52) {
             that.prikey = res;
@@ -175,7 +175,7 @@ export default class ImportAccount extends wepy.page {
               that.$apply();
               that.OnParseJson(account);
             } catch (err) {
-              console.log(err);
+              // console.log(err);
               //在这里处理错误
               Util.show.error('格式错误');
               return;
@@ -183,7 +183,7 @@ export default class ImportAccount extends wepy.page {
           }
         },
         fail: res => {
-          console.log(res);
+          // console.log(res);
           Util.show.error('解析失败');
         }
       });

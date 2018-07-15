@@ -29,8 +29,8 @@ export default class NNSBidding extends wepy.page {
 
   methods = {
     handleChange(coin) {
-      console.log('handleChange')
-      console.log(JSON.stringify(coin));
+      // console.log('handleChange')
+      // console.log(JSON.stringify(coin));
       Util.set.sendCoin(coin);
 
       // var pages = getCurrentPages();
@@ -39,7 +39,7 @@ export default class NNSBidding extends wepy.page {
 
       // //直接调用上一个页面的setData()方法，把数据存到上一个页面中去
       // let coin0 = JSON.stringify(coin);
-      // console.log(prevPage);
+      // // console.log(prevPage);
       
       // prevPage.setData({
       //   coin: JSON.parse(coin0)

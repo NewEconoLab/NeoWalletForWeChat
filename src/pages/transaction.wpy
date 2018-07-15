@@ -144,12 +144,12 @@ export default class Transaction extends wepy.page {
 
   methods = {};
   onLoad(option) {
-    console.log(option.tx);
+    // console.log(option.tx);
 
     this.tx = JSON.parse(option.tx);
     this.addr = Util.get.account().address;
     this.$apply();
-    console.log(this.tx.vin);
+    // console.log(this.tx.vin);
 
     this.OnLoadTX(this.tx);
   }

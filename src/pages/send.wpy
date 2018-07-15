@@ -192,7 +192,7 @@ export default class Send extends wepy.page {
   methods = {
     handleEmit(param) {
       let that = this;
-      console.log(param);
+      // console.log(param);
       switch (param) {
         case 'scan':
           that.OnScan();
@@ -240,16 +240,16 @@ export default class Send extends wepy.page {
 
   events = {};
   onShow() {
-    console.log('send onShow');
+    // console.log('send onShow');
     
     if (this.coin === null) {
-      console.log('send onShow coin null');
+      // console.log('send onShow coin null');
       const assets = Util.get.assets();
       this.coin = assets['NEO'];
       this.$apply();
     }else{
-      console.log('send onShow change coin');
-      console.log(Util.get.sendCoin());
+      // console.log('send onShow change coin');
+      // console.log(Util.get.sendCoin());
       
       this.coin = Util.get.sendCoin();
       this.$apply();
@@ -276,7 +276,7 @@ export default class Send extends wepy.page {
   }
   onReady() {
     const that = this;
-    console.log(Util.get.account());
+    // console.log(Util.get.account());
 
     if (Util.get.account().nep2key.length === 64) {
       that.hidePW = 'true';
@@ -287,12 +287,12 @@ export default class Send extends wepy.page {
     let that = this;
     wepy.scanCode({
       success: res => {
-        console.log(res);
+        // console.log(res);
         that.targetAddr = res.result;
         that.$apply();
       },
       fail: res => {
-        console.log(res);
+        // console.log(res);
       }
     });
   }
@@ -303,13 +303,13 @@ export default class Send extends wepy.page {
     let key = Util.get.account().nep2key;
 
     //如果当前账户直接使用私钥
-    console.log(key.length);
-    console.log(key.charCodeAt(0));
+    // console.log(key.length);
+    // console.log(key.charCodeAt(0));
 
     if (key.length === 52 && key.charAt(0) === 'K') {
-      console.log('send key')
+      // console.log('send key')
       //构造并发送交易
-      console.log(key)
+      // console.log(key)
       that.SendTran(key);
       return;
     }
@@ -331,7 +331,7 @@ export default class Send extends wepy.page {
     // var tran = Coin.makeTran(this.targetAddr, this.coin, count);
     // let randomStr = await Random.getSecureRandom(256);
     // Util.show.loading('获取交易编号');
-    console.log(this.coin)
+    // console.log(this.coin)
     const txid = await Util.send.transfer(prikey, this.targetAddr,this.coin.name, count); //setTran(tran, prikey, pubkey, randomStr);
     Util.hide.loading();
     if (txid === 'failed') {
@@ -341,7 +341,7 @@ export default class Send extends wepy.page {
         showCancel: false,
         success: async function(res) {
           if (res.confirm) {
-            console.log('用户点击确定');
+            // console.log('用户点击确定');
           }
         }
       });
@@ -352,7 +352,7 @@ export default class Send extends wepy.page {
         content: txid,
         success: async function(res) {
           if (res.confirm) {
-            console.log('用户点击确定');
+            // console.log('用户点击确定');
             wx.navigateBack();
           }
         }

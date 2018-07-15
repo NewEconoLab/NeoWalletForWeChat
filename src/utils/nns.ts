@@ -6,7 +6,7 @@ import Wallet from './wallet';
 import Transfer from './transaction';
 import { Account } from '../lib/neo-ts/Helper/index';
 import Common from './common';
-import { DOMAIN_ROOT } from './const';
+import { DOMAIN_ROOT, DAPP_NNS } from './const';
 import { getSecureRandom } from './random'
 /**
  * @name NEONameServiceTool
@@ -25,17 +25,17 @@ export default class NNS {
         let verify = /^[a-zA-Z0-9]{1,32}$/;
         if (verify.test(domain)) {
             let doamininfo: DomainInfo = await NNS.queryDomainInfo(domain + "." + DOMAIN_ROOT)
-            console.log(doamininfo)
+            // console.log(doamininfo)
             
             if (doamininfo.register !== null && doamininfo.ttl !== null) {
                 var timestamp = new Date().getTime();
-                console.log(timestamp);
-                // console.log(domains.register.toString());
-                // console.log(domains.resolver.toString());
+                // console.log(timestamp);
+                // // console.log(domains.register.toString());
+                // // console.log(domains.resolver.toString());
 
                 let copare = new Neo.BigInteger(timestamp).compareTo(new Neo.BigInteger(doamininfo.ttl).multiply(1000));
                 if (copare < 0) {
-                    console.log('域名已到期');
+                    // console.log('域名已到期');
                     doamininfo.status = DomainState.Avaliable;
                 } else {
                     doamininfo.status = DomainState.Taken;
@@ -56,7 +56,7 @@ export default class NNS {
         test.roothash = Common.nameHash(DOMAIN_ROOT);
         test.rootname = DOMAIN_ROOT;
 
-        var domain = await NNS.getOwnerInfo(test.roothash, Consts.baseContract);
+        var domain = await NNS.getOwnerInfo(test.roothash,DAPP_NNS);
         console.log('initRootDomain:');
         console.log(domain);
         test.owner = domain.owner;
@@ -86,7 +86,7 @@ export default class NNS {
                     NNS.getDomainsByAddr();
                 }
             } catch (error) {
-                console.log(error);
+                // console.log(error);
                 // mui.alert(error.message);
             }
         }
@@ -96,10 +96,10 @@ export default class NNS {
      * 获得域名列表
      */
     static async getDomainsByAddr() {
-        console.log(Wallet.account.address);
+        // console.log(Wallet.account.address);
 
         let res = await Https.getnnsinfo(Wallet.account.address);
-        console.log(res);
+        // console.log(res);
 
         // let arrdomain = res ? res.map(dom => { return dom + "." + DOMAIN_ROOT }) : [];
         // let arr = new Array<Domainmsg>();
@@ -133,7 +133,7 @@ export default class NNS {
         var subdomain: string = domainarr[0];
         var nnshash: Neo.Uint256 = Common.nameHashArray(domainarr);
         let doamininfo: DomainInfo = await NNS.getOwnerInfo(nnshash, Consts.baseContract);
-        console.log(doamininfo);
+        // console.log(doamininfo);
         // var owner = Helper.toHexString(doamininfo.owner);
         return doamininfo;
     }
@@ -149,14 +149,14 @@ export default class NNS {
         var data = Common.buildScript(scriptaddress, "getOwnerInfo", ["(hex256)" + domain.toString()]);
 
         let result = await Https.rpc_getInvokescript(data);
-        console.log(result)
+        // console.log(result)
         try {
             let rest = new NNSResult();
             rest.textInfo = result;
             var stackarr = result["stack"] as any[];
-            console.log(stackarr)
+            // console.log(stackarr)
             let stack = ResultItem.FromJson(DataType.Array, stackarr).subItem[0].subItem;
-            console.log(stack)
+            // console.log(stack)
             if (stackarr[0].type == "Array") {
                 info.owner = (stack[0].AsHash160() === null) ? null : stack[0].AsHash160();
                 info.register = (stack[1].AsHash160() === null) ? null : stack[1].AsHash160();
@@ -184,7 +184,7 @@ export default class NNS {
         sb.EmitPushString("requestSubDomain");
         sb.EmitAppCall(scriptaddress);
         var data = sb.ToArray();
-        var res = await Transfer.contractInvoke_attributes(data, prikey);
+        var res = await Transfer.contractInvoke_attributes(data);
         if (!res.err) {
             // WWW.setnnsinfo(address,doamin,);
         }
@@ -213,7 +213,7 @@ export default class NNS {
                 rest.textInfo = res;
 
                 rest.value = ResultItem.FromJson(DataType.Array, stack);
-                console.log(rest)
+                // console.log(rest)
                 //find name 他的type 有可能是string 或者ByteArray
                 if (stack[0].type == DataType.ByteArray) {
                     if (stack[0].value as string != "00") {
@@ -225,7 +225,7 @@ export default class NNS {
             }
         }
         catch (e) {
-            console.log(e);
+            // console.log(e);
             ret = { state: false };
         }
         return ret;

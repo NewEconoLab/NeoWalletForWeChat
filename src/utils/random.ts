@@ -20,12 +20,12 @@ export async function getSecureRandom(len:number) {
   let random:string = ''
   const code = await User.getLoginCode();
   const userinfo:any = await User.getUserInfo();
-  // console.log(code)
+  // // console.log(code)
   random = SHA256(code + random).toString()
   random = SHA256(userinfo.signature + random).toString()
   random = SHA256(userinfo.encryptedData + random).toString()
   random = SHA256(userinfo.iv + random).toString()
-  // console.log(random)
+  // // console.log(random)
   Tips.loaded();
   return random.slice(0, len)
 }

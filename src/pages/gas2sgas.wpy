@@ -231,14 +231,14 @@ export default class Gas2Sgas extends wepy.page {
 
     },
     inputAmount(e) {
-      console.log(e.detail.value);
+      // console.log(e.detail.value);
       this.amount = e.detail.value;
       this.$apply();
     },
     selected(option) {
       let that = this;
       const assets = that.onGetAsset();
-      console.log(option);
+      // console.log(option);
       option = parseInt(option);
       this.sgasSelected = option;
       if (option === 0) {
@@ -258,7 +258,7 @@ export default class Gas2Sgas extends wepy.page {
 
   onGetAsset() {
     const assets = Util.get.assets();
-    console.log(assets);
+    // console.log(assets);
     let gas = 0;
     try {
       gas = assets['GAS'].amount;
@@ -268,10 +268,10 @@ export default class Gas2Sgas extends wepy.page {
     try {
       sgas = assets['SGAS'].amount;
     } catch (error) {}
-    console.log(',.,.,..,.,.,.,,.,..,.,.,');
+    // console.log(',.,.,..,.,.,.,,.,..,.,.,');
 
-    console.log(gas);
-    console.log(sgas);
+    // console.log(gas);
+    // console.log(sgas);
     return { sgas: sgas, gas: gas };
   }
 }

@@ -4,7 +4,7 @@
   <view class="container">
     <scroll-view scroll-y class="scroll">
         <view class="inner">
-            <cassets @changeCoin.user="handleChange"></cassets>
+          
         </view>
     </scroll-view>
   </view>
@@ -13,62 +13,28 @@
 <script>
 import wepy from 'wepy';
 import Util from '../utils/index';
-import CAssets from '../components/cassets';
 export default class MyAuction extends wepy.page {
   config = {
-    navigationBarTitleText: '更换资产类型'
+    navigationBarTitleText: '我的竞拍'
   };
 
   components = {
-    cassets: CAssets
   };
 
   data = {};
 
   computed = {};
 
-  methods = {
-    handleChange(coin) {
-      console.log('handleChange')
-      console.log(JSON.stringify(coin));
-      Util.set.sendCoin(coin);
-
-      // var pages = getCurrentPages();
-      // var currPage = pages[pages.length - 1]; //当前页面
-      // var prevPage = pages[pages.length - 2]; //上一个页面
-
-      // //直接调用上一个页面的setData()方法，把数据存到上一个页面中去
-      // let coin0 = JSON.stringify(coin);
-      // console.log(prevPage);
-      
-      // prevPage.setData({
-      //   coin: JSON.parse(coin0)
-      // });
-
-      wx.navigateBack({
-        delta: 1
-      });
-    }
-  };
+  methods = {};
 
   events = {};
 
-  onLoad() {}
-  onShow() {
-    const assets = Util.get.assets();
-    this.$invoke('cassets', 'LoadCoins', assets);
+  onLoad() {
+    Util.auction.getBidList();
   }
+  onShow() {}
   // 页面渲染完成
   async onReady() {}
-
-  onShareAppMessage() {
-    return {
-      title: 'NNS',
-      path: '/pages/nns'
-    };
-  }
-
-  OnLoading() {}
 }
 </script>
  

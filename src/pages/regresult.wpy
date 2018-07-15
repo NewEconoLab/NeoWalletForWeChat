@@ -90,7 +90,7 @@ export default class RegResult extends wepy.page {
     let that = this;
     this.account = JSON.parse(option.account);
     this.$apply();
-    console.log(this.account);
+    // console.log(this.account);
 
     Util.show.loading('二维码生成中');
     wx.getSystemInfo({
@@ -186,7 +186,7 @@ export default class RegResult extends wepy.page {
         Util.show.success('备份成功');
       },
       fail: function(err) {
-        console.log(err);
+        // console.log(err);
         if (err.errMsg === 'saveImageToPhotosAlbum:fail auth deny') {
           wx.showModal({
             title: '提示',
@@ -194,9 +194,9 @@ export default class RegResult extends wepy.page {
             success: res => {
               wx.openSetting({
                 success(settingdata) {
-                  console.log(settingdata);
+                  // console.log(settingdata);
                   if (settingdata.authSetting['scope.writePhotosAlbum']) {
-                    console.log(
+                    // console.log(
                       '获取权限成功，给出再次点击图片保存到相册的提示。'
                     );
                   } else {

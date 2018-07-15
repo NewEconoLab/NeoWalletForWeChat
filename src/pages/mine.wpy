@@ -148,7 +148,7 @@ export default class Mine extends wepy.page {
         success: function(res) {
           wepy.getClipboardData({
             success: function(res) {
-              console.log(res.data); // data
+              // console.log(res.data); // data
               Util.show.success('复制成功');
             }
           });

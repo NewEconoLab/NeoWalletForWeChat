@@ -103,12 +103,12 @@ export default class Receive extends wepy.page {
       withShareTicket: true,
       success: function(res) {
         // 分享成功
-        console.log('shareMenu share success');
-        console.log('分享' + res);
+        // console.log('shareMenu share success');
+        // console.log('分享' + res);
       },
       fail: function(res) {
         // 分享失败
-        console.log(res);
+        // console.log(res);
       }
     });
   } // 只在Page中存在的页面生命周期函数
@@ -138,7 +138,7 @@ export default class Receive extends wepy.page {
         success: function(res) {
           wepy.getClipboardData({
             success: function(res) {
-              console.log(res.data); // data
+              // console.log(res.data); // data
               Util.show.alert('地址复制成功');
             }
           });
@@ -151,24 +151,24 @@ export default class Receive extends wepy.page {
       title: 'NEO小程序钱包',
       path: './page/send',
       success: function(res) {
-        console.log(res.shareTickets[0]);
-        // console.log
+        // console.log(res.shareTickets[0]);
+        // // console.log
         wx.getShareInfo({
           shareTicket: res.shareTickets[0],
           success: function(res) {
-            console.log(res);
+            // console.log(res);
           },
           fail: function(res) {
-            console.log(res);
+            // console.log(res);
           },
           complete: function(res) {
-            console.log(res);
+            // console.log(res);
           }
         });
       },
       fail: function(res) {
         // 分享失败
-        console.log(res);
+        // console.log(res);
       }
     };
   }
@@ -176,13 +176,13 @@ export default class Receive extends wepy.page {
     let that = this;
     wx.getSystemInfo({
       success: function(res) {
-        console.log(res.model);
-        console.log(res.pixelRatio);
-        console.log(res.windowWidth);
-        console.log(res.windowHeight);
-        console.log(res.language);
-        console.log(res.version);
-        console.log(res.platform);
+        // console.log(res.model);
+        // console.log(res.pixelRatio);
+        // console.log(res.windowWidth);
+        // console.log(res.windowHeight);
+        // console.log(res.language);
+        // console.log(res.version);
+        // console.log(res.platform);
 
         drawQrcode({
           width: res.windowWidth*(2.0/3),

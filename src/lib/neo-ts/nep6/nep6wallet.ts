@@ -55,7 +55,7 @@ export class nep6account {
             this.nep2key = account["nep2key"]
             //TODO: 域名解析
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     }
 }
