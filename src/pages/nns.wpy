@@ -193,7 +193,7 @@
                 </view>
               </form>
               <view class="foot-button" style='margin-top:30rpx;margin-bottom:50rpx;' wx:if="{{btn.show}}">
-                <button type="primary" form-type="submit">{{btn.label}}</button>
+                <button type="primary" form-type="submit" @tap="startAuction">{{btn.label}}</button>
               </view>
            </view>
            <view class="area-description">
@@ -234,6 +234,7 @@ export default class NNS extends wepy.page {
 
   data = {
     animationData: {},
+    domainInfo: {},
     root: 'neo',
     // domain: ''
     btn: {
@@ -254,7 +255,9 @@ export default class NNS extends wepy.page {
       this.nnsloading = true;
       this.$apply();
       let domainInfo = await Util.get.domainState(domain);
+      domainInfo.domain = domain;
       this.nnsloading = false;
+      this.domainInfo = domainInfo;
       this.$apply();
       this.processDomainState(domainInfo);
       // Util.get.addrByDomain('jinghui.test');
@@ -264,7 +267,20 @@ export default class NNS extends wepy.page {
       if (this.loadingIcon !== 'Loading') {
         this.loadingIcon = 'Loading';
         this.alert = '';
+        this.btn = {
+          show: false,
+          label: '开拍'
+        };
         this.$apply();
+      }
+    },
+    startAuction(e) {
+      console.log('open auction');
+      //开拍
+      if (this.domainInfo.state === DomainState.Avaliable) {
+        this.OpenAuction(this.domainInfo.domain);
+      } else {
+        //加价
       }
     }
   };
@@ -327,10 +343,18 @@ export default class NNS extends wepy.page {
       case DomainState.Bidding:
         this.loadingIcon = 'N_avaliable';
         this.alert = '该域名正在进行竞拍';
+        this.btn = {
+          show: true,
+          label: '参与竞拍'
+        };
         break;
       case DomainState.Avaliable:
         this.loadingIcon = 'N_avaliable';
         this.alert = '该域名可以使用';
+        this.btn = {
+          show: true,
+          label: '开拍'
+        };
         break;
       case DomainState.Invalid:
         this.loadingIcon = 'N_error';
@@ -340,6 +364,16 @@ export default class NNS extends wepy.page {
         break;
     }
     this.$apply();
+  }
+
+  async OpenAuction(domain) {
+    let res = await Util.auction.wantbuy(this.domain);
+    console.log('==========');
+
+    console.log(res);
+    console.log('==========');
+
+    await this.openAuction_confirm(res['info']);
   }
 }
 </script>

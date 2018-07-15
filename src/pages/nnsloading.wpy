@@ -40,14 +40,32 @@ export default class NNSLoading extends wepy.page {
   // 页面渲染完成
   async onReady() {}
 
-  onShareAppMessage() {
-    return {
-      title: 'NNS',
-      path: '/pages/nns'
-    };
-  }
+  
 
-  OnLoading() {}
+  OnLoading() {
+
+  }
+   /**
+     * 开标
+     * @param txid 交易id
+     */
+    async confirm(txid: string)
+    {
+        let res = await Https.getrawtransaction(txid);
+        if (!!res)
+        {
+            this.btn_start = 2;
+            this.addBid();
+            return;
+        }
+        else
+        {
+            setTimeout(() =>
+            {
+                this.confirm(txid);
+            }, 5000)
+        }
+    }
 }
 </script>
  

@@ -98,6 +98,10 @@ export class Context {
         this.lock = true;
         try {
             let nep5s = await Https.api_getnep5Balance(Context.getAccount().address);
+            console.log('=================');
+            console.log(nep5s);
+            console.log('=================');
+
 
             for (let key in Context.Assets) {
                 (Context.Assets[key] as Asset).amount = '0.00';
@@ -109,13 +113,16 @@ export class Context {
                 // let type = Coin.assetID2name[nep5.id];
                 if (Context.Assets[nep5.name] === undefined) {
                     Context.Assets[nep5.name] = new Asset(nep5.name, nep5.id, nep5.count);
+                } else {
+                    (Context.Assets[nep5.name] as Asset).amount = nep5.count+'';
                 }
             }
         } catch (error) {
             console.error(error);
+            this.lock = false;
             return
         }
-        
+
         try {
             var utxos = await Https.api_getUTXO(Context.getAccount().address);
             for (var i in utxos) {
@@ -130,6 +137,7 @@ export class Context {
             }
         } catch (error) {
             console.error(error);
+            this.lock = false;
             return
         }
 
@@ -137,7 +145,7 @@ export class Context {
         this.lock = false;
         let assets = JSON.parse(JSON.stringify(Context.Assets));
         Context.assetDelegate(assets);
-        
+
         //设置默认转账币种
         Transfer.coin = assets['NEO'];
     }
@@ -174,12 +182,12 @@ export class Context {
             }
         }
         //只有当所有的币种都成功获取价格才更新
-        if(isAll){
+        if (isAll) {
             Context.total = total;
             let assets = JSON.parse(JSON.stringify(Context.Assets));
             Context.assetDelegate(assets);
         }
-       
+
     }
 
     /**

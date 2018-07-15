@@ -139,12 +139,12 @@
         <view class="inner">
            <view class="area-nav">
                <view class="item" style="margin-left:89rpx;" @tap="selected(1)">
-                    <text class="label">兑换SGAS</text>
+                    <text class="label">兑换GAS</text>
                     <view class="line {{sgasSelected==1?'selected':''}}"></view>
                </view>
                <view class="line"></view>
                <view class="item" style="margin-right:89rpx;" @tap="selected(0)">
-                   <text class="label">兑换GAS</text>
+                   <text class="label">兑换SGAS</text>
                     <view class="line {{sgasSelected==1?'':'selected'}}"></view>
                </view>
            </view>
@@ -171,7 +171,7 @@
                 </view>
                 <view class="amount">
                     <input class="input" name="amount"  bindinput='inputAmount' type='digit' placeholder='0'/>
-                    <text class="description">所需{{config.from.name}}数量： {{amount}}；当前{{config.to.name}}拥有量： {{config.to.amount}}</text>
+                    <text class="description">所需{{config.from.name}}数量： {{amount}}；当前{{config.from.name}}拥有量： {{config.to.amount}}</text>
                 </view>
            </view>
 
@@ -195,8 +195,8 @@ export default class Gas2Sgas extends wepy.page {
   onShow() {
     const assets = this.onGetAsset();
     this.config = {
-      from: { name: 'GAS', icon: 'neo', amount: assets.gas },
-      to: { name: 'SGAS', icon: 'Sgas', amount: assets.sgas }
+      from: { name: 'GAS', icon: 'neo', amount: assets.gas||0 },
+      to: { name: 'SGAS', icon: 'Sgas', amount: assets.gas||0 }
     };
     this.$apply();
   } // 只在Page中存在的页面生命周期函数
@@ -207,7 +207,7 @@ export default class Gas2Sgas extends wepy.page {
 
   data = {
     config: {},
-    sgasSelected: 1,
+    sgasSelected: 0,
     amount: 0
   }; // 页面所需数据均需在这里声明，可用于模板数据绑定
 
@@ -244,12 +244,12 @@ export default class Gas2Sgas extends wepy.page {
       if (option === 0) {
         this.config = {
           from: { name: 'GAS', icon: 'neo', amount: assets.gas },
-          to: { name: 'SGAS', icon: 'Sgas', amount: assets.sgas }
+          to: { name: 'SGAS', icon: 'Sgas', amount: assets.gas }
         };
       } else {
         this.config = {
-          from: { name: 'SGAS', icon: 'Sgas', amount: assets.sgas },
-          to: { name: 'GAS', icon: 'neo', amount: assets.gas }
+          from: { name: 'SGAS', icon: 'Sgas', amount: assets.gas },
+          to: { name: 'GAS', icon: 'neo', amount: assets.sgas }
         };
       }
       this.$apply();

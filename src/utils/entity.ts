@@ -165,14 +165,19 @@ export class Consts {
  * 竞拍模型
  */
 export class MyAuction {
+    id: string;
     auctionSpentTime: string;
     auctionState: string;
+    endedState: number;
     blockindex: string;
     domain: string;
     maxBuyer: string;
     maxPrice: string;
     owner: string;
     startAuctionTime: number;
+    balanceOfSelling: string;
+    bidListSession: Object;
+    receivedState: number;
 }
 
 export class DomainInfo {
@@ -412,6 +417,8 @@ export class NNSResult {
  * @param maxBuyer 最大出价者(地址)
  */
 export class SellDomainInfo extends DomainInfo {
+    state: DomainState;
+    domain:string;
     id: Neo.Uint256;
     startBlockSelling: Neo.BigInteger;
     endBlock: Neo.BigInteger;
