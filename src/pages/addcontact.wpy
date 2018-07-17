@@ -1,74 +1,67 @@
- <style lang="less">
+<style lang="less">
+
 </style>
 <template>
   <view class="container">
     <scroll-view scroll-y class="scroll">
-        <view class="inner">
-            <clname/>
-            <claddr @onEmit.user="handleEmit"/>
-        </view>
+      <view class="inner">
+        <clname/>
+        <claddr @onEmit.user="handleEmit" />
+      </view>
     </scroll-view>
   </view>
 </template>
 
 <script>
-import wepy from 'wepy';
-import Util from '../utils/index';
-import CLabel from '../components/clabel';
-export default class AddContact extends wepy.page {
-  config = {
-    navigationBarTitleText: '添加联系人'
-  };
-
-  components = {
-    clname: CLabel,
-    claddr: CLabel
-  };
-
-  data = {
-    animation: {}
-  };
-
-  computed = {};
-
-  methods = {
-    handleEmit(e) {}
-  };
-
-  events = {};
-
-  onLoad() {
-    this.$invoke(
-      'clname',
-      'Show',
-      JSON.stringify({
-        title: '名称',
-        show: {}
-      })
-    );
-    this.$invoke(
-      'claddr',
-      'Show',
-      JSON.stringify({
-        title: 'NNS或地址',
-        show: {
-          scan: 1
-        }
-      })
-    );
-  }
-  async onShow() {}
-  // 页面渲染完成
-  async onReady() {}
-
-  onShareAppMessage() {
-    return {
-      title: 'NNS',
-      path: '/pages/nns'
+  import wepy from 'wepy';
+  import Util from '../utils/index';
+  import CLabel from '../components/clabel';
+  export default class AddContact extends wepy.page {
+    config = {
+      navigationBarTitleText: '添加联系人'
     };
+    components = {
+      clname: CLabel,
+      claddr: CLabel
+    };
+    data = {
+      animation: {}
+    };
+    computed = {};
+    methods = {
+      handleEmit(e) {}
+    };
+    events = {};
+    onLoad() {
+      this.$invoke(
+        'clname',
+        'Show',
+        JSON.stringify({
+          title: '名称',
+          show: {}
+        })
+      );
+      this.$invoke(
+        'claddr',
+        'Show',
+        JSON.stringify({
+          title: 'NNS或地址',
+          show: {
+            scan: 1
+          }
+        })
+      );
+    }
+    async onShow() {}
+    // 页面渲染完成
+    async onReady() {}
+    onShareAppMessage() {
+      return {
+        title: 'NNS',
+        path: '/pages/nns'
+      };
+    }
+    OnLoading() {}
   }
-
-  OnLoading() {}
-}
 </script>
  

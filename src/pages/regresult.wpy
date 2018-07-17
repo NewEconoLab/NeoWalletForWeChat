@@ -196,7 +196,7 @@ export default class RegResult extends wepy.page {
                 success(settingdata) {
                   // console.log(settingdata);
                   if (settingdata.authSetting['scope.writePhotosAlbum']) {
-                    // console.log(
+                    console.log(
                       '获取权限成功，给出再次点击图片保存到相册的提示。'
                     );
                   } else {

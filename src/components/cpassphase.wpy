@@ -1,0 +1,81 @@
+<style lang="less">
+  .background {
+    width: 100%;
+    height: 100vh;
+  }
+  .upper-cover {
+    width: 100%;
+    height: 100%;
+    opacity: 0.2;
+    background-color: black;
+  }
+  .passphase-frame {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 750rpx;
+  }
+  .notice {
+    position: absolute;
+    top: -30px;
+    width: 100%;
+    background-color: #90d1ff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text {
+      height: 30px;
+      font-family: PingFangSC-Medium;
+      font-size: 14px;
+      color: #ffffff;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 30px;
+    }
+  }
+</style>
+
+<template>
+  <view class="background">
+    <view class="upper-cover"></view>
+    <view class="passphase-frame">
+    
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy';
+  export default class CPassphase extends wepy.component {
+    props = {};
+    components = {};
+    data = {
+      animation: {},
+      label: ''
+    };
+    methods = {
+      show(e) {
+        let that = this;
+        this.label = e;
+        var animation = wx.createAnimation({
+          duration: 500
+        });
+        animation.translateY(30).step({
+          duration: 500
+        });
+        this.animation = animation.export();
+        this.$apply();
+        setTimeout(() => {
+          var animation = wx.createAnimation({
+            duration: 500
+          });
+          animation.translateY(-30).step({
+            duration: 500
+          });
+          that.animation = animation.export();
+          that.$apply();
+        }, 5000);
+      }
+    };
+    onLoad() {}
+  }
+</script>

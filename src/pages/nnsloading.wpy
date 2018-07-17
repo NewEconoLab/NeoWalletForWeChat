@@ -1,85 +1,76 @@
- <style lang="less">
+<style lang="less">
+
 </style>
 <template>
   <view class="container">
-      <text>{{notice}}结果等待中，大约需要等待{{remainTime}}秒</text>
-   <progress percent="{{percent}}" />
+    <text>{{notice}}结果等待中，大约需要等待{{remainTime}}秒</text>
+    <progress percent="{{percent}}" />
   </view>
 </template>
 
 <script>
-import wepy from 'wepy';
-import Util from '../utils/index';
-import CAssets from '../components/cassets';
-export default class NNSLoading extends wepy.page {
-  config = {
-    navigationBarTitleText: '数据上链中'
-  };
-
-  components = {
-    cassets: CAssets
-  };
-
-  data = {
-    percent: 0,
-    state: {},
-    notice: '开标',
-    remainTime: 20
-  };
-
-  computed = {};
-
-  methods = {};
-
-  events = {};
-
-  onLoad(option) {
-    const txid = option.txid;
-    const type = type; // 0:开标 1:加价 2:兑换sgas 3:兑换gas
-    if (type === '0') {
+  import wepy from 'wepy';
+  import Util from '../utils/index';
+  import CAssets from '../components/cassets';
+  export default class NNSLoading extends wepy.page {
+    config = {
+      navigationBarTitleText: '数据上链中'
+    };
+    components = {
+      cassets: CAssets
+    };
+    data = {
+      percent: 0,
+      state: {},
+      notice: '开标',
+      remainTime: 20
+    };
+    computed = {};
+    methods = {};
+    events = {};
+    onLoad(option) {
+      const txid = option.txid;
+      const type = type; // 0:开标 1:加价 2:兑换sgas 3:兑换gas
+      if (type === '0') {
         this.OnLoading();
-        this.notice='开标';
+        this.notice = '开标';
         this.confirm(txid);
-    }
-    this.$apply();
-  }
-
-  onShow() {}
-  // 页面渲染完成
-  async onReady() {}
-
-  OnLoading() {
-    let that = this;
-    let i = 0;
-    setInterval(() => {
-      that.percent = i;
-
-      i++;
-      that.remainTime = that.remainTime - 1;
-      if (i === 100) {
-        i = 0;
-        that.remainTime = 20;
       }
-      that.$apply();
-    }, 200);
-  }
-
-  /**
-   * 开标
-   * @param txid 交易id
-   */
-  async confirm(txid) {
-    let res = await Https.getrawtransaction(txid);
-    if (!!res) {
-      this.btn_start = 2;
-      this.addBid();
-      return;
-    } else {
-      setTimeout(() => {
-        this.confirm(txid);
-      }, 5000);
+      this.$apply();
+    }
+    onShow() {}
+    // 页面渲染完成
+    async onReady() {}
+    OnLoading() {
+      let that = this;
+      let i = 0;
+      setInterval(() => {
+        that.percent = i;
+        i++;
+        that.remainTime = that.remainTime - 1;
+        if (i === 100) {
+          i = 0;
+          that.remainTime = 20;
+        }
+        that.$apply();
+      }, 200);
+    }
+    /**
+     * 开标
+     * @param txid 交易id
+     */
+    async confirm(txid) {
+      let res = await Https.getrawtransaction(txid);
+      if (!!res) {
+        this.btn_start = 2;
+        this.addBid();
+        return;
+      } else {
+        setTimeout(() => {
+          this.confirm(txid);
+        }, 5000);
+      }
     }
   }
-}
 </script>
  

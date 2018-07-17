@@ -136,21 +136,14 @@ export default class Index extends wepy.page {
     register() {
       this.isSelected = 0;
       this.$apply();
-      // wx.navigateTo({ url: './register' });
     },
     loginImport() {
       this.isSelected = 1;
       this.$apply();
-      // wepy.navigateTo({
-      //   url: './importaccount'
-      // });
     },
     loginAccounts() {
       this.isSelected = 2;
       this.$apply();
-      // wepy.navigateTo({
-      //   url: './loginaccounts'
-      // });
     },
     OnSelect(account) {
       wepy.reLaunch({ url: './home' });

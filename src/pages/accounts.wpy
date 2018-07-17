@@ -4,48 +4,39 @@
 
 <template>
   <view class="container">
-   <caccounts @changeAccount.user="OnSelect"/>
+    <caccounts @changeAccount.user="OnSelect" />
   </view>
 </template>
 <script>
-import wepy from 'wepy';
-import Util from '../utils/index';
-import CAccounts from '../components/login/caccounts'
-export default class Accounts extends wepy.page {
-  customData = {}; // 自定义数据
-
-  customFunction() {} // 自定义方法
-
-  onLoad() {} // 在Page和Component共用的生命周期函数
-
-  async onShow() {
-    
-  } // 只在Page中存在的页面生命周期函数
-
-  config = { navigationBarTitleText: '本地账户' }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
-
-  data = {
-    wallets: [],
-    watchonly: [],
-    wals: {}
-  }; // 页面所需数据均需在这里声明，可用于模板数据绑定
-
-  components = {
-    caccounts:CAccounts
-  }; // 声明页面中所引用的组件，或声明组件中所引用的子组件
-
-  mixins = []; // 声明页面所引用的Mixin实例
-
-  computed = {}; // 声明计算属性（详见后文介绍）
-
-  watch = {}; // 声明数据watcher（详见后文介绍）
-
-  methods = {
-     OnSelect(account) {
-      wepy.reLaunch({ url: './home' });
-    }
-  }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
-
-  events = {}; // 声明组件之间的事件处理函数
-}
+  import wepy from 'wepy';
+  import Util from '../utils/index';
+  import CAccounts from '../components/login/caccounts'
+  export default class Accounts extends wepy.page {
+    customData = {}; // 自定义数据
+    customFunction() {} // 自定义方法
+    onLoad() {} // 在Page和Component共用的生命周期函数
+    async onShow() {} // 只在Page中存在的页面生命周期函数
+    config = {
+      navigationBarTitleText: '本地账户'
+    }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
+    data = {
+      wallets: [],
+      watchonly: [],
+      wals: {}
+    }; // 页面所需数据均需在这里声明，可用于模板数据绑定
+    components = {
+      caccounts: CAccounts
+    }; // 声明页面中所引用的组件，或声明组件中所引用的子组件
+    mixins = []; // 声明页面所引用的Mixin实例
+    computed = {}; // 声明计算属性（详见后文介绍）
+    watch = {}; // 声明数据watcher（详见后文介绍）
+    methods = {
+      OnSelect(account) {
+        wepy.reLaunch({
+          url: './home'
+        });
+      }
+    }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
+    events = {}; // 声明组件之间的事件处理函数
+  }
 </script>
