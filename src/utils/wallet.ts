@@ -12,7 +12,10 @@ export default class Wallet {
     static account: Nep6.nep6account = null
 
     //保存用户的openid
-    static openid: string = null
+    static openid: string = null;
+
+    // 用户输入一次密码之后，一段时间内保存密码不再重复验证
+    static prikey: string = null;
 
     constructor() { }
 
@@ -125,7 +128,9 @@ export default class Wallet {
      */
     public static getPrikey(passphrase?: string): Promise<string> /*Uint8Array*/ {
         return new Promise((resolve, rejet) => {
-            if (Wallet.account.nep2key.length === 52) {//wif
+            if (Wallet.prikey !== null && Wallet.prikey.length === 64) {
+                resolve(Wallet.prikey);
+            } else if (Wallet.account.nep2key.length === 52) {//wif
                 resolve(Wallet.wif2prikey(Wallet.account.nep2key));
             } else if (Wallet.account.nep2key.length === 64)//私钥
                 resolve(Wallet.account.nep2key);
@@ -133,12 +138,19 @@ export default class Wallet {
                 Helper.Account.GetPrivateKeyFromNep2(Wallet.account.nep2key, passphrase, 16384, 8, 8, (info, result) => {
                     console.log("info=" + info);
                     var prikey = result as Uint8Array;
-
-                    console.log("result=" + Helper.toHexString(prikey));
+                    const strKey = Helper.toHexString(prikey);
+                    console.log("result=" + strKey);
                     var pubkey = Helper.Account.GetPublicKeyFromPrivateKey(prikey);
                     var address = Helper.Account.GetAddressFromPublicKey(pubkey);
                     console.log("address=" + address);
-                    resolve(Helper.toHexString(prikey));
+                    if (address === Wallet.account.address) {
+                        //保存私钥
+                        Wallet.prikey = strKey;
+                        resolve(strKey);
+                    }else{ //解密失败
+                        resolve(null);
+                    }
+
 
                 });
             }
@@ -146,11 +158,13 @@ export default class Wallet {
     }
 
     public static needPassphase(): boolean {
-        if (Wallet.account.nep2key.length !== 64 && Wallet.account.nep2key.length !== 52)
+        if ((Wallet.prikey === null || Wallet.prikey.length !== 64) &&
+            Wallet.account.nep2key.length !== 64 &&
+            Wallet.account.nep2key.length !== 52)
             return true;
         return false;
     }
-    
+
     /**
      * 获取地址UTXO
      * @param addr 目标地址

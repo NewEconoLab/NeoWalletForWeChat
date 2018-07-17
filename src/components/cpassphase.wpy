@@ -69,6 +69,10 @@
         let passphrase = event.detail.value.passphrase;
         const prikey = await Util.wallet.getPrikey(passphrase);
         this.passAnimation(150);
+        if(prikey === null || prikey === undefined)
+        this.$emit('deciphered',{'prikey':prikey});
+        else
+        this.$emit('deciphered',{'prikey':'fail'});
       }
     };
     onLoad() {};

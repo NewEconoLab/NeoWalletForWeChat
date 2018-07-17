@@ -210,7 +210,7 @@
         </view>
       </view>
     </scroll-view>
-    <cpassphase />
+    <cpassphase @deciphered.user="deciphered"/>
   </view>
 </template>
 
@@ -275,16 +275,18 @@
         } else {
           //加价
         }
+      },
+      deciphered(e){
+        let prikey = e.prikey;
+        console.log('prikey = '+prikey)
+        if(prikey === 'fail'){
+          Util.show.
+        }
       }
     };
     events = {};
     async onLoad() {
-      // Util.get.wantBy('benben',Util.get.assets()['GAS']);
       this.root = Util.const.DOMAIN_ROOT;
-      // let res2 = await Util.auction.wantbuy('abc', Util.get.account().nep2key);
-      // // console.log(res);
-      // // console.log(res2);
-      //await Util.reg.domain('nuanbing');
       this.OnLoading();
       this.$apply();
     }
