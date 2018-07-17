@@ -2,6 +2,7 @@
   .background {
     width: 100%;
     height: 100vh;
+    position: absolute;
   }
   .upper-cover {
     width: 100%;
@@ -11,71 +12,76 @@
   }
   .passphase-frame {
     position: absolute;
-    bottom: 0;
+    bottom: -150px;
     width: 100%;
-    height: 750rpx;
-  }
-  .notice {
-    position: absolute;
-    top: -30px;
-    width: 100%;
-    background-color: #90d1ff;
+    height: 150px;
+    background: white;
     display: flex;
     flex-direction: column;
     align-items: center;
-    text {
-      height: 30px;
+    input {
       font-family: PingFangSC-Medium;
       font-size: 14px;
-      color: #ffffff;
+      color: #333333;
       letter-spacing: 0;
-      text-align: center;
-      line-height: 30px;
+      line-height: 14px;
+      width: 690rpx;
+      border-bottom: thin solid #a9a9a9;
+      margin-left: 30rpx;
+      margin-top: 50rpx;
+      padding-left: 10rpx;
+      margin-bottom: 30rpx;
     }
   }
 </style>
 
 <template>
-  <view class="background">
-    <view class="upper-cover"></view>
-    <view class="passphase-frame">
-    
+  <view class="background" wx:if="{{show}}">
+    <view class="upper-cover" @tap.stop="click"></view>
+    <view class="passphase-frame" @tap.stop="click" animation="{{animation}}">
+      <form bindsubmit="confirm" class="form" report-submit="true">
+        <input placeholder='请输入密码' name="passphrase" value='test'/>
+        <view class="foot-button" style="margin-top:60rpx;margin-bottom:30rpx;">
+          <button type="primary" form-type="submit" style="width:300rpx;" loading="{{opening}}" hover-class='btn_hover'>确定</button>
+        </view>
+      </form>
     </view>
   </view>
 </template>
 <script>
   import wepy from 'wepy';
+  import Util from '../utils/index';
   export default class CPassphase extends wepy.component {
     props = {};
     components = {};
     data = {
       animation: {},
-      label: ''
+      label: '',
+      show: false
     };
     methods = {
-      show(e) {
-        let that = this;
-        this.label = e;
-        var animation = wx.createAnimation({
-          duration: 500
-        });
-        animation.translateY(30).step({
-          duration: 500
-        });
-        this.animation = animation.export();
-        this.$apply();
-        setTimeout(() => {
-          var animation = wx.createAnimation({
-            duration: 500
-          });
-          animation.translateY(-30).step({
-            duration: 500
-          });
-          that.animation = animation.export();
-          that.$apply();
-        }, 5000);
+      click() {},
+      Show() {
+        this.passAnimation();
+      },
+      async confirm(event) {
+        console.log('confirm')
+        let passphrase = event.detail.value.passphrase;
+        const prikey = await Util.wallet.getPrikey(passphrase);
+        this.passAnimation(150);
       }
     };
-    onLoad() {}
+    onLoad() {};
+    passAnimation(distance = -150, duration = 500) {
+      var animation = wx.createAnimation({
+        duration: duration
+      });
+      animation.translateY(distance).step({
+        duration: duration
+      });
+      this.animation = animation.export();
+      this.show = !this.show;
+      this.$apply();
+    }
   }
 </script>

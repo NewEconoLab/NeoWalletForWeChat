@@ -1,388 +1,379 @@
- <style lang="less">
-.area-function {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-
-  .nav {
-    margin-top: 1rpx;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    width: 100%;
-    justify-content: space-between;
-    height: 160rpx;
-    background-color: white;
-    .item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 40rpx;
-      margin-bottom: 20rpx;
-      .icon {
-        width: 60rpx;
-        height: 60rpx;
-      }
-      .message {
-        height: 32rpx;
-        border-radius: 50%;
-        background-color: #ff6161;
-        position: absolute;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        right: 30rpx;
-        text {
-          margin-left: 10rpx;
-          margin-right: 13rpx;
-          font-family: PingFangSC-Medium;
-          font-size: 10px;
-          color: #ffffff;
-          letter-spacing: 0;
-          line-height: 10px;
-        }
-      }
-      .content {
-        font-family: PingFangSC-Medium;
-        font-size: 10px;
-        color: #333333;
-        letter-spacing: 0;
-        text-align: center;
-        line-height: 10px;
-        margin-top: 20rpx;
-      }
-    }
-  }
-}
-
-.area-bid {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  margin-top: 20rpx;
-  background-color: white;
-
-  .search {
+<style lang="less">
+  .area-function {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    height: 160rpx;
-    justify-content: center;
-    background-color: white;
-    margin-top: 1rpx;
-    .text {
+    .nav {
+      margin-top: 1rpx;
       display: flex;
       flex-direction: row;
       align-items: center;
       width: 100%;
-      .input {
-        width: 602rpx;
-        border-bottom: thin solid #a9a9a9;
-        margin-left: 30rpx;
-      }
-      .domain {
-        margin-left: 20rpx;
-        margin-right: 30rpx;
-        font-family: PingFangSC-Medium;
-        font-size: 14px;
-        color: #333333;
-        letter-spacing: 0;
-        line-height: 14px;
+      justify-content: space-between;
+      height: 160rpx;
+      background-color: white;
+      .item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 40rpx;
+        margin-bottom: 20rpx;
+        .icon {
+          width: 60rpx;
+          height: 60rpx;
+        }
+        .message {
+          height: 32rpx;
+          border-radius: 50%;
+          background-color: #ff6161;
+          position: absolute;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          right: 30rpx;
+          text {
+            margin-left: 10rpx;
+            margin-right: 13rpx;
+            font-family: PingFangSC-Medium;
+            font-size: 10px;
+            color: #ffffff;
+            letter-spacing: 0;
+            line-height: 10px;
+          }
+        }
+        .content {
+          font-family: PingFangSC-Medium;
+          font-size: 10px;
+          color: #333333;
+          letter-spacing: 0;
+          text-align: center;
+          line-height: 10px;
+          margin-top: 20rpx;
+        }
       }
     }
-    .loading {
+  }
+  .area-bid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 20rpx;
+    background-color: white;
+    .search {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      height: 160rpx;
+      justify-content: center;
+      background-color: white;
+      margin-top: 1rpx;
+      .text {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        .input {
+          width: 602rpx;
+          border-bottom: thin solid #a9a9a9;
+          margin-left: 30rpx;
+        }
+        .domain {
+          margin-left: 20rpx;
+          margin-right: 30rpx;
+          font-family: PingFangSC-Medium;
+          font-size: 14px;
+          color: #333333;
+          letter-spacing: 0;
+          line-height: 14px;
+        }
+      }
+      .loading {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        image {
+          width: 29rpx;
+          height: 29rpx;
+          margin-left: 30rpx;
+          margin-top: 10rpx;
+        }
+        text {
+          margin-left: 10rpx;
+          margin-top: 10rpx;
+          font-family: PingFangSC-Regular;
+          font-size: 12px;
+          color: #a9a9a9;
+          letter-spacing: 0;
+          line-height: 12px;
+          font-weight: 10;
+        }
+      }
+    }
+  }
+  .area-description {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 750rpx;
+    margin-top: 20rpx;
+    .description {
+      background-color: white;
+      margin-top: 1rpx;
       width: 100%;
       display: flex;
       flex-direction: row;
       align-items: flex-start;
-      image {
-        width: 29rpx;
-        height: 29rpx;
-        margin-left: 30rpx;
-        margin-top: 10rpx;
-      }
-      text {
-        margin-left: 10rpx;
-        margin-top: 10rpx;
+      .text {
+        padding: 0 30rpx 10rpx 30rpx;
         font-family: PingFangSC-Regular;
-        font-size: 12px;
-        color: #a9a9a9;
+        font-size: 14px;
+        color: #333333;
         letter-spacing: 0;
-        line-height: 12px;
-        font-weight: 10;
+        text-align: justify;
       }
     }
   }
-}
-.area-description {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 750rpx;
-  margin-top: 20rpx;
-  .description {
-    background-color: white;
-    margin-top: 1rpx;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    .text {
-      padding: 0 30rpx 10rpx 30rpx;
-      font-family: PingFangSC-Regular;
-      font-size: 14px;
-      color: #333333;
-      letter-spacing: 0;
-      text-align: justify;
-    }
+  .btn::after {
+    border: none;
   }
-}
-.btn::after {
-  border: none;
-}
 </style>
 <template>
   <view class="container">
     <scroll-view scroll-y class="scroll">
-        <view class="inner">
-           <view class="area-function">
-             <view class="function-title">
-               <text class="text">功能</text>
-             </view>
-             <view class="nav">
-               <navigator class="item" style="margin-left:30rpx;" url="/pages/gas2sgas" >
-                  <image class="icon" src="../images/N_G2S.png" />
-                  <text class="content">兑换SGAS</text>
-               </navigator>
-                <navigator class="item" url="/pages/myauction" >
-                  <image class="icon" src="../images/N_bid.png"/>
-                  <text class="content">我的竞拍</text>
-               </navigator>
-                <navigator class="item" url="/pages/reorder">
-                  <image class="icon" src="../images/N_NNS.png"/>
-                  <text class="content">我的NNS</text>
-               </navigator>
-              <navigator class="item" url="/pages/reorder">
-                  <image class="icon" src="../images/N_bonus.png"/>
-                  <text class="content">我的分红</text>
-               </navigator>
-                <navigator class="item" style="margin-right:30rpx;" url="/pages/reorder">
-                <view class="message"><text>99</text></view>
-                  <image class="icon" src="../images/N_message.png"/>
-                  <text class="content">竞拍消息</text>
-               </navigator>
-             </view>
-           </view>
-           <view class="area-bid">
-              <view class="function-title">
-               <text class="text">NNS域名拍卖</text>
-              </view>
-              <form bindsubmit="confirm" >
-                <view class="search">
-                    <view class="text">
-                      <input name="domain" class="input" confirm-type="done" bindconfirm="confirm" bindinput="domaininput"/>
-                      <text class="domain">.{{root}}</text>
-                    </view>
-                    <view class="loading">
-                      <image class="icon" src="../images/{{loadingIcon}}.png" animation="{{animationData}}" />
-                      <text>{{alert}}</text>
-                    </view>
-                </view>
-              </form>
-              <view class="foot-button" style='margin-top:30rpx;margin-bottom:50rpx;' wx:if="{{btn.show}}">
-                <button type="primary" form-type="submit" @tap="startAuction" loading="{{opening}}" hover-class='btn_hover'>{{btn.label}}</button>
-              </view>
-           </view>
-           <view class="area-description">
-             <view class="function-title">
-               <text class="text">NNS域名拍卖说明</text>
-             </view>
-             <view class="description">
-               <text class="text">
-                · 竞拍域名所需SGas资产，该资产由NeoGas以1:1的比例互相兑换。
-
-· 如果有用户在确定期最后一天进行出价，则进入两天的随机期，随机期可能会在两天中的任意一个时间点结束，因此用户还是需要尽早地竞拍而避免因靠后出价使自己的竞拍无效。
-
-· 域名竞拍注册时对域名进行出价，出价使用SGas，最小出价0.1SGas,出价最高者获得域名，支付的SGas会进入奖池，竞拍失败的参与者会收取5%的手续费进入奖池。
-
-· 竞拍成功的用户需要在“我的竞拍”页手动领取您的域名；竞拍失败的用户也请在该页面手动领取去除了手续费的竞拍金额。
-
-· 竞拍到的域名具有1年的有效期，在距离过期3个月之前，我们会发出消息通知您，您可以在“我的NNS”页面点击新出现的续约按钮进行续约，我们会为您延续1年的有效期。
-
-· 所有奖池收入会按NNC持有量重新分配给持币人，NNC持有人不需要锁仓，奖励是累积的，您可以在“我的分红”页面领取分红。
-               </text>
-             </view>
-           </view>
+      <view class="inner">
+        <view class="area-function">
+          <view class="function-title">
+            <text class="text">功能</text>
+          </view>
+          <view class="nav">
+            <navigator class="item" style="margin-left:30rpx;" url="/pages/gas2sgas">
+              <image class="icon" src="../images/N_G2S.png" />
+              <text class="content">兑换SGAS</text>
+            </navigator>
+            <navigator class="item" url="/pages/myauction">
+              <image class="icon" src="../images/N_bid.png" />
+              <text class="content">我的竞拍</text>
+            </navigator>
+            <navigator class="item" url="/pages/reorder">
+              <image class="icon" src="../images/N_NNS.png" />
+              <text class="content">我的NNS</text>
+            </navigator>
+            <navigator class="item" url="/pages/reorder">
+              <image class="icon" src="../images/N_bonus.png" />
+              <text class="content">我的分红</text>
+            </navigator>
+            <navigator class="item" style="margin-right:30rpx;" url="/pages/reorder">
+              <view class="message"><text>99</text></view>
+              <image class="icon" src="../images/N_message.png" />
+              <text class="content">竞拍消息</text>
+            </navigator>
+          </view>
         </view>
+        <view class="area-bid">
+          <view class="function-title">
+            <text class="text">NNS域名拍卖</text>
+          </view>
+          <form bindsubmit="confirm">
+            <view class="search">
+              <view class="text">
+                <input name="domain" class="input" confirm-type="done" bindconfirm="confirm" bindinput="domaininput" value='kkk'/>
+                <text class="domain">.{{root}}</text>
+              </view>
+              <view class="loading">
+                <image class="icon" src="../images/{{loadingIcon}}.png" animation="{{animationData}}" />
+                <text>{{alert}}</text>
+              </view>
+            </view>
+          </form>
+          <view class="foot-button" style='margin-top:30rpx;margin-bottom:50rpx;' wx:if="{{btn.show}}">
+            <button type="primary" form-type="submit" @tap="startAuction" loading="{{opening}}" hover-class='btn_hover'>{{btn.label}}</button>
+          </view>
+        </view>
+        <view class="area-description">
+          <view class="function-title">
+            <text class="text">NNS域名拍卖说明</text>
+          </view>
+          <view class="description">
+            <text class="text">
+                          · 竞拍域名所需SGas资产，该资产由NeoGas以1:1的比例互相兑换。
+          · 如果有用户在确定期最后一天进行出价，则进入两天的随机期，随机期可能会在两天中的任意一个时间点结束，因此用户还是需要尽早地竞拍而避免因靠后出价使自己的竞拍无效。
+          · 域名竞拍注册时对域名进行出价，出价使用SGas，最小出价0.1SGas,出价最高者获得域名，支付的SGas会进入奖池，竞拍失败的参与者会收取5%的手续费进入奖池。
+          · 竞拍成功的用户需要在“我的竞拍”页手动领取您的域名；竞拍失败的用户也请在该页面手动领取去除了手续费的竞拍金额。
+          · 竞拍到的域名具有1年的有效期，在距离过期3个月之前，我们会发出消息通知您，您可以在“我的NNS”页面点击新出现的续约按钮进行续约，我们会为您延续1年的有效期。
+          · 所有奖池收入会按NNC持有量重新分配给持币人，NNC持有人不需要锁仓，奖励是累积的，您可以在“我的分红”页面领取分红。
+                         </text>
+          </view>
+        </view>
+      </view>
     </scroll-view>
+    <cpassphase />
   </view>
 </template>
 
 <script>
-import wepy from 'wepy';
-import Util from '../utils/index';
-import { DomainState } from '../utils/entity';
-export default class NNS extends wepy.page {
-  config = {
-    navigationBarTitleText: 'NNS'
-  };
-
-  components = {};
-
-  data = {
-    animationData: {},
-    domainInfo: {},
-    root: 'neo',
-    // domain: ''
-    btn: {
-      show: false,
-      label: '开标'
-    },
-    nnsloading: false,
-    alert: '', //域名状态提示语句
-    loadingIcon: 'Loading', //检查域名状态图标
-    opening: false //开标等按钮加载
-  };
-
-  computed = {};
-
-  methods = {
-    async confirm(event) {
-      const domain = event.detail.value; //this.domain;
-      // console.log(domain);
-      this.nnsloading = true;
-      this.$apply();
-      let domainInfo = await Util.get.domainState(domain);
-      domainInfo.domain = domain;
-      this.nnsloading = false;
-      this.domainInfo = domainInfo;
-      this.$apply();
-      this.processDomainState(domainInfo);
-      // Util.get.addrByDomain('jinghui.test');
-    },
-    domaininput(event) {
-      // console.log('llllllllll');
-      if (this.loadingIcon !== 'Loading') {
-        this.loadingIcon = 'Loading';
-        this.alert = '';
-        this.btn = {
-          show: false,
-          label: '开拍'
-        };
-        this.$apply();
-      }
-    },
-    startAuction(e) {
-      // console.log('open auction');
-      //开拍
-      if (this.domainInfo.state === DomainState.Avaliable) {
-        this.OpenAuction(this.domainInfo.domain);
-      } else {
-        //加价
-      }
-    }
-  };
-
-  events = {};
-
-  async onLoad() {
-    // Util.get.wantBy('benben',Util.get.assets()['GAS']);
-    this.root = Util.const.DOMAIN_ROOT;
-
-    // let res2 = await Util.auction.wantbuy('abc', Util.get.account().nep2key);
-    // // console.log(res);
-    // // console.log(res2);
-
-    //await Util.reg.domain('nuanbing');
-    this.OnLoading();
-    this.$apply();
-  }
-  async onShow() {}
-  // 页面渲染完成
-  async onReady() {}
-
-  onShareAppMessage() {
-    return {
-      title: 'NNS',
-      path: '/pages/nns'
+  import wepy from 'wepy';
+  import Util from '../utils/index';
+  import {
+    DomainState
+  } from '../utils/entity';
+  import CPassphase from '../components/cpassphase';
+  export default class NNS extends wepy.page {
+    config = {
+      navigationBarTitleText: 'NNS'
     };
-  }
-
-  OnLoading() {
-    let that = this;
-    let animation = wx.createAnimation({
-      duration: 1500,
-      timingFunction: 'ease'
-    });
-
-    var n = 0;
-    setInterval(
-      function() {
-        if (!that.nnsloading) {
-          return;
+    components = {
+      cpassphase: CPassphase
+    };
+    data = {
+      animationData: {},
+      domainInfo: {},
+      root: 'neo',
+      // domain: ''
+      btn: {
+        show: true,
+        label: '开标'
+      },
+      nnsloading: false,
+      alert: '', //域名状态提示语句
+      loadingIcon: 'Loading', //检查域名状态图标
+      opening: false //开标等按钮加载
+    };
+    computed = {};
+    methods = {
+      async confirm(event) {
+        const domain = event.detail.value; //this.domain;
+        // console.log(domain);
+        this.nnsloading = true;
+        this.$apply();
+        let domainInfo = await Util.get.domainState(domain);
+        domainInfo.domain = domain;
+        this.nnsloading = false;
+        this.domainInfo = domainInfo;
+        this.$apply();
+        this.processDomainState(domainInfo);
+        // Util.get.addrByDomain('jinghui.test');
+      },
+      domaininput(event) {
+        if (this.loadingIcon !== 'Loading') {
+          this.loadingIcon = 'Loading';
+          this.alert = '';
+          this.btn = {
+            show: false,
+            label: '开拍'
+          };
+          this.$apply();
         }
-        n = n + 1;
-        animation.rotate(360 * n).step();
-        that.animationData = animation.export();
-        that.$apply();
-      }.bind(this),
-      800
-    );
-  }
-  /**
-   * 解析域名状态
-   */
-  processDomainState(domainInfo) {
-    switch (domainInfo.state) {
-      case DomainState.Taken:
-        this.loadingIcon = 'N_error';
-        this.alert = '该域名已经被别人拥有啦';
-        break;
-      case DomainState.Bidding:
-        this.loadingIcon = 'N_avaliable';
-        this.alert = '该域名正在进行竞拍';
-        this.btn = {
-          show: true,
-          label: '参与竞拍'
-        };
-        break;
-      case DomainState.Avaliable:
-        this.loadingIcon = 'N_avaliable';
-        this.alert = '该域名可以使用';
-        this.btn = {
-          show: true,
-          label: '开拍'
-        };
-        break;
-      case DomainState.Invalid:
-        this.loadingIcon = 'N_error';
-        this.alert = '该域名格式错误';
-        break;
-      default:
-        break;
+      },
+      startAuction(e) {
+        //开拍
+        if (this.domainInfo.state === DomainState.Avaliable) {
+          this.OpenAuction(this.domainInfo.domain);
+        } else {
+          //加价
+        }
+      }
+    };
+    events = {};
+    async onLoad() {
+      // Util.get.wantBy('benben',Util.get.assets()['GAS']);
+      this.root = Util.const.DOMAIN_ROOT;
+      // let res2 = await Util.auction.wantbuy('abc', Util.get.account().nep2key);
+      // // console.log(res);
+      // // console.log(res2);
+      //await Util.reg.domain('nuanbing');
+      this.OnLoading();
+      this.$apply();
     }
-    this.$apply();
-  }
-
-  async OpenAuction(domain) {
-    this.opening = true;
-    this.$apply();
-    let res = await Util.auction.wantbuy(this.domain);
-    this.opening = false;
-    this.$apply();
-    console.log('==========');
-
-    console.log(res);
-    //交易发送成功
-    if (res !== null && res !== '' && res !== 'failed') {
-      //0x9a599518589cf5b5bd93a030e0157f4657757f676808294c3fd42859b6e209b6
-      wepy.navigateTo({ url: './nnsloading?txid=' + res + '&type=0' });
+    async onShow() {
+       this.$invoke('cpassphase', 'Show');
     }
-    console.log('==========');
+    // 页面渲染完成
+    async onReady() {}
+    onShareAppMessage() {
+      return {
+        title: 'NNS',
+        path: '/pages/nns'
+      };
+    }
+    OnLoading() {
+      let that = this;
+      let animation = wx.createAnimation({
+        duration: 1500,
+        timingFunction: 'ease'
+      });
+      var n = 0;
+      setInterval(
+        function() {
+          if (!that.nnsloading) {
+            return;
+          }
+          n = n + 1;
+          animation.rotate(360 * n).step();
+          that.animationData = animation.export();
+          that.$apply();
+        }.bind(this),
+        800
+      );
+    }
+    /**
+     * 解析域名状态
+     */
+    processDomainState(domainInfo) {
+      switch (domainInfo.state) {
+        case DomainState.Taken:
+          this.loadingIcon = 'N_error';
+          this.alert = '该域名已经被别人拥有啦';
+          break;
+        case DomainState.Bidding:
+          this.loadingIcon = 'N_avaliable';
+          this.alert = '该域名正在进行竞拍';
+          this.btn = {
+            show: true,
+            label: '参与竞拍'
+          };
+          break;
+        case DomainState.Avaliable:
+          this.loadingIcon = 'N_avaliable';
+          this.alert = '该域名可以使用';
+          this.btn = {
+            show: true,
+            label: '开拍'
+          };
+          break;
+        case DomainState.Invalid:
+          this.loadingIcon = 'N_error';
+          this.alert = '该域名格式错误';
+          break;
+        default:
+          break;
+      }
+      this.$apply();
+    }
+    async OpenAuction(domain) {
+
+      if (Util.wallet.needPassphase()) {
+        this.$invoke('cpassphase', 'Show');
+      }
+      this.opening = true;
+      this.$apply();
+      let res = await Util.auction.wantbuy(this.domain);
+      this.opening = false;
+      this.$apply();
+      console.log('==========');
+      console.log(res);
+      //交易发送成功
+      if (res !== null && res !== '' && res !== 'failed') {
+        //0x9a599518589cf5b5bd93a030e0157f4657757f676808294c3fd42859b6e209b6
+        wepy.navigateTo({
+          url: './nnsloading?txid=' + res + '&type=0'
+        });
+      }
+      console.log('==========');
+    }
   }
-}
 </script>
  

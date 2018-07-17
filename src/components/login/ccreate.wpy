@@ -1,111 +1,113 @@
 <style lang="less">
-.area-create {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  .input {
-    margin: 10rpx 30rpx 0 30rpx;
-    border-bottom: thin solid #a9a9a9;
-    width: 90%;
+  .area-create {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .input {
+      margin: 10rpx 30rpx 0 30rpx;
+      border-bottom: thin solid #a9a9a9;
+      width: 90%;
+    }
   }
-}
 </style>
 <template>
-  <form bindsubmit="onCreate" class="form" report-submit ="true">
-<view class="area-create">
-    <clname/>
-    <input class="input" name="name" value='test8'/>
-    <clpassphrase/>
-    <input class="input" name="passphrase" value='test' password="true"/>
-     <clconfirm/>
-    <input class="input" name="confirm" password="true" value='test'/>
-    <view class="foot-button">
-      <button type="primary" style="width:600rpx;"  form-type="submit">创建账户</button>
+  <form bindsubmit="onCreate" class="form" report-submit="true">
+    <view class="area-create">
+      <clname/>
+      <input class="input" name="name" value='test8' />
+      <clpassphrase/>
+      <input class="input" name="passphrase" value='test' password="true" />
+      <clconfirm/>
+      <input class="input" name="confirm" password="true" value='test' />
+      <view class="foot-button">
+        <button type="primary" style="width:600rpx;" form-type="submit">创建账户</button>
+      </view>
     </view>
-</view>
   </form>
 </template>
 <script>
-import wepy from 'wepy';
-import Util from '../../utils/index';
-import CLabel from '../clabel';
-export default class CCreate extends wepy.component {
-  props = {};
-  components = {
-    clname: CLabel,
-    clpassphrase: CLabel,
-    clconfirm: CLabel
-  };
-
-  data = {};
-
-  methods = {
-    handleScan() {
-      let that = this;
-      wepy.scanCode({
-        success: res => {
-          // console.log(res);
-          res = res.result;
-          if (res.length === 64 || res.length == 52) {
-            that.prikey = res;
-            that.$apply();
-          } else {
-            try {
-              const account = JSON.parse(res);
-              that.prikey = account['nep2key'];
-              that.label = account['label'];
+  import wepy from 'wepy';
+  import Util from '../../utils/index';
+  import CLabel from '../clabel';
+  export default class CCreate extends wepy.component {
+    props = {};
+    components = {
+      clname: CLabel,
+      clpassphrase: CLabel,
+      clconfirm: CLabel
+    };
+    data = {};
+    methods = {
+      handleScan() {
+        let that = this;
+        wepy.scanCode({
+          success: res => {
+            // console.log(res);
+            res = res.result;
+            if (res.length === 64 || res.length == 52) {
+              that.prikey = res;
               that.$apply();
-              that.OnParseJson(account);
-            } catch (err) {
-              // console.log(err);
-              //在这里处理错误
-              Util.show.error('格式错误');
-              return;
+            } else {
+              try {
+                const account = JSON.parse(res);
+                that.prikey = account['nep2key'];
+                that.label = account['label'];
+                that.$apply();
+                that.OnParseJson(account);
+              } catch (err) {
+                // console.log(err);
+                //在这里处理错误
+                Util.show.error('格式错误');
+                return;
+              }
             }
+          },
+          fail: res => {
+            // console.log(res);
+            Util.show.error('解析失败');
           }
-        },
-        fail: res => {
-          // console.log(res);
-          Util.show.error('解析失败');
-        }
-      });
-    },
-    onCreate(e) {
-      let name = e.detail.value.name;
-      let passphrase = e.detail.value.passphrase;
-      let confirm = e.detail.value.confirm;
-      this.$emit('onCreate', {
-        name: name,
-        passphrase: passphrase,
-        confirm: confirm
-      });
+        });
+      },
+      onCreate(e) {
+        let name = e.detail.value.name;
+        let passphrase = e.detail.value.passphrase;
+        let confirm = e.detail.value.confirm;
+        this.$emit('onCreate', {
+          name: name,
+          passphrase: passphrase,
+          confirm: confirm
+        });
+      }
+    };
+    onLoad() {
+      this.onSetLabel();
     }
-  };
-
-  onLoad() {
-    this.onSetLabel();
+    onSetLabel() {
+      this.$invoke(
+        'clname',
+        'Show',
+        JSON.stringify({
+          title: '账户名称',
+          show: {}
+        })
+      );
+      this.$invoke(
+        'clpassphrase',
+        'Show',
+        JSON.stringify({
+          title: '设置密码',
+          show: {}
+        })
+      );
+      this.$invoke(
+        'clconfirm',
+        'Show',
+        JSON.stringify({
+          title: '确认密码',
+          show: {}
+        })
+      );
+    }
   }
-
-  onSetLabel() {
-    this.$invoke(
-      'clname',
-      'Show',
-      JSON.stringify({
-        title: '账户名称',
-        show: {}
-      })
-    );
-    this.$invoke(
-      'clpassphrase',
-      'Show',
-      JSON.stringify({ title: '设置密码', show: {} })
-    );
-    this.$invoke(
-      'clconfirm',
-      'Show',
-      JSON.stringify({ title: '确认密码', show: {} })
-    );
-  }
-}
 </script>

@@ -18,6 +18,8 @@ import NNSSell from './nnssell';
 export { Https }
 
 export default {
+    auction: NNSSell,
+    wallet:Wallet,
     show: {
         loading: Tips.loading,
         success: Tips.success,
@@ -38,7 +40,6 @@ export default {
         // invoke: Transfer.nep5Transaction,
         claim: Transfer.claimGas,
     },
-    auction: NNSSell,
     get: {
         random: Random.getSecureRandom,
         cache: Cache.get,

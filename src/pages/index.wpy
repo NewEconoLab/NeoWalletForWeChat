@@ -1,267 +1,250 @@
 <style lang="less">
-.area-uppper {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.upper-avatar {
-  border-radius: 50%;
-  width: 108rpx;
-  height: 108rpx;
-  margin-top: 32rpx;
-}
-
-.upper-nickName {
-  font-family: PingFangSC-Medium;
-  font-size: 14px;
-  color: #ffffff;
-  letter-spacing: 0;
-  text-align: center;
-  line-height: 14px;
-  margin-top: 36rpx;
-}
-
-.area-lower {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 697rpx;
-  height: 820rpx;
-  margin-top: 94rpx;
-  box-shadow: 0 2px 5px 0 rgba(164, 164, 164, 0.5);
-  border-radius: 5px;
-}
-
-.lower-nav {
-  width: 100%;
-  height: 90rpx;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-}
-
-.login-item {
-  height: 80rpx;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  background-color: #dddddd;
-  box-shadow: 0 2px 5px 0 rgba(164, 164, 164, 0.5);
-  .name {
+  .area-uppper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .upper-avatar {
+    border-radius: 50%;
+    width: 108rpx;
+    height: 108rpx;
+    margin-top: 32rpx;
+  }
+  .upper-nickName {
     font-family: PingFangSC-Medium;
     font-size: 14px;
-    width: 233rpx;
-    color: #333333;
+    color: #ffffff;
     letter-spacing: 0;
     text-align: center;
     line-height: 14px;
+    margin-top: 36rpx;
   }
-  .text-color {
-    color: #a9a9a9;
+  .area-lower {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 697rpx;
+    height: 820rpx;
+    margin-top: 94rpx;
+    box-shadow: 0 2px 5px 0 rgba(164, 164, 164, 0.5);
+    border-radius: 5px;
   }
-}
-.login-content {
-  background-color: white;
-  width: 100%;
-  height: 700rpx;
-  padding-top: 30rpx;
-}
-.selected {
-  height: 90rpx;
-  background-color: white;
-}
+  .lower-nav {
+    width: 100%;
+    height: 90rpx;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+  .login-item {
+    height: 80rpx;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    background-color: #dddddd;
+    box-shadow: 0 2px 5px 0 rgba(164, 164, 164, 0.5);
+    .name {
+      font-family: PingFangSC-Medium;
+      font-size: 14px;
+      width: 233rpx;
+      color: #333333;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 14px;
+    }
+    .text-color {
+      color: #a9a9a9;
+    }
+  }
+  .login-content {
+    background-color: white;
+    width: 100%;
+    height: 700rpx;
+    padding-top: 30rpx;
+  }
+  .selected {
+    height: 90rpx;
+    background-color: white;
+  }
 </style>
 <template>
   <view class="container" style="background: linear-gradient(to bottom, #51D2EE 0%, #21A3FF 100%);">
     <view class="area-uppper">
-      <image class="upper-avatar" src="{{avatarUrl}}"/>
+      <image class="upper-avatar" src="{{avatarUrl}}" />
       <text class="upper-nickName">{{nickName}}</text>
     </view>
     <view class="area-lower">
       <view class="lower-nav">
-        <view class="login-item {{isSelected==0?'selected':''}}" @tap="register()" >
-          <text class="name {{isSelected==0?'':'text-color'}}" >创建账户</text>
+        <view class="login-item {{isSelected==0?'selected':''}}" @tap="register()">
+          <text class="name {{isSelected==0?'':'text-color'}}">创建账户</text>
         </view>
-        <view class="login-item {{isSelected==1?'selected':''}}"  @tap="loginImport()">
-          <text class="name {{isSelected==1?'':'text-color'}}" >导入账户</text>
+        <view class="login-item {{isSelected==1?'selected':''}}" @tap="loginImport()">
+          <text class="name {{isSelected==1?'':'text-color'}}">导入账户</text>
         </view>
-        <view class="login-item  {{isSelected==2?'selected':''}}"  @tap="loginAccounts()">
+        <view class="login-item  {{isSelected==2?'selected':''}}" @tap="loginAccounts()">
           <text class="name {{isSelected==2?'':'text-color'}}">账户列表</text>
         </view>
       </view>
       <view class="login-content">
-        <cimport wx:if="{{isSelected==1}}" @onImport.user="onImport"/>
-        <ccreate wx:if="{{isSelected==0}}" @onCreate.user="onCreate"/>
-        <caccounts wx:if="{{isSelected==2}}" :login.sync='login' @changeAccount.user="OnSelect"/>
+        <cimport wx:if="{{isSelected==1}}" @onImport.user="onImport" />
+        <ccreate wx:if="{{isSelected==0}}" @onCreate.user="onCreate" />
+        <caccounts wx:if="{{isSelected==2}}" :login.sync='login' @changeAccount.user="OnSelect" />
       </view>
     </view>
   </view>
 </template>
 
 <script>
-import wepy from 'wepy';
-import Util from '../utils/index';
-import CAccounts from '../components/login/caccounts';
-import CImport from '../components/login/cimport';
-import CCreate from '../components/login/ccreate';
-import { Helper } from '../lib/neo-ts/index';
-export default class Index extends wepy.page {
-  config = {
-    navigationBarTitleText: '账户'
-  };
-
-  components = {
-    caccounts: CAccounts,
-    cimport: CImport,
-    ccreate: CCreate
-  };
-
-  data = {
-    avatarUrl: '',
-    nickName: '',
-    isSwitch: false,
-    isSelected: 0,
-    login: 1
-  };
-
-  computed = {};
-
-  methods = {
-    register() {
-      this.isSelected = 0;
-      this.$apply();
-    },
-    loginImport() {
-      this.isSelected = 1;
-      this.$apply();
-    },
-    loginAccounts() {
-      this.isSelected = 2;
-      this.$apply();
-    },
-    OnSelect(account) {
-      wepy.reLaunch({ url: './home' });
-    },
-    async onImport(param) {
-      // console.log('param');
-      // console.log(param);
-
-      await Util.set.account_json(param);
-      wepy.reLaunch({ url: './home' });
-    },
-    async onCreate(e) {
-      let that = this;
-      let label = e.name;
-      let passphrase = e.passphrase;
-      let confirm = e.confirm;
-
-      if (passphrase === '' || passphrase !== confirm) {
-        Util.show.alert('两次密码不同');
-        return;
-      }
-      if (label === '') {
-        Util.show.alert('账户名不能为空');
-        return;
-      }
-      let wallets = Util.get.cache(Util.const.LOCAL_ACCOUNTS) || {};
-      if (wallets[label] !== undefined) {
-        Util.show.alert('账户名已存在');
-        return;
-      }
-
-      Util.show.loading('私钥生成中');
-
-      let privateKey = await Util.get.random(64);
-
-      var account = Util.get.nep2(label, privateKey);
-
-      setTimeout(function() {
-        Util.hide.loading();
-      }, 1000);
-
-      Helper.Account.GetNep2FromPrivateKey(
-        Helper.hexToBytes(privateKey),
-        passphrase,
-        Util.const.SCRYPT.N,
-        Util.const.SCRYPT.r,
-        Util.const.SCRYPT.p,
-        (info, result) => {
-          that.isGenerating = false;
-          that.$apply();
-          if (info == 'finish') {
-            account.nep2key = result;
-            wallets[label] = account;
-
-            Util.show.loading('钱包创建完成');
-            Util.set.cache(Util.const.LOCAL_ACCOUNTS, wallets);
-            //本地缓存新生成的账户
-            Util.set.account(account);
-
-            var jsonstr = JSON.stringify(account.toJson());
-            Util.hide.loading();
-            that.$redirect('./regresult?account=' + jsonstr);
-          } else {
-            //TODO: alert for encoding error
-            Util.show.error('私钥加密失败');
-          }
+  import wepy from 'wepy';
+  import Util from '../utils/index';
+  import CAccounts from '../components/login/caccounts';
+  import CImport from '../components/login/cimport';
+  import CCreate from '../components/login/ccreate';
+  import {
+    Helper
+  } from '../lib/neo-ts/index';
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '账户'
+    };
+    components = {
+      caccounts: CAccounts,
+      cimport: CImport,
+      ccreate: CCreate
+    };
+    data = {
+      avatarUrl: '',
+      nickName: '',
+      isSwitch: false,
+      isSelected: 0,
+      login: 1
+    };
+    computed = {};
+    methods = {
+      register() {
+        this.isSelected = 0;
+        this.$apply();
+      },
+      loginImport() {
+        this.isSelected = 1;
+        this.$apply();
+      },
+      loginAccounts() {
+        this.isSelected = 2;
+        this.$apply();
+      },
+      OnSelect(account) {
+        wepy.reLaunch({
+          url: './home'
+        });
+      },
+      async onImport(param) {
+        // console.log('param');
+        // console.log(param);
+        await Util.set.account_json(param);
+        wepy.reLaunch({
+          url: './home'
+        });
+      },
+      async onCreate(e) {
+        let that = this;
+        let label = e.name;
+        let passphrase = e.passphrase;
+        let confirm = e.confirm;
+        if (passphrase === '' || passphrase !== confirm) {
+          Util.show.alert('两次密码不同');
+          return;
         }
-      );
+        if (label === '') {
+          Util.show.alert('账户名不能为空');
+          return;
+        }
+        let wallets = Util.get.cache(Util.const.LOCAL_ACCOUNTS) || {};
+        if (wallets[label] !== undefined) {
+          Util.show.alert('账户名已存在');
+          return;
+        }
+        Util.show.loading('私钥生成中');
+        let privateKey = await Util.get.random(64);
+        var account = Util.get.nep2(label, privateKey);
+        setTimeout(function() {
+          Util.hide.loading();
+        }, 1000);
+        Helper.Account.GetNep2FromPrivateKey(
+          Helper.hexToBytes(privateKey),
+          passphrase,
+          Util.const.SCRYPT.N,
+          Util.const.SCRYPT.r,
+          Util.const.SCRYPT.p,
+          (info, result) => {
+            that.isGenerating = false;
+            that.$apply();
+            if (info == 'finish') {
+              account.nep2key = result;
+              wallets[label] = account;
+              Util.show.loading('钱包创建完成');
+              Util.set.cache(Util.const.LOCAL_ACCOUNTS, wallets);
+              //本地缓存新生成的账户
+              Util.set.account(account);
+              var jsonstr = JSON.stringify(account.toJson());
+              Util.hide.loading();
+              that.$redirect('./regresult?account=' + jsonstr);
+            } else {
+              //TODO: alert for encoding error
+              Util.show.error('私钥加密失败');
+            }
+          }
+        );
+      }
+    };
+    events = {};
+    async onLoad(option) {
+      //是否是切换账号
+      this.isSwitch = option.switch || 0;
+      //获取缓存的用户信息
+      const userInfo = await Util.get.userInfo();
+      this.avatarUrl = userInfo.avatarUrl;
+      this.nickName = userInfo.nickName;
+      this.$apply();
+      return;
+      if (parseInt(option.switch) === 1) return;
+      let account = Util.get.cache(Util.const.CURR_ACCOUNT);
+      if (account !== {} && account !== undefined && account !== '') {
+        try {
+          //做兼容
+          if (account.accounts !== undefined) {
+            account = account.accounts[0];
+            Util.set.cache(Util.const.CURR_ACCOUNT, account);
+            let wallets = Util.get.cache(Util.const.LOCAL_ACCOUNTS) || {};
+            let accounts = {};
+            for (let key in wallets) {
+              accounts[key] = wallets[key].accounts[0];
+            }
+            Util.set.cache(Util.config.LOCAL_ACCOUNTS, accounts);
+          }
+        } catch (err) {
+          // console.log(err);
+        }
+        Util.show.loading('登陆中');
+        setTimeout(function() {
+          Util.hide.loading();
+        }, 4000);
+        Util.set.account(account);
+        wepy.reLaunch({
+          url: './home'
+        });
+        Util.hide.loading();
+      }
     }
-  };
-
-  events = {};
-
-  async onLoad(option) {
-    //是否是切换账号
-    this.isSwitch = option.switch || 0;
-    //获取缓存的用户信息
-    const userInfo = await Util.get.userInfo();
-    this.avatarUrl = userInfo.avatarUrl;
-    this.nickName = userInfo.nickName;
-    this.$apply();
-    return;
-
-    if (parseInt(option.switch) === 1) return;
-
-    let account = Util.get.cache(Util.const.CURR_ACCOUNT);
-
-    if (account !== {} && account !== undefined && account !== '') {
-      try {
-        //做兼容
-        if (account.accounts !== undefined) {
-          account = account.accounts[0];
-          Util.set.cache(Util.const.CURR_ACCOUNT, account);
-          let wallets = Util.get.cache(Util.const.LOCAL_ACCOUNTS) || {};
-          let accounts = {};
-          for (let key in wallets) {
-            accounts[key] = wallets[key].accounts[0];
-          }
-          Util.set.cache(Util.config.LOCAL_ACCOUNTS, accounts);
-        }
-      } catch (err) {
-        // console.log(err);
-      }
-
-      Util.show.loading('登陆中');
-      setTimeout(function() {
-        Util.hide.loading();
-      }, 4000);
-      Util.set.account(account);
-      wepy.reLaunch({ url: './home' });
-      Util.hide.loading();
+    onShow() {
+      // console.log(this.isSwitch);
     }
   }
-
-  onShow() {
-    // console.log(this.isSwitch);
-  }
-}
 </script>
 
 

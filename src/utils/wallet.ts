@@ -123,20 +123,34 @@ export default class Wallet {
      * 获取私钥
      * @param passphrase nep2解密密码
      */
-    public static getPrikey(passphrase?: string): string /*Uint8Array*/ {
-        if (Wallet.account.nep2key.length === 52) {
-            return Wallet.wif2prikey(Wallet.account.nep2key);
-        }
-        return Wallet.account.nep2key;
-        // return new Promise((resolve, rejet) => {
+    public static getPrikey(passphrase?: string): Promise<string> /*Uint8Array*/ {
+        return new Promise((resolve, rejet) => {
+            if (Wallet.account.nep2key.length === 52) {//wif
+                resolve(Wallet.wif2prikey(Wallet.account.nep2key));
+            } else if (Wallet.account.nep2key.length === 64)//私钥
+                resolve(Wallet.account.nep2key);
+            else {//解析nep2
+                Helper.Account.GetPrivateKeyFromNep2(Wallet.account.nep2key, passphrase, 16384, 8, 8, (info, result) => {
+                    console.log("info=" + info);
+                    var prikey = result as Uint8Array;
 
-        //     //私钥登陆
-        //     if (this.account.nep2key.length === 64)
-        //         resolve(this.account.nep2key);
-        //     else {}
-        // })
+                    console.log("result=" + Helper.toHexString(prikey));
+                    var pubkey = Helper.Account.GetPublicKeyFromPrivateKey(prikey);
+                    var address = Helper.Account.GetAddressFromPublicKey(pubkey);
+                    console.log("address=" + address);
+                    resolve(Helper.toHexString(prikey));
+
+                });
+            }
+        })
     }
 
+    public static needPassphase(): boolean {
+        if (Wallet.account.nep2key.length !== 64 && Wallet.account.nep2key.length !== 52)
+            return true;
+        return false;
+    }
+    
     /**
      * 获取地址UTXO
      * @param addr 目标地址
