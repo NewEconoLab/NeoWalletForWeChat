@@ -40,7 +40,7 @@
     <view class="upper-cover" @tap.stop="click"></view>
     <view class="passphase-frame" @tap.stop="click" animation="{{animation}}">
       <form bindsubmit="confirm" class="form" report-submit="true">
-        <input placeholder='请输入密码' name="passphrase" value='test'/>
+        <input placeholder='请输入密码' name="passphrase" value='test' />
         <view class="foot-button" style="margin-top:60rpx;margin-bottom:30rpx;">
           <button type="primary" form-type="submit" style="width:300rpx;" loading="{{opening}}" hover-class='btn_hover'>确定</button>
         </view>
@@ -61,22 +61,38 @@
     };
     methods = {
       click() {},
-      Show() {
-        this.passAnimation();
+      async Show() {
+        //  判断是否需要密码的工作交给组件来做
+        if (Util.wallet.needPassphase()) {
+          this.passAnimation();
+        } else {
+          await this.returnKey('0')
+        }
       },
       async confirm(event) {
         console.log('confirm')
         let passphrase = event.detail.value.passphrase;
-        const prikey = await Util.wallet.getPrikey(passphrase);
-        this.passAnimation(150);
-        if(prikey === null || prikey === undefined)
-        this.$emit('deciphered',{'prikey':prikey});
-        else
-        this.$emit('deciphered',{'prikey':'fail'});
+        await this.returnKey(passphrase, true)
       }
     };
+    async returnKey(passphrase, havePass = false) {
+      const prikey = await Util.wallet.getPrikey(passphrase);
+      if (havePass) {
+        console.log('havepass')
+        this.passAnimation(150);
+      }
+      if (prikey !== null && prikey !== undefined && prikey !=='')
+        this.$emit('deciphered', {
+          'prikey': prikey
+        });
+      else
+        this.$emit('deciphered', {
+          'prikey': 'fail'
+        });
+    }
     onLoad() {};
     passAnimation(distance = -150, duration = 500) {
+
       var animation = wx.createAnimation({
         duration: duration
       });
@@ -84,8 +100,17 @@
         duration: duration
       });
       this.animation = animation.export();
-      this.show = !this.show;
-      this.$apply();
+      // 等待密码框回退之后背景才消失
+      if (distance > 0) {
+        let that = this;
+        setTimeout(() => {
+          that.show = !that.show;
+          that.$apply();
+        }, 500)
+      } else {
+        this.show = !this.show;
+      }
+       this.$apply();
     }
   }
 </script>
