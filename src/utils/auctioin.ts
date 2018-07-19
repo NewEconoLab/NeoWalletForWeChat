@@ -3,7 +3,7 @@ import { DOMAIN_ROOT } from "./const";
 import Https from "./Https";
 import { Helper, Neo } from "../lib/neo-ts/index";
 import Wallet from "./wallet";
-import { DomainState, SellDomainInfo, ResultItem, DataType } from "./entity";
+import { DomainState, SellDomainInfo, ResultItem, DataType, RootDomainInfo } from "./entity";
 import NNSSell from "./nnssell";
 import NNS from "./nns";
 
@@ -24,6 +24,8 @@ export default class Auction {
 
         info = await NNSSell.getSellingStateByDomain(domain + '.' + DOMAIN_ROOT);
 
+        console.log('domain state')
+        console.log(info)
         //是否开始域名竞拍 0:未开始竞拍
         let sellstate = (info.startBlockSelling.compareTo(Neo.BigInteger.Zero));
         if (sellstate > 0) {   // 判断是否已有结束竞拍的区块高度。如果结束区块大于零则状态为结束
@@ -60,9 +62,9 @@ export default class Auction {
     static async getBalanceOfSeling(id: Neo.Uint256)
     {
         let who = new Neo.Uint160(Helper.Account.GetPublicKeyScriptHash_FromAddress(Wallet.account.address).buffer);
-
+        const root = await NNS.getRoot() as RootDomainInfo
         let res = await Common.contractInvokeScript(
-            NNS.root.register,
+           root.register,
             "balanceOfSelling",
             "(hex160)" + who.toString(),
             "(hex256)" + id.toString()

@@ -1,4 +1,4 @@
-import { Domainmsg, DomainInfo, SellDomainInfo, NNSResult, ResultItem, DataType, Asset, MyAuction } from "./entity";
+import { Domainmsg, DomainInfo, SellDomainInfo, NNSResult, ResultItem, DataType, Asset, MyAuction, RootDomainInfo } from "./entity";
 import { Neo, Helper, ThinNeo } from "../lib/neo-ts/index";
 import Common from "./common";
 import NNS from './nns'
@@ -128,14 +128,14 @@ export default class NNSSell {
      * @param amount 充值金额
      */
     static async rechargeReg(amount: string) {
-
+        const root = await NNS.getRoot() as RootDomainInfo
         var v = 1;
         for (var i = 0; i < 8; i++)
             v *= 10;
         var bnum = new Neo.BigInteger(amount.replace(".", ""));
         var intv = bnum.multiply(v).toString();
 
-        let addressto = Helper.Account.GetAddressFromScriptHash(NNS.root.register);
+        let addressto = Helper.Account.GetAddressFromScriptHash(root.register);
 
         let sb = new ThinNeo.ScriptBuilder()
 
@@ -156,7 +156,7 @@ export default class NNSSell {
         sb.EmitPushNumber(Neo.BigInteger.fromString("1"));
         sb.Emit(ThinNeo.OpCode.PACK);
         sb.EmitPushString("setmoneyin");
-        sb.EmitAppCall(NNS.root.register);
+        sb.EmitAppCall(root.register);
         let script = sb.ToArray();
         let res = await Transfer.contractInvoke_attributes(script)
         // // console.log(res);
@@ -168,13 +168,14 @@ export default class NNSSell {
      */
     static async wantbuy(subname: string, prikey: string) {
         try {
+            const root = await NNS.getRoot() as RootDomainInfo
             let who = new Neo.Uint160(Helper.Account.GetPublicKeyScriptHash_FromAddress(Wallet.account.address).buffer);
             let param = [
                 '(hex160)' + who.toString(),
-                "(hex256)" + NNS.root.roothash.toString(),
+                "(hex256)" + root.roothash.toString(),
                 "(str)" + subname
             ];
-            let data = Common.buildScript(NNS.root.register, "wantBuy", param);
+            let data = Common.buildScript(root.register, "wantBuy", param);
             let res = await Transfer.contractInvoke_attributes(data);
             return res
         } catch (error) {
@@ -188,7 +189,7 @@ export default class NNSSell {
      * @param domain 域名
      */
     static async addprice(domain: string, amount: number, prikey: string) {
-
+        const root = await NNS.getRoot() as RootDomainInfo
         let info = await this.getSellingStateByDomain(domain);
         let who = new Neo.Uint160(
             Helper.Account.GetPublicKeyScriptHash_FromAddress
@@ -198,7 +199,7 @@ export default class NNSSell {
         );
 
         let data = Common.buildScript(
-            NNS.root.register,
+            root.register,
             "addPrice",
             ["(hex160)" + who.toString(), "(hex256)" + info.id.toString(), "(int)" + amount]
         );
@@ -224,9 +225,10 @@ export default class NNSSell {
      * @param domain 域名
      */
     static async endSelling(id: string) {
+        const root = await NNS.getRoot() as RootDomainInfo
         let who = new Neo.Uint160(Helper.Account.GetPublicKeyScriptHash_FromAddress(Wallet.account.address).buffer);
         let script = Common.buildScript(
-            NNS.root.register,
+            root.register,
             "endSelling",
             [
                 "(hex160)" + who.toString(),
@@ -242,10 +244,11 @@ export default class NNSSell {
      * 获得领取域名
      * @param domain 域名
      */
-    static getsellingdomain(id: string) {
+    static async getsellingdomain(id: string) {
+        const root = await NNS.getRoot() as RootDomainInfo
         let who = new Neo.Uint160(Helper.Account.GetPublicKeyScriptHash_FromAddress(Wallet.account.address).buffer);
         let script = Common.buildScript(
-            NNS.root.register,
+            root.register,
             "getSellingDomain",
             [
                 "(hex160)" + who.toString(),
@@ -257,13 +260,14 @@ export default class NNSSell {
     }
 
     static async getMySellingDomain(domain) {
+        const root = await NNS.getRoot() as RootDomainInfo
         let info = await NNSSell.getSellingStateByDomain(domain);
         if (info.endBlock.compareTo(Neo.BigInteger.Zero)) {
             let data1 = NNSSell.endSelling(domain);
         }
         let who = new Neo.Uint160(Helper.Account.GetPublicKeyScriptHash_FromAddress(Wallet.account.address).buffer);
         let script = Common.buildScript(
-            NNS.root.register,
+            root.register,
             "getSellingDomain",
             [
                 "(hex160)" + who.toString(),
@@ -275,9 +279,10 @@ export default class NNSSell {
     }
 
     static async getBalanceOf() {
+        const root = await NNS.getRoot() as RootDomainInfo
         let who = new Neo.Uint160(Helper.Account.GetPublicKeyScriptHash_FromAddress(Wallet.account.address).buffer);
         let info = await Common.contractInvokeScript(
-            NNS.root.register, "balanceOf", "(hex160)" + who.toString()
+            root.register, "balanceOf", "(hex160)" + who.toString()
         );
 
         var stackarr = info["stack"] as any[];
@@ -295,9 +300,10 @@ export default class NNSSell {
      * 取回存储器下的sgas
      */
     static async getMoneyBack(amount: number) {
+        const root = await NNS.getRoot() as RootDomainInfo
         let transcount = amount.toFixed(8).replace(".", "");
         let data = Common.buildScript(
-            NNS.root.register,
+            root.register,
             "getmoneyback",
             ["(addr)" + Wallet.account.address, "(int)" + transcount]
         )

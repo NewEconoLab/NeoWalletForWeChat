@@ -291,7 +291,7 @@
       this.$apply();
     }
     async onShow() {
-      this.$invoke('cpassphase', 'Show');
+     
     }
     // 页面渲染完成
     async onReady() {}

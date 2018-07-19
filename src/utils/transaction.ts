@@ -20,7 +20,8 @@ export default class Transfer {
      * @param {string} randomStr
      */
     static async signAndSend(tran: ThinNeo.Transaction) {
-        const key = Helper.hexToBytes(Wallet.getPrikey());
+        let prikey = await Wallet.getPrikey() as string;
+        const key = Helper.hexToBytes(prikey);
         const pubkey = Helper.hexToBytes(Wallet.account.publickey);
 
         if (tran.witnesses === null)

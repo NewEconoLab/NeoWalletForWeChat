@@ -19,7 +19,7 @@ export { Https }
 
 export default {
     auction: NNSSell,
-    wallet:Wallet,
+    wallet: Wallet,
     show: {
         loading: Tips.loading,
         success: Tips.success,
@@ -58,7 +58,8 @@ export default {
         // wantBy: Auction.wantBy,
         domainByAddr: NNS.getDomainsByAddr,
         wif: Wallet.prikey2Wif,
-        domainState:Auction.queryDomainState
+        domainState: Auction.queryDomainState,
+        root: async () => { NNS.getRoot() }
     },
     set: {
         cache: Cache.put,

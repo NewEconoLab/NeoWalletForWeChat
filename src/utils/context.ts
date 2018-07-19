@@ -110,7 +110,7 @@ export class Context {
                 if (Context.Assets[nep5.name] === undefined) {
                     Context.Assets[nep5.name] = new Asset(nep5.name, nep5.id, nep5.count);
                 } else {
-                    (Context.Assets[nep5.name] as Asset).amount = nep5.count+'';
+                    (Context.Assets[nep5.name] as Asset).amount = nep5.count + '';
                 }
             }
         } catch (error) {
@@ -201,8 +201,6 @@ export class Context {
     static async OnGetClaims() {
 
         let res = await Https.api_getclaimgas(Wallet.account.address, 0);
-
-        // console.log(res);
         let claims = [];
         for (let i in res['claims']) {
             let claim = new Claim(res.claims[i]);

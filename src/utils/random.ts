@@ -25,6 +25,7 @@ export async function getSecureRandom(len:number) {
   random = SHA256(userinfo.signature + random).toString()
   random = SHA256(userinfo.encryptedData + random).toString()
   random = SHA256(userinfo.iv + random).toString()
+  random = SHA256(Math.random()+''+random).toString()
   // // console.log(random)
   Tips.loaded();
   return random.slice(0, len)

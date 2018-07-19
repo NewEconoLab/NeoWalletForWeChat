@@ -13,20 +13,20 @@ import { getSecureRandom } from './random'
  * @method initRootDomain_初始化根域名信息
  */
 export default class NNS {
-    static root: RootDomainInfo;
+    static root: RootDomainInfo = null;
 
     /**
      * 域名查询及校验
      * @param domain 二级域名
      */
-    static async  verifyDomain(domain: string):Promise<DomainInfo> {
+    static async  verifyDomain(domain: string): Promise<DomainInfo> {
         domain = domain.toLowerCase().trim();
 
         let verify = /^[a-zA-Z0-9]{1,32}$/;
         if (verify.test(domain)) {
             let doamininfo: DomainInfo = await NNS.queryDomainInfo(domain + "." + DOMAIN_ROOT)
             // console.log(doamininfo)
-            
+
             if (doamininfo.register !== null && doamininfo.ttl !== null) {
                 var timestamp = new Date().getTime();
                 // console.log(timestamp);
@@ -56,7 +56,7 @@ export default class NNS {
         test.roothash = Common.nameHash(DOMAIN_ROOT);
         test.rootname = DOMAIN_ROOT;
 
-        var domain = await NNS.getOwnerInfo(test.roothash,DAPP_NNS);
+        var domain = await NNS.getOwnerInfo(test.roothash, DAPP_NNS);
         console.log('initRootDomain:');
         console.log(domain);
         test.owner = domain.owner;
@@ -67,6 +67,12 @@ export default class NNS {
     }
 
 
+    static async getRoot() {
+        if (NNS.root === null) {
+            await NNS.initRootDomain();
+        }
+        return NNS.root;
+    }
     /**
      * 注册域名
      * @param domain 域名
@@ -113,7 +119,7 @@ export default class NNS {
         //         }
         //     }
         // }
-        
+
         // for (const i in arrdomain) {
         //     if (arrdomain.hasOwnProperty(i)) {
         //         const n = parseInt(i)
@@ -178,7 +184,8 @@ export default class NNS {
         var nnshash: Neo.Uint256 = Common.nameHash(NNS.root.rootname);
         var address = Wallet.account.address;
         var sb = new ThinNeo.ScriptBuilder();
-        var scriptaddress = NNS.root.register;
+        const root = await NNS.getRoot() as RootDomainInfo
+        var scriptaddress = root.register;
 
         sb.EmitParamJson(["(addr)" + address, "(hex256)" + nnshash.toString(), "(str)" + doamin]);//第二个参数是个数组
         sb.EmitPushString("requestSubDomain");

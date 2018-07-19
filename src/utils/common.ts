@@ -79,7 +79,7 @@ export default class Common {
         var msg = tran.GetMessage();
         var pubkey = Helper.hexToBytes(Wallet.account.publickey);
         let randomStr = await getSecureRandom(256);
-        const prikey = Wallet.getPrikey();
+        const prikey = await Wallet.getPrikey();
         var signdata = Helper.Account.Sign(msg, Helper.hexToBytes(prikey), randomStr);
         tran.AddWitness(signdata, pubkey, addr);
         var data: Uint8Array = tran.GetRawData();
@@ -106,7 +106,7 @@ export default class Common {
 
         var msg = tran.GetMessage();
         let randomStr = await getSecureRandom(256);
-        const prikey = Wallet.getPrikey();
+        const prikey = await Wallet.getPrikey();
         var signdata = Helper.Account.Sign(msg, Helper.hexToBytes(prikey), randomStr);
         tran.AddWitness(signdata, Helper.hexToBytes(Wallet.account.publickey), Wallet.account.address);
         var data = tran.GetRawData();
@@ -140,7 +140,7 @@ export default class Common {
             tran.witnesses = [];
         var msg = tran.GetMessage();
         let randomStr = await getSecureRandom(256);
-        const prikey = Wallet.getPrikey();
+        const prikey = await Wallet.getPrikey();
         var signdata = Helper.Account.Sign(msg, Helper.hexToBytes(prikey), randomStr);
         tran.AddWitness(signdata, Helper.hexToBytes(Wallet.account.publickey), Wallet.account.address);
         var data: Uint8Array = tran.GetRawData();
@@ -172,7 +172,7 @@ export default class Common {
 
         var msg = tran.GetMessage();
         let randomStr = await getSecureRandom(256);
-        const prikey =Wallet.getPrikey();
+        const prikey =await Wallet.getPrikey();
         var signdata = Helper.Account.Sign(msg, Helper.hexToBytes(prikey), randomStr);
         tran.AddWitness(signdata, Helper.hexToBytes(Wallet.account.publickey), Wallet.account.address);
         var data: Uint8Array = tran.GetRawData();
