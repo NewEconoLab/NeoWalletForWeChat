@@ -1,5 +1,5 @@
 import { Nep6, Neo, ThinNeo } from '../lib/neo-ts/index'
-import { Asset, Utxo, Nep5, Claim, Claims, UserInfo } from './entity';
+import { Asset, Utxo, Nep5, Claim, Claims, UserInfo, TaskManager, Task, TaskType } from './entity';
 import Https from './Https';
 import Coin from './coin';
 import { formatTime } from './time'
@@ -52,8 +52,21 @@ export class Context {
         Context.Assets['GAS'] = gas;
 
         await Coin.initAllAsset();
-        Context.OnGetHeight();
+        const height = await Context.OnGetHeight();
         Context.OnTimeOut();
+
+        // 初始化的任务时候添加 
+        // 一个资产更新事件
+        // 一个价格更新事件
+        // 一个交易历史
+        // 一个claim
+
+        TaskManager.addTask(new Task(height, 0, TaskType.asset, null, () => {
+            Context.OnGetAssets();
+            Context.OnGetPrice();
+            Context.OnGetTXs(1);
+            Context.OnGetClaims()
+        }))
     }
 
     /**
@@ -63,12 +76,8 @@ export class Context {
         if (Context.assetDelegate === null) {
             return;
         }
-
-        Context.OnGetAssets();
-        Context.OnGetPrice();
-        Context.OnGetTXs(1);
+        //周期更新高度
         Context.OnGetHeight();
-        Context.OnGetClaims();
     }
 
     /**
@@ -78,7 +87,15 @@ export class Context {
         const height = await Https.api_getHeight();
         if (height === -1)
             return;
-        Context.Height = height;
+
+        //当新的高度与以前高度不同时，触发任务更新
+        if (Context.Height < height) {
+            //第一次更新高度，用于添加任务 不触发任务更新
+            if (Context.Height !== 0)
+                TaskManager.update(height);
+            Context.Height = height;
+        }
+        return height;
     }
 
     /**

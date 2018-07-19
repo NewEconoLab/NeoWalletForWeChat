@@ -188,6 +188,8 @@ export class TaskManager {
 
     // 更新任务
     static update(height: number) {
+        if (TaskManager.tasks === null)
+            return;
         for (let index of TaskManager.tasks) {
             let task = TaskManager.tasks[index] as Task;
             if (task.height + task.confirmBlocks <= height) {
