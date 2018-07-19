@@ -155,10 +155,66 @@ export class NeoAsset {
     claim: number;
 }
 
+/**
+ * 需要从服务器更新的任务
+ * 由区块高度变化触发
+ */
+export class Task {
+    height: number = -1;//任务部署高度
+    confirmBlocks: number = 0;//任务确认周期
+    type: TaskType = TaskType.asset; //任务类型 默认资产更新
+    txid?: string = '';// 如果是交易确认任务则有
+    callback?: Function = null; // 回调
 
-export class Consts {
-    static baseContract = Neo.Uint160.parse("954f285a93eed7b4aed9396a7806a5812f1a5950");
-    static registerContract = Neo.Uint160.parse("d6a5e965f67b0c3e5bec1f04f028edb9cb9e3f7c");
+    constructor(height: number,
+        confirm: number = 0,
+        type: TaskType = TaskType.asset,
+        txid?: string,  // 可null
+        callback?: Function) {
+
+        this.height = height;
+        this.confirmBlocks = confirm;
+        this.txid = txid;
+        this.callback = callback;
+
+    }
+}
+
+/**
+ * 任务管理类
+ */
+export class TaskManager {
+    static tasks = null;
+
+    // 更新任务
+    static update(height: number) {
+        for (let index of TaskManager.tasks) {
+            let task = TaskManager.tasks[index] as Task;
+            if (task.height + task.confirmBlocks <= height) {
+                //达到确认高度，触发回调
+                task.callback();
+                TaskManager.tasks.remove(index);
+            }
+        }
+    }
+
+    //添加新任务
+    static addTask(task: Task) {
+        if (TaskManager.tasks === null)
+            TaskManager.tasks = [];
+
+        if (task !== null) {
+            TaskManager.tasks.push(task);
+        }
+    }
+}
+
+/**
+ * 任务类型
+ */
+export enum TaskType {
+    tx,// 交易确认 需要签名的任务，涉及资产变动
+    asset,// 资产更新 在tx交易成功后添加资产更新任务，资产更新立即执行
 }
 
 /**
@@ -418,7 +474,7 @@ export class NNSResult {
  */
 export class SellDomainInfo extends DomainInfo {
     state: DomainState;
-    domain:string;
+    domain: string;
     id: Neo.Uint256;
     startBlockSelling: Neo.BigInteger;
     endBlock: Neo.BigInteger;

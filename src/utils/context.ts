@@ -60,11 +60,10 @@ export class Context {
      * 定时触发
      */
     static async OnTimeOut() {
-        // console.log('onTimeOut');
-
         if (Context.assetDelegate === null) {
             return;
         }
+
         Context.OnGetAssets();
         Context.OnGetPrice();
         Context.OnGetTXs(1);
