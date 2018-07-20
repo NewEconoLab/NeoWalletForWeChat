@@ -7,6 +7,7 @@ import Wallet from './wallet';
 import Transfer from './transaction';
 import NNS from './nns';
 import User from './user';
+import { Emitter } from './Emitter';
 /**
  * 记录当前系统运行状态
  * 包括 当前账户 刷新等等
@@ -41,6 +42,7 @@ export class Context {
 
     static user: UserInfo = null;
 
+
     static async init(account: Nep6.nep6account) {
         // 暂时不加载历史记录
         this.txDelegate = null;
@@ -67,6 +69,32 @@ export class Context {
             Context.OnGetTXs(1);
             Context.OnGetClaims()
         }))
+
+        //注册监听事件，便于事件的添加
+        Emitter.register(TaskType.asset, () => {
+            TaskManager.addTask(new Task(height, 0, TaskType.asset, null, () => {
+                Context.OnGetAssets();
+            }))
+        }, this);
+
+        Emitter.register(TaskType.tx, (task: Task) => {
+            TaskManager.addTask(task);
+        }, this);
+
+        Emitter.register(TaskType.price, () => {
+            TaskManager.addTask(new Task(height, 0, TaskType.price, null, () => {
+                Context.OnGetClaims()
+            }))
+        }, this);
+
+        Emitter.register(TaskType.history, () => {
+            TaskManager.addTask(new Task(height, 0, TaskType.history, null, async () => {
+                await Context.OnGetTXs(1);
+                Context.OnGetPrice();
+            }))
+        }, this);
+
+        TaskManager.update(height);
     }
 
     /**
@@ -85,14 +113,19 @@ export class Context {
      */
     static async OnGetHeight() {
         const height = await Https.api_getHeight();
+        console.log('height');
+        console.log(height);
+        
         if (height === -1)
             return;
 
         //当新的高度与以前高度不同时，触发任务更新
         if (Context.Height < height) {
             //第一次更新高度，用于添加任务 不触发任务更新
+            console.log('Height')
+            console.log(height)
             if (Context.Height !== 0)
-                TaskManager.update(height);
+                TaskManager.update(height as number);
             Context.Height = height;
         }
         return height;

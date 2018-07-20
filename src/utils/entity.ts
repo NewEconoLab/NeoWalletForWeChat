@@ -190,12 +190,15 @@ export class TaskManager {
     static update(height: number) {
         if (TaskManager.tasks === null)
             return;
-        for (let index of TaskManager.tasks) {
+        console.log(TaskManager.tasks)
+        for (let index in TaskManager.tasks) {
             let task = TaskManager.tasks[index] as Task;
+            console.log(task);
+
             if (task.height + task.confirmBlocks <= height) {
                 //达到确认高度，触发回调
                 task.callback();
-                TaskManager.tasks.remove(index);
+                delete TaskManager.tasks[index];
             }
         }
     }
@@ -215,8 +218,10 @@ export class TaskManager {
  * 任务类型
  */
 export enum TaskType {
-    tx,// 交易确认 需要签名的任务，涉及资产变动
-    asset,// 资产更新 在tx交易成功后添加资产更新任务，资产更新立即执行
+    tx = 'tx',// 交易确认 需要签名的任务，涉及资产变动
+    asset = 'asset',// 资产更新 在tx交易成功后添加资产更新任务，资产更新立即执行
+    history = 'history', //更新历史记录
+    price = 'price'
 }
 
 /**
