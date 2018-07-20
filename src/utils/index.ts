@@ -73,14 +73,15 @@ export default {
         account: Wallet.removeWallet
     },
     delegate: {
-        asset: (delegate: Function) => Context.assetDelegate = delegate,
-        tx: (delegate: Function) => Context.txDelegate = delegate
+        // asset: (delegate: Function) => Context.assetDelegate = delegate,
+        // tx: (delegate: Function) => Context.txDelegate = delegate
     },
     const: Const,
     init: {
         asset: Coin.initAllAsset,
         context: Context.init,
-        nns: NNS.initRootDomain
+        nns: NNS.initRootDomain,
+        notity:Context.notity
         // NNS.nnsRegister('jinghui')
         //NNS.getDomainsByAddr();
     },

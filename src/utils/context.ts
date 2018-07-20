@@ -7,7 +7,7 @@ import Wallet from './wallet';
 import Transfer from './transaction';
 import NNS from './nns';
 import User from './user';
-import { Emitter } from './Emitter';
+import Emitter from './Emitter';
 /**
  * 记录当前系统运行状态
  * 包括 当前账户 刷新等等
@@ -26,12 +26,6 @@ export class Context {
     //未确认交易
     static unconfirm = {};
 
-    // 交易历史刷新代理
-    static txDelegate: Function = null;
-
-    // 资产刷新代理
-    static assetDelegate: Function = null;
-
     static lock = false; // use lock to prevent muti request competition
 
     static openid: string;
@@ -42,10 +36,33 @@ export class Context {
 
     static user: UserInfo = null;
 
+    static notity() {
+        //注册监听事件
+        Emitter.register(TaskType.asset, (observer) => {
+            console.log('asset was fired')
+            Context.OnGetAssets(observer);
+            Context.OnGetPrice(observer);
+        });
+
+        Emitter.register(TaskType.tx, (task: Task) => {
+            TaskManager.addTask(task);
+        });
+
+        Emitter.register(TaskType.history, (observer) => {
+            Context.OnGetTXs(1, observer);
+        });
+
+        Emitter.register(TaskType.claim, (observer) => {
+            Context.OnGetClaims(observer);
+        })
+
+        Emitter.register(TaskType.height, () => {
+            Context.OnGetHeight();
+        })
+    }
 
     static async init(account: Nep6.nep6account) {
-        // 暂时不加载历史记录
-        this.txDelegate = null;
+
         Wallet.setAccount(account);
         let neo = new Asset('NEO', '');
         let gas = new Asset('GAS', '');
@@ -63,47 +80,18 @@ export class Context {
         // 一个交易历史
         // 一个claim
 
-        TaskManager.addTask(new Task(height, 0, TaskType.asset, null, () => {
-            Context.OnGetAssets();
-            Context.OnGetPrice();
-            Context.OnGetTXs(1);
-            Context.OnGetClaims()
-        }))
-
-        //注册监听事件，便于事件的添加
-        Emitter.register(TaskType.asset, () => {
-            TaskManager.addTask(new Task(height, 0, TaskType.asset, null, () => {
-                Context.OnGetAssets();
-            }))
-        }, this);
-
-        Emitter.register(TaskType.tx, (task: Task) => {
-            TaskManager.addTask(task);
-        }, this);
-
-        Emitter.register(TaskType.price, () => {
-            TaskManager.addTask(new Task(height, 0, TaskType.price, null, () => {
-                Context.OnGetClaims()
-            }))
-        }, this);
-
-        Emitter.register(TaskType.history, () => {
-            TaskManager.addTask(new Task(height, 0, TaskType.history, null, async () => {
-                await Context.OnGetTXs(1);
-                Context.OnGetPrice();
-            }))
-        }, this);
-
-        TaskManager.update(height);
+        // TaskManager.addTask(new Task(height, 0, TaskType.asset, null, () => {
+        //     Context.OnGetAssets();
+        //     Context.OnGetPrice();
+        //     Context.OnGetTXs(1);
+        //     Context.OnGetClaims()
+        // }))
     }
 
     /**
      * 定时触发
      */
     static async OnTimeOut() {
-        if (Context.assetDelegate === null) {
-            return;
-        }
         //周期更新高度
         Context.OnGetHeight();
     }
@@ -115,7 +103,7 @@ export class Context {
         const height = await Https.api_getHeight();
         console.log('height');
         console.log(height);
-        
+
         if (height === -1)
             return;
 
@@ -134,13 +122,9 @@ export class Context {
     /**
      * 获取账户资产信息 UTXO
      */
-    static async OnGetAssets() {
-
-        if (Context.assetDelegate === null)
-            return;
-
+    static async OnGetAssets(observer) {
         let that = this;
-
+        console.log('....//////sssss/////')
         //加锁，避免多个网络请求导致的刷新竞争
         if (this.lock === true) return;
         //加锁
@@ -189,7 +173,8 @@ export class Context {
         //解锁
         this.lock = false;
         let assets = JSON.parse(JSON.stringify(Context.Assets));
-        Context.assetDelegate(assets);
+        console.log('....//////////fffff/')
+        observer(assets);
 
         //设置默认转账币种
         Transfer.coin = assets['NEO'];
@@ -198,9 +183,8 @@ export class Context {
     /**
      * 获取市场价格
      */
-    static async OnGetPrice() {
-        if (Context.assetDelegate === null)
-            return;
+    static async OnGetPrice(observer) {
+
         let that = this;
         let total: number = 0;
         let isAll = true;
@@ -230,7 +214,7 @@ export class Context {
         if (isAll) {
             Context.total = total;
             let assets = JSON.parse(JSON.stringify(Context.Assets));
-            Context.assetDelegate(assets);
+            observer(assets);
         }
 
     }
@@ -238,16 +222,13 @@ export class Context {
     /**
      * 获取历史交易
      */
-    static async OnGetTXs(page: number) {
-        if (Context.txDelegate === null)
-            return;
-
+    static async OnGetTXs(page: number, observer) {
         await Transfer.history();
-        Context.txDelegate(Transfer.TXs);
+        observer(Transfer.TXs);
         return Transfer.TXs;
     }
 
-    static async OnGetClaims() {
+    static async OnGetClaims(observer) {
 
         let res = await Https.api_getclaimgas(Wallet.account.address, 0);
         let claims = [];
