@@ -42,23 +42,23 @@ export class Context {
             console.log('asset was fired')
             Context.OnGetAssets(observer);
             Context.OnGetPrice(observer);
-        });
+        },this);
 
         Emitter.register(TaskType.tx, (task: Task) => {
             TaskManager.addTask(task);
-        });
+        },this);
 
         Emitter.register(TaskType.history, (observer) => {
             Context.OnGetTXs(1, observer);
-        });
+        },this);
 
         Emitter.register(TaskType.claim, (observer) => {
             Context.OnGetClaims(observer);
-        })
+        },this)
 
         Emitter.register(TaskType.height, () => {
             Context.OnGetHeight();
-        })
+        },this)
     }
 
     static async init(account: Nep6.nep6account) {
