@@ -16,12 +16,11 @@ import { Asset } from './entity';
 import NNSSell from './nnssell';
 import Emitter from './Emitter';
 
-export { Https }
-
 export default {
     auction: NNSSell,
     wallet: Wallet,
     Emitter:Emitter,
+    const: Const,
     show: {
         loading: Tips.loading,
         success: Tips.success,
@@ -74,7 +73,7 @@ export default {
     delete: {
         account: Wallet.removeWallet
     },
-    const: Const,
+    
     init: {
         asset: Coin.initAllAsset,
         context: Context.init,

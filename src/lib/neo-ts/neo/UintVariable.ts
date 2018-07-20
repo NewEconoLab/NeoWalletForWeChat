@@ -49,7 +49,7 @@
     }
 
     public toString(): string {
-        let s = "";
+        let s = "0x";
         for (let i = this._bits.length * 32 - 4; i >= 0; i -= 4)
             s += ((this._bits[i >>> 5] >>> (i % 32)) & 0xf).toString(16);
         return s;

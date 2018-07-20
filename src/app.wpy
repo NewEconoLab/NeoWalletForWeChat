@@ -107,8 +107,8 @@ Page {
 import wepy from 'wepy';
 import 'wepy-async-function';
 
-import Util, { Https } from './utils/index';
-
+import Util from './utils/index';
+import Https from './utils/Https'
 export default class extends wepy.app {
   config = {
     pages: [

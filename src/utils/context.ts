@@ -8,6 +8,7 @@ import Transfer from './transaction';
 import NNS from './nns';
 import User from './user';
 import Emitter from './Emitter';
+import { DAPP_SGAS, DAPP_NNC } from './const';
 /**
  * 记录当前系统运行状态
  * 包括 当前账户 刷新等等
@@ -39,53 +40,46 @@ export class Context {
     static notity() {
         //注册监听事件
         Emitter.register(TaskType.asset, (observer) => {
-            console.log('asset was fired')
             Context.OnGetAssets(observer);
             Context.OnGetPrice(observer);
-        },this);
+        }, this);
 
         Emitter.register(TaskType.tx, (task: Task) => {
             TaskManager.addTask(task);
-        },this);
+        }, this);
 
         Emitter.register(TaskType.history, (observer) => {
             Context.OnGetTXs(1, observer);
-        },this);
+        }, this);
 
         Emitter.register(TaskType.claim, (observer) => {
             Context.OnGetClaims(observer);
-        },this)
+        }, this)
 
         Emitter.register(TaskType.height, () => {
             Context.OnGetHeight();
-        },this)
-    }
+        }, this)
 
-    static async init(account: Nep6.nep6account) {
-
-        Wallet.setAccount(account);
+        // 提前注册好重要的资产，避免测试网络或者主网里出现同名的
         let neo = new Asset('NEO', '');
         let gas = new Asset('GAS', '');
+        let sgas = new Asset('SGAS', DAPP_SGAS.toString(), 0);
+        let nnc = new Asset('NNC', DAPP_NNC.toString(), 0);
 
         Context.Assets['NEO'] = neo;
         Context.Assets['GAS'] = gas;
+        Context.Assets['SGAS'] = sgas;
+        Context.Assets['NNC'] = nnc;
+        console.log(Context.Assets)
 
-        await Coin.initAllAsset();
-        const height = await Context.OnGetHeight();
-        Context.OnTimeOut();
+        // 获取链上所有资产
+        Coin.initAllAsset();
 
-        // 初始化的任务时候添加 
-        // 一个资产更新事件
-        // 一个价格更新事件
-        // 一个交易历史
-        // 一个claim
+    }
 
-        // TaskManager.addTask(new Task(height, 0, TaskType.asset, null, () => {
-        //     Context.OnGetAssets();
-        //     Context.OnGetPrice();
-        //     Context.OnGetTXs(1);
-        //     Context.OnGetClaims()
-        // }))
+    static async init(account: Nep6.nep6account) {
+        Wallet.setAccount(account);
+        Context.OnGetHeight();
     }
 
     /**
@@ -101,17 +95,12 @@ export class Context {
      */
     static async OnGetHeight() {
         const height = await Https.api_getHeight();
-        console.log('height');
-        console.log(height);
-
         if (height === -1)
             return;
 
         //当新的高度与以前高度不同时，触发任务更新
         if (Context.Height < height) {
             //第一次更新高度，用于添加任务 不触发任务更新
-            console.log('Height')
-            console.log(height)
             if (Context.Height !== 0)
                 TaskManager.update(height as number);
             Context.Height = height;
@@ -124,7 +113,6 @@ export class Context {
      */
     static async OnGetAssets(observer) {
         let that = this;
-        console.log('....//////sssss/////')
         //加锁，避免多个网络请求导致的刷新竞争
         if (this.lock === true) return;
         //加锁
@@ -140,9 +128,10 @@ export class Context {
                 var item = nep5s[i];
                 let nep5: Nep5 = new Nep5(item);
                 // let type = Coin.assetID2name[nep5.id];
+
                 if (Context.Assets[nep5.name] === undefined) {
                     Context.Assets[nep5.name] = new Asset(nep5.name, nep5.id, nep5.count);
-                } else {
+                } else if ((Context.Assets[nep5.name] as Asset).id === nep5.id) {
                     (Context.Assets[nep5.name] as Asset).amount = nep5.count + '';
                 }
             }
@@ -173,7 +162,6 @@ export class Context {
         //解锁
         this.lock = false;
         let assets = JSON.parse(JSON.stringify(Context.Assets));
-        console.log('....//////////fffff/')
         observer(assets);
 
         //设置默认转账币种

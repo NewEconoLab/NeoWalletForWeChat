@@ -32,19 +32,13 @@ export default class Transfer {
         var msg = tran.GetMessage();
         let randomStr = await getSecureRandom(256);
         Tips.loading('签名中');
-        // console.log('key');
-        // console.log(key);
         var signdata = Helper.Account.Sign(msg, key, randomStr);
-        // console.log(pubkey)
-        // console.log(Wallet.account.address);
-
         tran.AddWitness(signdata, pubkey, Wallet.account.address);
 
         Tips.loading('交易发送中');
-        // console.log(Helper.toHexString(tran.GetRawData()));
-
         const res = await Https.rpc_postRawTransaction(tran.GetRawData());
         Tips.loaded();
+        console.log(Helper.toHexString(tran.GetRawData()))
         console.log(res)
         return res;
     }
@@ -129,12 +123,12 @@ export default class Transfer {
      * @param claims cliams 的UTXO
      * @param sum 领取总量
      */
-    static async claimGas(claims: Claim[], sum: string, prikey: string) {
+    static async claimGas(claims: Claim[], sum: string) {
         var tran = new ThinNeo.Transaction();
         //交易类型为合约交易
         tran.type = ThinNeo.TransactionType.ClaimTransaction;
         tran.version = 0;//0 or 1
-        tran.extdata = new ThinNeo.ClaimTransData(); //JSON.parse(JSON.stringify(claims));
+        tran.extdata = new ThinNeo.ClaimTransData();
         (tran.extdata as ThinNeo.ClaimTransData).claims = []
         tran.attributes = [];
         tran.inputs = [];
@@ -146,6 +140,7 @@ export default class Transfer {
             input["_addr"] = claim.addr;
             (tran.extdata as ThinNeo.ClaimTransData).claims.push(input);
         }
+        
         var output = new ThinNeo.TransactionOutput();
         output.assetId = Helper.hexToBytes(Const.id_GAS).reverse();
         output.toAddress = Helper.Account.GetPublicKeyScriptHash_FromAddress(Wallet.account.address);

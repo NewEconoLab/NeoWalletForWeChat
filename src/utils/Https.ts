@@ -2,9 +2,8 @@ import * as Request from './wxRequest';
 import { Helper } from '../lib/neo-ts/index';
 let hotapp = require('./hotapp.js');
 export default class Https {
-    static api: string = "https://api.nel.group/api/testnet";
+    static api: string ='http://127.0.0.1:'// "https://api.nel.group/api/testnet";
     static priceHost: string = "https://api.coinmarketcap.com/v1/ticker/";
-    static rpc: string = "http://47.96.168.8:20332/testnet";
     static proxy_server: string = "http://112.74.52.116/";
     // 交易通知模板id
     static templet_id: string = "2lEt8hQIzI6tbTw9ThtZhNalDG6GulckpcYEs_Ki7ZQ";
@@ -137,7 +136,6 @@ export default class Https {
     static async api_getBlockInfo(index: number) {
         var str = Https.makeRpcUrl(Https.api, "getblocktime", index);
         var result = await Request.wxRequest({ "method": "get" }, str);
-        // var json = await result.json();
         console.log('get block info')
         console.log(result);
         
@@ -152,12 +150,11 @@ export default class Https {
      */
     static async rpc_postRawTransaction(data: Uint8Array) {
         var postdata = this.makeRpcPostBody("sendrawtransaction", Helper.toHexString(data));
-        // // console.log(postdata)
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.api } }, this.proxy_server + "proxy.php");
         console.log(result);
         var r = result["result"][0]['sendrawtransactionresult'];
         if (r) {
-            return result["result"][0]['txid'] || ''//[]
+            return result["result"][0]['txid'] || ''
         }
         return 'failed';
     }
