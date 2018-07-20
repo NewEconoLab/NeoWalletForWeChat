@@ -41,7 +41,6 @@ export default class Common {
         var domainUint8arry = Helper.concat(domain_bytes, new Uint8Array(roothash.bits.buffer));
 
         var sub = Neo.Cryptography.Sha256.computeHash(domainUint8arry);
-        // var sub_bytes = new Uint8Array(sub);
         return new Neo.Uint256(sub);
     }
 

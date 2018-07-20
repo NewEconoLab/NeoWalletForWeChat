@@ -14,12 +14,14 @@ import User from './user'
 import Auction from './auctioin';
 import { Asset } from './entity';
 import NNSSell from './nnssell';
+import Emitter from './Emitter';
 
 export { Https }
 
 export default {
     auction: NNSSell,
     wallet: Wallet,
+    Emitter:Emitter,
     show: {
         loading: Tips.loading,
         success: Tips.success,
@@ -72,18 +74,12 @@ export default {
     delete: {
         account: Wallet.removeWallet
     },
-    delegate: {
-        // asset: (delegate: Function) => Context.assetDelegate = delegate,
-        // tx: (delegate: Function) => Context.txDelegate = delegate
-    },
     const: Const,
     init: {
         asset: Coin.initAllAsset,
         context: Context.init,
         nns: NNS.initRootDomain,
         notity:Context.notity
-        // NNS.nnsRegister('jinghui')
-        //NNS.getDomainsByAddr();
     },
     service: {
         start: Context.init,

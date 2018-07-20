@@ -15,6 +15,15 @@ export default class Emitter {
         let observers: Observer[] = Emitter.listeners[name];
         if (!observers) {
             Emitter.listeners[name] = [];
+            Emitter.listeners[name].push(new Observer(callback, context));
+            return;
+        }
+        let length = observers.length;
+        for (let i = 0; i < length; i++) {
+            let observer = observers[i];
+            if (observer.compar(context)) {
+                return;
+            }
         }
         Emitter.listeners[name].push(new Observer(callback, context));
     }
@@ -85,6 +94,6 @@ class Observer {
      * @param context 上下文
      */
     compar(context: any): boolean {
-        return context == this.context;
+        return context === this.context;
     }
 }

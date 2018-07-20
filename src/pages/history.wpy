@@ -1,7 +1,7 @@
 <style lang="less">
-.empty {
-  color: gray;
-}
+  .empty {
+    color: gray;
+  }
 </style>
 <template>
   <view class="container">
@@ -11,70 +11,66 @@
 </template>
 
 <script>
-import wepy from 'wepy';
-import Util from '../utils/index';
-import CHistory from '../components/chistory';
-export default class History extends wepy.page {
-  config = {
-    navigationBarTitleText: '交易历史',
-    enablePullDownRefresh: true
-  };
-
-  components = {
-    history: CHistory
-  };
-
-  data = {
-    TXs: [],
-    page: 1,
-    address: '',
-    isLoading: false,
-    notEmpty: 'true'
-  };
-
-  computed = {};
-
-  methods = {};
-
-  events = {};
-
-  onLoad() {
-    this.address = Util.get.account().address;
-    this.$apply();
-  }
-  onShow() {
-    let that = this;
-    Util.delegate.tx(txs => {
-      that.$invoke('history', 'LoadTXs', txs);
-    });
-    this.OnLoadTXs();
-  }
-  onUnload() {
-    Util.delegate.tx(null);
-  }
-  async onPullDownRefresh() {
-    if (this.isLoading) return;
-    this.page = 1;
-    this.$apply();
-    this.OnLoadTXs();
-    wx.hideNavigationBarLoading(); // 完成停止加载
-    wx.stopPullDownRefresh(); // 停止下拉刷新
-  }
-
-  async OnLoadTXs() {
-    if (this.isLoading) return;
-    this.isLoading = true;
-    this.$apply();
-    Util.show.loading('历史数据加载中');
-    const TXs = await Util.get.TXs(1);
-    Util.hide.loading();
-    if (TXs === null) {
-      this.notEmpty = 'false';
-    } else {
-      this.notEmpty = 'true';
+  import wepy from 'wepy';
+  import Util from '../utils/index';
+  import {
+    TaskType
+  } from '../utils/const'
+  import CHistory from '../components/chistory';
+  export default class History extends wepy.page {
+    config = {
+      navigationBarTitleText: '交易历史',
+      enablePullDownRefresh: true
+    };
+    components = {
+      history: CHistory
+    };
+    data = {
+      TXs: [],
+      page: 1,
+      address: '',
+      isLoading: false,
+      notEmpty: 'true'
+    };
+    computed = {};
+    methods = {};
+    events = {};
+    onLoad() {
+      this.address = Util.get.account().address;
+      this.$apply();
     }
-    this.isLoading = false;
-    this.$apply();
+    onShow() {
+      let that = this;
+      Util.Emitter.fire(TaskType.history, txs => {
+        that.$invoke('history', 'LoadTXs', txs);
+      })
+      this.OnLoadTXs();
+    }
+    onUnload() {
+      Util.delegate.tx(null);
+    }
+    async onPullDownRefresh() {
+      if (this.isLoading) return;
+      this.page = 1;
+      this.$apply();
+      this.OnLoadTXs();
+      wx.hideNavigationBarLoading(); // 完成停止加载
+      wx.stopPullDownRefresh(); // 停止下拉刷新
+    }
+    async OnLoadTXs() {
+      if (this.isLoading) return;
+      this.isLoading = true;
+      this.$apply();
+      Util.show.loading('历史数据加载中');
+      const TXs = await Util.get.TXs(1);
+      Util.hide.loading();
+      if (TXs === null) {
+        this.notEmpty = 'false';
+      } else {
+        this.notEmpty = 'true';
+      }
+      this.isLoading = false;
+      this.$apply();
+    }
   }
-}
 </script>
