@@ -2,7 +2,7 @@ import * as Request from './wxRequest';
 import { Helper } from '../lib/neo-ts/index';
 let hotapp = require('./hotapp.js');
 export default class Https {
-    static api: string ='http://127.0.0.1:'// "https://api.nel.group/api/testnet";
+    static api: string = "https://api.nel.group/api/testnet";
     static priceHost: string = "https://api.coinmarketcap.com/v1/ticker/";
     static proxy_server: string = "http://112.74.52.116/";
     // 交易通知模板id
@@ -67,11 +67,11 @@ export default class Https {
         var height: number;
         try {
             var r = result["result"];
-            height = parseInt(r[0]["blockcount"]) - 1;
+            return parseInt(r[0]["blockcount"]) - 1;
         } catch (err) {
-            height = -1;
+            return -1;
         }
-        return height;
+
     }
 
     static async api_getAllAssets() {
@@ -119,18 +119,24 @@ export default class Https {
             return await Request.wxRequest({ "method": "get" }, this.priceHost + coin + '/?convert=CNY');
         } catch (error) {
             // console.log('price error');
+            return null;
         }
     }
 
     /**
      * 获取区块高度
      */
-    static async  rpc_getHeight() {
+    static async  rpc_getHeight(): Promise<number> {
         var str = this.makeRpcUrl(this.api, "getblockcount");
         var result = await Request.wxRequest({ "method": "get" }, str);
-        var r = (result["result"] as string);
-        var height = parseInt(r) - 1;
-        return height;
+        try {
+            var r = (result["result"] as string);
+            var height = parseInt(r) - 1;
+            return height;
+        } catch (error) {
+            return -1;
+        }
+
     }
 
     static async api_getBlockInfo(index: number) {
@@ -138,10 +144,11 @@ export default class Https {
         var result = await Request.wxRequest({ "method": "get" }, str);
         console.log('get block info')
         console.log(result);
-        
-        var r = result["result"];
-        var time = parseInt(r[0]["time"] as string);
-        return time;
+        try {
+            return parseInt(result["result"][0]["time"] as string);
+        } catch (error) {
+            return null
+        }
     }
 
     /**
@@ -151,12 +158,13 @@ export default class Https {
     static async rpc_postRawTransaction(data: Uint8Array) {
         var postdata = this.makeRpcPostBody("sendrawtransaction", Helper.toHexString(data));
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.api } }, this.proxy_server + "proxy.php");
-        console.log(result);
-        var r = result["result"][0]['sendrawtransactionresult'];
-        if (r) {
-            return result["result"][0]['txid'] || ''
+
+        try {
+            let txid = result["result"][0]['txid'];
+            return (txid === '' || txid === null || txid === undefined) ? null : txid;
+        } catch (error) {
+            return null;
         }
-        return 'failed';
     }
 
     /**
@@ -166,11 +174,12 @@ export default class Https {
     static async rpc_getInvokescript(scripthash: Uint8Array): Promise<any> {
         var str = this.makeRpcUrl(this.api, "invokescript", Helper.toHexString(scripthash));
         var result = await Request.Request({ "method": "get" }, str);
+        try {
+            return result["result"][0]
+        } catch (error) {
+            return null
+        }
 
-        if (result["result"] == null)
-            return null;
-        var r = result["result"][0]
-        return r;
     }
     /**
      * 获取交易脚本
@@ -179,10 +188,13 @@ export default class Https {
     static async getrawtransaction(txid: string) {
         var str = Https.makeRpcUrl(Https.api, "getrawtransaction", txid);
         var result = await Request.Request({ "method": "get" }, str);
-        if (!result["result"])
+
+        try {
+            return result["result"][0]
+        } catch (error) {
             return null;
-        var r = result["result"][0]
-        return r;
+        }
+
     }
 
     /**
@@ -210,13 +222,10 @@ export default class Https {
      */
     static async rpc_getAddressTXs(addr: string, max: number = 20, page: number = 1) {
         var postdata = this.makeRpcPostBody("getaddresstxs", addr, max, page);
-        // // console.log(postdata)
-        // var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.api } }, this.proxy_server + "proxy.php");
         var result = await Request.wxRequest({ "method": "post", "body": JSON.stringify(postdata) }, this.api);
         try {
             return result["result"];
         } catch (error) {
-            // console.log(error);
             return null;
         }
     }
@@ -230,7 +239,6 @@ export default class Https {
             var str = this.makeRpcUrl(this.api, "getclaimgas", address, type);
         else
             var str = this.makeRpcUrl(this.api, "getclaimgas", address);
-        // var result = await fetch(str, { "method": "get" });
         var result = await Request.wxRequest({ "method": "get" }, str);
         try {
             return result["result"][0];
@@ -265,9 +273,6 @@ export default class Https {
         try {
             return result["result"][0];
         } catch (error) {
-            // console.log("getNep5Asset:");
-            // console.log(error);
-
             return null;
         }
     }

@@ -23,15 +23,15 @@ export function Request(params = {}, url) {
       },
       success: function (res) {
         wx.hideLoading();
-        // Loading = false;
         if (res.data) {
           resolve(res.data)
         } else {
           // // console.log('网络异常' + res.errMsg)
+          resolve(null);
         }
       },
-      fail:function(res){
-
+      fail: function (res) {
+        resolve(null);
       }
     })
   })

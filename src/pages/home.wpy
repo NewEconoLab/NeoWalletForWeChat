@@ -203,9 +203,10 @@
     Claims,
     TaskType
   } from '../utils/entity';
-  import Emitter from '../utils/Emitter'
+  import Emitter from '../utils/Emitter';
   import CAssets from '../components/cassets';
   import CNotice from '../components/cnotice';
+  import NotifyMixin from '../mixins/mnotify';
   export default class Home extends wepy.page {
     config = {
       navigationBarTitleText: '钱包'
@@ -214,6 +215,7 @@
       cassets: CAssets,
       cnotice: CNotice
     };
+    mixins = [NotifyMixin];
     data = {
       assets: {},
       user: {},
@@ -233,8 +235,8 @@
         });
       },
       async claim() {
-        await Util.send.claim(this.claim.claims, '0.01') //this.claim.total);
-        this.$invoke('cnotice', 'show', '这是个大提示');
+        await Util.send.claim(this.claim.claims, '0.01'); //this.claim.total);
+        this.notify('hhhhh');
       },
       onShowAsset() {
         this.showAsset = !this.showAsset;
@@ -267,7 +269,7 @@
         }
       } catch (err) {
         // console.log(err);
-        Util.show.error('未知错误，请重新进入')
+        Util.show.error('未知错误，请重新进入');
       }
     }
     onShareAppMessage() {
@@ -285,8 +287,8 @@
     onSetDelegate() {
       let that = this;
       // 设置资产更新回调
-      Emitter.fire(TaskType.claim)
-      Emitter.fire(TaskType.asset, (assets) => {
+      Emitter.fire(TaskType.claim);
+      Emitter.fire(TaskType.asset, assets => {
         assets['GAS'].amount = parseFloat(assets['GAS'].amount).toFixed(4);
         assets['NEO'].amount = parseFloat(assets['NEO'].amount).toFixed(0);
         that.$invoke('cassets', 'LoadCoins', assets);
