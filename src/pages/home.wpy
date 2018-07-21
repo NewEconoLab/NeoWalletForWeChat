@@ -1,162 +1,162 @@
 <style lang="less">
-  .area-upper {
-    height: 320rpx;
-    width: 690rpx;
-    background: linear-gradient(165deg, #51d2ee 3%, #21a3ff 100%);
-    box-shadow: 0 2px 5px 0 #77ccf8;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+.area-upper {
+  height: 320rpx;
+  width: 690rpx;
+  background: linear-gradient(165deg, #51d2ee 3%, #21a3ff 100%);
+  box-shadow: 0 2px 5px 0 #77ccf8;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 32rpx;
+  .upper-user {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    margin-top: 32rpx;
-    .upper-user {
+    width: 100%;
+    margin-top: 36rpx;
+    justify-content: space-between;
+    .user {
       display: flex;
       flex-direction: row;
       align-items: center;
-      width: 100%;
-      margin-top: 36rpx;
-      justify-content: space-between;
-      .user {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        margin-left: 40rpx;
-        .avater {
-          width: 60rpx;
-          height: 60rpx;
-          border-radius: 50%;
-        }
-        .name {
-          margin-left: 16rpx;
-          font-family: PingFangSC-Medium;
-          font-size: 14px;
-          color: #ffffff;
-          letter-spacing: 0;
-          line-height: 14px;
-        }
+      margin-left: 40rpx;
+      .avater {
+        width: 60rpx;
+        height: 60rpx;
+        border-radius: 50%;
       }
-      .qrcode {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-right: 40rpx;
-        .image {
-          width: 48rpx;
-          height: 48rpx;
-        }
-        .label {
-          font-family: PingFangSC-Regular;
-          font-size: 10px;
-          color: #ffffff;
-          letter-spacing: 0;
-          margin-top: 6rpx;
-        }
+      .name {
+        margin-left: 16rpx;
+        font-family: PingFangSC-Medium;
+        font-size: 14px;
+        color: #ffffff;
+        letter-spacing: 0;
+        line-height: 14px;
       }
     }
-    .upper-asset {
+    .qrcode {
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       align-items: center;
-      width: 100%;
-      margin-top: 60rpx;
-      margin-left: 50rpx;
+      margin-right: 40rpx;
+      .image {
+        width: 48rpx;
+        height: 48rpx;
+      }
       .label {
         font-family: PingFangSC-Regular;
         font-size: 10px;
         color: #ffffff;
         letter-spacing: 0;
-        text-align: center;
-        line-height: 10px;
-      }
-      .amount {
-        font-family: PingFangSC-Medium;
-        font-size: 24px;
-        color: #ffffff;
-        letter-spacing: 0;
-        text-align: center;
-        line-height: 24px;
-        margin-left: 80rpx;
-        justify-content: center;
-      }
-      .icon {
-        width: 48rpx;
-        height: 48rpx;
-        margin-left: 20rpx;
+        margin-top: 6rpx;
       }
     }
   }
-  .area-block-height {
+  .upper-asset {
     display: flex;
-    align-items: center;
     flex-direction: row;
+    align-items: center;
     width: 100%;
-    height: 104rpx;
-    border-bottom: solid thin #f5f5f5;
-    background-color: white;
+    margin-top: 60rpx;
+    margin-left: 50rpx;
     .label {
       font-family: PingFangSC-Regular;
-      font-size: 12px;
-      color: #9a9a9a;
-      margin-left: 40rpx;
+      font-size: 10px;
+      color: #ffffff;
       letter-spacing: 0;
-      line-height: 12px;
+      text-align: center;
+      line-height: 10px;
+    }
+    .amount {
+      font-family: PingFangSC-Medium;
+      font-size: 24px;
+      color: #ffffff;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 24px;
+      margin-left: 80rpx;
+      justify-content: center;
+    }
+    .icon {
+      width: 48rpx;
+      height: 48rpx;
+      margin-left: 20rpx;
     }
   }
-  .area-claim {
+}
+.area-block-height {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  width: 100%;
+  height: 104rpx;
+  border-bottom: solid thin #f5f5f5;
+  background-color: white;
+  .label {
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #9a9a9a;
+    margin-left: 40rpx;
+    letter-spacing: 0;
+    line-height: 12px;
+  }
+}
+.area-claim {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 146rpx;
+  background-color: white;
+  margin-top: 1rpx;
+  .left {
+    margin-left: 30rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100%;
+    .label {
+      font-family: PingFangSC-Medium;
+      font-size: 12px;
+      color: #333333;
+      letter-spacing: 0;
+      line-height: 12px;
+      margin-top: 40rpx;
+    }
+    .amount {
+      font-family: PingFangSC-Medium;
+      font-size: 16px;
+      color: #333333;
+      letter-spacing: 0;
+      line-height: 16px;
+      margin-top: 15rpx;
+    }
+  }
+  .btn-claim {
+    background: #22a4ff;
+    border-radius: 3px;
+    margin-right: 30rpx;
+    height: 48rpx;
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    height: 146rpx;
-    background-color: white;
-    margin-top: 1rpx;
-    .left {
-      margin-left: 30rpx;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      height: 100%;
-      .label {
-        font-family: PingFangSC-Medium;
-        font-size: 12px;
-        color: #333333;
-        letter-spacing: 0;
-        line-height: 12px;
-        margin-top: 40rpx;
-      }
-      .amount {
-        font-family: PingFangSC-Medium;
-        font-size: 16px;
-        color: #333333;
-        letter-spacing: 0;
-        line-height: 16px;
-        margin-top: 15rpx;
-      }
-    }
-    .btn-claim {
-      background: #22a4ff;
-      border-radius: 3px;
-      margin-right: 30rpx;
-      height: 48rpx;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      text {
-        width: 120rpx;
-        font-family: PingFangSC-Medium;
-        font-size: 14px;
-        color: #ffffff;
-        letter-spacing: 0;
-        text-align: center;
-        line-height: 14px;
-      }
-    }
-    .invalid {
-      background: #b2b2b2;
+    text {
+      width: 120rpx;
+      font-family: PingFangSC-Medium;
+      font-size: 14px;
+      color: #ffffff;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 14px;
     }
   }
+  .invalid {
+    background: #b2b2b2;
+  }
+}
 </style>
 <template>
   <view class="container">
@@ -196,110 +196,104 @@
   </view>
 </template>
 <script>
-  import wepy from 'wepy';
-  import Util from '../utils/index';
-  import Wallet from '../utils/wallet';
-  import {
-    Claims,
-    TaskType
-  } from '../utils/entity';
-  import Emitter from '../utils/Emitter';
-  import CAssets from '../components/cassets';
-  import CNotice from '../components/cnotice';
-  import NotifyMixin from '../mixins/mnotify';
-  export default class Home extends wepy.page {
-    config = {
-      navigationBarTitleText: '钱包'
-    };
-    components = {
-      cassets: CAssets,
-      cnotice: CNotice
-    };
-    mixins = [NotifyMixin];
-    data = {
-      assets: {},
-      user: {},
-      total: '0.00',
-      totalShow: '*.**',
-      Block: '0',
-      claim: {
-        total: '0.00000000'
-      },
-      showAsset: false
-    };
-    computed = {};
-    methods = {
-      receive() {
-        wx.navigateTo({
-          url: './receive'
-        });
-      },
-      async claim() {
-        await Util.send.claim(this.claim.claims, '0.01'); //this.claim.total);
-        this.notify('hhhhh');
-      },
-      onShowAsset() {
-        this.showAsset = !this.showAsset;
-        this.$apply();
-        this.onShowAsset();
-      }
-    };
-    events = {};
-    async onLoad() {
-      this.user = await Util.get.userInfo();
-      this.$apply();
-    }
-    async onShow() {}
-    // 页面渲染完成
-    async onReady() {
-      const that = this;
-      await this.OnLogin();
-    }
-    async OnLogin() {
-      let that = this;
-      const account = Util.get.cache(Util.const.CURR_ACCOUNT) || {};
-      // 本地缓存有账户 则直接加载本地账户信息
-      try {
-        if (account.address !== undefined && account.address !== null) {
-          Util.service.start(account);
-          this.isLogin = true;
-          this.$apply();
-          Util.set.account(account);
-          that.onSetDelegate();
-        }
-      } catch (err) {
-        // console.log(err);
-        Util.show.error('未知错误，请重新进入');
-      }
-    }
-    onShareAppMessage() {
-      return {
-        title: 'NEO钱包',
-        path: '/pages/index'
-      };
-    }
-    onShowAsset() {
-      if (this.showAsset === false) {
-        this.totalShow = this.total.replace(/[0-9]/g, '*');
-      } else this.totalShow = this.total;
-      this.$apply();
-    }
-    onSetDelegate() {
-      let that = this;
-      // 设置资产更新回调
-      Emitter.fire(TaskType.claim);
-      Emitter.fire(TaskType.asset, assets => {
-        assets['GAS'].amount = parseFloat(assets['GAS'].amount).toFixed(4);
-        assets['NEO'].amount = parseFloat(assets['NEO'].amount).toFixed(0);
-        that.$invoke('cassets', 'LoadCoins', assets);
-        that.total = Util.get.total().toFixed(2);
-        that.Block = Util.get.height();
-        that.claim = Util.get.claim();
-        that.$apply();
-        // console.log(that.claim);
-        that.onShowAsset();
+import wepy from 'wepy';
+import Util from '../utils/index';
+import Wallet from '../utils/wallet';
+import { Claims, TaskType } from '../utils/entity';
+import Emitter from '../utils/Emitter';
+import CAssets from '../components/cassets';
+import CNotice from '../components/cnotice';
+import NotifyMixin from '../mixins/mnotify';
+export default class Home extends wepy.page {
+  config = {
+    navigationBarTitleText: '钱包'
+  };
+  components = {
+    cassets: CAssets,
+    cnotice: CNotice
+  };
+  mixins = [NotifyMixin];
+  data = {
+    assets: {},
+    user: {},
+    total: '0.00',
+    totalShow: '*.**',
+    Block: '0',
+    claim: {
+      total: '0.00000000'
+    },
+    showAsset: false
+  };
+  computed = {};
+  methods = {
+    receive() {
+      wx.navigateTo({
+        url: './receive'
       });
+    },
+    async claim() {
+      if (parseFloat(this.claim.total) < 0.1) {
+        return;
+      }
+      await Util.send.claim(this.claim.claims, '0.01'); //this.claim.total);
+      this.notify('hhhhh');
+    },
+    onShowAsset() {
+      this.showAsset = !this.showAsset;
+      this.$apply();
+      this.onShowAsset();
+    }
+  };
+  events = {};
+  async onLoad() {
+    this.user = await Util.get.userInfo();
+    this.$apply();
+  }
+  async onShow() {}
+  // 页面渲染完成
+  async onReady() {
+    const that = this;
+    await this.OnLogin();
+  }
+  async OnLogin() {
+    let that = this;
+    const account = Util.get.cache(Util.const.CURR_ACCOUNT) || {};
+    // 本地缓存有账户 则直接加载本地账户信息
+    try {
+      if (account.address !== undefined && account.address !== null) {
+        Util.service.start(account);
+        this.isLogin = true;
+        this.$apply();
+        Util.set.account(account);
+        that.onSetDelegate();
+      }
+    } catch (err) {
+      // console.log(err);
+      Util.show.error('未知错误，请重新进入');
     }
   }
+  onShowAsset() {
+    if (this.showAsset === false) {
+      this.totalShow = this.total.replace(/[0-9]/g, '*');
+    } else this.totalShow = this.total;
+    this.$apply();
+  }
+  onSetDelegate() {
+    let that = this;
+    // 设置资产更新回调
+    Emitter.fire(TaskType.claim);
+    Emitter.fire(TaskType.asset, assets => {
+      assets['GAS'].amount = parseFloat(assets['GAS'].amount).toFixed(4);
+      assets['NEO'].amount = parseFloat(assets['NEO'].amount).toFixed(0);
+      that.$invoke('cassets', 'LoadCoins', assets);
+      that.total = Util.get.total().toFixed(2);
+      that.Block = Util.get.height();
+      that.claim = Util.get.claim();
+      that.$apply();
+      // console.log(that.claim);
+      that.onShowAsset();
+    });
+  }
+}
 </script>
  

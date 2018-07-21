@@ -40,8 +40,8 @@ export class Context {
     static notity() {
         //注册监听事件
         Emitter.register(TaskType.asset, (observer) => {
+            // 获取资产之后立即进行价格的更新
             Context.OnGetAssets(observer);
-            Context.OnGetPrice(observer);
         }, this);
 
         Emitter.register(TaskType.tx, (task: Task) => {
@@ -111,7 +111,7 @@ export class Context {
     /**
      * 获取账户资产信息 UTXO
      */
-    static async OnGetAssets(observer) {
+    static async OnGetAssets(observer: Function) {
         let that = this;
         //加锁，避免多个网络请求导致的刷新竞争
         if (this.lock === true) return;
@@ -166,19 +166,22 @@ export class Context {
 
         //设置默认转账币种
         Transfer.coin = assets['NEO'];
+
+        Context.OnGetPrice(observer);
     }
 
     /**
      * 获取市场价格
      */
-    static async OnGetPrice(observer) {
+    static async OnGetPrice(observer: Function) {
 
         let that = this;
         let total: number = 0;
-        let isAll = true;
+
         for (let key in Context.Assets) {
 
             const coin = await Https.api_getCoinPrice((Context.Assets[key] as Asset).name);
+
             try {
                 // 更新价格
                 (Context.Assets[key] as Asset).price = parseFloat(coin[0]['price_cny']).toFixed(2);
@@ -191,20 +194,10 @@ export class Context {
                 // 更新币市走向
                 if (coin[0]['percent_change_1h'][0] !== '-') (Context.Assets[key] as Asset).rise = true;
                 else (Context.Assets[key] as Asset).rise = false;
-
             } catch (err) {
-                // console.log('NET_ERR:price');
-                // // console.log(err);
-                isAll = false;
             }
+            observer(Context.Assets);
         }
-        //只有当所有的币种都成功获取价格才更新
-        if (isAll) {
-            Context.total = total;
-            let assets = JSON.parse(JSON.stringify(Context.Assets));
-            observer(assets);
-        }
-
     }
 
     /**
