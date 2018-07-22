@@ -1,56 +1,56 @@
 <style lang="less">
-.addr-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  background-color: white;
-}
-.nns {
-  border-bottom: thin solid #a9a9a9;
-  flex-direction: row;
-  align-items: flex-start;
-  width: 90%;
-  margin-top: 40rpx;
-  margin-bottom: 20rpx;
-  text {
-    font-family: PingFangSC-Medium;
-    font-size: 14px;
-    color: #333333;
-    letter-spacing: 0;
-    line-height: 14px;
-    margin-bottom: 10rpx;
+  .addr-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    background-color: white;
+  }
+  .nns {
+    border-bottom: thin solid #a9a9a9;
+    flex-direction: row;
     align-items: flex-start;
+    width: 90%;
+    margin-top: 40rpx;
+    margin-bottom: 20rpx;
+    text {
+      font-family: PingFangSC-Medium;
+      font-size: 14px;
+      color: #333333;
+      letter-spacing: 0;
+      line-height: 14px;
+      margin-bottom: 10rpx;
+      align-items: flex-start;
+    }
+    input {
+      font-family: PingFangSC-Medium;
+      font-size: 14px;
+      color: #333333;
+      letter-spacing: 0;
+      line-height: 14px;
+      width: 100%rpx;
+      align-content: flex-start;
+      margin-bottom: 10rpx;
+      padding-left: 5rpx;
+    }
   }
-  input {
-    font-family: PingFangSC-Medium;
-    font-size: 14px;
-    color: #333333;
-    letter-spacing: 0;
-    line-height: 14px;
-    width: 100%rpx;
-    align-content: flex-start;
-    margin-bottom: 10rpx;
-    padding-left: 5rpx;
+  .addr {
+    width: 90%;
+    margin-bottom: 20rpx;
+    .icon {
+      width: 24rpx;
+      height: 24rpx;
+    }
+    .text {
+      font-family: PingFangSC-Regular;
+      font-size: 12px;
+      color: #a9a9a9;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 12px;
+      margin-left: 10rpx;
+    }
   }
-}
-.addr {
-  width: 90%;
-  margin-bottom: 20rpx;
-  .icon {
-    width: 24rpx;
-    height: 24rpx;
-  }
-  .text {
-    font-family: PingFangSC-Regular;
-    font-size: 12px;
-    color: #a9a9a9;
-    letter-spacing: 0;
-    text-align: center;
-    line-height: 12px;
-    margin-left: 10rpx;
-  }
-}
 </style>
 
 <template>
@@ -59,7 +59,7 @@
     <view class="nns">
       <!-- 此组建可以直接用来展示域名，而不是输入 所以存在两种应用场景 -->
       <text wx:if="{{type=='text'}}">{{value}}</text>
-      <input wx:if="{{type=='input'}}" bindinput="confirm" value='' />
+      <input wx:if="{{type=='input'}}" bindinput="confirm" />
     </view>
     <!-- 地址所在的地方 -->
     <view class="addr" wx:if="{{showLower}}">
@@ -69,61 +69,85 @@
   </view>
 </template>
 <script>
-import wepy from 'wepy';
-import Util from '../utils/index';
-export default class CNNSAddress extends wepy.component {
-  props = {
-    address: {
-      type: String,
-      default: 'address',
-      twoWay: true
-    },
-    type: {
-      type: String,
-      default: 'text'
-    }
-  };
-  components = {};
-  data = {
-    addr: '',
-    showLower: false
-  };
-  methods = {
-    showNNS(addr) {
-      this.addr = addr;
-      this.value = '';
-      this.$apply();
-    },
-    confirm(e) {
-      this.showLower = false;
-      const address = e.detail.value;
-      if (address === undefined || address === '') return;
-      //判断为地址
-      if (address.length === 34 && address[0] === 'A') {
-        // ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F
-        // console.log(event.detail.address);
-        this.address = address;
-      } else if (address.length > 3 && address.includes('.neo')) {
-        //TODO: 如果判断结果为domain，查找地址
-        this.onLoadDomain(address);
-      } else {
-        return;
+  import wepy from 'wepy';
+  import Util from '../utils/index';
+  export default class CNNSAddress extends wepy.component {
+    props = {
+      address: {
+        type: String,
+        default: 'address',
+        twoWay: true
+      },
+      type: {
+        type: String,
+        default: 'text'
+      },
+      value: {
+        type: String,
+        default: 'address or domain'
       }
-      this.$emit('confirm', e.detail.address);
+    };
+    components = {};
+    data = {
+      addr: '', //有域名的时候底部显示的地址
+      showLower: false //是否显示域名底部地址
+    };
+    methods = {
+      showNNS(addr) {
+        this.addr = addr;
+        this.value = '';
+        this.$apply();
+      },
+      confirm(e) {
+        this.showLower = false;
+        const address = e.detail.value;
+        if (address === undefined || address === '') return;
+        //判断为地址
+        if (address.length === 34 && address[0] === 'A') {
+          // ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F
+          // console.log(event.detail.address);
+          this.address = address;
+        } else if (address.length > 3 && address.includes('.neo')) {
+          //TODO: 如果判断结果为domain，查找地址
+          this.onLoadDomain(address);
+        } else {
+          return;
+        }
+        this.$emit('confirm', e.detail.address);
+        this.$apply();
+      }
+    };
+    async onLoadDomain(address) {
+      console.log('is a domain');
+      let domain = await Util.get.addrByDomain(address);
+      if (domain !== null) {
+        this.addr = domain.address;
+        this.showLower = true;
+        this.address = domain.address;
+      }
+      this.$apply();
+      console.log(domain);
+    }
+    async onLoad() {
+      console.log('cnnsaddress');
+      console.log(this.type);
+      if (this.type === 'input') return;
+      let domains = await Util.get.myDomain(Util.get.account().address);
+      if (domains === null || domains.length === 0) return;
+      for (let index in domains) {
+        let domain = domains[index];
+        console.log(domain);
+        if (domain['expiring'] !== '已过期') {
+          this.addr = Util.get.account().address;
+          this.value = domain.domain;
+          this.showLower = true;
+          this.$apply();
+          return;
+        }
+      }
+      // 没有解析到可用域名则直接显示地址
+      this.value = Util.get.account().address;
       this.$apply();
     }
-  };
-  async onLoadDomain(address) {
-    console.log('is a domain');
-    let domain = await Util.get.addrByDomain(address);
-    if (domain !== null) {
-      this.addr = domain.address;
-      this.showLower = true;
-      this.address = domain.address;
-    }
-    this.$apply();
-    console.log(domain);
   }
-  async onLoad() {}
-}
 </script>

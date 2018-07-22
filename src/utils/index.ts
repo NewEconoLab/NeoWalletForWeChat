@@ -57,8 +57,6 @@ export default {
         claim: () => { return Context.claim },
         sendCoin: () => { return Transfer.coin },
         addrByDomain: async (domain: string) => { return await NNS.verifyDomain(domain) },
-        //addrByDomain2: async (domain: string) => { return await NNS.resolveData2(domain) },
-        // wantBy: Auction.wantBy,
         domainByAddr: NNS.getDomainsByAddr,
         wif: Wallet.prikey2Wif,
         domainState: Auction.queryDomainState,

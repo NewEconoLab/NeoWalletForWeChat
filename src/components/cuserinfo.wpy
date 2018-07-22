@@ -34,7 +34,7 @@
     <view class= "area-user">
         <image class="avatar" src="{{user.avatarUrl}}"/>
         <text class="nickName">{{user.nickName}}</text>
-        <cnnsaddr :type.sync="addrType" :value.sync="address"></cnnsaddr>
+        <cnnsaddr :type.sync="addrType" ></cnnsaddr>
         <view style="margin-bottom:20rpx;"></view>
     </view>
 </template>
@@ -52,8 +52,7 @@ export default class CUserInfo extends wepy.component {
   };
 
   data = {
-    addrType: 'text',
-    address: 'kkkk'
+    addrType: 'text'
   };
 
   methods = {
