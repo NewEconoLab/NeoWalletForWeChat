@@ -129,9 +129,12 @@
       console.log(domain);
     }
     async onLoad() {
-      console.log('cnnsaddress');
-      console.log(this.type);
+   
       if (this.type === 'input') return;
+       // 没有解析到可用域名则直接显示地址
+      this.value = Util.get.account().address;
+      this.$apply();
+      
       let domains = await Util.get.myDomain(Util.get.account().address);
       if (domains === null || domains.length === 0) return;
       for (let index in domains) {
@@ -145,9 +148,7 @@
           return;
         }
       }
-      // 没有解析到可用域名则直接显示地址
-      this.value = Util.get.account().address;
-      this.$apply();
+     
     }
   }
 </script>
