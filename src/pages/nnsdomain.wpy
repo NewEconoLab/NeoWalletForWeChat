@@ -1,0 +1,44 @@
+
+
+<style lang="less">
+
+</style>
+
+<template>
+  <view class="container">
+    <scroll-view scroll-y class="scroll">
+      <view class="inner">
+      </view>
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import Util from '../utils/index';
+  export default class NNSDomain extends wepy.page {
+    config = {
+      navigationBarTitleText: '域名'
+    };
+    components = {};
+    data = {
+      animation: {}
+    };
+    computed = {};
+    methods = {};
+    events = {};
+    onLoad() {}
+    async onShow() {}
+    // 页面渲染完成
+    async onReady() {}
+    onShareAppMessage() {
+      return {
+        title: 'NNS',
+        path: '/pages/nns'
+      };
+    }
+    OnLoading() {}
+  }
+</script>
+ 
+

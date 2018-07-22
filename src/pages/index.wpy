@@ -144,8 +144,6 @@
         });
       },
       async onImport(param) {
-        // console.log('param');
-        // console.log(param);
         await Util.set.account_json(param);
         wepy.reLaunch({
           url: './home'
@@ -203,9 +201,12 @@
       }
     };
     events = {};
-    async onLoad(option) {
+    onLoad(option) {
       //是否是切换账号
       this.isSwitch = option.switch || 0;
+      this.$apply();
+    }
+    async onShow() {
       //获取缓存的用户信息
       const userInfo = await Util.get.userInfo();
       this.avatarUrl = userInfo.avatarUrl;
@@ -240,9 +241,6 @@
         });
         Util.hide.loading();
       }
-    }
-    onShow() {
-      // console.log(this.isSwitch);
     }
   }
 </script>

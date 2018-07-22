@@ -1,10 +1,12 @@
 import Https from './Https';
-import {id_GAS, id_NEO} from './const'
+import { id_GAS, id_NEO } from './const'
 export default class Coin {
     static assetID2name = {};
     static name2assetID = {};
     static async initAllAsset() {
-        var allassets = await Https.api_getAllAssets();
+        let allassets = []
+        while (allassets.length === 0)
+            allassets = await Https.api_getAllAssets();
         for (var a in allassets) {
             var asset = allassets[a];
             var names = asset.name;

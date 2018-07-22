@@ -117,12 +117,12 @@ export default class NNS extends wepy.page {
     let wif = Util.get.wif(this.account.nep2key);
     // console.log(this.account);
     // console.log(wif);
-
+  }
+  async onShow() {
     this.$invoke('userinfo', 'showNNS', 0);
     const user = await Util.get.userInfo();
     this.$invoke('userinfo', 'showUser', user);
   }
-  async onShow() {}
   // 页面渲染完成
   async onReady() {}
 

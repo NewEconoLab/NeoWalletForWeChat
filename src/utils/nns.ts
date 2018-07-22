@@ -1,4 +1,4 @@
-import { DomainInfo, Consts, RootDomainInfo, DomainStatus, Domainmsg, DataType, NNSResult, ResultItem, DomainState } from './entity';
+import { DomainInfo, RootDomainInfo, DomainStatus, Domainmsg, DataType, NNSResult, ResultItem, DomainState } from './entity';
 import { ThinNeo, Helper, Neo } from '../lib/neo-ts/index'
 import Https from "./Https";
 import Coin from './coin';
@@ -138,7 +138,7 @@ export default class NNS {
         var domainarr: string[] = doamin.split('.');
         var subdomain: string = domainarr[0];
         var nnshash: Neo.Uint256 = Common.nameHashArray(domainarr);
-        let doamininfo: DomainInfo = await NNS.getOwnerInfo(nnshash, Consts.baseContract);
+        let doamininfo: DomainInfo = await NNS.getOwnerInfo(nnshash, DAPP_NNS);
         // console.log(doamininfo);
         // var owner = Helper.toHexString(doamininfo.owner);
         return doamininfo;
@@ -199,7 +199,7 @@ export default class NNS {
     }
 
     static async resolveData(domain: string) {
-        var scriptaddress = Consts.baseContract;
+        var scriptaddress = DAPP_NNS;
         let arr = domain.split(".");
         let nnshash: Neo.Uint256 = Common.nameHashArray(arr);
 
