@@ -8,7 +8,7 @@ import Transfer from './transaction';
 import NNS from './nns';
 import User from './user';
 import Emitter from './Emitter';
-import { DAPP_SGAS, DAPP_NNC } from './const';
+import { DAPP_SGAS, DAPP_NNC, id_NEO, id_GAS } from './const';
 /**
  * 记录当前系统运行状态
  * 包括 当前账户 刷新等等
@@ -61,8 +61,8 @@ export class Context {
         }, this)
 
         // 提前注册好重要的资产，避免测试网络或者主网里出现同名的
-        let neo = new Asset('NEO', '');
-        let gas = new Asset('GAS', '');
+        let neo = new Asset('NEO', id_NEO);
+        let gas = new Asset('GAS', id_GAS);
         let sgas = new Asset('SGAS', DAPP_SGAS.toString(), 0);
         let nnc = new Asset('NNC', DAPP_NNC.toString(), 0);
 
@@ -162,11 +162,11 @@ export class Context {
         //解锁
         this.lock = false;
         let assets = JSON.parse(JSON.stringify(Context.Assets));
-        observer(assets);
 
         //设置默认转账币种
         Transfer.coin = assets['NEO'];
-
+        console.log(assets)
+        observer(assets);
         // Context.OnGetPrice(observer);
     }
 

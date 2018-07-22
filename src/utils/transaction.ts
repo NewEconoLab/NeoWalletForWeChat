@@ -62,11 +62,6 @@ export default class Transfer {
         // tran.extdata = null;
         tran.attributes = [];
         tran.inputs = [];
-        // console.log(sendcount);
-        // console.log('pay asset');
-        // console.log(asset);
-
-
         var pay: Pay = asset.pay(sendcount);
 
         //交易输入
@@ -79,7 +74,6 @@ export default class Transfer {
             input["_addr"] = utxo.addr;
             tran.inputs.push(input);
         }
-        // console.log(pay)
         if (pay.sum >= sendcount)//输入大于等于输出
         {
             tran.outputs = [];
@@ -90,8 +84,6 @@ export default class Transfer {
                 output.assetId = Helper.hexToBytes(pay.assetid).reverse();
                 //交易金额
                 output.value = Neo.Fixed8.parse(sendcount + '');
-                // console.log('targetaddr')
-                // console.log(targetaddr)
                 //目的账户
                 output.toAddress = Helper.Account.GetPublicKeyScriptHash_FromAddress(targetaddr);
                 //添加转账交易
@@ -115,6 +107,9 @@ export default class Transfer {
         else {
             throw new Error("no enough money.");
         }
+        console.log('transactions')
+        console.log(tran);
+        
         return tran;
     }
 
