@@ -236,6 +236,8 @@ export class MyAuction {
 
 export class DomainInfo {
     status: DomainState = null;     // 域名状态
+    address: string = null;
+    domain: string = null;
     owner: Neo.Uint160 = null;      // 所有者
     register: Neo.Uint256 = null;   // 注册器
     resolver: Neo.Uint256 = null;   // 解析器

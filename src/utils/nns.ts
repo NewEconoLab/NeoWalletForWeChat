@@ -20,19 +20,19 @@ export default class NNS {
      * @param domain 二级域名
      */
     static async  verifyDomain(domain: string): Promise<DomainInfo> {
+        if (domain.includes('.neo')) {
+            domain = domain.substring(0, domain.length - 4);
+        }
+        console.log(domain);
         domain = domain.toLowerCase().trim();
-
         let verify = /^[a-zA-Z0-9]{1,32}$/;
         if (verify.test(domain)) {
-            let doamininfo: DomainInfo = await NNS.queryDomainInfo(domain + "." + DOMAIN_ROOT)
-            // console.log(doamininfo)
+            console.log(domain + '.' + DOMAIN_ROOT)
+            let doamininfo: DomainInfo = await NNS.queryDomainInfo(domain + '.' + DOMAIN_ROOT);
+            console.log(doamininfo)
 
             if (doamininfo.register !== null && doamininfo.ttl !== null) {
                 var timestamp = new Date().getTime();
-                // console.log(timestamp);
-                // // console.log(domains.register.toString());
-                // // console.log(domains.resolver.toString());
-
                 let copare = new Neo.BigInteger(timestamp).compareTo(new Neo.BigInteger(doamininfo.ttl).multiply(1000));
                 if (copare < 0) {
                     // console.log('域名已到期');
@@ -43,9 +43,12 @@ export default class NNS {
             } else {
                 doamininfo.status = DomainState.Avaliable;
             }
+            return doamininfo;
         } else {
-            return;
+            return null;
         }
+
+        return null;
     }
 
     /**
@@ -139,7 +142,7 @@ export default class NNS {
         var subdomain: string = domainarr[0];
         var nnshash: Neo.Uint256 = Common.nameHashArray(domainarr);
         let doamininfo: DomainInfo = await NNS.getOwnerInfo(nnshash, DAPP_NNS);
-        // console.log(doamininfo);
+        console.log(doamininfo);
         // var owner = Helper.toHexString(doamininfo.owner);
         return doamininfo;
     }
@@ -155,7 +158,7 @@ export default class NNS {
         var data = Common.buildScript(scriptaddress, "getOwnerInfo", ["(hex256)" + domain.toString()]);
 
         let result = await Https.rpc_getInvokescript(data);
-        // console.log(result)
+        console.log(result)
         try {
             let rest = new NNSResult();
             rest.textInfo = result;
@@ -164,14 +167,17 @@ export default class NNS {
             let stack = ResultItem.FromJson(DataType.Array, stackarr).subItem[0].subItem;
             // console.log(stack)
             if (stackarr[0].type == "Array") {
+
                 info.owner = (stack[0].AsHash160() === null) ? null : stack[0].AsHash160();
+                info.address = Helper.Account.GetAddressFromScriptHash(info.owner);
                 info.register = (stack[1].AsHash160() === null) ? null : stack[1].AsHash160();
                 info.resolver = (stack[2].AsHash160() === null) ? null : stack[2].AsHash160();
-                info.ttl = (stack[3].AsHash160() === null) ? null : stack[3].AsHash160().toString();
+                info.ttl = (stack[3].AsInteger() === null) ? null : stack[3].AsInteger().toString();
             }
         }
         catch (e) {
             console.error(e);
+            return null;
         }
         return info;
     }

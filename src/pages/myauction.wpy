@@ -1,40 +1,34 @@
- <style lang="less">
+<style lang="less">
+
 </style>
+
 <template>
   <view class="container">
     <scroll-view scroll-y class="scroll">
-        <view class="inner">
-          
-        </view>
+      <view class="inner">
+      </view>
     </scroll-view>
   </view>
 </template>
 
 <script>
-import wepy from 'wepy';
-import Util from '../utils/index';
-export default class MyAuction extends wepy.page {
-  config = {
-    navigationBarTitleText: '我的竞拍'
-  };
-
-  components = {
-  };
-
-  data = {};
-
-  computed = {};
-
-  methods = {};
-
-  events = {};
-
-  onLoad() {
-    Util.auction.getBidList();
+  import wepy from 'wepy';
+  import Util from '../utils/index';
+  export default class MyAuction extends wepy.page {
+    config = {
+      navigationBarTitleText: '我的竞拍'
+    };
+    components = {};
+    data = {};
+    computed = {};
+    methods = {};
+    events = {};
+    onLoad() {
+      Util.auction.getBidList();
+    }
+    onShow() {}
+    // 页面渲染完成
+    async onReady() {}
   }
-  onShow() {}
-  // 页面渲染完成
-  async onReady() {}
-}
 </script>
  

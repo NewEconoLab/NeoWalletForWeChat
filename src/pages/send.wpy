@@ -184,7 +184,7 @@
       addrType: 'input',
       amount: 0.001,
       coin: {},
-      loading: false,
+      loading: false
     };
     computed = {};
     methods = {
@@ -300,12 +300,8 @@
       let that = this;
       let key = Util.get.account().nep2key;
       //如果当前账户直接使用私钥
-      // console.log(key.length);
-      // console.log(key.charCodeAt(0));
       if (key.length === 52 && key.charAt(0) === 'K') {
-        // console.log('send key')
         //构造并发送交易
-        // console.log(key)
         that.SendTran(key);
         return;
       }
@@ -321,16 +317,16 @@
       });
     }
     async SendTran(prikey) {
-      // pubkey = Helper.hexToBytes(pubkey);
       var count = parseFloat(this.amount + '');
       Util.show.loading('交易生成中');
-      // var tran = Coin.makeTran(this.targetAddr, this.coin, count);
-      // let randomStr = await Random.getSecureRandom(256);
-      // Util.show.loading('获取交易编号');
-      // console.log(this.coin)
-      const txid = await Util.send.transfer(prikey, this.targetAddr, this.coin.name, count); //setTran(tran, prikey, pubkey, randomStr);
+      const txid = await Util.send.transfer(
+        prikey,
+        this.targetAddr,
+        this.coin.name,
+        count
+      ); //setTran(tran, prikey, pubkey, randomStr);
       Util.hide.loading();
-      if (txid === 'failed') {
+      if (txid === null) {
         wepy.showModal({
           title: '提示',
           content: '交易失败',

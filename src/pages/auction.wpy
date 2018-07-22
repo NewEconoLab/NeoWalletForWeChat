@@ -1,0 +1,40 @@
+ <style lang="less">
+</style>
+<template>
+  <view class="container">
+    <scroll-view scroll-y class="scroll">
+        <view class="inner">
+          
+        </view>
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import Util from '../utils/index';
+export default class Auction extends wepy.page {
+  config = {
+    navigationBarTitleText: '域名竞拍'
+  };
+
+  components = {
+  };
+
+  data = {};
+
+  computed = {};
+
+  methods = {};
+
+  events = {};
+
+  onLoad() {
+    Util.auction.getBidList();
+  }
+  onShow() {}
+  // 页面渲染完成
+  async onReady() {}
+}
+</script>
+ 

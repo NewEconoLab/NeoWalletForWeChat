@@ -12,6 +12,7 @@
   align-items: flex-start;
   width: 90%;
   margin-top: 40rpx;
+  margin-bottom: 20rpx;
   text {
     font-family: PingFangSC-Medium;
     font-size: 14px;
@@ -21,7 +22,6 @@
     margin-bottom: 10rpx;
     align-items: flex-start;
   }
-
   input {
     font-family: PingFangSC-Medium;
     font-size: 14px;
@@ -31,6 +31,7 @@
     width: 100%rpx;
     align-content: flex-start;
     margin-bottom: 10rpx;
+    padding-left: 5rpx;
   }
 }
 .addr {
@@ -53,68 +54,76 @@
 </style>
 
 <template>
-<view class="addr-content">
-  <view class="nns">
-    <text wx:if="{{type=='text'}}">{{value}}</text>
-    <input wx:if="{{type=='input'}}" name="address" value="ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F" bindconfirm="confirm" bindinput='watchInput' bindchange='change'/>
+  <view class="addr-content">
+    <!-- 地址/域名填写为位置 -->
+    <view class="nns">
+      <!-- 此组建可以直接用来展示域名，而不是输入 所以存在两种应用场景 -->
+      <text wx:if="{{type=='text'}}">{{value}}</text>
+      <input wx:if="{{type=='input'}}" bindinput="confirm" value='' />
+    </view>
+    <!-- 地址所在的地方 -->
+    <view class="addr" wx:if="{{showLower}}">
+      <image src="../images/Pointer.png" class="icon" />
+      <text class="text">{{addr}}</text>
+    </view>
   </view>
-  <view class="addr">
-    <image src="../images/Pointer.png" class="icon"/>
-    <text class="text">{{addr}}</text>
-  </view>
-</view>
 </template>
 <script>
 import wepy from 'wepy';
 import Util from '../utils/index';
 export default class CNNSAddress extends wepy.component {
   props = {
-    addr: {  
+    address: {
       type: String,
       default: 'address',
-      twoWay: false
-      },
+      twoWay: true
+    },
     type: {
       type: String,
       default: 'text'
-    },
-    value: {
-      type: String,
-      default: 'domain',
-      twoWay: true
     }
   };
   components = {};
-
-  data = {};
-
+  data = {
+    addr: '',
+    showLower: false
+  };
   methods = {
     showNNS(addr) {
       this.addr = addr;
       this.value = '';
       this.$apply();
     },
-    watchInput(event) {
-      const address = event.detail.address;
-      if (address === undefined || address === '') return;
-      if (address.length === 34 && address[0] === 'A') {
-        // console.log(event.detail.address);
-        //TODO: 如果判断结果为domain，查找地址
-      }
-    },
     confirm(e) {
-      // console.log(e.detail.address);
+      this.showLower = false;
+      const address = e.detail.value;
+      if (address === undefined || address === '') return;
+      //判断为地址
+      if (address.length === 34 && address[0] === 'A') {
+        // ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F
+        // console.log(event.detail.address);
+        this.address = address;
+      } else if (address.length > 3 && address.includes('.neo')) {
+        //TODO: 如果判断结果为domain，查找地址
+        this.onLoadDomain(address);
+      } else {
+        return;
+      }
       this.$emit('confirm', e.detail.address);
-    },
-    change(e) {
-      //失去焦点的时候触发
+      this.$apply();
     }
   };
-
-  async onLoad() {
-    this.addr = 'addr';
-    this.value = 'llllllll';
+  async onLoadDomain(address) {
+    console.log('is a domain');
+    let domain = await Util.get.addrByDomain(address);
+    if (domain !== null) {
+      this.addr = domain.address;
+      this.showLower = true;
+      this.address = domain.address;
+    }
     this.$apply();
+    console.log(domain);
   }
+  async onLoad() {}
 }
 </script>

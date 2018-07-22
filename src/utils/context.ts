@@ -213,6 +213,8 @@ export class Context {
 
         let res = await Https.api_getclaimgas(Wallet.account.address, 0);
         let claims = [];
+        if (res === null)
+            return;
         for (let i in res['claims']) {
             let claim = new Claim(res.claims[i]);
             claims.push(claim);

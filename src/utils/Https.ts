@@ -422,12 +422,9 @@ export default class Https {
     static async api_getBidListByAddress(address: string) {
         var postdata = Https.makeRpcPostBody("getbidlistbyaddress", address);
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
-        // var result = await fetch(Https.apiaggr, { "method": "post", "body": JSON.stringify(postdata) });
-        // var json = await result.json();
         try {
             return result["result"];
         } catch (error) {
-            // console.log(error);
             return null;
         }
     }

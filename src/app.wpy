@@ -137,7 +137,8 @@ export default class extends wepy.app {
       'pages/nnsloading',
       'pages/nnsbidding',
       'pages/nnsmydomain',
-      'pages/nnsdomain'
+      'pages/nnsdomain',
+      'pages/auction'
     ],
     window: {
       backgroundTextStyle: 'light',
