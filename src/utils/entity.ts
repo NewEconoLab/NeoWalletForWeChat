@@ -222,8 +222,8 @@ export enum TaskType {
     asset = 'asset',// 资产更新 在tx交易成功后添加资产更新任务，资产更新立即执行
     history = 'history', //更新历史记录
     price = 'price',
-    claim  = 'claim',
-    height='height'
+    claim = 'claim',
+    height = 'height'
 }
 
 /**
@@ -252,7 +252,11 @@ export class DomainInfo {
     resolver: Neo.Uint256 = null;   // 解析器
     ttl: string = null;             // 到期时间
 }
-
+export enum MyDomainState {
+    expired = '已过期', //已过期
+    expiring = '即将过期', //即将过期
+    health = ''  //正常
+}
 export class RootDomainInfo extends DomainInfo {
     rootname: string;
     roothash: Neo.Uint256;

@@ -158,7 +158,7 @@
               <image class="icon" src="../images/N_bid.png" />
               <text class="content">我的竞拍</text>
             </navigator>
-            <navigator class="item" url="/pages/reorder">
+            <navigator class="item" url="/pages/nnsmydomain">
               <image class="icon" src="../images/N_NNS.png" />
               <text class="content">我的NNS</text>
             </navigator>

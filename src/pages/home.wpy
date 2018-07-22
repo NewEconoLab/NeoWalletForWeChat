@@ -236,7 +236,6 @@ export default class Home extends wepy.page {
         return;
       }
       await Util.send.claim(this.claim.claims, '0.01'); //this.claim.total);
-      this.notify('hhhhh');
     },
     onShowAsset() {
       this.showAsset = !this.showAsset;
@@ -249,7 +248,11 @@ export default class Home extends wepy.page {
     this.user = await Util.get.userInfo();
     this.$apply();
   }
-  async onShow() {}
+  
+  async onShow() {
+     this.notify('数据更新中...');
+  }
+
   // 页面渲染完成
   async onReady() {
     const that = this;

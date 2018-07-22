@@ -1,0 +1,109 @@
+<style lang="less">
+  .nns-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-top: solid thin #f5f5f5;
+    margin-bottom: 40rpx;
+    width: 100%;
+    .domain {
+      font-family: PingFangSC-Medium;
+      font-size: 14px;
+      color: #333333;
+      letter-spacing: 0;
+      line-height: 14px;
+      margin-top: 40rpx;
+      margin-left: 30rpx;
+    }
+    .other {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      margin-top: 30rpx;
+      margin-left: 30rpx;
+      .text {
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #a9a9a9;
+        letter-spacing: 0;
+        line-height: 12px;
+        font-weight: 100;
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="container" style="background-color:white;">
+    <scroll-view scroll-y class="scroll">
+      <view class="inner" style='margin-top:20rpx;'>
+        <claddr class="send-addr" />
+        <view class="nns-block" wx:for="{{domains}}">
+          <text class="domain">{{item.domain}}</text>
+          <view class="other">
+            <text class="text">解析器：{{item.resolver==''?'未设置':item.resolver}}</text>
+          </view>
+          <view class="other">
+            <text class="text">解析地址：{{item.resolverAddress==''?'未设置':tem.resolverAddress}}</text>
+          </view>
+          <view class="other">
+            <text class="text">到期时间：{{item.ttl}}</text>
+            <text class="text" style="color:red;margin-left:10rpx;">({{item.expiring}})</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import Util from '../utils/index';
+  import CLabel from '../components/clabel';
+  export default class NNSMyDomain extends wepy.page {
+    config = {
+      navigationBarTitleText: '我的NNS',
+      enablePullDownRefresh: true
+    };
+    components = {
+      claddr: CLabel
+    };
+    data = {
+      domains: []
+    };
+    computed = {};
+    methods = {};
+    events = {};
+    onLoad() {
+      this.$invoke(
+        'claddr',
+        'Show',
+        JSON.stringify({
+          title: '我的域名',
+          show: {}
+        })
+      );
+    }
+    async onShow() {
+      this.domains = await Util.get.myDomain(Util.get.account().address);
+      this.$apply();
+    }
+    // 页面渲染完成
+    async onReady() {}
+    onShareAppMessage() {
+      return {
+        title: 'NNS',
+        path: '/pages/nns'
+      };
+    }
+    OnLoading() {}
+    async onPullDownRefresh() {
+      this.domains = await Util.get.myDomain(Util.get.account().address);
+      this.$apply();
+      wx.hideNavigationBarLoading(); // 完成停止加载
+      wx.stopPullDownRefresh(); // 停止下拉刷新
+    }
+  }
+</script>
+ 
+

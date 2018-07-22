@@ -15,12 +15,14 @@ import Auction from './auctioin';
 import { Asset } from './entity';
 import NNSSell from './nnssell';
 import Emitter from './Emitter';
+import MyDomains from './mydomain';
 
 export default {
     auction: NNSSell,
     wallet: Wallet,
     Emitter:Emitter,
     const: Const,
+    myDomain:MyDomains,
     show: {
         loading: Tips.loading,
         success: Tips.success,
@@ -60,7 +62,8 @@ export default {
         domainByAddr: NNS.getDomainsByAddr,
         wif: Wallet.prikey2Wif,
         domainState: Auction.queryDomainState,
-        root: async () => { NNS.getRoot() }
+        root: async () => { NNS.getRoot() },
+        myDomain:MyDomains.getAllNeoName
     },
     set: {
         cache: Cache.put,

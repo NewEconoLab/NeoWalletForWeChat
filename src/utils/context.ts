@@ -167,7 +167,7 @@ export class Context {
         //设置默认转账币种
         Transfer.coin = assets['NEO'];
 
-        Context.OnGetPrice(observer);
+        // Context.OnGetPrice(observer);
     }
 
     /**

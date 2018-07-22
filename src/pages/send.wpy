@@ -1,132 +1,128 @@
 <style lang="less">
-.asset {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 1rpx;
-  background-color: white;
-  .left {
+  .asset {
+    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
-    .icon {
-      width: 56rpx;
-      height: 56rpx;
-      border-radius: 50rpx;
+    justify-content: space-between;
+    margin-top: 1rpx;
+    background-color: white;
+    .left {
       display: flex;
       flex-direction: row;
       align-items: center;
-      justify-content: space-around;
-      border: thin solid #f5f5f5;
-      margin: 40rpx 32rpx 40rpx 30rpx;
-      image {
-        width: 37rpx;
-        height: 37rpx;
-      }
-    }
-
-    .coin {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      width: 375rpx;
-      .name {
-        font-family: PingFangSC-Medium;
-        font-size: 16px;
-        color: #333333;
-        letter-spacing: 0;
-        text-align: center;
-        line-height: 16px;
-      }
-      .amount {
+      .icon {
+        width: 56rpx;
+        height: 56rpx;
+        border-radius: 50rpx;
         display: flex;
-        align-items: center;
         flex-direction: row;
-        margin-top: 10rpx;
-        text {
-          font-family: PingFangSC-Regular;
-          font-size: 10px;
-          color: #9a9a9a;
+        align-items: center;
+        justify-content: space-around;
+        border: thin solid #f5f5f5;
+        margin: 40rpx 32rpx 40rpx 30rpx;
+        image {
+          width: 37rpx;
+          height: 37rpx;
+        }
+      }
+      .coin {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 375rpx;
+        .name {
+          font-family: PingFangSC-Medium;
+          font-size: 16px;
+          color: #333333;
           letter-spacing: 0;
-          line-height: 10px;
+          text-align: center;
+          line-height: 16px;
+        }
+        .amount {
+          display: flex;
+          align-items: center;
+          flex-direction: row;
+          margin-top: 10rpx;
+          text {
+            font-family: PingFangSC-Regular;
+            font-size: 10px;
+            color: #9a9a9a;
+            letter-spacing: 0;
+            line-height: 10px;
+          }
         }
       }
     }
-  }
-  .switch-btn {
-    background: #22a4ff;
-    border-radius: 3px;
-    margin-right: 30rpx;
-    height: 48rpx;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    text {
-      width: 120rpx;
-      font-family: PingFangSC-Medium;
-      font-size: 14px;
-      color: #ffffff;
-      letter-spacing: 0;
-      text-align: center;
-      line-height: 14px;
+    .switch-btn {
+      background: #22a4ff;
+      border-radius: 3px;
+      margin-right: 30rpx;
+      height: 48rpx;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      text {
+        width: 120rpx;
+        font-family: PingFangSC-Medium;
+        font-size: 14px;
+        color: #ffffff;
+        letter-spacing: 0;
+        text-align: center;
+        line-height: 14px;
+      }
     }
   }
-}
-
-.area-amount {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  align-items: center;
-  background-color: white;
-  height: 104rpx;
-  margin-top: 20rpx;
-  .text {
-    font-family: PingFangSC-Regular;
-    font-size: 12px;
-    color: #9a9a9a;
-    letter-spacing: 0;
-    line-height: 12px;
-    margin-left: 30rpx;
-    align-content: center;
+  .area-amount {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    background-color: white;
+    height: 104rpx;
+    margin-top: 20rpx;
+    .text {
+      font-family: PingFangSC-Regular;
+      font-size: 12px;
+      color: #9a9a9a;
+      letter-spacing: 0;
+      line-height: 12px;
+      margin-left: 30rpx;
+      align-content: center;
+    }
   }
-}
-.send-addr {
-  margin-top: 20rpx;
-}
-.send-addr-content {
-  margin-top: 1rpx;
-}
-
-.amount {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-top: 1rpx;
-  background-color: white;
-  width: 750rpx;
-  .input {
-    font-family: PingFangSC-Medium;
-    font-size: 14px;
-    color: #333333;
-    letter-spacing: 0;
-    line-height: 14px;
-    width: 690rpx;
-    border-bottom: thin solid #a9a9a9;
-    margin-left: 30rpx;
-    margin-top: 50rpx;
-    padding-left: 10rpx;
-    margin-bottom: 30rpx;
+  .send-addr {
+    margin-top: 20rpx;
   }
-}
+  .send-addr-content {
+    margin-top: 1rpx;
+  }
+  .amount {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 1rpx;
+    background-color: white;
+    width: 750rpx;
+    .input {
+      font-family: PingFangSC-Medium;
+      font-size: 14px;
+      color: #333333;
+      letter-spacing: 0;
+      line-height: 14px;
+      width: 690rpx;
+      border-bottom: thin solid #a9a9a9;
+      margin-left: 30rpx;
+      margin-top: 50rpx;
+      padding-left: 10rpx;
+      margin-bottom: 30rpx;
+    }
+  }
 </style>
 <template>
-  <form bindsubmit="formSubmit" class="form" report-submit ="true">
+  <form bindsubmit="formSubmit" class="form" report-submit="true">
     <view class="container">
-    <scroll-view scroll-y class="scroll">
+      <scroll-view scroll-y class="scroll">
         <view class="inner">
           <view class="text-item">
             <view class="function-title">
@@ -134,7 +130,9 @@
             </view>
             <view class="asset">
               <view class="left">
-                <view class="icon"><image src="../images/neo.png" /></view>
+                <view class="icon">
+                  <image src="../images/neo.png" />
+                </view>
                 <view class="coin">
                   <text class="name">{{coin.name}}</text>
                   <view class="amount">
@@ -146,218 +144,216 @@
               <view class="switch-btn" @tap="changeCoin()"><text>更换</text></view>
             </view>
           </view>
-          <claddr class="send-addr" @onEmit.user="handleEmit"/>
+          <claddr class="send-addr" @onEmit.user="handleEmit" />
           <caddress :type.sync="addrType" :address.sync="address" class="send-addr-content" />
-          <clamount class="send-addr"/>
+          <clamount class="send-addr" />
           <view class="amount">
-            <input class="input" name="amount" value='{{amount}}'/>
+            <input class="input" name="amount" value='{{amount}}' />
           </view>
-        <view class="foot-button">
-          <button type="primary" form-type="submit">转账</button>
+          <view class="foot-button">
+            <button type="primary" form-type="submit">转账</button>
+          </view>
         </view>
-      </view>
-    </scroll-view>
+      </scroll-view>
     </view>
   </form>
 </template>
 <script>
-import wepy from 'wepy';
-import { Helper, ThinNeo, Neo } from '../lib/neo-ts/index';
-import Util from '../utils/index';
-import CLabel from '../components/clabel';
-import CNNSAddress from '../components/cnnsaddress';
-export default class Send extends wepy.page {
-  config = {
-    navigationBarTitleText: '转账'
-  };
-
-  components = {
-    claddr: CLabel,
-    clamount: CLabel,
-    caddress: CNNSAddress
-  };
-
-  data = {
-    targetAddr: '',
-    assets: {},
-    address: 'ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F',
-    addrType: 'input',
-    amount: 0.001,
-    coin:{},
-    loading:false,
-  };
-
-  computed = {};
-
-  methods = {
-    handleEmit(param) {
-      let that = this;
-      // console.log(param);
-      switch (param) {
-        case 'scan':
-          that.OnScan();
-          break;
-        case 'contact':
-          wx.navigateTo({ url: './contact' });
-          break;
-        case 'add':
-          break;
-        default:
-          break;
-      }
-    },
-    changeCoin() {
-      wx.navigateTo({ url: './assets' });
-    },
-    async formSubmit(e) {
-      const that = this;
-      let target = this.address; //e.detail.value.address;
-      let amount = e.detail.value.amount;
-      let password = ''; // e.detail.value.passphrase;
-      Util.set.formid(e.detail.formId);
-
-      if (target.length !== 34 || target.charAt(0) !=='A') {
-        Util.show.alert('目标地址有误');
-        return;
-      }
-      if (parseFloat(amount) > parseFloat(this.coin.amount)) {
-        Util.show.alert('余额不足');
-        return;
-      }
-      if (password.length <= 0 && that.hidePW === 'false') {
-        Util.show.alert('请输入密码');
-        return;
-      }
-
-      this.amount = amount;
-      this.hiddenmodalput = false;
-      this.password = password;
-      this.targetAddr = target;
-      this.$apply();
-      this.OnSend();
-    }
-  };
-
-  events = {};
-  onShow() {
-    // console.log('send onShow');
-    
-    if (this.coin === null) {
-      // console.log('send onShow coin null');
-      const assets = Util.get.assets();
-      this.coin = assets['NEO'];
-      this.$apply();
-    }else{
-      // console.log('send onShow change coin');
-      // console.log(Util.get.sendCoin());
-      
-      this.coin = Util.get.sendCoin();
-      this.$apply();
-    }
-  }
-  onLoad() {
-    // sendCoin
-    this.$invoke(
-      'claddr',
-      'Show',
-      JSON.stringify({
-        title: '收款人地址',
-        show: {
-          scan: 1,
-          contact: 1
+  import wepy from 'wepy';
+  import {
+    Helper,
+    ThinNeo,
+    Neo
+  } from '../lib/neo-ts/index';
+  import Util from '../utils/index';
+  import CLabel from '../components/clabel';
+  import CNNSAddress from '../components/cnnsaddress';
+  export default class Send extends wepy.page {
+    config = {
+      navigationBarTitleText: '转账'
+    };
+    components = {
+      claddr: CLabel,
+      clamount: CLabel,
+      caddress: CNNSAddress
+    };
+    data = {
+      targetAddr: '',
+      assets: {},
+      address: 'ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F',
+      addrType: 'input',
+      amount: 0.001,
+      coin: {},
+      loading: false,
+    };
+    computed = {};
+    methods = {
+      handleEmit(param) {
+        let that = this;
+        // console.log(param);
+        switch (param) {
+          case 'scan':
+            that.OnScan();
+            break;
+          case 'contact':
+            wx.navigateTo({
+              url: './contact'
+            });
+            break;
+          case 'add':
+            break;
+          default:
+            break;
         }
-      })
-    );
-    this.$invoke(
-      'clamount',
-      'Show',
-      JSON.stringify({ title: '转账数量', show: {} })
-    );
-  }
-  onReady() {
-    const that = this;
-    // console.log(Util.get.account());
-
-    if (Util.get.account().nep2key.length === 64) {
-      that.hidePW = 'true';
-      that.$apply();
-    }
-  }
-  OnScan() {
-    let that = this;
-    wepy.scanCode({
-      success: res => {
-        // console.log(res);
-        that.targetAddr = res.result;
-        that.$apply();
       },
-      fail: res => {
-        // console.log(res);
+      changeCoin() {
+        wx.navigateTo({
+          url: './assets'
+        });
+      },
+      async formSubmit(e) {
+        const that = this;
+        let target = this.address; //e.detail.value.address;
+        let amount = e.detail.value.amount;
+        let password = ''; // e.detail.value.passphrase;
+        Util.set.formid(e.detail.formId);
+        if (target.length !== 34 || target.charAt(0) !== 'A') {
+          Util.show.alert('目标地址有误');
+          return;
+        }
+        if (parseFloat(amount) > parseFloat(this.coin.amount)) {
+          Util.show.alert('余额不足');
+          return;
+        }
+        if (password.length <= 0 && that.hidePW === 'false') {
+          Util.show.alert('请输入密码');
+          return;
+        }
+        this.amount = amount;
+        this.hiddenmodalput = false;
+        this.password = password;
+        this.targetAddr = target;
+        this.$apply();
+        this.OnSend();
       }
-    });
-  }
-  //构造并发送交易
-  async OnSend() {
-    let that = this;
-
-    let key = Util.get.account().nep2key;
-
-    //如果当前账户直接使用私钥
-    // console.log(key.length);
-    // console.log(key.charCodeAt(0));
-
-    if (key.length === 52 && key.charAt(0) === 'K') {
-      // console.log('send key')
-      //构造并发送交易
-      // console.log(key)
-      that.SendTran(key);
-      return;
+    };
+    events = {};
+    onShow() {
+      // console.log('send onShow');
+      if (this.coin === null) {
+        // console.log('send onShow coin null');
+        const assets = Util.get.assets();
+        this.coin = assets['NEO'];
+        this.$apply();
+      } else {
+        // console.log('send onShow change coin');
+        // console.log(Util.get.sendCoin());
+        this.coin = Util.get.sendCoin();
+        this.$apply();
+      }
     }
-    Util.show.loading('密码验证中');
-    Wallet.decode(this.password, async (code, key, pubkey) => {
-      wepy.hideLoading();
-      if (code < 0) {
-        Util.show.error('密码错误');
+    onLoad() {
+      // sendCoin
+      this.$invoke(
+        'claddr',
+        'Show',
+        JSON.stringify({
+          title: '收款人地址',
+          show: {
+            scan: 1,
+            contact: 1
+          }
+        })
+      );
+      this.$invoke(
+        'clamount',
+        'Show',
+        JSON.stringify({
+          title: '转账数量',
+          show: {}
+        })
+      );
+    }
+    onReady() {
+      const that = this;
+      // console.log(Util.get.account());
+      if (Util.get.account().nep2key.length === 64) {
+        that.hidePW = 'true';
+        that.$apply();
+      }
+    }
+    OnScan() {
+      let that = this;
+      wepy.scanCode({
+        success: res => {
+          // console.log(res);
+          that.targetAddr = res.result;
+          that.$apply();
+        },
+        fail: res => {
+          // console.log(res);
+        }
+      });
+    }
+    //构造并发送交易
+    async OnSend() {
+      let that = this;
+      let key = Util.get.account().nep2key;
+      //如果当前账户直接使用私钥
+      // console.log(key.length);
+      // console.log(key.charCodeAt(0));
+      if (key.length === 52 && key.charAt(0) === 'K') {
+        // console.log('send key')
+        //构造并发送交易
+        // console.log(key)
+        that.SendTran(key);
         return;
       }
-      //构造并发送交易
-      that.SendTran(prikey);
-    });
-  }
-  async SendTran(prikey) {
-    // pubkey = Helper.hexToBytes(pubkey);
-    var count =parseFloat(this.amount+'');
-    Util.show.loading('交易生成中');
-    // var tran = Coin.makeTran(this.targetAddr, this.coin, count);
-    // let randomStr = await Random.getSecureRandom(256);
-    // Util.show.loading('获取交易编号');
-    // console.log(this.coin)
-    const txid = await Util.send.transfer(prikey, this.targetAddr,this.coin.name, count); //setTran(tran, prikey, pubkey, randomStr);
-    Util.hide.loading();
-    if (txid === 'failed') {
-      wepy.showModal({
-        title: '提示',
-        content: '交易失败',
-        showCancel: false,
-        success: async function(res) {
-          if (res.confirm) {
-            // console.log('用户点击确定');
-          }
+      Util.show.loading('密码验证中');
+      Wallet.decode(this.password, async(code, key, pubkey) => {
+        wepy.hideLoading();
+        if (code < 0) {
+          Util.show.error('密码错误');
+          return;
         }
-      });
-    } else {
-      // TransactionTool.unconfirmed.push(txid);
-      wepy.showModal({
-        title: '交易发送成功',
-        content: txid,
-        success: async function(res) {
-          if (res.confirm) {
-            // console.log('用户点击确定');
-            wx.navigateBack();
-          }
-        }
+        //构造并发送交易
+        that.SendTran(prikey);
       });
     }
+    async SendTran(prikey) {
+      // pubkey = Helper.hexToBytes(pubkey);
+      var count = parseFloat(this.amount + '');
+      Util.show.loading('交易生成中');
+      // var tran = Coin.makeTran(this.targetAddr, this.coin, count);
+      // let randomStr = await Random.getSecureRandom(256);
+      // Util.show.loading('获取交易编号');
+      // console.log(this.coin)
+      const txid = await Util.send.transfer(prikey, this.targetAddr, this.coin.name, count); //setTran(tran, prikey, pubkey, randomStr);
+      Util.hide.loading();
+      if (txid === 'failed') {
+        wepy.showModal({
+          title: '提示',
+          content: '交易失败',
+          showCancel: false,
+          success: async function(res) {
+            if (res.confirm) {
+              // console.log('用户点击确定');
+            }
+          }
+        });
+      } else {
+        // TransactionTool.unconfirmed.push(txid);
+        wepy.showModal({
+          title: '交易发送成功',
+          content: txid,
+          success: async function(res) {
+            if (res.confirm) {
+              // console.log('用户点击确定');
+              wx.navigateBack();
+            }
+          }
+        });
+      }
+    }
   }
-}
 </script>
