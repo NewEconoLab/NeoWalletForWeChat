@@ -108,7 +108,7 @@ export default class NNS {
         // console.log(Wallet.account.address);
 
         let res = await Https.getnnsinfo(Wallet.account.address);
-  
+
     }
 
     /**
@@ -141,13 +141,11 @@ export default class NNS {
             let rest = new NNSResult();
             rest.textInfo = result;
             var stackarr = result["stack"] as any[];
-            // console.log(stackarr)
             let stack = ResultItem.FromJson(DataType.Array, stackarr).subItem[0].subItem;
-            // console.log(stack)
             if (stackarr[0].type == "Array") {
-
                 info.owner = (stack[0].AsHash160() === null) ? null : stack[0].AsHash160();
-                info.address = Helper.Account.GetAddressFromScriptHash(info.owner);
+                if (stack[0].AsHash160() !== null)
+                    info.address = Helper.Account.GetAddressFromScriptHash(info.owner);
                 info.register = (stack[1].AsHash160() === null) ? null : stack[1].AsHash160();
                 info.resolver = (stack[2].AsHash160() === null) ? null : stack[2].AsHash160();
                 info.ttl = (stack[3].AsInteger() === null) ? null : stack[3].AsInteger().toString();

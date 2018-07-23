@@ -26,6 +26,11 @@ export default class Auction {
 
         console.log('domain state')
         console.log(info)
+        if (info === null) {
+            info = new SellDomainInfo();
+            info.state = DomainState.Avaliable
+            return info;
+        }
         //是否开始域名竞拍 0:未开始竞拍
         let sellstate = (info.startBlockSelling.compareTo(Neo.BigInteger.Zero));
         if (sellstate > 0) {   // 判断是否已有结束竞拍的区块高度。如果结束区块大于零则状态为结束
@@ -53,24 +58,23 @@ export default class Auction {
     }
 
 
-  
 
-      /**
-     * 获得
-     * @param id 竞拍id
-     */
-    static async getBalanceOfSeling(id: Neo.Uint256)
-    {
+
+    /**
+   * 获得
+   * @param id 竞拍id
+   */
+    static async getBalanceOfSeling(id: Neo.Uint256) {
         let who = new Neo.Uint160(Helper.Account.GetPublicKeyScriptHash_FromAddress(Wallet.account.address).buffer);
         const root = await NNS.getRoot() as RootDomainInfo
         let res = await Common.contractInvokeScript(
-           root.register,
+            root.register,
             "balanceOfSelling",
             "(hex160)" + who.toString(),
             "(hex256)" + id.toString()
         );
-        var stackarr = res[ "stack" ] as any[];
-        let stack = ResultItem.FromJson(DataType.Array, stackarr).subItem[ 0 ];
+        var stackarr = res["stack"] as any[];
+        let stack = ResultItem.FromJson(DataType.Array, stackarr).subItem[0];
         let balance = stack.AsInteger();
         return balance;
     }

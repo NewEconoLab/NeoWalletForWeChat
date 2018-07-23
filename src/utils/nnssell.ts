@@ -20,17 +20,16 @@ export default class NNSSell {
    * @param domain 域名
    */
     static async getSellingStateByDomain(domain: string) {
-        // tools.nnstool.initRootDomain(domainarr.reverse[ 0 ]);
         var domainarr: string[] = domain.split('.');
         var nnshash: Neo.Uint256 = Common.nameHashArray(domainarr);
         let data = Common.buildScript(NNS.root.register, "getSellingStateByFullhash", ["(hex256)" + nnshash.toString()]);
         let result = await Https.rpc_getInvokescript(data);
         let domainInfo: DomainInfo = await NNS.getOwnerInfo(nnshash, DAPP_NNS);
+
         let info = new SellDomainInfo();
-        info.copyDomainInfoToThis(domainInfo);
         try {
+            info.copyDomainInfoToThis(domainInfo);
             var state = result.state as string;
-            // info2.textContent = "";
             if (state.includes("FAULT, BREAK")) {
                 throw "FAULT, BREAK";
             }
@@ -61,7 +60,7 @@ export default class NNSSell {
         let res = await Https.api_getBidListByAddress(Wallet.account.address);
         console.log('bidlist:')
         console.log(res);
-        if(res === null){
+        if (res === null) {
             return;
         }
         let arr = new Array<MyAuction>();

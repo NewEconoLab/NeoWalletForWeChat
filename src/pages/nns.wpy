@@ -234,7 +234,7 @@
       root: 'neo',
       // domain: ''
       btn: {
-        show: true,
+        show: false,
         label: '开标'
       },
       nnsloading: false,
