@@ -359,7 +359,7 @@
     async OpenAuction(domain) {
       this.opening = true;
       this.$apply();
-      let res = await Util.auction.wantbuy(this.domain);
+      let res = await Util.auction.wantbuy(domain);
       this.opening = false;
       this.$apply();
       console.log('==========');

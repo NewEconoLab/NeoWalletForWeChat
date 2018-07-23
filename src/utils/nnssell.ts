@@ -169,6 +169,9 @@ export default class NNSSell {
         try {
             const root = await NNS.getRoot() as RootDomainInfo
             let who = new Neo.Uint160(Helper.Account.GetPublicKeyScriptHash_FromAddress(Wallet.account.address).buffer);
+            console.log(who)
+            console.log('subname =' +subname)
+            
             let param = [
                 '(hex160)' + who.toString(),
                 "(hex256)" + root.roothash.toString(),

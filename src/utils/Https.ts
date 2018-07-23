@@ -158,7 +158,7 @@ export default class Https {
     static async rpc_postRawTransaction(data: Uint8Array) {
         var postdata = this.makeRpcPostBody("sendrawtransaction", Helper.toHexString(data));
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.api } }, this.proxy_server + "proxy.php");
-
+        console.log(result);
         try {
             let txid = result["result"][0]['txid'];
             return (txid === '' || txid === null || txid === undefined) ? null : txid;

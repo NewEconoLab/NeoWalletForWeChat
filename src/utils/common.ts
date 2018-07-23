@@ -9,6 +9,10 @@ export default class Common {
     constructor() { }
 
     static buildScript(appCall: Neo.Uint160, method: string, param: string[]): Uint8Array {
+       console.log('buildScript')
+       console.log(appCall.toString())
+       console.log(method)
+       console.log(param)
         var sb = new ThinNeo.ScriptBuilder();
         sb.EmitParamJson(param);//第二个参数是个数组
         sb.EmitPushString(method);

@@ -109,7 +109,7 @@ export default class Transfer {
         }
         console.log('transactions')
         console.log(tran);
-        
+
         return tran;
     }
 
@@ -135,7 +135,7 @@ export default class Transfer {
             input["_addr"] = claim.addr;
             (tran.extdata as ThinNeo.ClaimTransData).claims.push(input);
         }
-        
+
         var output = new ThinNeo.TransactionOutput();
         output.assetId = Helper.hexToBytes(Const.id_GAS).reverse();
         output.toAddress = Helper.Account.GetPublicKeyScriptHash_FromAddress(Wallet.account.address);
@@ -195,7 +195,8 @@ export default class Transfer {
         tran.attributes[0] = new ThinNeo.Attribute();
         tran.attributes[0].usage = ThinNeo.TransactionAttributeUsage.Script;
         tran.attributes[0].data = Helper.Account.GetPublicKeyScriptHash_FromAddress(addr);
-
+        console.log('contractInvoke_attributes')
+        console.log(tran);
         return await Transfer.signAndSend(tran);
     }
 

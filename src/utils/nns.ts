@@ -57,11 +57,10 @@ export default class NNS {
     static async initRootDomain() {
         var test = new RootDomainInfo();
         test.roothash = Common.nameHash(DOMAIN_ROOT);
+        let domain = null;
         test.rootname = DOMAIN_ROOT;
-
-        var domain = await NNS.getOwnerInfo(test.roothash, DAPP_NNS);
-        console.log('initRootDomain:');
-        console.log(domain);
+        while (domain === null)
+            domain = await NNS.getOwnerInfo(test.roothash, DAPP_NNS);
         test.owner = domain.owner;
         test.register = domain.register;
         test.resolver = domain.resolver;
