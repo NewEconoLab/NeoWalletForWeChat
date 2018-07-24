@@ -6,7 +6,7 @@
     align-items: center;
     background-color: white;
     height: 104rpx;
-    margin-top: 1rpx;
+    margin-top: 2rpx;
     justify-content: space-between;
     .label {
       font-family: PingFangSC-Regular;
@@ -22,18 +22,48 @@
       flex-direction: column;
       align-items: flex-end;
       margin-right: 30rpx;
-      .upper {
+      .content {
         display: flex;
         flex-direction: row;
-        align-items:flex-end;
-        .title{
-
+        align-items: flex-end;
+        .upper {
+          font-family: PingFangSC-Medium;
+          font-size: 12px;
+          color: #333333;
+          letter-spacing: 0;
+          text-align: right;
+          line-height: 12px;
+          margin-top: 36rpx;
         }
-        .state{
-          
+        .lower {
+          font-family: PingFangSC-Regular;
+          font-size: 10px;
+          color: #9A9A9A;
+          letter-spacing: 0;
+          text-align: right;
+          line-height: 10px;
+          margin-top: 10rpx;
         }
       }
-      .lower {}
+    }
+  }
+  .row-domain {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    background-color: white;
+    height: 104rpx;
+    margin-top: 1rpx;
+    justify-content: space-between;
+    .domain {
+      margin-top: 40rpx;
+      margin-bottom: 40rpx;
+      font-family: PingFangSC-Medium;
+      font-size: 14px;
+      color: #333333;
+      letter-spacing: 0;
+      line-height: 14px;
     }
   }
 </style>
@@ -41,6 +71,41 @@
   <view class="container">
     <scroll-view scroll-y class="scroll">
       <view class="inner">
+        <view class="row-state" style="border-top:thin solid #bbbbbb;">
+          <view class="label">
+            域名竞拍
+          </view>
+          <view class="right">
+            <view class="content">
+              <text class="upper">状态：</text>
+              <text class="upper"></text>
+            </view>
+            <view class="content">
+              <text class="lower">剩余时间</text>
+              <text class="lower"></text>
+            </view>
+          </view>
+        </view>
+        <view class="row-domain">
+          <text class="domain">kkkkk</text>
+        </view>
+        <view class="row-state" style="margin-top:20rpx;">
+          <view class="label">
+            最新出价
+          </view>
+          <view class="right">
+            <view class="content">
+              <text class="upper" decode="{{true}}">当前最高价:&nbsp;</text>
+              <text class="upper" style="color:red;">9</text>
+              <text class="upper" decode="{{true}}">&nbsp;SGAS</text>
+            </view>
+            <view class="content">
+              <text class="lower" decode="{{true}}">我的当前出价总和:&nbsp;</text>
+              <text class="lower" style="color:red;">8</text>
+              <text class="lower" decode="{{true}}">&nbsp;SGAS</text>
+            </view>
+          </view>
+        </view>
       </view>
     </scroll-view>
   </view>
