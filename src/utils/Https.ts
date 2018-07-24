@@ -422,6 +422,7 @@ export default class Https {
     static async api_getBidListByAddress(address: string) {
         var postdata = Https.makeRpcPostBody("getbidlistbyaddress", address);
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
+       
         try {
             return result["result"];
         } catch (error) {
@@ -436,10 +437,10 @@ export default class Https {
      */
     static async api_getBidDetail(domain: string, currentpage: number, pagesize: number) {
         var postdata = Https.makeRpcPostBody("getbiddetailbydomain", domain, currentpage, pagesize);
+        console.log(postdata)
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
-
-        // var result = await fetch(Https.apiaggr, { "method": "post", "body": JSON.stringify(postdata) });
-        // var json = await result.json();
+        console.log('bid info')
+        console.log(result)
         try {
             return result["result"];
         } catch (error) {

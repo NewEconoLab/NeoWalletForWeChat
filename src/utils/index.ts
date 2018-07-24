@@ -61,7 +61,8 @@ export default {
         wif: Wallet.prikey2Wif,
         domainState: Auction.queryDomainState,
         root: async () => { NNS.getRoot() },
-        myDomain:MyDomains.getAllNeoName
+        myDomain:MyDomains.getAllNeoName,
+        bidInfo:Auction.getBidDetail
     },
     set: {
         cache: Cache.put,

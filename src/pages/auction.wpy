@@ -1,40 +1,71 @@
- <style lang="less">
+<style lang="less">
+  .row-state {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    background-color: white;
+    height: 104rpx;
+    margin-top: 1rpx;
+    justify-content: space-between;
+    .label {
+      font-family: PingFangSC-Regular;
+      font-size: 12px;
+      color: #9a9a9a;
+      letter-spacing: 0;
+      line-height: 12px;
+      margin-left: 30rpx;
+      align-content: center;
+    }
+    .right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      margin-right: 30rpx;
+      .upper {
+        display: flex;
+        flex-direction: row;
+        align-items:flex-end;
+        .title{
+
+        }
+        .state{
+          
+        }
+      }
+      .lower {}
+    }
+  }
 </style>
 <template>
   <view class="container">
     <scroll-view scroll-y class="scroll">
-        <view class="inner">
-          
-        </view>
+      <view class="inner">
+      </view>
     </scroll-view>
   </view>
 </template>
 
 <script>
-import wepy from 'wepy';
-import Util from '../utils/index';
-export default class Auction extends wepy.page {
-  config = {
-    navigationBarTitleText: '域名竞拍'
-  };
-
-  components = {
-  };
-
-  data = {};
-
-  computed = {};
-
-  methods = {};
-
-  events = {};
-
-  onLoad() {
-    Util.auction.getBidList();
+  import wepy from 'wepy';
+  import Util from '../utils/index';
+  export default class Auction extends wepy.page {
+    config = {
+      navigationBarTitleText: '域名竞拍'
+    };
+    components = {};
+    data = {};
+    computed = {};
+    methods = {};
+    events = {};
+    async onLoad(option) {
+      let bidInfo = await Util.get.bidInfo(option.domain);
+      console.log('auction.wpy')
+      console.log(bidInfo);
+    }
+    onShow() {}
+    // 页面渲染完成
+    async onReady() {}
   }
-  onShow() {}
-  // 页面渲染完成
-  async onReady() {}
-}
 </script>
  

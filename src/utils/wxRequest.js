@@ -1,5 +1,8 @@
-import tip from './tip'
+
 let hotapp = require('./hotapp.js');
+
+let proxy = false;
+
 export async function wxRequest(params = {}, url) {
   let res = await this.Request(params, url);
   return res;
@@ -14,7 +17,7 @@ export function Request(params = {}, url) {
     else
       type = 'application/x-www-form-urlencoded';
     hotapp.request({
-      useProxy: true,
+      useProxy: proxy,
       url: url, // 需要代理请求的网址
       method: params.method || 'GET',
       data: body,
