@@ -66,6 +66,25 @@
       line-height: 14px;
     }
   }
+  .bid-btn {
+    position: absolute;
+    bottom: 0;
+    height: 88rpx;
+    width: 100%;
+    background-color: #22A4FF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text {
+      font-family: PingFangSC-Medium;
+      font-size: 12px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 80rpx;
+      justify-content: space-around;
+    }
+  }
 </style>
 <template>
   <view class="container">
@@ -87,7 +106,7 @@
           </view>
         </view>
         <view class="row-domain">
-          <text class="domain">kkkkk</text>
+          <text class="domain">{{domain}}</text>
         </view>
         <view class="row-state" style="margin-top:20rpx;">
           <view class="label">
@@ -95,38 +114,66 @@
           </view>
           <view class="right">
             <view class="content">
-              <text class="upper" decode="{{true}}">当前最高价:&nbsp;</text>
+              <text class="upper" decode>当前最高价:</text>
               <text class="upper" style="color:red;">9</text>
-              <text class="upper" decode="{{true}}">&nbsp;SGAS</text>
+              <text class="upper" decode>SGAS</text>
             </view>
             <view class="content">
-              <text class="lower" decode="{{true}}">我的当前出价总和:&nbsp;</text>
-              <text class="lower" style="color:red;">8</text>
-              <text class="lower" decode="{{true}}">&nbsp;SGAS</text>
+              <text class="lower" decode>我的当前出价总和:</text>
+              <text class="lower" style="color:red;"> 8 </text>
+              <text class="lower" decode>SGAS</text>
             </view>
           </view>
         </view>
       </view>
     </scroll-view>
+    <view class="bid-btn" @tap="onBid()">
+      <text>出价</text>
+    </view>
+    <cpassphase @deciphered.user="deciphered" />
   </view>
 </template>
 
 <script>
   import wepy from 'wepy';
   import Util from '../utils/index';
+  import CPassphase from '../components/cpassphase';
   export default class Auction extends wepy.page {
     config = {
       navigationBarTitleText: '域名竞拍'
     };
-    components = {};
-    data = {};
+    components = {
+      cpassphase: CPassphase
+    };
+    data = {
+      domain: '',
+      bidInfo: []
+    };
     computed = {};
-    methods = {};
+    methods = {
+      onBid() {
+        // 密码处理逻辑，如果需要输入密码则弹出输入框 如果不需要则直接回调diciphered
+        this.$invoke('cpassphase', 'Show');
+      },
+      deciphered(e) {
+        // 密钥解析成功之后再进行具体操作
+        let prikey = e.prikey;
+        console.log('prikey = ' + prikey)
+        if (prikey === 'fail' || prikey === null || prikey === '') {
+          Util.show.error('密码错误');
+          return;
+        }
+        // 加价
+
+      }
+    };
     events = {};
     async onLoad(option) {
-      let bidInfo = await Util.get.bidInfo(option.domain);
+      this.bidInfo = await Util.get.bidInfo('kkkkkk.neo') //(option.domain);
+      this.domain = 'kkkkkk.neo' //option.domain;
+      this.$apply();
       console.log('auction.wpy')
-      console.log(bidInfo);
+      console.log(this.bidInfo);
     }
     onShow() {}
     // 页面渲染完成

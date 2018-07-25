@@ -33,17 +33,16 @@
       margin-bottom: 30rpx;
     }
   }
+
 </style>
 
 <template>
   <view class="background" wx:if="{{show}}">
     <view class="upper-cover" @tap.stop="click"></view>
     <view class="passphase-frame" @tap.stop="click" animation="{{animation}}">
-      <form bindsubmit="confirm" class="form" report-submit="true">
+      <form bindsubmit="confirm" class="form" style="width:100%;margin-left:0rpx;" report-submit="true">
         <input placeholder='请输入密码' name="passphrase" value='test' />
-        <view class="foot-button" style="margin-top:60rpx;margin-bottom:30rpx;">
-          <button type="primary" form-type="submit" style="width:300rpx;" loading="{{opening}}" hover-class='btn_hover'>确定</button>
-        </view>
+        <button form-type="submit" loading="{{opening}}" class="bottom-btn">确定</button>
       </form>
     </view>
   </view>
@@ -63,11 +62,11 @@
       click() {},
       async Show() {
         //  判断是否需要密码的工作交给组件来做
-        if (Util.wallet.needPassphase()) {
-          this.passAnimation();
-        } else {
-          await this.returnKey('0')
-        }
+        //  if (Util.wallet.needPassphase()) {
+        this.passAnimation();
+        // } else {
+        //   await this.returnKey('0')
+        // }
       },
       async confirm(event) {
         console.log('confirm')
@@ -79,9 +78,9 @@
       const prikey = await Util.wallet.getPrikey(passphrase);
       if (havePass) {
         console.log('havepass')
-        this.passAnimation(150);
+        this.passAnimation(149);
       }
-      if (prikey !== null && prikey !== undefined && prikey !=='')
+      if (prikey !== null && prikey !== undefined && prikey !== '')
         this.$emit('deciphered', {
           'prikey': prikey
         });
@@ -91,8 +90,7 @@
         });
     }
     onLoad() {};
-    passAnimation(distance = -150, duration = 500) {
-
+    passAnimation(distance = -149, duration = 500) {
       var animation = wx.createAnimation({
         duration: duration
       });
@@ -110,7 +108,7 @@
       } else {
         this.show = !this.show;
       }
-       this.$apply();
+      this.$apply();
     }
   }
 </script>

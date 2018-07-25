@@ -1,0 +1,189 @@
+<style lang="less">
+  .background {
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+  }
+  .upper-cover {
+    width: 100%;
+    height: 100%;
+    opacity: 0.2;
+    background-color: black;
+  }
+  .price-frame {
+    position: absolute;
+    bottom: -150px;
+    width: 100%;
+    height: 150px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .title-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      height: 57px;
+      .title {
+        font-family: PingFangSC-Medium;
+        font-size: 16px;
+        color: #030303;
+        letter-spacing: 0;
+        text-align: center;
+        line-height: 17px;
+      }
+      .close {
+        width: 48rpx;
+        height: 48rpx;
+        position: absolute;
+        right: 30rpx;
+      }
+    }
+    .price {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      width: 100%;
+      margin-top: 51px;
+      .text {
+        font-family: PingFangSC-Medium;
+        font-size: 14px;
+        color: #333333;
+        letter-spacing: 0;
+        line-height: 14px;
+      }
+      input {
+        font-family: PingFangSC-Medium;
+        font-size: 14px;
+        color: #333333;
+        letter-spacing: 0;
+        line-height: 14px;
+        width: 690rpx;
+        border-bottom: thin solid #a9a9a9;
+        margin-left: 30rpx;
+        margin-top: 50rpx;
+        padding-left: 10rpx;
+        margin-bottom: 30rpx;
+      }
+    }
+    .total {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      width: 100%;
+      margin-top: 5px;
+      margin-left: 100rpx;
+      margin-bottom: 30px;
+      border-bottom: thin solid #cccccc;
+      text {
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #A9A9A9;
+        letter-spacing: 0;
+        line-height: 12px;
+      }
+    }
+    .tip {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      width: 100%;
+      margin-top: 15px;
+      margin-left: 100rpx;
+      text {
+        font-family: PingFangSC-Regular;
+        font-size: 12px;
+        color: #A9A9A9;
+        letter-spacing: 0;
+      }
+    }
+  }
+</style>
+
+<template>
+  <view class="background" wx:if="{{show}}">
+    <view class="upper-cover" @tap.stop="click"></view>
+    <view class="price-frame" @tap.stop="click" animation="{{animation}}">
+      <view class="title-area">
+        <text class="title">竞拍出价</text>
+        <image class="close" src="../images/biderror.png" />
+      </view>
+      <form bindsubmit="confirm" class="form" report-submit="true">
+        <view class="price">
+          <text>本次加价：</text>
+          <input placeholder='请输入密码' name="amount" value='10' />
+          <text>SGAS</text>
+        </view>
+        <view class="total">
+          <text>我的出价总和：</text>
+          <text style="color:#22A4FF;">17</text>
+          <text>SGAS</text>
+        </view>
+        <view class="tip">
+          <text>Tips:每次加价最小单位为</text>
+          <text style="color:#22A4FF;">0.1</text>
+          <text>SGas，当出价总和小于该域名的当前最高价时，本次出价不成功。</text>
+        </view>
+        <button form-type="submit" loading="{{opening}}" class="bottom-btn">确定</button>
+      </form>
+    </view>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy';
+  import Util from '../utils/index';
+  export default class CBid extends wepy.component {
+    props = {};
+    components = {};
+    data = {
+      animation: {},
+      label: '',
+      show: false
+    };
+    methods = {
+      async Show() {
+        // 触发加价弹框
+        this.passAnimation();
+      },
+      async confirm(event) {
+        console.log('confirm')
+        let amount = event.detail.value.amount;
+        await this.returnValue(amount)
+      }
+    };
+    async returnValue(amount) {
+      this.passAnimation(300);
+      amount = parseFloat(amounut + '')
+      if (amount !== null && amount > 0)
+        this.$emit('bid', {
+          'amount': prikey
+        });
+      else
+        this.$emit('bid', {
+          'amount': -1
+        });
+    }
+    onLoad() {};
+    passAnimation(distance = -300, duration = 500) {
+      var animation = wx.createAnimation({
+        duration: duration
+      });
+      animation.translateY(distance).step({
+        duration: duration
+      });
+      this.animation = animation.export();
+      // 等待密码框回退之后背景才消失
+      if (distance > 0) {
+        let that = this;
+        setTimeout(() => {
+          that.show = !that.show;
+          that.$apply();
+        }, 500)
+      } else {
+        this.show = !this.show;
+      }
+      this.$apply();
+    }
+  }
+</script>

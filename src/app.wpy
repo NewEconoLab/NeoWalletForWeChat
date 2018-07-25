@@ -100,7 +100,21 @@ Page {
 .btn_hover {
   background-color: gray;
 }
-
+  .bottom-btn {
+    position: absolute;
+    bottom: 0;
+    height: 88rpx;
+    width: 100%;
+    background-color: #22A4FF;
+    border-radius: 0;
+    color: white;
+    font-size: 12px;
+    line-height:88rpx;
+  }
+  .bottom-btn::after {
+    border: none;
+    border-radius: 0;
+  }
 </style>
 
 <script>
