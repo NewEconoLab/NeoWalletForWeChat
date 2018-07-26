@@ -1,11 +1,99 @@
 <style lang="less">
-
+  .nns-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-top: solid thin #f5f5f5;
+    margin-bottom: 40rpx;
+    width: 100%;
+  }
+  .row-state {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+    background-color: white;
+    height: 104rpx;
+    margin-top: 2rpx;
+    justify-content: space-between;
+    .label {
+      font-family: PingFangSC-Regular;
+      font-size: 12px;
+      color: #9a9a9a;
+      letter-spacing: 0;
+      line-height: 12px;
+      margin-left: 30rpx;
+      align-content: center;
+    }
+    .right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      margin-right: 30rpx;
+      .content {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+        .upper {
+          font-family: PingFangSC-Medium;
+          font-size: 12px;
+          color: #333333;
+          letter-spacing: 0;
+          text-align: right;
+          line-height: 12px;
+          margin-top: 36rpx;
+        }
+        .lower {
+          font-family: PingFangSC-Regular;
+          font-size: 10px;
+          color: #9A9A9A;
+          letter-spacing: 0;
+          text-align: right;
+          line-height: 10px;
+          margin-top: 10rpx;
+        }
+      }
+    }
+  }
+  .other {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    margin-top: 30rpx;
+    margin-left: 30rpx;
+    .text {
+      font-family: PingFangSC-Regular;
+      font-size: 12px;
+      color: #a9a9a9;
+      letter-spacing: 0;
+      line-height: 12px;
+      font-weight: 100;
+    }
+  }
 </style>
 
 <template>
   <view class="container">
     <scroll-view scroll-y class="scroll">
       <view class="inner">
+        <view class="nns-block" wx:for="{{domains}}">
+          <view class="row-state" style="border-top:thin solid #bbbbbb;">
+            <view class="label">
+              竞拍域名
+            </view>
+            <view class="right">
+              <view class="content">
+                <text class="upper">状态：</text>
+                <text class="upper"></text>
+              </view>
+              <view class="content">
+                <text class="lower">剩余时间</text>
+                <text class="lower"></text>
+              </view>
+            </view>
+          
+          </view>
+        </view>
       </view>
     </scroll-view>
   </view>
@@ -19,12 +107,50 @@
       navigationBarTitleText: '我的竞拍'
     };
     components = {};
-    data = {};
+    data = {
+      domains: [{
+        w: 'w'
+      }]
+    }
     computed = {};
     methods = {};
     events = {};
-    onLoad() {
-      Util.auction.getBidList();
+    async onLoad() {
+      this.domains = await Util.auction.getBidList();
+      //       600
+      // auctionState
+      // :
+      // "1"
+      // blockindex
+      // :
+      // "1625564"
+      // domain
+      // :
+      // "test1014.neo"
+      // endBlock
+      // :
+      // "0"
+      // endedState
+      // :
+      // 0
+      // id
+      // :
+      // "0xe0fac44d5bb2e9e394bbba86c5b6deabaeef0e9d9ac508079df0a4a818304ba1"
+      // maxBuyer
+      // :
+      // "ASb7YBfR7g1dvxELLkpYSQGGh9YSirWHq6"
+      // maxPrice
+      // :
+      // "20000000000000000"
+      // owner
+      // :
+      // "AeYiwwjiy2nKXoGLDafoTXc1tGvfkTYQcM"
+      // receivedState
+      // :
+      // 2
+      // startAuctionTime
+      // :
+      // "1970/01/18 12:40:20"
     }
     onShow() {}
     // 页面渲染完成
