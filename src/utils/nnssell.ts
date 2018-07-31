@@ -63,47 +63,85 @@ export default class NNSSell {
     console.log('bidlist:')
     console.log(res);
     if (res === null) {
-      return;
+      return [];
     }
+
     let arr = new Array<MyAuction>();
-    //获得session列表
     let list = res ? res[0]["list"] as Array<MyAuction> : [];
-    if (res) {
-      for (let i in list) {
-        const element = list[i];
-
+    let ids = list.map(auction => {
+      return auction.id;
+    });
+    let amounts = await NNSSell.getBalanceOfSelingArray(ids);
+    for (let i in list) {
+      const element = list[i];
+      element.receivedState = 0;
+      //根据余额和所有者判断当前账户是否领取过了域名或退币
+      if (element.auctionState == '0') {
         //获得当前账户该域名下的余额
-        let balanceOfSelling = await Auction.getBalanceOfSeling(Neo.Uint256.parse(element.id.replace('0x', '')));
-        element.receivedState = 0;
-        //根据余额和所有者判断当前账户是否领取过了域名或退币
-        if (element.auctionState == '0') {
-          if (element.maxBuyer == Wallet.account.address) {
-            element.receivedState = element.owner == Wallet.account.address ? 1 : 0
-          } else {
-            element.receivedState = balanceOfSelling.compareTo(Neo.BigInteger.Zero) == 0 ? 2 : 0;
-          }
+        let balanceOfSelling = amounts[element.id]
+        if (element.maxBuyer === Wallet.account.address) {
+          //  判断所有者是不是自己并且余额为0
+          element.receivedState = (balanceOfSelling.compareTo(Neo.BigInteger.Zero) === 0 && element.owner === Wallet.account.address) ? 1 : 0;
+        } else {
+          element.receivedState = balanceOfSelling.compareTo(Neo.BigInteger.Zero) == 0 ? 2 : 0;//2 随机期 0 结束
         }
-        //开始时间日期格式化
-        element.startAuctionTime = formatTime(element.startAuctionTime, 'Y/M/D h:m:s'); // formatTime("yyyy/MM/dd hh:mm:ss", new Date(element.startAuctionTime * 1000));
-
-        element.endedState = 0;
-        element.auctionState = '3';
-        element.maxBuyer = null;
-        element.maxPrice = '0';
-        let info = await NNSSell.getSellingStateByDomain(element.domain);
-        if (info.startBlockSelling.compareTo(Neo.BigInteger.Zero) > 0) {
-          if (info.maxPrice.compareTo(Neo.BigInteger.Zero) > 0) {
-            element.maxBuyer = Helper.Account.GetAddressFromScriptHash(info.maxBuyer);
-            element.maxPrice = parseInt(info.maxPrice.toString()) + '00000000';
-          }
-          element.auctionState = '1';
-        }
-        arr.push(element);
       }
+      //开始时间日期格式化
+      element.startAuctionTime = formatTime(element.startAuctionTime, 'Y/M/D h:m:s'); // formatTime("yyyy/MM/dd hh:mm:ss", new Date(element.startAuctionTime * 1000));
+
+      element.endedState = 0;
+      element.auctionState = '3';
+      element.maxBuyer = null;
+      element.maxPrice = '0';
+      let info = await NNSSell.getSellingStateByDomain(element.domain);
+      if (info.startBlockSelling.compareTo(Neo.BigInteger.Zero) > 0 && info.maxPrice.compareTo(Neo.BigInteger.Zero) > 0) {
+
+        element.maxBuyer = Helper.Account.GetAddressFromScriptHash(info.maxBuyer);
+        element.maxPrice = accDiv(parseInt(info.maxPrice.toString()), 100000000).toString();
+        // element.auctionState = '1'; //确定期
+      }
+      arr.push(element);
     }
+
     console.log('bidlist');
     console.log(arr)
     return arr
+  }
+
+
+  /**
+   * 获得
+   * @param id 竞拍id
+   */
+  static async getBalanceOfSelingArray(ids: string[]) {
+    let addr = Wallet.account.address
+    let who = new Neo.Uint160(Helper.Account.GetPublicKeyScriptHash_FromAddress(addr).buffer);
+    var sb = new ThinNeo.ScriptBuilder();
+    const root = await NNS.getRoot() as RootDomainInfo
+    var scriptaddress = root.register;
+    for (const index in ids) {
+      if (ids.hasOwnProperty(index)) {
+        const id = ids[index];
+        sb.EmitParamJson([
+          "(hex160)" + who.toString(),
+          "(hex256)" + id
+        ]);//第二个参数是个数组
+        sb.EmitPushString("balanceOfSelling");
+        sb.EmitAppCall(scriptaddress);
+      }
+    }
+    let res = await Https.rpc_getInvokescript(sb.ToArray());
+    var stackarr = res["stack"] as any[];
+    let stack = ResultItem.FromJson(DataType.Array, stackarr);
+    let obj = {};
+    for (let i = 0; i < ids.length; i++) {
+      const id = ids[i];
+      obj[id] = stack.subItem[i].AsInteger();
+    }
+    return obj;
+
+    // let balance = stack.AsInteger();
+    // return balance;
   }
 
   static async gasToRecharge(transcount: number, asset: Asset) {

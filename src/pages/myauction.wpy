@@ -69,7 +69,13 @@
       line-height: 12px;
       font-weight: 100;
     }
+    .bider {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+    }
   }
+
 </style>
 
 <template>
@@ -84,14 +90,21 @@
             <view class="right">
               <view class="content">
                 <text class="upper">状态：</text>
-                <text class="upper"></text>
+                <text class="upper">{{item.auctionState}}</text>
               </view>
               <view class="content">
-                <text class="lower">剩余时间</text>
+                <text class="lower">{{item.auctionState}}剩余时间</text>
                 <text class="lower"></text>
               </view>
             </view>
-          
+          </view>
+          <view class="other">
+            <text class="text">NNS域名：{{item.domain}}</text>
+            <text class="text">当前最高价{{item.maxPrice}}SGAS</text>
+            <view>
+              <text class="text">有效出价者:</text>
+              <text class="text">{{item.maxBuyer}}</text>
+            </view>
           </view>
         </view>
       </view>
@@ -117,6 +130,7 @@
     events = {};
     async onLoad() {
       this.domains = await Util.auction.getBidList();
+      this.$apply();
       //       600
       // auctionState
       // :

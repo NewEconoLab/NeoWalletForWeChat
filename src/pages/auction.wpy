@@ -131,6 +131,7 @@
       <text>出价</text>
     </view>
     <cpassphase @deciphered.user="deciphered" />
+    <cbid @bid.user="addPrice" />
   </view>
 </template>
 
@@ -138,12 +139,14 @@
   import wepy from 'wepy';
   import Util from '../utils/index';
   import CPassphase from '../components/cpassphase';
+  import CBid from '../components/cbid';
   export default class Auction extends wepy.page {
     config = {
       navigationBarTitleText: '域名竞拍'
     };
     components = {
-      cpassphase: CPassphase
+      cpassphase: CPassphase,
+      cbid: CBid
     };
     data = {
       domain: '',
@@ -153,7 +156,7 @@
     methods = {
       onBid() {
         // 密码处理逻辑，如果需要输入密码则弹出输入框 如果不需要则直接回调diciphered
-        this.$invoke('cpassphase', 'Show');
+        this.$invoke('cbid', 'Show');
       },
       deciphered(e) {
         // 密钥解析成功之后再进行具体操作
@@ -164,7 +167,9 @@
           return;
         }
         // 加价
-
+      },
+      addPrice(e) {
+         this.$invoke('cpassphase', 'Show');
       }
     };
     events = {};

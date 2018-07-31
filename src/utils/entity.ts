@@ -243,11 +243,26 @@ export class DomainInfo {
     resolver?: Neo.Uint256 = null;   // 解析器
     ttl?: string = null;             // 到期时间
 }
+
+/**
+ * 域名状态
+ */
 export enum MyDomainState {
     expired = '已过期', //已过期
     expiring = '即将过期', //即将过期
     health = ''  //正常
 }
+
+/**
+ * 域名竞拍状态
+ */
+export enum DomainBidState {
+    end = '结束',
+    fix = '确定',
+    random = '随机',
+    waiting = '等待'
+}
+
 export class RootDomainInfo extends DomainInfo {
     rootname: string;
     roothash: Neo.Uint256;
@@ -496,8 +511,6 @@ export class SellDomainInfo extends DomainInfo {
         this.register = info.register;
         this.resolver = info.resolver;
     }
-
-
 }
 
 export class WatchOnly {

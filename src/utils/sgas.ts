@@ -168,7 +168,7 @@ export default class SGAS {
                 ).buffer
         );
         let data = Common.buildScript(Const.DAPP_NNC, "claim", ["(hex160)" + who.toString()]);
-        let res = await Transfer.contractInvoke_attributes(data, prikey);
+        let res = await Transfer.contractInvoke_attributes(data);
         // console.log(res);
         //prikey,Config.dapp_nnc, "claim", "(bytes)" + strhash
     }
