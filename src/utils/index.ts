@@ -1,21 +1,18 @@
 import Coin from './coin';
 import * as Const from './const';
-import Https from './Https';
 import NNS from './nns';
 import * as Random from './random';
 import { Context } from './context';
-import * as Time from './time';
 import Tips from './tip';
 import Transfer from './transaction';
 import Cache from './cache';
 import Wallet from './wallet';
-import { Nep6, Helper, Neo } from '../lib/neo-ts/index';
-import User from './user'
 import Auction from './auctioin';
 import { Asset } from './entity';
 import NNSSell from './nnssell';
 import Emitter from './Emitter';
 import MyDomains from './mydomain';
+import WatchOnlyManager from './watchonly';
 
 export default {
     auction: NNSSell,
@@ -23,6 +20,7 @@ export default {
     Emitter:Emitter,
     const: Const,
     myDomain:MyDomains,
+    watchOnly:WatchOnlyManager,
     show: {
         loading: Tips.loading,
         success: Tips.success,
@@ -62,7 +60,8 @@ export default {
         domainState: Auction.queryDomainState,
         root: async () => { NNS.getRoot() },
         myDomain:MyDomains.getAllNeoName,
-        bidInfo:Auction.getBidDetail
+        bidInfo:Auction.getBidDetail,
+        watchonly:WatchOnlyManager.getAll
     },
     set: {
         cache: Cache.put,

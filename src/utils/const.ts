@@ -18,8 +18,14 @@ export const USER_INFO: string = "userInfo";
 export const LOCAL_ACCOUNTS: string = "localWallets";
 /** 
  * 当前登陆账户
-*/
+ */
 export const CURR_ACCOUNT: string = "currentWallet";
+
+/**
+ * 观察账户 
+ */
+export const WATCH_ONLY:string ="watchonlyaccounts";
+
 
 export const SCRYPT: any = {
     N: 16384,

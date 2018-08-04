@@ -50,6 +50,9 @@
   import Util from '../utils/index';
   import CLabel from '../components/clabel';
   import CNNSAddress from '../components/cnnsaddress';
+  import {
+    WatchOnlyAccount
+  } from '../utils/entity'
   export default class AddContact extends wepy.page {
     config = {
       navigationBarTitleText: '添加联系人'
@@ -78,11 +81,18 @@
         }
       },
       formSubmit(e) {
-        let label = this.label;
-        let domainres = JSON.parse(this.addr_res);
-        if (domainres !== null) {
-          if (domainres['domain'])
-          ;
+        let label = e.detail.value.label;
+        try {
+          console.log(this.addr_res)
+          let domainres = JSON.parse(this.addr_res);
+          console.log(this.addr_res);
+          if (domainres !== null) {
+            Util.watchOnly.add(new WatchOnlyAccount(label, domainres['address'], domainres['domain']))
+            Util.show.toast('观察账户添加成功')
+          }
+        } catch (err) {
+          console.log(err)
+          Util.show.alert('出现异常');
         }
       }
     };

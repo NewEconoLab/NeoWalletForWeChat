@@ -408,16 +408,14 @@ export class Claims {
 }
 
 export class WatchOnlyAccount {
-    public nns: string;
+    public domain?: string;
     public address: string;
-    public label: string;
+    public tag: string;
 
-    constructor(label: string, address: string, nns: string = null) {
-        this.nns = nns;
-        this.label = label;
-        if (nns !== null)
-            this.nns = nns;
-
+    constructor(tag: string, address: string, domain: string = null) {
+        this.domain = domain;
+        this.tag = tag;
+        this.address = address;
     }
 }
 
@@ -434,8 +432,7 @@ export class DataType {
  * @param random 随机期
  * @param end 结束
  */
-export enum DomainState
-{
+export enum DomainState {
     open,
     fixed,
     random,

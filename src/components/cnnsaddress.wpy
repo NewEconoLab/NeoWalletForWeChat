@@ -92,7 +92,8 @@
       },
       addrres: {
         type: String,
-        default: 'text'
+        default: 'text',
+        twoWay:true
       }
     };
     components = {};
@@ -114,6 +115,7 @@
         if (address.length === 34 && address[0] === 'A') {
           // ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F
           // console.log(event.detail.address);
+          console.log('============================================')
           this.address = address;
           this.addrres = JSON.stringify({
             'address': address
