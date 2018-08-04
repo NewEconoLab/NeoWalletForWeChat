@@ -1,4 +1,4 @@
-import { DomainInfo, SellDomainInfo, NNSResult, ResultItem, DataType, Asset, MyAuction, RootDomainInfo } from "./entity";
+import { DomainInfo, SellDomainInfo, NNSResult, ResultItem, DataType, Asset, MyAuction, RootDomainInfo, DomainState } from "./entity";
 import { Neo, Helper, ThinNeo } from "../lib/neo-ts/index";
 import Common from "./common";
 import NNS from './nns'
@@ -7,7 +7,6 @@ import Wallet from "./wallet";
 import { DAPP_SGAS, DAPP_NNS, id_GAS } from "./const";
 import Transfer from "./transaction";
 import { formatTime } from './time'
-import Auction from "./auctioin";
 export default class NNSSell {
 
   /**
@@ -48,13 +47,35 @@ export default class NNSSell {
       info.maxPrice = stack[6].AsInteger();
       info.maxBuyer = stack[7].AsHash160();
       info.lastBlock = stack[8].AsInteger();
-
+      if (!!info.id) {   //竞拍id不为空则查询域名下的余额
+        info.balanceOfSelling = await NNSSell.getBalanceOfBid(info.id);
+      }
       return info;
     }
     catch (e) {
       console.error(e);
     }
     return null;
+  }
+
+  /**d
+ * 获得
+ * @param id 竞拍id
+ */
+  static async getBalanceOfBid(id: Neo.Uint256):Promise<Neo.BigInteger> {
+    let who = new Neo.Uint160(Helper.Account.GetPublicKeyScriptHash_FromAddress(Wallet.account.address).buffer);
+    const root = await NNS.getRoot() as RootDomainInfo
+    var scriptaddress = root.register;
+    let res = await Common.contractInvokeScript(
+      scriptaddress,
+      "balanceOfBid",
+      "(hex160)" + who.toString(),
+      "(hex256)" + id.toString()
+    );
+    var stackarr = res["stack"] as any[];
+    let stack = ResultItem.FromJson(DataType.Array, stackarr).subItem[0];
+    let balance = stack.AsInteger();
+    return balance;
   }
 
   static async getBidList(): Promise<Array<MyAuction>> {
@@ -351,5 +372,84 @@ export default class NNSSell {
     )
     let res = await Common.contractInvokeTrans_attributes(data)
     return res;
+  }
+
+  /**
+  * 判断域名状态
+  * @param info 域名详情
+  */
+  static async getMyAuctionState(info: SellDomainInfo): Promise<MyAuction> {
+    let myauction = new MyAuction();
+    if (!info.id) {
+      console.log("---------------id 为空----------------");
+      console.log(myauction);
+      return myauction;
+    }
+    myauction.id = info.id.toString();
+    myauction.domain = info.domain;
+    myauction.endBlock = parseInt(info.endBlock.toString());
+    myauction.maxBuyer = !info.maxBuyer ? "" : Helper.Account.GetAddressFromScriptHash(info.maxBuyer);
+    myauction.maxPrice = !info.maxPrice ? "" : accDiv(info.maxPrice.toString(), 100000000).toString();
+    myauction.owner = info.owner ? Helper.Account.GetAddressFromScriptHash(info.owner) : "";
+    let startTime = await Https.api_getBlockInfo(parseInt(info.startBlockSelling.toString()));
+    myauction.startAuctionTime = startTime * 1000;
+    myauction.startTimeStr = formatTime(startTime, 'Y/M/D h:m:s');
+
+    //是否开始域名竞拍 0:未开始竞拍
+    let sellstate = (info.startBlockSelling.compareTo(Neo.BigInteger.Zero));
+    if (sellstate == 0) {
+      myauction.domainstate = DomainState.open;
+      return myauction;
+    }
+    //根据开标的区块高度获得开标的时间
+    let currentTime = new Date().getTime();
+    let dtime = currentTime - startTime * 1000; //时间差值;
+    //如果超过随机期
+    if (dtime > 109500000)
+      myauction.expire = true;
+    else
+      myauction.expire = false;
+    if (dtime > 900000) {   //最大金额为0，无人加价，流拍数据，或者域名到期，都可以重新开标
+      if (info.maxPrice.compareTo(Neo.BigInteger.Zero) == 0) {
+        myauction.domainstate = DomainState.pass;
+        return myauction;
+      }
+
+      //先判断最后出价时间是否大于第三天
+      let lastTime = await Https.api_getBlockInfo(parseInt(info.lastBlock.toString()));
+      let dlast = lastTime - startTime;
+      if (dlast < 600)    //最后一次出价时间是在开标后两天内 也就是第三天 无出价且开标时间大于三天 状态为结束
+      {
+        myauction.domainstate = DomainState.end2;
+        myauction.endTime = accAdd(accMul(startTime, 1000), 900000);
+        myauction.auctionState = "0";
+        return myauction;
+      }
+
+      //判断是否已有结束竞拍的区块高度。如果结束区块大于零则状态为结束
+      if (info.endBlock.compareTo(Neo.BigInteger.Zero) > 0) {
+        let time = await Https.api_getBlockInfo(parseInt(info.endBlock.toString()));
+        let subtime = time - startTime;
+        myauction.endTime = subtime < 1500 ? accMul(time, 1000) : accAdd(accMul(startTime, 1000), 1500000);
+        myauction.domainstate = DomainState.end1;
+        myauction.auctionState = "0";
+        return myauction;
+      }
+      if (dtime < 1500000)    //当前时间小于开标后五天且第三天有出价 状态为随机期
+      {
+        myauction.domainstate = DomainState.random;
+        myauction.auctionState = "2";
+        return myauction;
+      } else {
+        myauction.domainstate = DomainState.end1;
+        myauction.endTime = accAdd(accMul(startTime, 1000), 1500000);
+        myauction.auctionState = "0";
+        return myauction;
+      }
+    } else {
+      myauction.domainstate = DomainState.fixed;
+      myauction.auctionState = "1";
+      return myauction;
+    }
   }
 }

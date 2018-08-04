@@ -3,7 +3,7 @@ import { DOMAIN_ROOT } from "./const";
 import Https from "./Https";
 import { Helper, Neo } from "../lib/neo-ts/index";
 import Wallet from "./wallet";
-import { DomainState, SellDomainInfo, ResultItem, DataType, RootDomainInfo } from "./entity";
+import { DomainState, SellDomainInfo, ResultItem, DataType, RootDomainInfo, MyAuction } from "./entity";
 import NNSSell from "./nnssell";
 import NNS from "./nns";
 import { formatTime } from './time'
@@ -81,12 +81,12 @@ export default class Auction {
 
   /**
    * 时间轴列表
-   * @param domain 域名
+   * @param id 竞拍id
    * @param currentpage 当前地址
    * @param pagesize 分页条数
    */
-  static async getBidDetail(domain, currentpage = 0, pagesize = 5) {
-    let res = await Https.api_getBidDetail(domain+'.'+DOMAIN_ROOT, currentpage, pagesize);
+  static async getBidDetail(id:string, currentpage = 0, pagesize = 5) {
+    let res = await Https.api_getBidDetail(id, currentpage, pagesize);
     console.log(res)
     let ret = [];
     if (res) {
@@ -101,4 +101,46 @@ export default class Auction {
       return null;
     }
   }
+
+    /**
+     * 初始化竞拍域名的详情状态信息
+     */
+    static async initAuctionInfo(domain: string):Promise<MyAuction>
+    {
+        let info = await NNSSell.getSellingStateByDomain(domain);
+        //获取状态
+        let myauction:MyAuction = await NNSSell.getMyAuctionState(info);
+        let balance = await NNSSell.getBalanceOfBid(info.id);
+        myauction.balanceOfSelling = accDiv(balance.toString(), 100000000).toString();
+        // this.myBidPrice =myauction.balanceOfSelling;
+
+        //判断竞拍是否结束
+        if (myauction.auctionState == "0")
+        {
+            let stateMsg = undefined;
+            try
+            {
+                let stateMsg = await Https.getDomainState(Wallet.account.address, "0x" + myauction.id);
+                // this.myBidPrice = stateMsg[ "mybidprice" ];
+            } catch (error)
+            {
+                // this.myBidPrice = "0";
+            }
+
+            // 判断在该域名下的竞拍金额是否大于零
+            let compare = Neo.Fixed8.parse(myauction.balanceOfSelling).compareTo(Neo.Fixed8.Zero);
+            myauction.receivedState = compare < 0 ? 0 : 1;
+            // this.state_getDomain = 0;
+            // this.state_recover = 0;
+            if (compare === 0 && myauction.owner === Wallet.account.address)
+            {
+                // this.state_getDomain = 2;
+                // this.state_recover = 2;
+            }
+        }
+
+        // let mybidprice = !!this.myBidPrice && this.myBidPrice != '' ? this.myBidPrice : 0;
+        // this.updatePrice = mybidprice.toString();
+    }
+
 }

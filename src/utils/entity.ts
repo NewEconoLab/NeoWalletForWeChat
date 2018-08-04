@@ -223,15 +223,44 @@ export class MyAuction {
     auctionSpentTime: string;
     auctionState: string;
     endedState: number;
+    endTime: number;
+    endBlock: number;
+    expire: boolean;
+    domainstate: DomainState;
     blockindex: string;
     domain: string;
     maxBuyer: string;
     maxPrice: string;
     owner: string;
     startAuctionTime: number;
+    startTimeStr: string;
     balanceOfSelling: string;
     bidListSession: Object;
     receivedState: number;
+
+    constructor() {
+        this.id = "";
+        this.auctionSpentTime = "";
+        this.auctionState = "";
+        this.expire = false;
+        this.blockindex = "";
+        this.maxBuyer = "";
+        this.maxPrice = "";
+        this.owner = "";
+        this.endedState = 0;
+        this.endTime = 0;
+        this.startAuctionTime = 0;
+        this.startTimeStr = "";
+    }
+
+    async initSelling(info: SellDomainInfo) {
+        this.id = info.id.toString();
+        this.domain = info.domain;
+        this.endBlock = parseInt(info.endBlock.toString());
+        this.maxBuyer = Helper.Account.GetAddressFromScriptHash(info.maxBuyer);
+        this.maxPrice = info.maxPrice.toString();
+        this.owner = info.owner ? Helper.Account.GetAddressFromScriptHash(info.owner) : "";
+    }
 }
 
 export class DomainInfo {
@@ -399,17 +428,21 @@ export class DataType {
     public static Boolean = 'Boolean';
     public static String = 'String';
 }
-export enum DomainState {
-    // 有owner 有ttl且没过期
-    Taken = 'taken',
-    // 竞拍中 没owner 有ttl
-    Bidding = 'bidding',
-    // 已过期 不是自己的 有owner ttl过期
-    Avaliable = 'avaliable',
-    //格式错误域名
-    Invalid = 'invalid',
-    // 已过期 是自己的 
-    Renew = 'renew',
+/**
+ * @param open 开标或者重新开标
+ * @param fixed 确定期
+ * @param random 随机期
+ * @param end 结束
+ */
+export enum DomainState
+{
+    open,
+    fixed,
+    random,
+    end1,   //第三天结束
+    end2,
+    expire,
+    pass,
 }
 
 export class ResultItem {

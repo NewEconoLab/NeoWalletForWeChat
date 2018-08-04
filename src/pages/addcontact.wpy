@@ -1,35 +1,90 @@
 <style lang="less">
-
+  .actag {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 1rpx;
+    background-color: white;
+    width: 750rpx;
+    margin-bottom: 1rpx;
+  }
+  .tag-input {
+    font-family: PingFangSC-Medium;
+    font-size: 14px;
+    color: #333333;
+    letter-spacing: 0;
+    line-height: 14px;
+    width: 690rpx;
+    border-bottom: thin solid #a9a9a9;
+    margin-left: 30rpx;
+    margin-top: 50rpx;
+    padding-left: 10rpx;
+    margin-bottom: 30rpx;
+  }
+  .send-addr-content {
+    margin-top: 1rpx;
+  }
 </style>
 <template>
-  <view class="container">
-    <scroll-view scroll-y class="scroll">
-      <view class="inner">
-        <clname/>
-        <claddr @onEmit.user="handleEmit" />
-      </view>
-    </scroll-view>
-  </view>
+  <form bindsubmit="formSubmit" class="form" report-submit="true">
+    <view class="container">
+      <scroll-view scroll-y class="scroll">
+        <view class="inner">
+          <clname/>
+          <view class="actag">
+            <input class="tag-input" name="label" />
+          </view>
+          <claddr @onEmit.user="handleEmit" />
+          <caddress :type.sync="addrType" :address.sync="address" :addrres.sync="addr_res" class="send-addr-content" />
+          <view class="foot-button">
+            <button type="primary" form-type="submit">保存</button>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </form>
 </template>
 
 <script>
   import wepy from 'wepy';
   import Util from '../utils/index';
   import CLabel from '../components/clabel';
+  import CNNSAddress from '../components/cnnsaddress';
   export default class AddContact extends wepy.page {
     config = {
       navigationBarTitleText: '添加联系人'
     };
     components = {
       clname: CLabel,
-      claddr: CLabel
+      claddr: CLabel,
+      caddress: CNNSAddress
     };
     data = {
-      animation: {}
+      address: 'ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F',
+      addrType: 'input',
+      addr_res: '' //域名 地址解析结果
     };
     computed = {};
     methods = {
-      handleEmit(e) {}
+      handleEmit(param) {
+        let that = this;
+        // console.log(param);
+        switch (param) {
+          case 'scan':
+            that.OnScan();
+            break;
+          default:
+            break;
+        }
+      },
+      formSubmit(e) {
+        let label = this.label;
+        let domainres = JSON.parse(this.addr_res);
+        if (domainres !== null) {
+          if (domainres['domain'])
+          ;
+        }
+      }
     };
     events = {};
     onLoad() {
@@ -62,6 +117,19 @@
       };
     }
     OnLoading() {}
+    OnScan() {
+      let that = this;
+      wepy.scanCode({
+        success: res => {
+          // console.log(res);
+          that.address = res.result;
+          that.$apply();
+        },
+        fail: res => {
+          // console.log(res);
+        }
+      });
+    }
   }
 </script>
  

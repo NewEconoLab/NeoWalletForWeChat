@@ -422,7 +422,7 @@ export default class Https {
     static async api_getBidListByAddress(address: string) {
         var postdata = Https.makeRpcPostBody("getbidlistbyaddress", address);
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
-       
+
         try {
             return result["result"];
         } catch (error) {
@@ -435,8 +435,8 @@ export default class Https {
      * @param currentpage 
      * @param pagesize 
      */
-    static async api_getBidDetail(domain: string, currentpage: number, pagesize: number) {
-        var postdata = Https.makeRpcPostBody("getbiddetailbydomain", domain, currentpage, pagesize);
+    static async api_getBidDetail(id: string, currentpage: number, pagesize: number) {
+        var postdata = Https.makeRpcPostBody("getbiddetailbydomain", id, currentpage, pagesize);
         console.log(postdata)
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
         console.log('bid info')
@@ -449,6 +449,54 @@ export default class Https {
         }
     }
 
+
+    /**
+     * 我的域名的状态
+     * @param address 地址
+     * @param domain 域名
+     */
+    static async getDomainState(address: string, id: string) {
+        var postdata = Https.makeRpcPostBody("getdomainstate", address, id);
+        // var result = await fetch(WWW.apiaggr, { "method": "post", "body": JSON.stringify(postdata) });
+        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
+        // var json = await result.json();
+        try {
+            var r = result["result"][0];
+            return r;
+        } catch (err) {
+            return null;
+        }
+    }
+
+    static async getNotify(txid: string)
+    {
+        var postdata = Https.makeRpcPostBody("getnotify", txid);
+        // var result = await fetch(WWW.api, { "method": "post", "body": JSON.stringify(postdata) });
+        var result = await Request.wxRequest({ "method": "post", "body": JSON.stringify(postdata) }, this.api);
+        var json = await result.json();
+        var r = json[ "result" ][ 0 ];
+        return r;
+    }
+
+    static async hastx(txid: string)
+    {
+        var postdata = Https.makeRpcPostBody("hastx", txid);
+        // var result = await fetch(WWW.apiaggr, { "method": "post", "body": JSON.stringify(postdata) });
+        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
+        // var json = await result.json();
+        var r = result[ "result" ][ 0 ];
+        return r;
+    }
+
+    static async hascontract(txid: string)
+    {
+        var postdata = Https.makeRpcPostBody("hascontract", txid);
+        var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
+        // var result = await fetch(WWW.apiaggr, { "method": "post", "body": JSON.stringify(postdata) });
+        // var json = await result.json();
+        var r = result[ "result" ][ 0 ];
+        return r;
+    }
 
     /**********************************************************
      * 
