@@ -326,7 +326,7 @@
         count
       ); //setTran(tran, prikey, pubkey, randomStr);
       Util.hide.loading();
-      if (txid === null) {
+      if (txid === null || txid === undefined) {
         wepy.showModal({
           title: '提示',
           content: '交易失败',
