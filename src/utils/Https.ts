@@ -160,8 +160,8 @@ export default class Https {
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.api } }, this.proxy_server + "proxy.php");
         console.log(result);
         try {
-            let txid = result["result"][0]['txid'];
-            return (txid === '' || txid === null || txid === undefined) ? null : txid;
+            var r = result[ "result" ][ 0 ] as boolean;
+            return r;
         } catch (error) {
             return null;
         }

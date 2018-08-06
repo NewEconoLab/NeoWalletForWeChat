@@ -19,7 +19,7 @@ export default class Transfer {
      * @param {ThinNeo.Transaction} tran 
      * @param {string} randomStr
      */
-    static async signAndSend(tran: ThinNeo.Transaction) {
+    static async signAndSend(tran: ThinNeo.Transaction):Promise<string> {
         let prikey = await Wallet.getPrikey() as string;
         const key = Helper.hexToBytes(prikey);
         const pubkey = Helper.hexToBytes(Wallet.account.publickey);
@@ -40,7 +40,7 @@ export default class Transfer {
         Tips.loaded();
         console.log(Helper.toHexString(tran.GetRawData()))
         console.log(res)
-        return res;
+        return res?txid:null;
     }
 
     static async contactTransaction(targetaddr: string, asset: Asset, sendcount: number) {
