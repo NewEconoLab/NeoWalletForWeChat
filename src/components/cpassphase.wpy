@@ -62,11 +62,11 @@
       click() {},
       async Show() {
         //  判断是否需要密码的工作交给组件来做
-        //  if (Util.wallet.needPassphase()) {
+         if (Util.wallet.needPassphase()) {
         this.passAnimation();
-        // } else {
-        //   await this.returnKey('0')
-        // }
+        } else {
+          await this.returnKey('0')
+        }
       },
       async confirm(event) {
         console.log('confirm')

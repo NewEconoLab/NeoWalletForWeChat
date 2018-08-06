@@ -8,7 +8,7 @@ export default class Https {
     // 交易通知模板id
     static templet_id: string = "2lEt8hQIzI6tbTw9ThtZhNalDG6GulckpcYEs_Ki7ZQ";
 
-    static apiaggr: string = "https://apiaggr.nel.group/api/testnet";
+    static apiaggr: string = "https://apiaggr.nel.group/api/testnet";//"http://seed1.nether.top:12122"//
 
     /**
      * create Rpc Url

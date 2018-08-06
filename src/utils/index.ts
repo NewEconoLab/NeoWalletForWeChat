@@ -34,9 +34,9 @@ export default {
         loading: Tips.loaded
     },
     send: {
-        transfer: (prikey: string, targetaddr: string, asset: string, sendcount: number) => {
+        transfer: async(targetaddr: string, asset: string, sendcount: number) => {
             let coin: Asset = Context.Assets[asset] as Asset;
-            Transfer.contactTransaction(prikey, targetaddr, coin, sendcount);
+           await Transfer.contactTransaction(targetaddr, coin, sendcount);
         },
         // invoke: Transfer.nep5Transaction,
         claim: Transfer.claimGas,

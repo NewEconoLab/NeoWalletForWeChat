@@ -43,7 +43,7 @@ export default class Transfer {
         return res;
     }
 
-    static async contactTransaction(prikey: string, targetaddr: string, asset: Asset, sendcount: number) {
+    static async contactTransaction(targetaddr: string, asset: Asset, sendcount: number) {
         let tran = Transfer.makeTran(targetaddr, asset, sendcount)
         return await Transfer.signAndSend(tran);
     }
