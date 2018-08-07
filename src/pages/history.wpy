@@ -6,7 +6,7 @@
 <template>
   <view class="container">
     <text class="empty" hidden="{{notEmpty}}">还没有交易记录哦！</text>
-    <history></history>
+    <chistory></chistory>
   </view>
 </template>
 
@@ -15,7 +15,7 @@
   import Util from '../utils/index';
   import {
     TaskType
-  } from '../utils/const'
+  } from '../utils/entity'
   import CHistory from '../components/chistory';
   export default class History extends wepy.page {
     config = {
@@ -23,7 +23,7 @@
       enablePullDownRefresh: true
     };
     components = {
-      history: CHistory
+      chistory: CHistory
     };
     data = {
       TXs: [],
@@ -42,7 +42,7 @@
     onShow() {
       let that = this;
       Util.Emitter.fire(TaskType.history, txs => {
-        that.$invoke('history', 'LoadTXs', txs);
+        that.$invoke('chistory', 'LoadTXs', txs);
       })
       this.OnLoadTXs();
     }

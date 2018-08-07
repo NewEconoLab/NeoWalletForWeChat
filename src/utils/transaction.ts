@@ -267,8 +267,11 @@ export default class Transfer {
                         else {
                             let nep5 = await Https.getNep5Asset(asset);
                             // console.log(nep5);
-
-                            assetname = 'jjj'//nep5["name"];
+                            try{
+                                assetname = nep5["name"];
+                            }catch(err){
+                                assetname = 'null'
+                            }
                         }
                         var history = new History();
                         history.time = date;

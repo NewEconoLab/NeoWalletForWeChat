@@ -143,6 +143,8 @@ export class Context {
 
         try {
             var utxos = await Https.api_getUTXO(Context.getAccount().address);
+            console.log('============================================')
+            console.log(utxos)
             for (var i in utxos) {
                 var item = utxos[i];
                 let utxo: Utxo = new Utxo(item);
@@ -203,7 +205,7 @@ export class Context {
     /**
      * 获取历史交易
      */
-    static async OnGetTXs(page: number, observer) {
+    static async OnGetTXs(page: number, observer:Function) {
         await Transfer.history();
         observer(Transfer.TXs);
         return Transfer.TXs;

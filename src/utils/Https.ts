@@ -2,7 +2,7 @@ import * as Request from './wxRequest';
 import { Helper } from '../lib/neo-ts/index';
 let hotapp = require('./hotapp.js');
 export default class Https {
-    static api: string = "https://api.nel.group/api/testnet";
+    static api: string ="https://api.nel.group/api/testnet";
     static priceHost: string = "https://api.coinmarketcap.com/v1/ticker/";
     static proxy_server: string = "http://112.74.52.116/";
     // 交易通知模板id
@@ -324,6 +324,7 @@ export default class Https {
             );
 
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
+        console.log(result)
         try {
             return result["result"];
         } catch (err) {
