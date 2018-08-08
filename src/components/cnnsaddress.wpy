@@ -90,10 +90,10 @@
         type: String,
         default: 'address or domain'
       },
-      addrres: {
+      addrres: { //用来向外传递域名及地址解析结果 目前只有添加联系人的时候需要
         type: String,
         default: 'text',
-        twoWay:true
+        twoWay: true
       }
     };
     components = {};
@@ -111,7 +111,7 @@
         this.showLower = false;
         const address = e.detail.value;
         if (address === undefined || address === '') return;
-        //判断为地址
+        // 判断为地址
         if (address.length === 34 && address[0] === 'A') {
           // ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F
           // console.log(event.detail.address);
@@ -121,7 +121,7 @@
             'address': address
           });
         } else if (address.length > 3 && address.includes('.neo')) {
-          //TODO: 如果判断结果为domain，查找地址
+          // 如果判断结果为domain，查找地址
           this.onLoadDomain(address);
         } else {
           return;
@@ -138,28 +138,35 @@
         this.showLower = true;
         this.address = domain.address;
         this.addrres = JSON.stringify({
-          'address': address,
-          'domain': domain
+          'address': domain.address,
+          'domain': address
         });
       }
       this.$apply();
       console.log(domain);
     }
     async onLoad() {
+
       //如果是输入类型则直接返回，如果是展示类型，则解析地址类型
       if (this.type === 'input') return;
+
       // 没有解析到可用域名则直接显示地址
       this.value = Util.get.account().address;
       this.$apply();
+
       //根据地址查询与其绑定的域名
       let domains = await Util.get.myDomain(Util.get.account().address);
+
       if (domains === null || domains === undefined || domains.length === 0) return;
       for (let index in domains) {
         let domain = domains[index];
+
         console.log(domain);
         if (domain['expiring'] !== '已过期') {
+
           // addr为用户地址 
           this.addr = Util.get.account().address;
+
           //value为域名 展示第二层地址展示位
           this.value = domain.domain;
           this.showLower = true;

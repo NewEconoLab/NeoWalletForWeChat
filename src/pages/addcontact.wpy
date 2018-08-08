@@ -89,6 +89,7 @@
           if (domainres !== null) {
             Util.watchOnly.add(new WatchOnlyAccount(label, domainres['address'], domainres['domain']))
             Util.show.toast('观察账户添加成功')
+            wx.navigateBack();
           }
         } catch (err) {
           console.log(err)

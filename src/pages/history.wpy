@@ -27,7 +27,6 @@
     };
     data = {
       TXs: [],
-      page: 1,
       address: '',
       isLoading: false,
       notEmpty: 'true'
@@ -40,18 +39,13 @@
       this.$apply();
     }
     onShow() {
-      let that = this;
-      Util.Emitter.fire(TaskType.history, txs => {
-        that.$invoke('chistory', 'LoadTXs', txs);
-      })
       this.OnLoadTXs();
     }
     onUnload() {
-      Util.delegate.tx(null);
+      // Util.delegate.tx(null);
     }
     async onPullDownRefresh() {
       if (this.isLoading) return;
-      this.page = 1;
       this.$apply();
       this.OnLoadTXs();
       wx.hideNavigationBarLoading(); // 完成停止加载
@@ -61,16 +55,19 @@
       if (this.isLoading) return;
       this.isLoading = true;
       this.$apply();
+      let that = this;
       Util.show.loading('历史数据加载中');
-      const TXs = await Util.get.TXs(1);
-      Util.hide.loading();
-      if (TXs === null) {
-        this.notEmpty = 'false';
-      } else {
-        this.notEmpty = 'true';
-      }
-      this.isLoading = false;
-      this.$apply();
+      Util.Emitter.fire(TaskType.history, txs => {
+        if (txs === null) {
+          that.notEmpty = 'false';
+        } else {
+          that.notEmpty = 'true';
+        }
+        that.$invoke('chistory', 'LoadTXs', txs);
+        that.isLoading = false;
+        Util.hide.loading();
+        that.$apply();
+      })
     }
   }
 </script>

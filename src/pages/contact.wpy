@@ -60,7 +60,9 @@ export default class Contact extends wepy.page {
       })
     );
   }
-  async onShow() {}
+  async onShow() {
+    this.$invoke('ccontact','onShow')
+  }
   // 页面渲染完成
   async onReady() {}
 

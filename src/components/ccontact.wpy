@@ -1,233 +1,230 @@
 <style lang="less">
-/**index.wxss**/
-
-.msg-list {
-  display: block;
-  flex-direction: column;
-  align-items: center;
-}
-
-.msg-item {
-  width: 100%;
-  height: 136rpx;
-  border-bottom: 1rpx solid rgb(233, 233, 233);
-  position: relative;
-  left: 0;
-  top: 0;
-  overflow: hidden;
-}
-
-.msg {
-  position: absolute;
-  width: 100%;
-  height: 136rpx;
-  left: 0;
-  top: 0;
-  z-index: 100;
-  background-color: #fff;
-}
-
-.user-name {
-  position: absolute;
-  left: 30rpx;
-  top: 20rpx;
-  font-family: PingFangSC-Medium;
-  font-size: 16px;
-  color: #333333;
-  letter-spacing: 0;
-  line-height: 16px;
-}
-
-.msg-text {
-  position: absolute;
-  left: 30rpx;
-  bottom: 20rpx;
-  font-family: PingFangSC-Regular;
-  font-size: 12px;
-  color: #a9a9a9;
-  letter-spacing: 0;
-  line-height: 12px;
-}
-
-.msg-menu {
-  position: absolute;
-  width: 100%;
-  height: 136rpx;
-  left: 0;
-  top: 0;
-  z-index: 0;
-}
-
-.menu-delete {
-  position: absolute;
-  width: 70px;
-  height: 134rpx;
-  top: 1rpx;
-  right: 0;
-  background-color: #fc7a7a;
-  color: #fff;
-  text-align: center;
-  line-height: 150rpx;
-  image{
+  /**index.wxss**/
+  .msg-list {
+    display: block;
+    flex-direction: column;
+    align-items: center;
+  }
+  .msg-item {
+    width: 100%;
+    height: 136rpx;
+    border-bottom: 1rpx solid rgb(233, 233, 233);
+    position: relative;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+  }
+  .msg {
+    position: absolute;
+    width: 100%;
+    height: 136rpx;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    background-color: #fff;
+  }
+  .user-name {
+    position: absolute;
+    left: 30rpx;
+    top: 20rpx;
+    font-family: PingFangSC-Medium;
+    font-size: 16px;
+    color: #333333;
+    letter-spacing: 0;
+    line-height: 16px;
+  }
+  .msg-text {
+    position: absolute;
+    left: 30rpx;
+    bottom: 20rpx;
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #a9a9a9;
+    letter-spacing: 0;
+    line-height: 12px;
+  }
+  .msg-menu {
+    position: absolute;
+    width: 100%;
+    height: 136rpx;
+    left: 0;
+    top: 0;
+    z-index: 0;
+  }
+  .menu-delete {
+    position: absolute;
+    width: 70px;
+    height: 134rpx;
+    top: 1rpx;
+    right: 0;
+    background-color: #fc7a7a;
+    color: #fff;
+    text-align: center;
+    line-height: 150rpx;
+    image {
       width: 48rpx;
       height: 48rpx;
+    }
   }
-}
 </style>
 
 <template>
-   <scroll-view scroll-y='{{scrollY}}' class='msg-list' bindscroll = 'onScroll'>
-       <view wx:for="{{msgList}}" wx:key="id"  class='msg-item'> 
-            <view id='{{item.id}}' class='msg' animation='{{item.animation}}' bindtouchstart='ontouchstart' bindtouchmove='ontouchmove' bindtouchend='ontouchend'>
-                <text class='user-name'>{{item.userName}}</text>
-                <text class='msg-text'>{{item.msgText}}</text>
-            </view>
-            <view class='msg-menu'>
-                <view id='{{item.id}}' class='menu-delete' bindtap='onDeleteMsgTap' bindlongtap='onDeleteMsgLongtap'>
-                    <image src='../images/delete.png' />
-                </view>
-            </view>
-       </view>
-   </scroll-view>
+  <scroll-view scroll-y='{{scrollY}}' class='msg-list' bindscroll='onScroll'>
+    <view wx:for="{{msgList}}" wx:key="id" class='msg-item'>
+      <view id='{{item.tag}}' class='msg' animation='{{item.animation}}' bindtouchstart='ontouchstart' bindtouchmove='ontouchmove' bindtouchend='ontouchend'>
+        <text class='user-name'>{{item.tag}}</text>
+        <text class='msg-text'>{{item.domain== null?item.address:item.domain}}</text>
+      </view>
+      <view class='msg-menu'>
+        <view id='{{item.tag}}' class='menu-delete' bindtap='onDeleteMsgTap' bindlongtap='onDeleteMsgLongtap'>
+          <image src='../images/delete.png' />
+        </view>
+      </view>
+    </view>
+  </scroll-view>
 </template>
 <script>
-import wepy from 'wepy';
-// import Util from '../../utils/index';
-export default class CContact extends wepy.component {
-  props = {};
-  components = {};
-
-  data = {
-    msgList: [],
-    scrollY: true,
-    swipeCheckX: 35, //激活检测滑动的阈值
-    swipeCheckState: 0, //0未激活 1激活
-    maxMoveLeft: 70, //消息列表项最大左滑距离
-    correctMoveLeft: 70, //显示菜单时的左滑距离
-    thresholdMoveLeft: 20, //左滑阈值，超过则显示菜单
-    lastShowMsgId: '', //记录上次显示菜单的消息id
-    moveX: 0, //记录平移距离
-    showState: 0, //0 未显示菜单 1显示菜单
-    touchStartState: 0, // 开始触摸时的状态 0 未显示菜单 1 显示菜单
-    swipeDirection: 0, //是否触发水平滑动 0:未触发 1:触发水平滑动 2:触发垂直滑动
-    lastMoveTime: 0
-  };
-
-  methods = {
-    ontouchstart(e) {
-      if (this.showState === 1) {
-        this.touchStartState = 1;
-        this.showState = 0;
-        this.moveX = 0;
-        this.translateXMsgItem(this.lastShowMsgId, 0, 200);
-        this.lastShowMsgId = '';
-        return;
-      }
-      this.firstTouchX = e.touches[0].clientX;
-      this.firstTouchY = e.touches[0].clientY;
-      if (this.firstTouchX > this.swipeCheckX) {
-        this.swipeCheckState = 1;
-      }
-      this.lastMoveTime = e.timeStamp;
-    },
-
-    ontouchmove(e) {
-      if (this.swipeCheckState === 0) {
-        return;
-      }
-      //当开始触摸时有菜单显示时，不处理滑动操作
-      if (this.touchStartState === 1) {
-        return;
-      }
-      var moveX = e.touches[0].clientX - this.firstTouchX;
-      var moveY = e.touches[0].clientY - this.firstTouchY;
-      //已触发垂直滑动，由scroll-view处理滑动操作
-      if (this.swipeDirection === 2) {
-        return;
-      }
-      //未触发滑动方向
-      if (this.swipeDirection === 0) {
-        // console.log(Math.abs(moveY));
-        //触发垂直操作
-        if (Math.abs(moveY) > 4) {
-          this.swipeDirection = 2;
+  import wepy from 'wepy';
+  import Util from '../utils/index';
+  export default class CContact extends wepy.component {
+    props = {};
+    components = {};
+    data = {
+      msgList: [],
+      scrollY: true,
+      swipeCheckX: 35, //激活检测滑动的阈值
+      swipeCheckState: 0, //0未激活 1激活
+      maxMoveLeft: 70, //消息列表项最大左滑距离
+      correctMoveLeft: 70, //显示菜单时的左滑距离
+      thresholdMoveLeft: 20, //左滑阈值，超过则显示菜单
+      lastShowMsgId: '', //记录上次显示菜单的消息id
+      moveX: 0, //记录平移距离
+      showState: 0, //0 未显示菜单 1显示菜单
+      touchStartState: 0, // 开始触摸时的状态 0 未显示菜单 1 显示菜单
+      swipeDirection: 0, //是否触发水平滑动 0:未触发 1:触发水平滑动 2:触发垂直滑动
+      lastMoveTime: 0
+    };
+    methods = {
+      ontouchstart(e) {
+        if (this.showState === 1) {
+          this.touchStartState = 1;
+          this.showState = 0;
+          this.moveX = 0;
+          this.translateXMsgItem(this.lastShowMsgId, 0, 200);
+          this.lastShowMsgId = '';
           return;
         }
-        //触发水平操作
-        if (Math.abs(moveX) > 4) {
-          this.swipeDirection = 1;
-          this.setData({ scrollY: false });
+        this.firstTouchX = e.touches[0].clientX;
+        this.firstTouchY = e.touches[0].clientY;
+        if (this.firstTouchX > this.swipeCheckX) {
+          this.swipeCheckState = 1;
+        }
+        this.lastMoveTime = e.timeStamp;
+      },
+      ontouchmove(e) {
+        if (this.swipeCheckState === 0) {
+          return;
+        }
+        //当开始触摸时有菜单显示时，不处理滑动操作
+        if (this.touchStartState === 1) {
+          return;
+        }
+        var moveX = e.touches[0].clientX - this.firstTouchX;
+        var moveY = e.touches[0].clientY - this.firstTouchY;
+        //已触发垂直滑动，由scroll-view处理滑动操作
+        if (this.swipeDirection === 2) {
+          return;
+        }
+        //未触发滑动方向
+        if (this.swipeDirection === 0) {
+          // console.log(Math.abs(moveY));
+          //触发垂直操作
+          if (Math.abs(moveY) > 4) {
+            this.swipeDirection = 2;
+            return;
+          }
+          //触发水平操作
+          if (Math.abs(moveX) > 4) {
+            this.swipeDirection = 1;
+            this.setData({
+              scrollY: false
+            });
+          } else {
+            return;
+          }
+        }
+        this.lastMoveTime = e.timeStamp;
+        //处理边界情况
+        if (moveX > 0) {
+          moveX = 0;
+        }
+        //检测最大左滑距离
+        if (moveX < -this.maxMoveLeft) {
+          moveX = -this.maxMoveLeft;
+        }
+        this.moveX = moveX;
+        this.translateXMsgItem(e.currentTarget.id, moveX, 0);
+      },
+      ontouchend(e) {
+        this.swipeCheckState = 0;
+        var swipeDirection = this.swipeDirection;
+        this.swipeDirection = 0;
+        if (this.touchStartState === 1) {
+          this.touchStartState = 0;
+          this.setData({
+            scrollY: true
+          });
+          return;
+        }
+        //垂直滚动，忽略
+        if (swipeDirection !== 1) {
+          return;
+        }
+        if (this.moveX === 0) {
+          this.showState = 0;
+          //不显示菜单状态下,激活垂直滚动
+          this.setData({
+            scrollY: true
+          });
+          return;
+        }
+        if (this.moveX === this.correctMoveLeft) {
+          this.showState = 1;
+          this.lastShowMsgId = e.currentTarget.tag;
+          return;
+        }
+        if (this.moveX < -this.thresholdMoveLeft) {
+          this.moveX = -this.correctMoveLeft;
+          this.showState = 1;
+          this.lastShowMsgId = e.currentTarget.tag;
         } else {
-          return;
+          this.moveX = 0;
+          this.showState = 0;
+          //不显示菜单,激活垂直滚动
+          this.setData({
+            scrollY: true
+          });
         }
+        this.translateXMsgItem(e.currentTarget.tag, this.moveX, 500);
+      },
+      onShow() {
+        this.msgList = Util.watchOnly.getAll();
+        this.$apply();
       }
-      this.lastMoveTime = e.timeStamp;
-      //处理边界情况
-      if (moveX > 0) {
-        moveX = 0;
-      }
-
-      //检测最大左滑距离
-      if (moveX < -this.maxMoveLeft) {
-        moveX = -this.maxMoveLeft;
-      }
-
-      this.moveX = moveX;
-      this.translateXMsgItem(e.currentTarget.id, moveX, 0);
-    },
-    ontouchend(e) {
-      this.swipeCheckState = 0;
-      var swipeDirection = this.swipeDirection;
-      this.swipeDirection = 0;
-      if (this.touchStartState === 1) {
-        this.touchStartState = 0;
-        this.setData({ scrollY: true });
-        return;
-      }
-      //垂直滚动，忽略
-      if (swipeDirection !== 1) {
-        return;
-      }
-      if (this.moveX === 0) {
-        this.showState = 0;
-        //不显示菜单状态下,激活垂直滚动
-        this.setData({ scrollY: true });
-        return;
-      }
-      if (this.moveX === this.correctMoveLeft) {
-        this.showState = 1;
-        this.lastShowMsgId = e.currentTarget.id;
-        return;
-      }
-      if (this.moveX < -this.thresholdMoveLeft) {
-        this.moveX = -this.correctMoveLeft;
-        this.showState = 1;
-        this.lastShowMsgId = e.currentTarget.id;
-      } else {
-        this.moveX = 0;
-        this.showState = 0;
-        //不显示菜单,激活垂直滚动
-        this.setData({ scrollY: true });
-      }
-      this.translateXMsgItem(e.currentTarget.id, this.moveX, 500);
+    };
+    onLoad() {
+      this.msgList = Util.watchOnly.getAll();
+      this.$apply();
     }
-  };
-
-  onLoad() {
-    for (var i = 0; i < 30; i++) {
-      var msg = {};
-      msg.userName = '' + '用户' + i + 1;
-      msg.msgText = '您有新的消息';
-      msg.id = i + '';
-      this.msgList.push(msg);
+    translateXMsgItem(id, x, duration) {
+      var animation = wx.createAnimation({
+        duration: duration
+      });
+      animation.translateX(x).step({
+        duration: 500
+      });
+      this.msgList[id].animation = animation.export();
       this.$apply();
     }
   }
-  translateXMsgItem(id, x, duration) {
-    var animation = wx.createAnimation({ duration: duration });
-    animation.translateX(x).step({ duration: 500 });
-    this.msgList[id].animation = animation.export();
-    this.$apply();
-  }
-}
 </script>
