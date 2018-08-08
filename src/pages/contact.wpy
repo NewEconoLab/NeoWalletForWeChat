@@ -1,79 +1,85 @@
- <style lang="less">
-.clabel {
-  display: block;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 1rpx;
-}
+<style lang="less">
+  .clabel {
+    display: block;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1rpx;
+  }
 </style>
 <template>
   <view class="container">
-    
     <view class="clabel">
-      <clabel @onEmit.user="handleEmit"/>
+      <clabel @onEmit.user="handleEmit" />
     </view>
-   <ccontact />
+    <ccontact />
   </view>
 </template>
 
 <script>
-import wepy from 'wepy';
-import Util from '../utils/index';
-import CContact from '../components/ccontact';
-import CLabel from '../components/clabel';
-export default class Contact extends wepy.page {
-  config = {
-    navigationBarTitleText: '通讯录'
-  };
-
-  components = {
-    ccontact: CContact,
-    clabel: CLabel
-  };
-
-  data = {
-    animation: {}
-  };
-
-  computed = {};
-
-  methods = {
-    handleEmit(e) {
-       wepy.navigateTo({
-        url: './addcontact'
-      });
-    }
-  };
-
-  events = {};
-
-  onLoad() {
-    this.$invoke(
-      'clabel',
-      'Show',
-      JSON.stringify({
-        title: '通讯录',
-        show: {
-          add: 1
-        }
-      })
-    );
-  }
-  async onShow() {
-    this.$invoke('ccontact','onShow')
-  }
-  // 页面渲染完成
-  async onReady() {}
-
-  onShareAppMessage() {
-    return {
-      title: 'NNS',
-      path: '/pages/nns'
+  import wepy from 'wepy';
+  import Util from '../utils/index';
+  import CContact from '../components/ccontact';
+  import CLabel from '../components/clabel';
+  export default class Contact extends wepy.page {
+    config = {
+      navigationBarTitleText: '通讯录'
     };
+    components = {
+      ccontact: CContact,
+      clabel: CLabel
+    };
+    data = {
+      needEdit: 1
+    };
+    computed = {};
+    methods = {
+      handleEmit(e) {
+        wepy.navigateTo({
+          url: './addcontact'
+        });
+      }
+    };
+    events = {};
+    onLoad(option) {
+      const edit = this.needEdit = option.edit;
+      this.$apply();
+      //这里有两种应用场景，第一种是个人界面里可以编辑通讯录，另一种是在转账的时候选择转账用户
+      //第一种的话就需要展示添加通讯录的按钮，还需要有左划删除，另一种就啥都没有
+      if (edit === 1) { //1代表true需要编辑
+        this.$invoke(
+          'clabel',
+          'Show',
+          JSON.stringify({
+            title: '通讯录',
+            show: {
+              add: 1
+            }
+          })
+        );
+      } else {
+        this.$invoke(
+          'clabel',
+          'Show',
+          JSON.stringify({
+            title: '通讯录',
+            show: {}
+          })
+        );
+      }
+    }
+    async onShow() {
+      this.$invoke('ccontact', 'onShow', this.needEdit + '')
+    }
+    // 页面渲染完成
+    async onReady() {}
+    onShareAppMessage() {
+      return {
+        title: 'NNS',
+        path: '/pages/nns'
+      };
+    }
+    OnLoading() {}
   }
-
-  OnLoading() {}
-}
 </script>
  

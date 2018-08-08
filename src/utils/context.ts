@@ -49,7 +49,7 @@ export class Context {
         }, this);
 
         Emitter.register(TaskType.history, (observer) => {
-            Context.OnGetTXs(1, observer);
+            Context.OnGetTXs(observer);
         }, this);
 
         Emitter.register(TaskType.claim, (observer) => {
@@ -205,7 +205,7 @@ export class Context {
     /**
      * 获取历史交易
      */
-    static async OnGetTXs(page: number, observer:Function) {
+    static async OnGetTXs(observer:Function) {
         await Transfer.history();
         observer(Transfer.TXs);
         return Transfer.TXs;

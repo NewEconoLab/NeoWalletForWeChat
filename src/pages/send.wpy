@@ -183,7 +183,7 @@
     data = {
       targetAddr: '',
       assets: {},
-      address: 'ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F',
+      address: '',
       addrType: 'input',
       amount: 0.001,
       coin: {},
@@ -200,7 +200,7 @@
             break;
           case 'contact':
             wx.navigateTo({
-              url: './contact'
+              url: './contact?edit=0'
             });
             break;
           case 'add':
