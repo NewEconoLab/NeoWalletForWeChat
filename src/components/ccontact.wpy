@@ -71,7 +71,7 @@
 <template>
   <scroll-view scroll-y='{{scrollY}}' class='msg-list' bindscroll='onScroll'>
     <view wx:for="{{msgList}}" wx:key="id" class='msg-item'>
-      <view id='{{item.tag}}' class='msg' animation='{{item.animation}}' bindtouchstart='ontouchstart' bindtouchmove='ontouchmove' bindtouchend='ontouchend'>
+      <view id='{{item.tag}}' class='msg' animation='{{item.animation}}' bindtouchstart='ontouchstart' bindtouchmove='ontouchmove' bindtouchend='ontouchend' @tap="OnSelect({{item.tag}})">
         <text class='user-name'>{{item.tag}}</text>
         <text class='msg-text'>{{item.domain== null?item.address:item.domain}}</text>
       </view>
@@ -145,7 +145,7 @@
             return;
           }
           //触发水平操作
-          if (Math.abs(moveX) > 4) {
+          if (Math.abs(moveX) > 4 && this.needEdit) {
             this.swipeDirection = 1;
             this.setData({
               scrollY: false
@@ -209,9 +209,18 @@
         this.translateXMsgItem(e.currentTarget.tag, this.moveX, 500);
       },
       onShow(edit) {
+        // 选择通讯录的话就不需要编辑通讯录
         this.msgList = Util.watchOnly.getAll();
-        this.needEdit = edit === 0 ? false : true;
+        this.needEdit = edit === '0' ? false : true;
         this.$apply();
+      },
+      OnSelect(tag) {
+        //编辑状态下禁止点击事件//或者直接作为观察账户使用也可以
+        if (this.needEdit) return;
+        console.log(tag)
+        Util.set.setAddr(this.msgList[tag]);
+        console.log(this.msgList[tag])
+        wepy.navigateBack();
       }
     };
     onLoad() {

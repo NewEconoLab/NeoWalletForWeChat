@@ -8,7 +8,7 @@ import Transfer from './transaction';
 import Cache from './cache';
 import Wallet from './wallet';
 import Auction from './auctioin';
-import { Asset } from './entity';
+import { Asset, WatchOnlyAccount } from './entity';
 import NNSSell from './nnssell';
 import Emitter from './Emitter';
 import MyDomains from './mydomain';
@@ -17,10 +17,10 @@ import WatchOnlyManager from './watchonly';
 export default {
     auction: NNSSell,
     wallet: Wallet,
-    Emitter:Emitter,
+    Emitter: Emitter,
     const: Const,
-    myDomain:MyDomains,
-    watchOnly:WatchOnlyManager,
+    myDomain: MyDomains,
+    watchOnly: WatchOnlyManager,
     show: {
         loading: Tips.loading,
         success: Tips.success,
@@ -34,9 +34,9 @@ export default {
         loading: Tips.loaded
     },
     send: {
-        transfer: async(targetaddr: string, asset: string, sendcount: number) => {
+        transfer: async (targetaddr: string, asset: string, sendcount: number) => {
             let coin: Asset = Context.Assets[asset] as Asset;
-           await Transfer.contactTransaction(targetaddr, coin, sendcount);
+            return await Transfer.contactTransaction(targetaddr, coin, sendcount);
         },
         // invoke: Transfer.nep5Transaction,
         claim: Transfer.claimGas,
@@ -54,14 +54,15 @@ export default {
         total: () => { return Context.total },
         claim: () => { return Context.claim },
         sendCoin: () => { return Transfer.coin },
+        sendAddr: () => { return Transfer.address },
         addrByDomain: async (domain: string) => { return await NNS.verifyDomain(domain) },
         domainByAddr: NNS.getDomainsByAddr,
         wif: Wallet.prikey2Wif,
         domainState: Auction.queryDomainState,
         root: async () => { NNS.getRoot() },
-        myDomain:MyDomains.getAllNeoName,
-        bidInfo:Auction.getBidDetail,
-        watchonly:WatchOnlyManager.getAll
+        myDomain: MyDomains.getAllNeoName,
+        bidInfo: Auction.getBidDetail,
+        watchonly: WatchOnlyManager.getAll
     },
     set: {
         cache: Cache.put,
@@ -69,17 +70,18 @@ export default {
         account_json: Wallet.importAccount,
         openid: Context.openid,
         formid: (formid: string) => { Transfer.formId.push(formid); },
-        sendCoin: (coin: Asset) => { Transfer.coin = coin }
+        sendCoin: (coin: Asset) => { Transfer.coin = coin },
+        setAddr: (addr: WatchOnlyAccount) => { Transfer.address = addr }
     },
     delete: {
         account: Wallet.removeWallet
     },
-    
+
     init: {
         asset: Coin.initAllAsset,
         context: Context.init,
         nns: NNS.initRootDomain,
-        notity:Context.notity
+        notity: Context.notity
     },
     service: {
         start: Context.init,

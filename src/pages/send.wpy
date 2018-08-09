@@ -248,17 +248,22 @@
     };
     events = {};
     onShow() {
-      // console.log('send onShow');
       if (this.coin === null) {
-        // console.log('send onShow coin null');
         const assets = Util.get.assets();
         this.coin = assets['NEO'];
         this.$apply();
       } else {
-        // console.log('send onShow change coin');
-        // console.log(Util.get.sendCoin());
         this.coin = Util.get.sendCoin();
         this.$apply();
+      }
+      let addr = Util.get.sendAddr();
+      if (addr !== null && addr !== undefined) {
+        if (addr.domain !== null && addr.domain !== undefined)
+          this.address = addr.domain;
+        else
+          this.address = addr.address;
+        this.$apply();
+        this.$invoke('caddress','quickAddress',this.address);
       }
     }
     onLoad() {
@@ -283,13 +288,11 @@
         })
       );
     }
-    onReady() {
-    }
+    onReady() {}
     OnScan() {
       let that = this;
       wepy.scanCode({
         success: res => {
-          // console.log(res);
           that.targetAddr = res.result;
           that.$apply();
         },
@@ -301,15 +304,12 @@
     async SendTran() {
       var count = parseFloat(this.amount + '');
       Util.show.loading('交易生成中');
-      const txid = await Util.send.transfer(
+      let txid = await Util.send.transfer(
         this.targetAddr,
         this.coin.name,
         count
-      ); 
-
+      );
       Util.hide.loading();
-      console.log('=============00')
-      console.log(txid)
       if (txid === null || txid === undefined) {
         wepy.showModal({
           title: '提示',

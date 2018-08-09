@@ -30,7 +30,7 @@
       clabel: CLabel
     };
     data = {
-      needEdit: 1
+      needEdit: 0
     };
     computed = {};
     methods = {
@@ -46,7 +46,7 @@
       this.$apply();
       //这里有两种应用场景，第一种是个人界面里可以编辑通讯录，另一种是在转账的时候选择转账用户
       //第一种的话就需要展示添加通讯录的按钮，还需要有左划删除，另一种就啥都没有
-      if (edit === 1) { //1代表true需要编辑
+      if (edit === '1') { //1代表true需要编辑
         this.$invoke(
           'clabel',
           'Show',

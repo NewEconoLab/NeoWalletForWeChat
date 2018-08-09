@@ -60,7 +60,7 @@
     <view class="nns">
       <!-- 此组建可以直接用来展示域名，而不是输入 所以存在两种应用场景 -->
       <text wx:if="{{type=='text'}}">{{value}}</text>
-      <input wx:if="{{type=='input'}}" bindinput="confirm" />
+      <input wx:if="{{type=='input'}}" bindinput="confirm" value="{{value}}" />
     </view>
     <!-- 地址所在的地方 -->
     <view class="addr" wx:if="{{showLower}}">
@@ -108,29 +108,18 @@
         this.$apply();
       },
       confirm(e) {
-        this.showLower = false;
-        const address = e.detail.value;
-        if (address === undefined || address === '') return;
-        // 判断为地址
-        if (address.length === 34 && address[0] === 'A') {
-          // ASCjW4xpfr8kyVHY1J2PgvcgFbPYa1qX7F
-          // console.log(event.detail.address);
-          console.log('============================================')
-          this.address = address;
-          this.addrres = JSON.stringify({
-            'address': address
-          });
-        } else if (address.length > 3 && address.includes('.neo')) {
-          // 如果判断结果为domain，查找地址
-          this.onLoadDomain(address);
-        } else {
-          return;
-        }
-        this.$emit('confirm', e.detail.address);
+        this.OnParseAddress(e.detail.value)
+      },
+      //由外部触发，用户选择通讯录或者扫码
+      quickAddress(addr) {
+        console.log(addr)
+        this.value = addr;
+        this.OnParseAddress(addr)
         this.$apply();
       }
     };
     async onLoadDomain(address) {
+      this.showLower = false;
       console.log('is a domain');
       let domain = await Util.get.addrByDomain(address);
       if (domain !== null) {
@@ -143,30 +132,39 @@
         });
       }
       this.$apply();
-      console.log(domain);
+    }
+    OnParseAddress(address) {
+      if (address === undefined || address === '') return;
+      // 判断为地址
+      if (address.length === 34 && address[0] === 'A') {
+        this.address = address;
+        this.addrres = JSON.stringify({
+          'address': address
+        });
+      } else if (address.length > 3 && address.includes('.neo')) {
+        // 如果判断结果为domain，查找地址
+        this.onLoadDomain(address);
+      } else {
+        return;
+      }
+      this.$emit('confirm', address);
+      this.$apply();
     }
     async onLoad() {
-
       //如果是输入类型则直接返回，如果是展示类型，则解析地址类型
       if (this.type === 'input') return;
-
       // 没有解析到可用域名则直接显示地址
       this.value = Util.get.account().address;
       this.$apply();
-
       //根据地址查询与其绑定的域名
       let domains = await Util.get.myDomain(Util.get.account().address);
-
       if (domains === null || domains === undefined || domains.length === 0) return;
       for (let index in domains) {
         let domain = domains[index];
-
         console.log(domain);
         if (domain['expiring'] !== '已过期') {
-
           // addr为用户地址 
           this.addr = Util.get.account().address;
-
           //value为域名 展示第二层地址展示位
           this.value = domain.domain;
           this.showLower = true;

@@ -2,7 +2,7 @@ import { Helper, Neo, ThinNeo } from '../lib/neo-ts/index'
 import Tips from './tip'
 import Wallet from './wallet'
 import Https from './Https'
-import { Asset, Pay, Claim, History, Utxo } from './entity';
+import { Asset, Pay, Claim, History, WatchOnlyAccount } from './entity';
 import Coin from './coin';
 import { getSecureRandom } from './random'
 import { formatTime } from './time';
@@ -12,6 +12,7 @@ export default class Transfer {
     static formId = [];
     static TXs = [];
     static coin: Asset;
+    static address:WatchOnlyAccount = null;
     constructor() { };
 
     /**
