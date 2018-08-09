@@ -1,105 +1,99 @@
 <style lang="less">
-Page {
-  background-color: #f5f5f5;
-  height: 100%;
-}
-.container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-sizing: border-box;
-}
-
-.function-title {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  align-items: center;
-  background-color: white;
-  height: 104rpx;
-  margin-top: 1rpx;
-  .text {
-    font-family: PingFangSC-Regular;
-    font-size: 12px;
-    color: #9a9a9a;
-    letter-spacing: 0;
-    line-height: 12px;
-    margin-left: 30rpx;
-    align-content: center;
+  Page {
+    background-color: #f5f5f5;
+    height: 100%;
   }
-}
-.text-item {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  margin-top: 2rpx;
-  width: 100%;
-  background-color: white;
-  .content {
-    word-break: break-all;
-    font-family: PingFangSC-Medium;
-    font-size: 14px;
-    color: #333333;
-    letter-spacing: 0;
-    line-height: 14px;
+  .container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+  }
+  .function-title {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
     background-color: white;
-    margin: 0 30rpx 40rpx 30rpx;
+    height: 104rpx;
+    margin-top: 1rpx;
+    .text {
+      font-family: PingFangSC-Regular;
+      font-size: 12px;
+      color: #9a9a9a;
+      letter-spacing: 0;
+      line-height: 12px;
+      margin-left: 30rpx;
+      align-content: center;
+    }
   }
-}
-
-.btn {
-  background: #22a4ff;
-  box-shadow: 0 2px 5px 0 rgba(119, 204, 248, 0.5);
-  border-radius: 3px;
-  width: 690rpx;
-  height: 108rpx;
-  color: white;
-  font-size: 14px;
-  margin-top: 200rpx;
-}
-
-.scroll {
-  width: 100%;
-  height: 100%;
-}
-.inner {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 200rpx;
-}
-::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-  color: transparent;
-}
-
-.foot-button {
-  margin-top: 55rpx;
-  margin-bottom: 100rpx;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  button {
-    font-size: 14px;
-    height: 98rpx;
+  .text-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    margin-top: 2rpx;
+    width: 100%;
+    background-color: white;
+    .content {
+      word-break: break-all;
+      font-family: PingFangSC-Medium;
+      font-size: 14px;
+      color: #333333;
+      letter-spacing: 0;
+      line-height: 14px;
+      background-color: white;
+      margin: 0 30rpx 40rpx 30rpx;
+    }
+  }
+  .btn {
+    background: #22a4ff;
+    box-shadow: 0 2px 5px 0 rgba(119, 204, 248, 0.5);
+    border-radius: 3px;
     width: 690rpx;
-    background-color: #22a4ff;
-    line-height: 98rpx;
+    height: 108rpx;
+    color: white;
+    font-size: 14px;
+    margin-top: 200rpx;
   }
-  button::after {
-    border: none;
+  .scroll {
+    width: 100%;
+    height: 100%;
   }
-}
-
-//按钮点击后颜色
-.btn_hover {
-  background-color: gray;
-}
+  .inner {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 200rpx;
+  }
+   ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    color: transparent;
+  }
+  .foot-button {
+    margin-top: 55rpx;
+    margin-bottom: 100rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    button {
+      font-size: 14px;
+      height: 98rpx;
+      width: 690rpx;
+      background-color: #22a4ff;
+      line-height: 98rpx;
+    }
+    button::after {
+      border: none;
+    }
+  } //按钮点击后颜色
+  .btn_hover {
+    background-color: gray;
+  }
   .bottom-btn {
     position: absolute;
     bottom: 0;
@@ -109,7 +103,7 @@ Page {
     border-radius: 0;
     color: white;
     font-size: 12px;
-    line-height:88rpx;
+    line-height: 88rpx;
   }
   .bottom-btn::after {
     border: none;
@@ -118,113 +112,124 @@ Page {
 </style>
 
 <script>
-import wepy from 'wepy';
-import 'wepy-async-function';
-
-import Util from './utils/index';
-import Https from './utils/Https'
-export default class extends wepy.app {
-  config = {
-    pages: [
-      'pages/index',
-      'pages/register',
-      'pages/receive',
-      'pages/regresult',
-      'pages/accounts',
-      'pages/account',
-      'pages/importaccount',
-      'pages/home',
-      'pages/send',
-      'pages/history',
-      'pages/mine',
-      'pages/nns',
-      'pages/transaction',
-      'pages/watchonly',
-      'pages/watch',
-      'pages/registerwatch',
-      'pages/gas2sgas',
-      'pages/startbidding',
-      'pages/assets',
-      'pages/contact',
-      'pages/addcontact',
-      'pages/myauction',
-      'pages/nnsloading',
-      'pages/nnsbidding',
-      'pages/nnsmydomain',
-      'pages/nnsdomain',
-      'pages/auction'
-    ],
-    window: {
-      backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: 'white',
-      navigationBarTitleText: 'NEL',
-      navigationBarTextStyle: 'black'
-    },
-    tabBar: {
-      color: '#A9A9A9',
-      selectedColor: '#333333',
-      backgroundColor: '#ffffff',
-      borderStyle: 'black',
-      list: [
-        {
-          pagePath: 'pages/home',
-          text: '钱包',
-          iconPath: 'images/Wallet.png',
-          selectedIconPath: 'images/Wallet_s.png'
-        },
-        {
-          pagePath: 'pages/send',
-          text: '转账',
-          iconPath: 'images/Transfer.png',
-          selectedIconPath: 'images/Transfer_s.png'
-        },
-        {
-          pagePath: 'pages/nns',
-          text: 'NNS',
-          iconPath: 'images/NNS.png',
-          selectedIconPath: 'images/NNS_s.png'
-        },
-        {
-          pagePath: 'pages/mine',
-          text: '个人',
-          iconPath: 'images/Mine.png',
-          selectedIconPath: 'images/Mine_s.png'
-        }
-      ]
-    }
-  };
-
-  globalData = {
-    userInfo: null
-  };
-
-  constructor() {
-    super();
-    this.use('requestfix');
-  }
-
-  onLaunch() {
-    const that = this;
-
-    // 登陆获取用户code
-    wx.login({
-      success: async function(res) {
-        const code = res['code'];
-        if (code) {
-          // 获取用户openid
-          let id = await Https.addr_openid(code);
-          id = id['openid'];
-          // 保存用户id在wallet中
-          Util.set.openid = id;
-        }
+  import wepy from 'wepy';
+  import 'wepy-async-function';
+  import Util from './utils/index';
+  import Https from './utils/Https'
+  export default class extends wepy.app {
+    config = {
+      pages: [
+        'pages/index',
+        'pages/register',
+        'pages/receive',
+        'pages/regresult',
+        'pages/accounts',
+        'pages/account',
+        'pages/importaccount',
+        'pages/home',
+        'pages/send',
+        'pages/history',
+        'pages/mine',
+        'pages/nns',
+        'pages/transaction',
+        'pages/watchonly',
+        'pages/watch',
+        'pages/registerwatch',
+        'pages/gas2sgas',
+        'pages/startbidding',
+        'pages/assets',
+        'pages/contact',
+        'pages/addcontact',
+        'pages/myauction',
+        'pages/nnsloading',
+        'pages/nnsbidding',
+        'pages/nnsmydomain',
+        'pages/nnsdomain',
+        'pages/auction'
+      ],
+      window: {
+        backgroundTextStyle: 'light',
+        navigationBarBackgroundColor: 'white',
+        navigationBarTitleText: 'NEL',
+        navigationBarTextStyle: 'black'
+      },
+      tabBar: {
+        color: '#A9A9A9',
+        selectedColor: '#333333',
+        backgroundColor: '#ffffff',
+        borderStyle: 'black',
+        list: [{
+            pagePath: 'pages/home',
+            text: '钱包',
+            iconPath: 'images/Wallet.png',
+            selectedIconPath: 'images/Wallet_s.png'
+          },
+          {
+            pagePath: 'pages/send',
+            text: '转账',
+            iconPath: 'images/Transfer.png',
+            selectedIconPath: 'images/Transfer_s.png'
+          },
+          {
+            pagePath: 'pages/nns',
+            text: 'NNS',
+            iconPath: 'images/NNS.png',
+            selectedIconPath: 'images/NNS_s.png'
+          },
+          {
+            pagePath: 'pages/mine',
+            text: '个人',
+            iconPath: 'images/Mine.png',
+            selectedIconPath: 'images/Mine_s.png'
+          }
+        ]
       }
-    });
-    Util.init.nns();
-    Util.init.notity();
-    // 循环执行代码
-    setInterval(async () => {
-      Util.service.update();
-    }, 15000); // 循环时间 这里是15秒
+    };
+    globalData = {
+      userInfo: null
+    };
+    constructor() {
+      super();
+      this.use('requestfix');
+      //   this.use('promisify');
+      console.log('-----------------------------')
+       this.testAsync()
+    }
+   async sleep(s) {
+      let id = await Https.addr_openid('code');
+      // return new Promise((resolve, reject) => {
+      //   setTimeout(() => {
+      //     resolve('promise resolved')
+      //   }, s * 1000)
+      // })
+      return id
+    }
+    async testAsync() {
+      const data = await this.sleep(3)
+      console.log(data)
+      return data;
+    }
+    onLaunch() {
+      const that = this;
+      // 登陆获取用户code
+      wx.login({
+        success: async function(res) {
+          const code = res['code'];
+          if (code) {
+            // 获取用户openid
+            let id = await Https.addr_openid(code);
+            id = id['openid'];
+            // 保存用户id在wallet中
+            Util.set.openid = id;
+          }
+        }
+      });
+      Util.init.nns();
+      Util.init.notity();
+      // 循环执行代码
+      setInterval(async() => {
+        Util.service.update();
+      }, 15000); // 循环时间 这里是15秒
+    }
   }
-}
 </script>

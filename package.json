@@ -1,6 +1,6 @@
 {
   "name": "neowallet",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "description": "A WePY project",
   "main": "dist/app.js",
   "scripts": {
@@ -14,17 +14,17 @@
     "module-a": false,
     "./src/components/list": "./src/components/wepy-list.wpy"
   },
-  "author": "nuanbing <vvvincentvan@gmail.com>",
+  "author": "nuanbing <jinghui@wayne.edu>",
   "license": "MIT",
   "dependencies": {
     "@types/base-64": "^0.1.2",
     "@types/crypto-js": "^3.1.38",
     "@types/scrypt-async": "^1.3.0",
     "@types/text-encoding": "0.0.32",
+    "ajv": "^6.5.2",
     "base-64": "^0.1.0",
     "buffer": "5.0.8",
     "crypto-js": "3.1.9-1",
-    "es6-promisify": "^5.0.0",
     "global": "4.3.2",
     "identicon.js": "^2.3.2",
     "redux": "^3.7.2",
@@ -36,9 +36,8 @@
     "reselect": "^3.0.1",
     "scrypt-async": "^2.0.0",
     "typescript": "^2.8.1",
-    "wafer2-client-sdk": "^1.1.1",
     "wepy": "^1.7.2",
-    "wepy-async-function": "^1.4.4",
+    "wepy-async-function": "^1.4.6",
     "wepy-com-toast": "^1.0.3",
     "wepy-redux": "^1.5.3"
   },

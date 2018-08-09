@@ -24,14 +24,13 @@ module.exports = {
     typescript: {
       compilerOptions: {
         "module": "commonjs",
-        "target": "es6",
         "declaration": true,
         "sourceMap": true,
         "removeComments": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true
       }
-  },
+    },
     less: {
       compress: prod
     },
@@ -39,7 +38,7 @@ module.exports = {
       outputStyle: 'compressed'
     },*/
     babel: {
-      sourceMap: !prod,
+      sourceMap: true,
       presets: [
         'env'
       ],
@@ -48,6 +47,7 @@ module.exports = {
         'transform-decorators-legacy',
         'transform-object-rest-spread',
         'transform-export-extensions',
+        //"syntax-export-extensions"
       ]
     }
   },

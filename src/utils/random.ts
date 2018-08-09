@@ -1,11 +1,10 @@
 import Tips from './tip';
 import { SHA256 } from 'crypto-js'
-import wepy from 'wepy'
 import User from './user';
 
 /**
  *  Get random string algorithm based on wechat login encrypted information.
- *  This method can only be used on wechat mini program pletform, since code, 
+ *  This method can only be used on wechat mini program platform, since code, 
  *  signature, encryptedData and iv change every time login is called 
  * 
  *  max length is 256
@@ -15,7 +14,7 @@ import User from './user';
  * @param {number} len length for random string
  * @return {string}  
  */
-export async function getSecureRandom(len:number) {
+export async function getSecureRandom(len:number):Promise<string> {
   Tips.loading('获取随机数种子' );
   let random:string = ''
   const code = await User.getLoginCode();
@@ -26,7 +25,7 @@ export async function getSecureRandom(len:number) {
   random = SHA256(userinfo.encryptedData + random).toString()
   random = SHA256(userinfo.iv + random).toString()
   random = SHA256(Math.random()+''+random).toString()
-  // // console.log(random)
+  console.log(random)
   Tips.loaded();
   return random.slice(0, len)
 }

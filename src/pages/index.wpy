@@ -168,7 +168,9 @@
           return;
         }
         Util.show.loading('私钥生成中');
+        console.log('====================.......................')
         let privateKey = await Util.get.random(64);
+        console.log('====================....llll...................')
         var account = Util.get.nep2(label, privateKey);
         setTimeout(function() {
           Util.hide.loading();
