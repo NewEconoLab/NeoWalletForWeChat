@@ -1,71 +1,68 @@
 <style lang="less">
-.avater {
-  position: absolute;
-  z-index: 9999;
-  width: 116rpx;
-  height: 116rpx;
-  margin-top: 35rpx;
-  border: 12rpx solid #f5f5f5;
-  border-radius: 50%;
-}
-.area-qrcode {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 650rpx; // 750rpx
-  margin-top: 92rpx;
-  background: #ffffff;
-  box-shadow: 0 2px 5px 0 rgba(192, 192, 192, 0.5);
-  border-radius: 3px;
-}
-
-.note-text {
-  margin-top: 50rpx;
-  font-size: 16px;
-  color: #69c0fd;
-}
-
-.qrcode {
-  margin-top: 120rpx;
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  align-items: center;
-  .canvas {
-    width: 500rpx;
-    height: 500rpx;
+  .avater {
+    position: absolute;
+    z-index: 9999;
+    width: 116rpx;
+    height: 116rpx;
+    margin-top: 35rpx;
+    border: 12rpx solid #f5f5f5;
+    border-radius: 50%;
   }
-  margin-bottom: 40rpx;
-}
-
-.area-address {
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  margin: 50rpx 15px 20px 27rpx;
-  width: 682rpx;
-  justify-content: flex-start;
-}
-.address-label {
-  font-family: PingFangSC-Regular;
-  font-size: 12px;
-  color: #9a9a9a;
-  letter-spacing: 0;
-  line-height: 12px;
-}
-.address-content {
-  font-family: PingFangSC-Medium;
-  font-size: 14px;
-  color: #22a4ff;
-  letter-spacing: 0;
-  line-height: 14px;
-  margin-top: 10rpx;
-}
+  .area-qrcode {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 650rpx; // 750rpx
+    margin-top: 92rpx;
+    background: #ffffff;
+    box-shadow: 0 2px 5px 0 rgba(192, 192, 192, 0.5);
+    border-radius: 3px;
+  }
+  .note-text {
+    margin-top: 50rpx;
+    font-size: 16px;
+    color: #69c0fd;
+  }
+  .qrcode {
+    margin-top: 120rpx;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    .canvas {
+      width: 500rpx;
+      height: 500rpx;
+    }
+    margin-bottom: 40rpx;
+  }
+  .area-address {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    margin: 50rpx 15px 20px 27rpx;
+    width: 682rpx;
+    justify-content: flex-start;
+  }
+  .address-label {
+    font-family: PingFangSC-Regular;
+    font-size: 12px;
+    color: #9a9a9a;
+    letter-spacing: 0;
+    line-height: 12px;
+  }
+  .address-content {
+    font-family: PingFangSC-Medium;
+    font-size: 14px;
+    color: #22a4ff;
+    letter-spacing: 0;
+    line-height: 14px;
+    margin-top: 10rpx;
+  }
 </style>
 
 <template>
   <view class="container">
-    <image src="{{avatarUrl}}" class="avater"/>
+    <image src="{{avatarUrl}}" class="avater" />
     <view class="area-qrcode">
       <view class="qrcode">
         <canvas class="canvas" canvas-id="address"></canvas>
@@ -82,116 +79,105 @@
 </template>
 
 <script>
-import wepy from 'wepy';
-import drawQrcode from '../lib/qrcode/qr';
-import Util from '../utils/index';
-export default class Receive extends wepy.page {
-  customData = {}; // 自定义数据
-
-  customFunction() {} // 自定义方法
-
-  async onLoad(option) {
-    this.account = Util.get.account();
-    const user = await Util.get.userInfo();
-    this.avatarUrl = user.avatarUrl;
-    this.$apply();
-    this.onGetSystemInfo()
-  } // 在Page和Component共用的生命周期函数
-
-  onShow() {
-    wx.showShareMenu({
-      withShareTicket: true,
-      success: function(res) {
-        // 分享成功
-        // console.log('shareMenu share success');
-        // console.log('分享' + res);
-      },
-      fail: function(res) {
-        // 分享失败
-        // console.log(res);
-      }
-    });
-  } // 只在Page中存在的页面生命周期函数
-
-  config = {
-    navigationBarTitleText: '收款'
-  }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
-
-  data = {
-    account: {},
-    avatarUrl: ''
-  }; // 页面所需数据均需在这里声明，可用于模板数据绑定
-
-  components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
-
-  mixins = []; // 声明页面所引用的Mixin实例
-
-  computed = {}; // 声明计算属性（详见后文介绍）
-
-  watch = {}; // 声明数据watcher（详见后文介绍）
-
-  methods = {
-    copyToClip() {
-      let that = this;
-      wepy.setClipboardData({
-        data: that.account.address,
+  import wepy from 'wepy';
+  import drawQrcode from '../lib/qrcode/qr';
+  import Util from '../utils/index';
+  export default class Receive extends wepy.page {
+    customData = {}; // 自定义数据
+    customFunction() {} // 自定义方法
+    async onLoad(option) {
+      this.account = Util.get.account();
+      const user = await Util.get.userInfo();
+      this.avatarUrl = user.avatarUrl;
+      this.$apply();
+      this.onGetSystemInfo()
+    } // 在Page和Component共用的生命周期函数
+    onShow() {
+      wx.showShareMenu({
+        withShareTicket: true,
         success: function(res) {
-          wepy.getClipboardData({
+          // 分享成功
+          // console.log('shareMenu share success');
+          // console.log('分享' + res);
+        },
+        fail: function(res) {
+          // 分享失败
+          // console.log(res);
+        }
+      });
+    } // 只在Page中存在的页面生命周期函数
+    config = {
+      navigationBarTitleText: '收款'
+    }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
+    data = {
+      account: {},
+      avatarUrl: ''
+    }; // 页面所需数据均需在这里声明，可用于模板数据绑定
+    components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
+    mixins = []; // 声明页面所引用的Mixin实例
+    computed = {}; // 声明计算属性（详见后文介绍）
+    watch = {}; // 声明数据watcher（详见后文介绍）
+    methods = {
+      copyToClip() {
+        let that = this;
+        wepy.setClipboardData({
+          data: that.account.address,
+          success: function(res) {
+            wepy.getClipboardData({
+              success: function(res) {
+                // console.log(res.data); // data
+                Util.show.alert('地址复制成功');
+              }
+            });
+          }
+        });
+      }
+    }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
+    onShareAppMessage() {
+      return {
+        title:'NEO地址：'+ Util.get.account().address,
+        path: './page/send',
+        success: function(res) {
+          // console.log(res.shareTickets[0]);
+          // // console.log
+          wx.getShareInfo({
+            shareTicket: res.shareTickets[0],
             success: function(res) {
-              // console.log(res.data); // data
-              Util.show.alert('地址复制成功');
+              // console.log(res);
+            },
+            fail: function(res) {
+              // console.log(res);
+            },
+            complete: function(res) {
+              // console.log(res);
             }
+          });
+        },
+        fail: function(res) {
+          // 分享失败
+          // console.log(res);
+        }
+      };
+    }
+    onGetSystemInfo() {
+      let that = this;
+      wx.getSystemInfo({
+        success: function(res) {
+          // console.log(res.model);
+          // console.log(res.pixelRatio);
+          // console.log(res.windowWidth);
+          // console.log(res.windowHeight);
+          // console.log(res.language);
+          // console.log(res.version);
+          // console.log(res.platform);
+          drawQrcode({
+            width: res.windowWidth * (2.0 / 3),
+            height: res.windowWidth * (2.0 / 3),
+            canvasId: 'address',
+            text: that.account.address
           });
         }
       });
     }
-  }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
-  onShareAppMessage() {
-    return {
-      title: 'NEO小程序钱包',
-      path: './page/send',
-      success: function(res) {
-        // console.log(res.shareTickets[0]);
-        // // console.log
-        wx.getShareInfo({
-          shareTicket: res.shareTickets[0],
-          success: function(res) {
-            // console.log(res);
-          },
-          fail: function(res) {
-            // console.log(res);
-          },
-          complete: function(res) {
-            // console.log(res);
-          }
-        });
-      },
-      fail: function(res) {
-        // 分享失败
-        // console.log(res);
-      }
-    };
   }
-  onGetSystemInfo() {
-    let that = this;
-    wx.getSystemInfo({
-      success: function(res) {
-        // console.log(res.model);
-        // console.log(res.pixelRatio);
-        // console.log(res.windowWidth);
-        // console.log(res.windowHeight);
-        // console.log(res.language);
-        // console.log(res.version);
-        // console.log(res.platform);
-
-        drawQrcode({
-          width: res.windowWidth*(2.0/3),
-          height: res.windowWidth*(2.0/3),
-          canvasId: 'address',
-          text: that.account.address
-        });
-      }
-    });
-  }
-}
 </script>

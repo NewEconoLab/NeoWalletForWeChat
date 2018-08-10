@@ -60,7 +60,7 @@
     <view class="nns">
       <!-- 此组建可以直接用来展示域名，而不是输入 所以存在两种应用场景 -->
       <text wx:if="{{type=='text'}}">{{value}}</text>
-      <input wx:if="{{type=='input'}}" bindinput="confirm" value="{{value}}" />
+      <input wx:if="{{type=='input'}}" bindinput="confirm" value="{{value}}" placeholder="address or domain" />
     </view>
     <!-- 地址所在的地方 -->
     <view class="addr" wx:if="{{showLower}}">
@@ -88,7 +88,7 @@
       },
       value: { // 如果是域名则展示域名，如果是地址则展示地址
         type: String,
-        default: 'address or domain'
+        default: ''
       },
       addrres: { //用来向外传递域名及地址解析结果 目前只有添加联系人的时候需要
         type: String,
