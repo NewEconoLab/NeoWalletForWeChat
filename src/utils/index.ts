@@ -74,7 +74,8 @@ export default {
         setAddr: (addr: WatchOnlyAccount) => { Transfer.address = addr }
     },
     delete: {
-        account: Wallet.removeWallet
+        account: Wallet.removeWallet,
+        watchonly:WatchOnlyManager.delete
     },
 
     init: {

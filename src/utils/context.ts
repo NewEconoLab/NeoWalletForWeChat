@@ -215,15 +215,16 @@ export class Context {
 
         let res = await Https.api_getclaimgas(Wallet.account.address, 0);
         let claims = [];
+        console.log('claims')
+        console.log(res)
         if (res === null)
             return;
         for (let i in res['claims']) {
-            let claim = new Claim(res.claims[i]);
-            claims.push(claim);
+            claims.push(new Claim(res.claims[i]));
         }
 
         let a = res['gas'].toFixed(8);
-
+        console.log(a)
         Context.claim = new Claims(claims, a);
     }
 

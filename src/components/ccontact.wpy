@@ -76,7 +76,7 @@
         <text class='msg-text'>{{item.domain== null?item.address:item.domain}}</text>
       </view>
       <view class='msg-menu'>
-        <view id='{{item.tag}}' class='menu-delete' bindtap='onDeleteMsgTap' bindlongtap='onDeleteMsgLongtap'>
+        <view id='{{item.tag}}' class='menu-delete' @tap="onDeleteMsgTap({{item.tag}})">
           <image src='../images/delete.png' />
         </view>
       </view>
@@ -191,13 +191,13 @@
         }
         if (this.moveX === this.correctMoveLeft) {
           this.showState = 1;
-          this.lastShowMsgId = e.currentTarget.tag;
+          this.lastShowMsgId = e.currentTarget.id;
           return;
         }
         if (this.moveX < -this.thresholdMoveLeft) {
           this.moveX = -this.correctMoveLeft;
           this.showState = 1;
-          this.lastShowMsgId = e.currentTarget.tag;
+          this.lastShowMsgId = e.currentTarget.id;
         } else {
           this.moveX = 0;
           this.showState = 0;
@@ -206,7 +206,7 @@
             scrollY: true
           });
         }
-        this.translateXMsgItem(e.currentTarget.tag, this.moveX, 500);
+        this.translateXMsgItem(e.currentTarget.id, this.moveX, 500);
       },
       onShow(edit) {
         // 选择通讯录的话就不需要编辑通讯录
@@ -216,11 +216,16 @@
       },
       OnSelect(tag) {
         //编辑状态下禁止点击事件//或者直接作为观察账户使用也可以
-        if (this.needEdit) return;
+        if (this.needEdit) {} else {
+          Util.set.setAddr(this.msgList[tag]);
+          wepy.navigateBack();
+        }
+      },
+      onDeleteMsgTap(tag) {
+        console.log('delete watch')
         console.log(tag)
-        Util.set.setAddr(this.msgList[tag]);
-        console.log(this.msgList[tag])
-        wepy.navigateBack();
+        // 删除元素
+        Util.delete.watchonly(tag)
       }
     };
     onLoad() {
@@ -228,7 +233,8 @@
       this.$apply();
     }
     translateXMsgItem(id, x, duration) {
-      var animation = wx.createAnimation({
+      console.log(id)
+      let animation = wx.createAnimation({
         duration: duration
       });
       animation.translateX(x).step({

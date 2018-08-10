@@ -13,8 +13,9 @@ export default class WatchOnlyManager {
         let accounts = Cache.get(WATCH_ONLY) || {};
         let res = [];
         for (let key in accounts) {
+            console.log(key)
             if (key !== tag)
-                res[key] = accounts[key];
+                res[key] = accounts[key] as WatchOnlyAccount;
         }
         Cache.put(WATCH_ONLY, res);
     }

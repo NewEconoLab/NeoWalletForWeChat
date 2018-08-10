@@ -1,7 +1,7 @@
 import wepy from 'wepy'
 export default class AuthMixin extends wepy.mixin {
   data = {
-    showModal: true,
+    showModal: false,
     hasUserInfo: true,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
   }
@@ -26,12 +26,14 @@ export default class AuthMixin extends wepy.mixin {
     let that = this;
     wx.getSetting({
       success: (res) => {
+        console.log(res)
+        let auth = res.authSetting['scope.userInfo'];
+        console.log(auth)
         // 没有用户权限
-        if (res.authSetting['scope.userInfo']) {
+        if (!auth) {
           that.setData({
-            showModal: false
+            showModal: true
           })
-          return;
         }
       }
     })
