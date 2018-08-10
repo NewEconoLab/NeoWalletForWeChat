@@ -10,6 +10,9 @@
     width: 108rpx;
     height: 108rpx;
     margin-top: 32rpx;
+    image {
+      border-radius: 50%;
+    }
   }
   .upper-nickName {
     font-family: PingFangSC-Medium;
@@ -70,13 +73,55 @@
   .selected {
     height: 90rpx;
     background-color: white;
+  } //////////////////////////
+  .mask {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #000;
+    z-index: 9000;
+    opacity: 0.4;
+  }
+  .modalDlg {
+    width: 580rpx;
+    height: 620rpx;
+    position: fixed;
+    top: 50%;
+    left: 0;
+    z-index: 9999;
+    margin: -370rpx 85rpx;
+    background-color: #fff;
+    border-radius: 36rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .modalDlg .mhead {
+    margin-top: 30rpx;
+  }
+  .modalDlg .mcontent {
+    margin-top: 100rpx;
+    font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 100;
+    padding: 10rpx 20rpx 0 20rpx;
+  }
+  .btn {
+    width: 400rpx;
+    height: 80rpx;
+    margin-top: 200rpx;
+    font-size: 14px;
+    background-color: green;
+    color: white;
   }
 </style>
 <template>
   <view class="container" style="background: linear-gradient(to bottom, #51D2EE 0%, #21A3FF 100%);">
     <view class="area-uppper">
-      <image class="upper-avatar" src="{{avatarUrl}}" />
-      <text class="upper-nickName">{{nickName}}</text>
+      <open-data class="upper-avatar" type="userAvatarUrl"></open-data>
+      <open-data class="upper-nickName" type="userNickName" lang="zh_CN"></open-data>
     </view>
     <view class="area-lower">
       <view class="lower-nav">
@@ -96,6 +141,12 @@
         <caccounts wx:if="{{isSelected==2}}" :login.sync='login' @changeAccount.user="OnSelect" />
       </view>
     </view>
+    <view class="mask" catchtouchmove="preventTouchMove" wx:if="{{showModal}}"></view>
+    <view class="modalDlg" wx:if="{{showModal  && canIUse}}">
+      <text class='mhead'>提醒</text>
+      <text class='mcontent'>小程序需要获取您的微信头像及昵称，信息不会上传网络，请放心授权。</text>
+      <button class='btn' open-type="getUserInfo" bindgetuserinfo="getUserInfo">授权</button>
+    </view>
   </view>
 </template>
 
@@ -105,6 +156,7 @@
   import CAccounts from '../components/login/caccounts';
   import CImport from '../components/login/cimport';
   import CCreate from '../components/login/ccreate';
+  import AuthMixin from '../mixins/auth'
   import {
     Helper
   } from '../lib/neo-ts/index';
@@ -117,12 +169,13 @@
       cimport: CImport,
       ccreate: CCreate
     };
+    mixins = [AuthMixin]
     data = {
       avatarUrl: '',
       nickName: '',
       isSwitch: false,
       isSelected: 0,
-      login: 1
+      login: 1,
     };
     computed = {};
     methods = {
@@ -209,6 +262,7 @@
       this.$apply();
     }
     async onShow() {
+      this.checkAuth()
       //获取缓存的用户信息
       const userInfo = await Util.get.userInfo();
       this.avatarUrl = userInfo.avatarUrl;
