@@ -1,146 +1,132 @@
 <style lang="less">
-.wallet-block {
-  width: 660rpx;
-  display: block;
-  flex-direction: row;
-}
-.content {
-  width: 660rpx;
-  height: 182rpx;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background-color: white;
-  border-radius: 5px;
-  margin: 32rpx 0 13rpx 0;
-  background-color: white;
-  box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
-}
-.area-icon {
-  width: 80rpx;
-  height: 80rpx;
-  margin-left: 32rpx;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  image {
+  .wallet-block {
+    width: 660rpx;
+    display: block;
+    flex-direction: row;
+  }
+  .content {
+    width: 660rpx;
+    height: 182rpx;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: white;
+    border-radius: 5px;
+    margin: 32rpx 0 13rpx 0;
+    background-color: white;
+    box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
+  }
+  .area-icon {
     width: 80rpx;
     height: 80rpx;
-    background-color: white;
-    border-radius: 50%;
+    margin-left: 32rpx;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    image {
+      width: 80rpx;
+      height: 80rpx;
+      background-color: white;
+      border-radius: 50%;
+    }
   }
-}
-
-.area-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  // margin-top: 44rpx;
-  margin-left: 28rpx;
-  width: 100%;
-}
-.info-name {
-  font-size: 17px;
-  width: 100%;
-  margin-top: 44rpx;
-  color: #a3a3a3;
-}
-.info-addr {
-  font-size: 11px;
-  width: 100%;
-  margin-top: 30rpx;
-  color: #cccccc;
-  margin-bottom: 45rpx;
-}
-
+  .area-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; // margin-top: 44rpx;
+    margin-left: 28rpx;
+    width: 100%;
+  }
+  .info-name {
+    font-size: 17px;
+    width: 100%;
+    margin-top: 44rpx;
+    color: #a3a3a3;
+  }
+  .info-addr {
+    font-size: 11px;
+    width: 100%;
+    margin-top: 30rpx;
+    color: #cccccc;
+    margin-bottom: 45rpx;
+  }
 </style>
 
 <template>
   <view class="container">
-   <view class="wallet-block" wx:for="{{watchonly}}" >
-     <view class="content">
-      <view class="area-icon">
-        <image  src="../images/icon.png" />
-      </view>
-      <view class="area-info" @tap="OnSelect({{item.address}},{{item.label}})">
-        <text class="info-name"> {{item.label}}</text>
-        <text class="info-addr">{{item.address}}</text>
-      </view>
+    <view class="wallet-block" wx:for="{{watchonly}}">
+      <view class="content">
+        <view class="area-icon">
+          <image src="../images/icon.png" />
+        </view>
+        <view class="area-info" @tap="OnSelect({{item.address}},{{item.label}})">
+          <text class="info-name"> {{item.label}}</text>
+          <text class="info-addr">{{item.address}}</text>
+        </view>
       </view>
     </view>
-      <view class="foot-button">
-        <button type="primary" @tap="registerWatch()">添加观察账户</button>
-      </view>
+    <view class="foot-button">
+      <button type="primary" @tap="registerWatch()">添加观察账户</button>
+    </view>
   </view>
 </template>
 
 <script>
-import wepy from 'wepy';
-import Util, { Https } from '../utils/index';
-export default class WatchOnly extends wepy.page {
-  customData = {}; // 自定义数据
-
-  customFunction() {} // 自定义方法
-
-  onLoad() {
-    this.OnLoadWatchOnly();
-  } // 在Page和Component共用的生命周期函数
-
-  async onShow() {} // 只在Page中存在的页面生命周期函数
-
-  config = {
-    navigationBarTitleText: '观察账户列表'
-  }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
-
-  data = {
-    watchonly: []
-  }; // 页面所需数据均需在这里声明，可用于模板数据绑定
-
-  components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
-
-  mixins = []; // 声明页面所引用的Mixin实例
-
-  computed = {}; // 声明计算属性（详见后文介绍）
-
-  watch = {}; // 声明数据watcher（详见后文介绍）
-
-  methods = {
-    async OnSelect(addr, label) {
-      const selected = addr;
-      wepy.reLaunch({
-        url: '/pages/watch?address=' + selected + '&label=' + label
-      });
-    },
-    registerWatch() {
-      wepy.navigateTo({
-        url: '/pages/registerwatch'
-      });
+  import wepy from 'wepy';
+  import Util, {
+    Https
+  } from '../utils/index';
+  export default class WatchOnly extends wepy.page {
+    customData = {}; // 自定义数据
+    customFunction() {} // 自定义方法
+    onLoad() {
+      this.OnLoadWatchOnly();
+    } // 在Page和Component共用的生命周期函数
+    async onShow() {} // 只在Page中存在的页面生命周期函数
+    config = {
+      navigationBarTitleText: '观察账户列表'
+    }; // 只在Page实例中存在的配置数据，对应于原生的page.json文件
+    data = {
+      watchonly: []
+    }; // 页面所需数据均需在这里声明，可用于模板数据绑定
+    components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
+    mixins = []; // 声明页面所引用的Mixin实例
+    computed = {}; // 声明计算属性（详见后文介绍）
+    watch = {}; // 声明数据watcher（详见后文介绍）
+    methods = {
+      async OnSelect(addr, label) {
+        const selected = addr;
+        wepy.reLaunch({
+          url: '/pages/watch?address=' + selected + '&label=' + label
+        });
+      },
+      registerWatch() {
+        wepy.navigateTo({
+          url: '/pages/registerwatch'
+        });
+      }
+    }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
+    events = {}; // 声明组件之间的事件处理函数
+    async OnLoadWatchOnly() {
+      let that = this;
+      let res = await Https.addr_query(Util.get.openid);
+      res = JSON.parse(res);
+      if (res['code'] === 0) {
+        let addr = res['address'];
+        that.watchonly = addr;
+        that.$apply();
+      }
+      wx.hideNavigationBarLoading(); //完成停止加载
+      wx.stopPullDownRefresh(); //停止下拉刷新
     }
-  }; // 声明页面wxml中标签的事件处理函数。注意，此处只用于声明页面wxml中标签的bind、catch事件，自定义方法需以自定义方法的方式声明
-
-  events = {}; // 声明组件之间的事件处理函数
-  async OnLoadWatchOnly() {
-    let that = this;
-
-    let res = await Https.addr_query(Util.get.openid);
-    res = JSON.parse(res);
-    if (res['code'] === 0) {
-      let addr = res['address'];
-      that.watchonly = addr;
-      that.$apply();
+    async onPullDownRefresh() {
+      if (this.isLoading) return;
+      this.isLoading = true;
+      this.$apply();
+      await OnLoadWatchOnly();
+      this.isLoading = false;
+      this.$apply();
     }
-    wx.hideNavigationBarLoading(); //完成停止加载
-    wx.stopPullDownRefresh(); //停止下拉刷新
   }
-
-  async onPullDownRefresh() {
-    if (this.isLoading) return;
-    this.isLoading = true;
-    this.$apply();
-    await OnLoadWatchOnly();
-    this.isLoading = false;
-    this.$apply();
-  }
-}
 </script>

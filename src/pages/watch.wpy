@@ -1,205 +1,197 @@
- <style lang="less">
-
-.area-uppper {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.upper-navigator {
-  margin-top: 100rpx;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
-  justify-content: space-around;
-}
-.upper-item {
-  width: 375rpx;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  .icon {
-    width: 60rpx;
-    height: 60rpx;
+<style lang="less">
+  .area-uppper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  .label {
-    margin-top: 20rpx;
-    font-size: 16px;
-    color: #cccccc;
-    font-family: '黑体';
+  .upper-navigator {
+    margin-top: 100rpx;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    justify-content: space-around;
   }
-}
-.selected {
-  .label {
-    color: white;
+  .upper-item {
+    width: 375rpx;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .icon {
+      width: 60rpx;
+      height: 60rpx;
+    }
+    .label {
+      margin-top: 20rpx;
+      font-size: 16px;
+      color: #cccccc;
+      font-family: '黑体';
+    }
   }
-}
-
-.area-lower {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
-.asset-block {
-  width: 695rpx;
-  display: block;
-  flex-direction: column;
-  border-radius: 5px;
-  margin-top: 32rpx;
-  margin-bottom: 18rpx;
-  background-color: white;
-  justify-content: center;
-}
-
-.content {
-  width: 695rpx;
-  height: 182rpx;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  background-color: white;
-  border-radius: 5px;
-  margin: 32rpx 0 13rpx 0;
-  background-color: white;
-  box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
-}
-.content-left {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-.content-icon {
-  width: 80rpx;
-  height: 80rpx;
-  margin-left: 32rpx;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  image {
+  .selected {
+    .label {
+      color: white;
+    }
+  }
+  .area-lower {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+  .asset-block {
+    width: 695rpx;
+    display: block;
+    flex-direction: column;
+    border-radius: 5px;
+    margin-top: 32rpx;
+    margin-bottom: 18rpx;
+    background-color: white;
+    justify-content: center;
+  }
+  .content {
+    width: 695rpx;
+    height: 182rpx;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    border-radius: 5px;
+    margin: 32rpx 0 13rpx 0;
+    background-color: white;
+    box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
+  }
+  .content-left {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .content-icon {
     width: 80rpx;
     height: 80rpx;
-    background-color: white;
-    border-radius: 50%;
+    margin-left: 32rpx;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    image {
+      width: 80rpx;
+      height: 80rpx;
+      background-color: white;
+      border-radius: 50%;
+    }
   }
-}
-.content-middle {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin-left: 10rpx;
-  .asset {
-    font-family: Arial, Helvetica, sans-serif;
-    color: #a3a3a3;
-    font-size: 15px;
+  .content-middle {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 10rpx;
+    .asset {
+      font-family: Arial, Helvetica, sans-serif;
+      color: #a3a3a3;
+      font-size: 15px;
+    }
+    .price {
+      margin-top: 5rpx;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #a3a3a3;
+      font-size: 15px;
+    }
   }
-  .price {
-    margin-top: 5rpx;
-    font-family: Arial, Helvetica, sans-serif;
-    color: #a3a3a3;
-    font-size: 15px;
+  .content-total {
+    width: 200rpx;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    text {
+      color: #27adf1;
+      font-size: 13px;
+      font-family: Helvetica, Arial, sans-serif;
+    }
   }
-}
-.content-total {
-  width: 200rpx;
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-  text {
-    color: #27adf1;
-    font-size: 13px;
-    font-family: Helvetica, Arial, sans-serif;
-  }
-}
-
-.history-block {
-  width: 695rpx;
-  display: block;
-  flex-direction: column;
-  border-radius: 5px;
-  margin-top: 32rpx;
-  margin-bottom: 18rpx;
-  background-color: white;
-  justify-content: center;
-}
-
-.tx-content {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-//头部
-.area-head {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: flex-end;
-  width: 625rpx;
-  margin: 30rpx 0 0 0;
-  .label {
-    font-size: 17px;
-    font-family: '黑体';
-    color: #a3a3a3;
-  }
-  .time {
-    font-size: 14px;
-    font-family: '黑体';
-    color: #a3a3a3;
-  }
-}
-//交易ID
-.area-txid {
-  display: flex;
-  flex-direction: column;
-  width: 625rpx;
-  height: wrap;
-  border-bottom: thin rgb(230, 230, 230) solid;
-  .txid {
+  .history-block {
+    width: 695rpx;
     display: block;
-    word-break: break-all;
-    font-size: 15px;
-    color: #a3a3a3;
-    margin: 34rpx 0 30rpx 0;
+    flex-direction: column;
+    border-radius: 5px;
+    margin-top: 32rpx;
+    margin-bottom: 18rpx;
+    background-color: white;
+    justify-content: center;
   }
-}
-//确认高度
-.area-confirm {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  align-items: center;
-  margin: 20rpx 20rpx 20rpx 20rpx;
-  width: 625rpx;
-  .label {
+  .tx-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  //头部
+  .area-head {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 625rpx;
+    margin: 30rpx 0 0 0;
+    .label {
+      font-size: 17px;
+      font-family: '黑体';
+      color: #a3a3a3;
+    }
+    .time {
+      font-size: 14px;
+      font-family: '黑体';
+      color: #a3a3a3;
+    }
+  }
+  //交易ID
+  .area-txid {
+    display: flex;
+    flex-direction: column;
+    width: 625rpx;
+    height: wrap;
+    border-bottom: thin rgb(230, 230, 230) solid;
+    .txid {
+      display: block;
+      word-break: break-all;
+      font-size: 15px;
+      color: #a3a3a3;
+      margin: 34rpx 0 30rpx 0;
+    }
+  }
+  //确认高度
+  .area-confirm {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 20rpx 20rpx 20rpx 20rpx;
+    width: 625rpx;
+    .label {
+      font-size: 16px;
+      color: #69c0fd;
+      font-family: '黑体';
+    }
+    .count {
+      font-size: 16px;
+      padding-right: 5px;
+      color: #69c0fd;
+    }
+  }
+  .manage-btn {
+    margin-top: 50rpx;
+    width: 660rpx;
     font-size: 16px;
-    color: #69c0fd;
-    font-family: '黑体';
+    box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
+    button::after {
+      border: none;
+    }
   }
-  .count {
-    font-size: 16px;
-    padding-right: 5px;
-    color: #69c0fd;
-  }
-}
-
-.manage-btn {
-  margin-top: 50rpx;
-  width: 660rpx;
-  font-size: 16px;
-  box-shadow: 2px 2px 20px rgba(130, 130, 130, 0.2);
-  button::after {
-    border: none;
-  }
-}
 </style>
 <template>
   <view class="container">
@@ -210,204 +202,200 @@
             <text class="text">功能</text>
           </view>
           <view class="upper-navigator">
-            <view class="upper-item {{selected==0?'selected':''}}"  @tap="navigate('account')">
-              <image src="../images/W_asset{{selected==0?'_s':''}}.png" class="icon"/>
+            <view class="upper-item {{selected==0?'selected':''}}" @tap="navigate('account')">
+              <image src="../images/W_asset{{selected==0?'_s':''}}.png" class="icon" />
               <text class="label">账户概览</text>
             </view>
-            <view class="upper-item {{selected==1?'selected':''}}"  @tap="navigate('history')" >
-              <image src="../images/W_history{{selected==1?'_s':''}}.png" class="icon"/>
+            <view class="upper-item {{selected==1?'selected':''}}" @tap="navigate('history')">
+              <image src="../images/W_history{{selected==1?'_s':''}}.png" class="icon" />
               <text class="label">交易历史</text>
             </view>
-            <view class="upper-item {{selected==2?'selected':''}}"  @tap="navigate('manager')">
-              <image src="../images/W_account{{selected==2?'_s':''}}.png" class="icon"/>
+            <view class="upper-item {{selected==2?'selected':''}}" @tap="navigate('manager')">
+              <image src="../images/W_account{{selected==2?'_s':''}}.png" class="icon" />
               <text class="label">账户管理</text>
             </view>
           </view>
         </view>
-      <view class="area-lower">
-        <view wx:if="{{selected==0}}">
-          <view class="asset-block" wx:for="{{assets}}" >
-            <view class="content">
-              <view class="content-left">
-                <view class="content-icon">
-                  <image src="../images/neo.png"></image>
+        <view class="area-lower">
+          <view wx:if="{{selected==0}}">
+            <view class="asset-block" wx:for="{{assets}}">
+              <view class="content">
+                <view class="content-left">
+                  <view class="content-icon">
+                    <image src="../images/neo.png"></image>
+                  </view>
+                  <view class="content-middle">
+                    <text class="asset">{{item.amount+" "+item.type}}</text>
+                    <text class="price" style="color:{{item.rise?'#45d68a':'#f67581'}};">{{item.price}}￥</text>
+                  </view>
                 </view>
-                <view class="content-middle">
-                  <text class="asset">{{item.amount+" "+item.type}}</text>
-                  <text class="price" style="color:{{item.rise?'#45d68a':'#f67581'}};">{{item.price}}￥</text>
+                <view class="content-total">
+                  <text>{{item.total}}￥</text>
                 </view>
-              </view>
-              <view class="content-total">
-                <text >{{item.total}}￥</text>
               </view>
             </view>
           </view>
-        </view>
-        <view wx:elif="{{selected==1}}">
-          <text class="empty" hide="{{notEmpty}}">还没有交易记录哦！</text>
-          <view class="history-block" wx:for="{{TXs}}" >
-            <view class="tx-content">
-              <view class="area-head">
-                <text class="label">交易编号</text>
-                <text class="time">{{item.blocktime['$date']}}</text>
-              </view>
-              <view class ="area-txid" @tap="OnDetail({{item.txid}})">
-                <text class="txid">{{item.txid}}</text>
-              </view>
-              <view class="area-confirm">
-                <text class="label"> 确认高度：</text>
-                <text class="count">{{item.blockindex}}</text>
+          <view wx:elif="{{selected==1}}">
+            <text class="empty" hide="{{notEmpty}}">还没有交易记录哦！</text>
+            <view class="history-block" wx:for="{{TXs}}">
+              <view class="tx-content">
+                <view class="area-head">
+                  <text class="label">交易编号</text>
+                  <text class="time">{{item.blocktime['$date']}}</text>
+                </view>
+                <view class="area-txid" @tap="OnDetail({{item.txid}})">
+                  <text class="txid">{{item.txid}}</text>
+                </view>
+                <view class="area-confirm">
+                  <text class="label"> 确认高度：</text>
+                  <text class="count">{{item.blockindex}}</text>
+                </view>
               </view>
             </view>
           </view>
+          <view wx:else>
+            <view class="manage-btn">
+              <button type="primary" style="background-color:#69c0fd;width: 660rpx;" @tap="manage('normal')">正常登陆模式</button>
+            </view>
+            <view class="manage-btn">
+              <button type="primary" style="background-color:#69c0fd;width: 660rpx;" @tap="manage('switch')">切换观察账户</button>
+            </view>
+            <view class="manage-btn">
+              <button type="primary" style="background-color:#f67581;width: 660rpx;" @tap="manage('delete')">删除当前账户</button>
+            </view>
+          </view>
         </view>
-        <view wx:else>
-          <view class="manage-btn">
-            <button type="primary" style="background-color:#69c0fd;width: 660rpx;" @tap="manage('normal')">正常登陆模式</button>
-          </view>
-          <view class="manage-btn">
-            <button type="primary" style="background-color:#69c0fd;width: 660rpx;" @tap="manage('switch')">切换观察账户</button>
-          </view>
-          <view class="manage-btn">
-            <button type="primary" style="background-color:#f67581;width: 660rpx;" @tap="manage('delete')">删除当前账户</button>
-          </view>
-        </view>
-      </view>
       </view>
     </scroll-view>
   </view>
 </template>
 
 <script>
-import wepy from 'wepy';
-import Util,{Https} from '../utils/index';
-export default class Watch extends wepy.page {
-  config = {
-    navigationBarTitleText: '观察账户'
-  };
-
-  components = {};
-
-  data = {
-    selected: 0,
-    assets: {},
-    address: '',
-    TXs: [],
-    isLoading: false,
-    page: 1,
-    label: '',
-    notEmpty: 'true'
-  };
-
-  computed = {};
-
-  methods = {
-    async OnDetail(txid) {
-      wepy.navigateTo({ url: './transaction?txid=' + txid });
-    },
-    async manage(param) {
-      let that = this;
-      switch (param) {
-        case 'normal':
-          wepy.reLaunch({
-            url: '/pages/index?switch=' + 0
-          });
-          break;
-        case 'switch':
-          wepy.navigateTo({ url: '/pages/watchonly' });
-          break;
-        case 'delete':
-          Util.show.loading('账户删除中');
-          let res = await Https.addr_delete(Wallet.openid, that.address);
-          Util.hide.loading();
-          if (res['code'] == 0) {
-            Util.show.success('删除成功');
+  import wepy from 'wepy';
+  import Util, {
+    Https
+  } from '../utils/index';
+  export default class Watch extends wepy.page {
+    config = {
+      navigationBarTitleText: '观察账户'
+    };
+    components = {};
+    data = {
+      selected: 0,
+      assets: {},
+      address: '',
+      TXs: [],
+      isLoading: false,
+      page: 1,
+      label: '',
+      notEmpty: 'true'
+    };
+    computed = {};
+    methods = {
+      async OnDetail(txid) {
+        wepy.navigateTo({
+          url: './transaction?txid=' + txid
+        });
+      },
+      async manage(param) {
+        let that = this;
+        switch (param) {
+          case 'normal':
             wepy.reLaunch({
               url: '/pages/index?switch=' + 0
             });
-          } else Util.show.error('删除失败');
-
-          break;
-        default:
-          break;
+            break;
+          case 'switch':
+            wepy.navigateTo({
+              url: '/pages/watchonly'
+            });
+            break;
+          case 'delete':
+            Util.show.loading('账户删除中');
+            let res = await Https.addr_delete(Wallet.openid, that.address);
+            Util.hide.loading();
+            if (res['code'] == 0) {
+              Util.show.success('删除成功');
+              wepy.reLaunch({
+                url: '/pages/index?switch=' + 0
+              });
+            } else Util.show.error('删除失败');
+            break;
+          default:
+            break;
+        }
+        that.$apply();
+      },
+      navigate(param) {
+        let that = this;
+        switch (param) {
+          case 'account':
+            that.selected = 0;
+            Util.delegate.tx = null;
+            break;
+          case 'history':
+            that.selected = 1;
+            Util.delegate.tx = function(txs) {
+              if (txs === null) that.empty = 'false';
+              else {
+                that.notEmpty = 'true';
+                that.TXs = txs;
+                that.isLoading = false;
+              }
+              that.$apply();
+            };
+            Util.get.TXs(1);
+            break;
+          case 'manager':
+            that.selected = 2;
+            Util.delegate.tx = null;
+            break;
+          default:
+            break;
+        }
+        that.$apply();
       }
-      that.$apply();
-    },
-    navigate(param) {
-      let that = this;
-      switch (param) {
-        case 'account':
-          that.selected = 0;
-          Util.delegate.tx = null;
-          break;
-        case 'history':
-          that.selected = 1;
-          Util.delegate.tx = function(txs) {
-            if (txs === null) that.empty = 'false';
-            else {
-              that.notEmpty = 'true';
-              that.TXs = txs;
-              that.isLoading = false;
-            }
-            that.$apply();
-          };
-          Util.get.TXs(1);
-          break;
-        case 'manager':
-          that.selected = 2;
-          Util.delegate.tx = null;
-          break;
-        default:
-          break;
-      }
-      that.$apply();
+    };
+    events = {};
+    onLoad(option) {
+      this.address = option.address;
+      this.label = option.label;
+      this.$apply();
     }
-  };
-
-  events = {};
-
-  onLoad(option) {
-    this.address = option.address;
-    this.label = option.label;
-    this.$apply();
+    async onShow() {
+      let that = this;
+      // 初始化服务
+      Util.init.context();
+      // 资产加载回调
+      Util.delegate.asset = function(assets) {
+        that.assets = assets;
+        that.$apply();
+      };
+    }
+    /**
+     * 下拉刷新
+     */
+    async onPullDownRefresh() {
+      if (this.isLoading) return;
+      this.isLoading = true;
+      this.$apply();
+      this.TXs = await Util.get.TXs(1);
+      this.isLoading = false;
+      this.$apply();
+      wx.hideNavigationBarLoading(); //完成停止加载
+      wx.stopPullDownRefresh(); //停止下拉刷新
+    }
+    /**
+     * 分享
+     */
+    onShareAppMessage() {
+      let that = this;
+      return {
+        title: that.address,
+        desc: '观察账户:' + that.label,
+        path: '/pages/watch?address=' + that.address
+      };
+    }
   }
-  async onShow() {
-    let that = this;
-
-    // 初始化服务
-    Util.init.context();
-
-    // 资产加载回调
-    Util.delegate.asset = function(assets) {
-      that.assets = assets;
-      that.$apply();
-    };
-  }
-
-  /**
-   * 下拉刷新
-   */
-  async onPullDownRefresh() {
-    if (this.isLoading) return;
-    this.isLoading = true;
-    this.$apply();
-    this.TXs = await Util.get.TXs(1);
-    this.isLoading = false;
-    this.$apply();
-    wx.hideNavigationBarLoading(); //完成停止加载
-    wx.stopPullDownRefresh(); //停止下拉刷新
-  }
-  /**
-   * 分享
-   */
-  onShareAppMessage() {
-    let that = this;
-    return {
-      title: that.address,
-      desc: '观察账户:' + that.label,
-      path: '/pages/watch?address=' + that.address
-    };
-  }
-}
 </script>
  

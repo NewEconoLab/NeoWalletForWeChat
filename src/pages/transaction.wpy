@@ -1,169 +1,163 @@
 <style lang="less">
-.tx-info {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  background-color: white;
-  .icon {
-    margin-top: 40rpx;
-    width: 60rpx;
-    height: 60rpx;
-    border-radius: 50%;
-  }
-  .type {
-    font-family: PingFangSC-Medium;
-    font-size: 16px;
-    color: #333333;
-    letter-spacing: 0;
-    line-height: 16px;
-    margin-top: 20rpx;
-  }
-  .date {
-    font-family: PingFangSC-Regular;
-    font-size: 10px;
-    color: #9a9a9a;
-    letter-spacing: 0;
-    text-align: center;
-    line-height: 10px;
-    margin-top: 30rpx;
-    margin-bottom: 40rpx;
-  }
-}
-
-.vin-out {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  margin: 1rpx 30rpx 0 30rpx;
-  .upper {
-    font-family: PingFangSC-Medium;
-    font-size: 14px;
-    color: #333333;
-    letter-spacing: 0;
-    line-height: 14px;
-  }
-  .blue {
-    color: #22a4ff;
-  }
-  .lower {
+  .tx-info {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    background-color: white;
+    .icon {
+      margin-top: 40rpx;
+      width: 60rpx;
+      height: 60rpx;
+      border-radius: 50%;
+    }
+    .type {
+      font-family: PingFangSC-Medium;
+      font-size: 16px;
+      color: #333333;
+      letter-spacing: 0;
+      line-height: 16px;
+      margin-top: 20rpx;
+    }
+    .date {
+      font-family: PingFangSC-Regular;
+      font-size: 10px;
+      color: #9a9a9a;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 10px;
+      margin-top: 30rpx;
+      margin-bottom: 40rpx;
+    }
+  }
+  .vin-out {
+    display: flex;
+    flex-direction: column;
     align-items: flex-start;
-    margin-top: 30rpx;
-    margin-bottom: 40rpx;
-    text {
+    margin: 1rpx 30rpx 0 30rpx;
+    .upper {
       font-family: PingFangSC-Medium;
       font-size: 14px;
-      color: #151515;
+      color: #333333;
       letter-spacing: 0;
       line-height: 14px;
     }
     .blue {
       color: #22a4ff;
     }
+    .lower {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      margin-top: 30rpx;
+      margin-bottom: 40rpx;
+      text {
+        font-family: PingFangSC-Medium;
+        font-size: 14px;
+        color: #151515;
+        letter-spacing: 0;
+        line-height: 14px;
+      }
+      .blue {
+        color: #22a4ff;
+      }
+    }
   }
-}
 </style>
 <template>
-<view class="container">
-  <scroll-view scroll-y class="scroll">
-    <view class="inner">
-      <view class="tx-info">
-        <image src="../images/{{tx.txtype}}.png" class="icon"/>
-        <text class="type">{{tx.txtype}}</text>
-        <text class="date">{{tx.time}}</text>
-      </view>
-    <view class="text-item">
-      <view class="function-title">
-          <text class="text">交易编号</text>
-      </view>
-      <text class="content">0x{{tx.txid}}</text>
-    </view>
-     <view class="text-item">
-       <view class="function-title">
-          <text class="text">手续费</text>
-      </view>
-        <text class="content">0 GAS</text>
-    </view>
-     <view class="text-item">
-       <view class="function-title">
-          <text class="text">系统费</text>
-      </view>
-        <text class="content">0 GAS</text>
-    </view>
-    <view class="text-item">
-      <view class="function-title">
-        <text class="text">区块高度</text>
-      </view>
-      <text class="content">{{tx.block}}</text>
-    </view>
-    <view class="text-item" style="margin-top:20rpx;">
-       <view class="function-title">
-        <text class="text">交易输入</text>
-      </view>
-      <view class="vin-out" wx:for="{{tx.vin}}" >
-        <text class="upper">{{item.address}}</text>
-        <view class="lower">
-          <text class="blue">{{item.value+' '}} </text>
-          <text> {{tx.assetname}}</text>
+  <view class="container">
+    <scroll-view scroll-y class="scroll">
+      <view class="inner">
+        <view class="tx-info">
+          <image src="../images/{{tx.txtype}}.png" class="icon" />
+          <text class="type">{{tx.txtype}}</text>
+          <text class="date">{{tx.time}}</text>
+        </view>
+        <view class="text-item">
+          <view class="function-title">
+            <text class="text">交易编号</text>
+          </view>
+          <text class="content">0x{{tx.txid}}</text>
+        </view>
+        <view class="text-item">
+          <view class="function-title">
+            <text class="text">手续费</text>
+          </view>
+          <text class="content">0 GAS</text>
+        </view>
+        <view class="text-item">
+          <view class="function-title">
+            <text class="text">系统费</text>
+          </view>
+          <text class="content">0 GAS</text>
+        </view>
+        <view class="text-item">
+          <view class="function-title">
+            <text class="text">区块高度</text>
+          </view>
+          <text class="content">{{tx.block}}</text>
+        </view>
+        <view class="text-item" style="margin-top:20rpx;">
+          <view class="function-title">
+            <text class="text">交易输入</text>
+          </view>
+          <view class="vin-out" wx:for="{{tx.vin}}">
+            <text class="upper">{{item.address}}</text>
+            <view class="lower">
+              <text class="blue">{{item.value+' '}} </text>
+              <text> {{tx.assetname}}</text>
+            </view>
+          </view>
+        </view>
+        <view class="text-item" style="margin-top:20rpx;">
+          <view class="function-title">
+            <text class="text">交易输出</text>
+          </view>
+          <view class="vin-out" wx:for="{{tx.vout}}">
+            <text class="upper {{addr==item.address?'blue':''}}">{{item.address}}</text>
+            <view class="lower">
+              <text class="blue">{{item.value+' '}}</text>
+              <text>  {{tx.assetname}}</text>
+            </view>
+          </view>
         </view>
       </view>
-    </view>
-    <view class="text-item" style="margin-top:20rpx;">
-      <view class="function-title">
-        <text class="text">交易输出</text>
-      </view>
-      <view class="vin-out" wx:for="{{tx.vout}}" >
-        <text class="upper {{addr==item.address?'blue':''}}">{{item.address}}</text>
-         <view class="lower">
-          <text class="blue">{{item.value+' '}}</text>
-          <text>  {{tx.assetname}}</text>
-        </view>
-      </view>
-    </view>
-    </view>
-  </scroll-view>
-</view>
+    </scroll-view>
+  </view>
 </template>
 <script>
-import wepy from 'wepy';
-import Util from '../utils/index';
-export default class Transaction extends wepy.page {
-  config = {
-    navigationBarTitleText: '交易详情'
-  };
-  data = {
-    tx: {},
-    vout: [],
-    tx: {},
-    addr: ''
-  };
-
-  components = {};
-
-  methods = {};
-  onLoad(option) {
-    // console.log(option.tx);
-
-    this.tx = JSON.parse(option.tx);
-    this.addr = Util.get.account().address;
-    this.$apply();
-    // console.log(this.tx.vin);
-
-    this.OnLoadTX(this.tx);
-  }
-  async onShow() {
-    // Service.add('transaction',this)
-  }
-
-  async OnLoadTX(tx) {
-    let outputs = tx.vout;
-    for (let index in outputs) {
-      outputs[index].asset = Coin.assetID2name[outputs[index].asset];
+  import wepy from 'wepy';
+  import Util from '../utils/index';
+  export default class Transaction extends wepy.page {
+    config = {
+      navigationBarTitleText: '交易详情'
+    };
+    data = {
+      tx: {},
+      vout: [],
+      tx: {},
+      addr: ''
+    };
+    components = {};
+    methods = {};
+    onLoad(option) {
+      // console.log(option.tx);
+      this.tx = JSON.parse(option.tx);
+      this.addr = Util.get.account().address;
+      this.$apply();
+      // console.log(this.tx.vin);
+      this.OnLoadTX(this.tx);
     }
-    this.vout = outputs;
-    this.$apply();
+    async onShow() {
+      // Service.add('transaction',this)
+    }
+    async OnLoadTX(tx) {
+      let outputs = tx.vout;
+      for (let index in outputs) {
+        outputs[index].asset = Coin.assetID2name[outputs[index].asset];
+      }
+      this.vout = outputs;
+      this.$apply();
+    }
   }
-}
 </script>
