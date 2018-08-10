@@ -5,11 +5,14 @@ export default class Cache {
      * @param {string} key 
      * @param {any} value 
      */
-    static async put(key, value) {
+    static put(key, value) {
         if (key === null || key === undefined)
             return;
-
-        await wx.setStorageSync(key, value);
+        try {
+            wx.setStorageSync(key, value);
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     /**
@@ -21,6 +24,13 @@ export default class Cache {
     }
 
     static delete(key) {
-        Cache.put(key, undefined);
+        try {
+            wx.removeStorageSync(key)
+            return true;
+        } catch (e) {
+            console.log(e)
+            // Do something when catch error
+            return false;
+        }
     }
 }

@@ -24,7 +24,7 @@ export const CURR_ACCOUNT: string = "currentWallet";
 /**
  * 观察账户 
  */
-export const WATCH_ONLY:string ="watchonlyaccounts";
+export const WATCH_ONLY:string ="watchonlys";
 
 
 export const SCRYPT: any = {
