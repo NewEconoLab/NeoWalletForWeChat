@@ -1,112 +1,113 @@
 <style lang="less">
-.area-import {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  .input {
-    margin: 10rpx 30rpx 10rpx 30rpx;
-    border-bottom: thin solid #a9a9a9;
-    width: 90%;
+  .area-import {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .input {
+      margin: 10rpx 30rpx 10rpx 30rpx;
+      border-bottom: thin solid #a9a9a9;
+      width: 90%;
+    }
   }
-}
 </style>
 <template>
-  <form bindsubmit="onImport" class="form" report-submit ="true">
-<view class="area-import">
-    <clname @onEmit.user="handleScan"/>
-    <input class="input" name="name" value='{{label}}'/>
-    <clprikey/>
-    <input class="input" style="font-size:11px;" name="prikey" value='{{prikey}}' />
-    <view class="foot-button">
-      <button type="primary" style="width:600rpx;"  form-type="submit">导入账户</button>
+  <form bindsubmit="onImport" class="form" report-submit="true">
+    <view class="area-import">
+      <clname @onEmit.user="handleScan" />
+      <input class="input" name="name" value='{{label}}' />
+      <clprikey/>
+      <input class="input" style="font-size:11px;" name="prikey" value='{{prikey}}' />
+      <view class="foot-button">
+        <button type="primary" style="width:600rpx;" form-type="submit">导入账户</button>
+      </view>
     </view>
-</view>
   </form>
 </template>
 <script>
-import wepy from 'wepy';
-import Util from '../../utils/index';
-import CLabel from '../clabel';
-export default class CImport extends wepy.component {
-  props = {};
-  components = {
-    clname: CLabel,
-    clprikey: CLabel
-  };
-
-  data = {
-    label: '',
-    prikey: '',
-    account: {}
-  };
-
-  methods = {
-    handleScan() {
-      let that = this;
-      Util.show.loading('账户识别中');
-      wepy.scanCode({
-        success: res => {
-          Util.hide.loading();
-          // console.log(res);
-
-          res = res.result;
-          if (res.length == 52) {
-            that.prikey = res;
-            that.$apply();
-          } else {
-            try {
-              const account = JSON.parse(res);
-              that.account = account;
-              that.prikey = account['nep2key'];
-              that.label = account['label'];
+  import wepy from 'wepy';
+  import Util from '../../utils/index';
+  import CLabel from '../clabel';
+  export default class CImport extends wepy.component {
+    props = {};
+    components = {
+      clname: CLabel,
+      clprikey: CLabel
+    };
+    data = {
+      label: '',
+      prikey: '',
+      account: {}
+    };
+    methods = {
+      handleScan() {
+        let that = this;
+        Util.show.loading('账户识别中');
+        wepy.scanCode({
+          success: res => {
+            Util.hide.loading();
+            console.log(res);
+            res = res.result;
+            if (res.length == 52) {
+              that.prikey = res;
               that.$apply();
-            } catch (err) {
-              // console.log(err);
-              //在这里处理错误
-              Util.show.error('格式错误');
-              return;
+            } else {
+              try {
+                const account = JSON.parse(res);
+                that.account = account;
+                that.prikey = account['nep2key'];
+                that.label = account['label'];
+                that.$apply();
+              } catch (err) {
+                console.log(err);
+                //在这里处理错误
+                Util.show.error('格式错误');
+                return;
+              }
             }
+          },
+          fail: res => {
+            console.log(res);
+            Util.hide.loading();
+            Util.show.error('解析失败');
           }
-        },
-        fail: res => {
-          // console.log(res);
-          Util.hide.loading();
-          Util.show.error('解析失败');
-        }
-      });
-    },
-    onImport(e) {
-      let name = e.detail.value.name;
-      let prikey = e.detail.value.prikey;
-      this.prikey = prikey;
-      this.label = name;
-      this.$apply();
-      // // console.log(this.)
-      this.$emit('onImport', {'label':name,'nep2key':prikey});
+        });
+      },
+      onImport(e) {
+        let name = e.detail.value.name;
+        let prikey = e.detail.value.prikey;
+        this.prikey = prikey;
+        this.label = name;
+        this.$apply();
+        // // console.log(this.)
+        this.$emit('onImport', {
+          'label': name,
+          'nep2key': prikey
+        });
+      }
+    };
+    onLoad() {
+      this.onSetLabel();
     }
-  };
-
-  onLoad() {
-    this.onSetLabel();
+    onSetLabel() {
+      this.$invoke(
+        'clname',
+        'Show',
+        JSON.stringify({
+          title: '账户名称',
+          show: {
+            scan: 1
+          }
+        })
+      );
+      this.$invoke(
+        'clprikey',
+        'Show',
+        JSON.stringify({
+          title: '输入私钥/WIF',
+          show: {}
+        })
+      );
+    }
   }
-
-  onSetLabel() {
-    this.$invoke(
-      'clname',
-      'Show',
-      JSON.stringify({
-        title: '账户名称',
-        show: {
-          scan: 1
-        }
-      })
-    );
-    this.$invoke(
-      'clprikey',
-      'Show',
-      JSON.stringify({ title: '输入私钥/WIF', show: {} })
-    );
-  }
-}
 </script>

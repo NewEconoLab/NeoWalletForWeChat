@@ -12,7 +12,7 @@ export default class Transfer {
     static formId = [];
     static TXs = [];
     static coin: Asset;
-    static address:WatchOnlyAccount = null;
+    static address: WatchOnlyAccount = null;
     constructor() { };
 
     /**
@@ -20,7 +20,7 @@ export default class Transfer {
      * @param {ThinNeo.Transaction} tran 
      * @param {string} randomStr
      */
-    static async signAndSend(tran: ThinNeo.Transaction):Promise<string> {
+    static async signAndSend(tran: ThinNeo.Transaction): Promise<string> {
         let prikey = await Wallet.getPrikey() as string;
         const key = Helper.hexToBytes(prikey);
         const pubkey = Helper.hexToBytes(Wallet.account.publickey);
@@ -41,7 +41,7 @@ export default class Transfer {
         Tips.loaded();
         console.log(Helper.toHexString(tran.GetRawData()))
         console.log(res)
-        return res?txid:null;
+        return res ? txid : null;
     }
 
     static async contactTransaction(targetaddr: string, asset: Asset, sendcount: number) {
@@ -234,7 +234,7 @@ export default class Transfer {
 
         var currentAddress = Wallet.account.address;
         var res = await Https.gettransbyaddress(currentAddress, 20, 1);
-        if (res.length > 0) {
+        if (res !== null && res.length > 0) {
             this.TXs = [];
             for (let index = 0; index < res.length; index++) {
                 const tx = res[index];
@@ -268,9 +268,9 @@ export default class Transfer {
                         else {
                             let nep5 = await Https.getNep5Asset(asset);
                             // console.log(nep5);
-                            try{
+                            try {
                                 assetname = nep5["name"];
-                            }catch(err){
+                            } catch (err) {
                                 assetname = 'null'
                             }
                         }
