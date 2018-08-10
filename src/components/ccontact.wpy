@@ -221,11 +221,15 @@
           wepy.navigateBack();
         }
       },
-      onDeleteMsgTap(tag) {
+      async onDeleteMsgTap(tag) {
         console.log('delete watch')
         console.log(tag)
         // 删除元素
-        Util.delete.watchonly(tag)
+        await Util.delete.watchonly(tag)
+        this.msgList = {}// Util.watchOnly.getAll();
+        this.$apply();
+        this.msgList = Util.watchOnly.getAll();
+        this.$apply();
       }
     };
     onLoad() {
