@@ -207,7 +207,8 @@ export enum TaskType {
     history = 'history', //更新历史记录
     price = 'price',
     claim = 'claim',
-    height = 'height'
+    height = 'height',
+    openAuction='openAuction'
 }
 
 /**

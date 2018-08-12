@@ -1,4 +1,4 @@
-import { DomainInfo, SellDomainInfo, NNSResult, ResultItem, DataType, Asset, MyAuction, RootDomainInfo, DomainState } from "./entity";
+import { DomainInfo, SellDomainInfo, NNSResult, ResultItem, DataType, Asset, MyAuction, RootDomainInfo, DomainState, TaskManager, Task, TaskType } from "./entity";
 import { Neo, Helper, ThinNeo } from "../lib/neo-ts/index";
 import Common from "./common";
 import NNS from './nns'
@@ -7,6 +7,7 @@ import Wallet from "./wallet";
 import { DAPP_SGAS, DAPP_NNS, id_GAS } from "./const";
 import Transfer from "./transaction";
 import { formatTime } from './time'
+import Emitter from "./Emitter";
 export default class NNSSell {
 
   /**
@@ -222,7 +223,7 @@ export default class NNSSell {
   /**
    * 欲购买
    */
-  static async wantbuy(subname: string, prikey: string) {
+  static async wantbuy(subname: string, height: number) {
     try {
       const root = await NNS.getRoot() as RootDomainInfo
       let who = new Neo.Uint160(Helper.Account.GetPublicKeyScriptHash_FromAddress(Wallet.account.address).buffer);
@@ -236,6 +237,14 @@ export default class NNSSell {
       ];
       let data = Common.buildScript(root.register, "wantBuy", param);
       let res = await Transfer.contractInvoke_attributes(data);
+      try {
+        // 注册开拍事件，两个之内如果成功写入区块，则广播openAuction事件，并发送交易id
+        if (res['sendrawtransactionresult'])
+          TaskManager.addTask(new Task(height, 2, TaskType.openAuction, res['txid'], () => { Emitter.fire(TaskType.openAuction, {txid:res['txid']}) }))
+      } catch (error) {
+
+      }
+
       return res
     } catch (error) {
       throw error;

@@ -45,15 +45,13 @@ export default class Transfer {
   }
 
   static async contactTransaction(targetaddr: string, asset: Asset, sendcount: number) {
-    let tran = null;
-    if (asset.isnep5) {
-      tran = await Transfer.nep5Transaction(targetaddr, asset, sendcount + '');
-      console.log(tran)
-    } else {
-      tran = Transfer.makeTran(targetaddr, asset, sendcount)
+    if (asset.isnep5)
+      return await Transfer.nep5Transaction(targetaddr, asset, sendcount + '');
+    else {
+      let tran = await Transfer.makeTran(targetaddr, asset, sendcount);
+      return await Transfer.signAndSend(tran);
     }
 
-    return await Transfer.signAndSend(tran);
   }
   /**
    * 发送utxo交易
@@ -61,7 +59,7 @@ export default class Transfer {
    * @param asset 资产对象
    * @param sendcount 转账金额
    */
-  static makeTran(targetaddr, asset: Asset, sendcount: number): ThinNeo.Transaction {
+  static  makeTran(targetaddr, asset: Asset, sendcount: number) {
     //新建交易对象
     var tran = new ThinNeo.Transaction();
     //交易类型为合约交易
@@ -119,7 +117,6 @@ export default class Transfer {
     }
     console.log('transactions')
     console.log(tran);
-
     return tran;
   }
 
@@ -178,7 +175,7 @@ export default class Transfer {
     var intv = bnum.multiply(v).toString();
 
     var sb = new ThinNeo.ScriptBuilder();
-    var scriptaddress = Neo.Uint160.parse(asset.id.replace('0x',''));
+    var scriptaddress = Neo.Uint160.parse(asset.id.replace('0x', ''));
     sb.EmitParamJson(["(address)" + address, "(address)" + tatgeraddr, "(integer)" + intv]);//第二个参数是个数组
     sb.EmitPushString("transfer");//第一个参数
     sb.EmitAppCall(scriptaddress);  //资产合约
@@ -204,7 +201,7 @@ export default class Transfer {
     tran.attributes[0] = new ThinNeo.Attribute();
     tran.attributes[0].usage = ThinNeo.TransactionAttributeUsage.Script;
     tran.attributes[0].data = Helper.Account.GetPublicKeyScriptHash_FromAddress(addr);
-    return tran;
+    return Transfer.signAndSend(tran);
   }
 
   /**
