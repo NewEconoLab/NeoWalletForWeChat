@@ -45,8 +45,6 @@ export default class NNS {
         } else {
             return null;
         }
-
-        return null;
     }
 
     /**

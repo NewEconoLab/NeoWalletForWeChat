@@ -2,7 +2,7 @@ import * as Request from './wxRequest';
 import { Helper } from '../lib/neo-ts/index';
 let hotapp = require('./hotapp.js');
 export default class Https {
-    static api: string ="https://api.nel.group/api/testnet";
+    static api: string = "https://api.nel.group/api/testnet";
     static priceHost: string = "https://api.coinmarketcap.com/v1/ticker/";
     static proxy_server: string = "http://112.74.52.116/";
     // 交易通知模板id
@@ -160,7 +160,7 @@ export default class Https {
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.api } }, this.proxy_server + "proxy.php");
         console.log(result);
         try {
-            var r = result[ "result" ][ 0 ] as boolean;
+            var r = result["result"][0] as boolean;
             return r;
         } catch (error) {
             return null;
@@ -468,34 +468,44 @@ export default class Https {
             return null;
         }
     }
+    //查询domain竞拍情况
+    static async api_getdomaininfo(domainname: string) {
+        var str = Https.makeRpcUrl(Https.apiaggr, "getdomaininfo", domainname);
+        var result = await Request.Request({ "method": "get" }, str);
+        // var result = await fetch(str, { "method": "get" });
+        // var json = await result.json();
+        try {
+            var r = result["result"];
+            return r;
+        } catch (error) {
+            return null
+        }
 
-    static async getNotify(txid: string)
-    {
+    }
+    static async getNotify(txid: string) {
         var postdata = Https.makeRpcPostBody("getnotify", txid);
         // var result = await fetch(WWW.api, { "method": "post", "body": JSON.stringify(postdata) });
         var result = await Request.wxRequest({ "method": "post", "body": JSON.stringify(postdata) }, this.api);
         var json = await result.json();
-        var r = json[ "result" ][ 0 ];
+        var r = json["result"][0];
         return r;
     }
 
-    static async hastx(txid: string)
-    {
+    static async hastx(txid: string) {
         var postdata = Https.makeRpcPostBody("hastx", txid);
         // var result = await fetch(WWW.apiaggr, { "method": "post", "body": JSON.stringify(postdata) });
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
         // var json = await result.json();
-        var r = result[ "result" ][ 0 ];
+        var r = result["result"][0];
         return r;
     }
 
-    static async hascontract(txid: string)
-    {
+    static async hascontract(txid: string) {
         var postdata = Https.makeRpcPostBody("hascontract", txid);
         var result = await Request.wxRequest({ "method": "post", "body": { 'tx': JSON.stringify(postdata), 'server': this.apiaggr } }, this.proxy_server + "proxy.php");
         // var result = await fetch(WWW.apiaggr, { "method": "post", "body": JSON.stringify(postdata) });
         // var json = await result.json();
-        var r = result[ "result" ][ 0 ];
+        var r = result["result"][0];
         return r;
     }
 

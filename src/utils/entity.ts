@@ -433,13 +433,13 @@ export class DataType {
  * @param end 结束
  */
 export enum DomainState {
-    open,
-    fixed,
-    random,
-    end1,   //第三天结束
-    end2,
-    expire,
-    pass,
+    open, // 可用
+    fixed, // 固定期
+    random,// 随机期
+    end1,   // 第三天无人出价则直接结束 无人出价，直接结束
+    end2, //  正常结束
+    expire,  // 过期
+    pass, // 流拍
 }
 
 export class ResultItem {

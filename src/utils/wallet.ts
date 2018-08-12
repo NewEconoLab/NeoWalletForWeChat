@@ -42,20 +42,16 @@ export default class Wallet {
             privateKey = Helper.hexToBytes(key);
         }
 
-        // console.log('000')
         Tips.loading('公钥计算中');
         const publicKey = Helper.Account.GetPublicKeyFromPrivateKey(privateKey);
-        // console.log('1111')
         Tips.loading('地址计算中');
         const address = Helper.Account.GetAddressFromPublicKey(publicKey);
+
         let account: Nep6.nep6account = new Nep6.nep6account();
-        // console.log('3333')
         account.address = address;
         account.label = label;
         account.nep2key = key;
         account.publickey = Helper.toHexString(publicKey);
-        // console.log('4444')
-        // console.log(account)
         return account;
     }
 
@@ -147,7 +143,7 @@ export default class Wallet {
                         //保存私钥
                         Wallet.prikey = strKey;
                         resolve(strKey);
-                    }else{ //解密失败
+                    } else { //解密失败
                         resolve(null);
                     }
 
