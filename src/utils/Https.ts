@@ -9,7 +9,7 @@ export default class Https {
     static templet_id: string = "2lEt8hQIzI6tbTw9ThtZhNalDG6GulckpcYEs_Ki7ZQ";
 
     static apiaggr: string = "https://apiaggr.nel.group/api/testnet";//"http://seed1.nether.top:12122"//
-
+    static api_scan:string ="https://apiscan.nel.group/api/testnet";
     /**
      * create Rpc Url
      * @param url string
@@ -18,7 +18,7 @@ export default class Https {
      */
     static makeRpcUrl(url: string, method: string, ..._params: any[]) {
 
-        if (url[url.length - 1] != '/')
+        if (url[url.length - 1] != '/' && !url.includes("apiscan"))
             url = url + "/";
         var urlout = url + "?jsonrpc=2.0&id=1&method=" + method + "&params=[";
         for (var i = 0; i < _params.length; i++) {
@@ -470,7 +470,7 @@ export default class Https {
     }
     //查询domain竞拍情况
     static async api_getdomaininfo(domainname: string) {
-        var str = Https.makeRpcUrl(Https.apiaggr, "getdomaininfo", domainname);
+        var str = Https.makeRpcUrl(Https.api_scan, "getdomaininfo", domainname);
         var result = await Request.Request({ "method": "get" }, str);
         // var result = await fetch(str, { "method": "get" });
         // var json = await result.json();

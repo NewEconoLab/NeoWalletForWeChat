@@ -6,13 +6,11 @@
     align-items: center;
   }
   .upper-avatar {
-    border-radius: 50%;
     width: 108rpx;
     height: 108rpx;
     margin-top: 32rpx;
-    image {
-      border-radius: 50%;
-    }
+    overflow: hidden;
+    border-radius: 50%;
   }
   .upper-nickName {
     font-family: PingFangSC-Medium;

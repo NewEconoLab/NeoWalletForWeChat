@@ -13,10 +13,6 @@ export default class NNSSell {
    * 获得竞拍域名详情
    * @param domain 域名
    */
-  /**
- * 获得竞拍域名详情
- * @param domain 域名
- */
   static async getSellingStateByDomain(domain: string) {
     var domainarr: string[] = domain.split('.');
     var nnshash: Neo.Uint256 = Common.nameHashArray(domainarr);
@@ -40,7 +36,7 @@ export default class NNSSell {
       let stack = ResultItem.FromJson(DataType.Array, stackarr).subItem[0].subItem
       info.id = stack[0].AsHash256();
       let parenthash = stack[1].AsHash256();
-      let domain = stack[2].AsString();
+      info.domain = stack[2].AsString();
       info.ttl = stack[3].AsInteger().toString();
       info.startBlockSelling = stack[4].AsInteger();
       info.endBlock = stack[5].AsInteger();
@@ -62,7 +58,7 @@ export default class NNSSell {
  * 获得
  * @param id 竞拍id
  */
-  static async getBalanceOfBid(id: Neo.Uint256):Promise<Neo.BigInteger> {
+  static async getBalanceOfBid(id: Neo.Uint256): Promise<Neo.BigInteger> {
     let who = new Neo.Uint160(Helper.Account.GetPublicKeyScriptHash_FromAddress(Wallet.account.address).buffer);
     const root = await NNS.getRoot() as RootDomainInfo
     var scriptaddress = root.register;

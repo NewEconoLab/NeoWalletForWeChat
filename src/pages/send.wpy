@@ -218,7 +218,6 @@
         const that = this;
         let target = this.address; //e.detail.value.address;
         let amount = e.detail.value.amount;
-        //let password = ''; // e.detail.value.passphrase;
         Util.set.formid(e.detail.formId);
         if (target.length !== 34 || target.charAt(0) !== 'A') {
           Util.show.alert('目标地址有误');

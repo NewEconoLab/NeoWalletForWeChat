@@ -246,10 +246,11 @@
     methods = {
       async confirm(event) {
         const domain = event.detail.value; //this.domain;
-        // console.log(domain);
+        console.log(domain);
         this.nnsloading = true;
         this.$apply();
         let domainInfo = await Util.get.domainState(domain);
+        console.log(domainInfo)
         domainInfo.domain = domain;
         this.nnsloading = false;
         this.domainInfo = domainInfo;
@@ -277,7 +278,7 @@
         console.log('prikey = ' + prikey)
         if (prikey === 'fail' || prikey === null || prikey === '') {
           Util.show.error('密码错误');
-        } else if (this.domainInfo.state === DomainState.Avaliable) { //开拍
+        } else if (this.domainInfo.state === DomainState.open) { //开拍
           this.OpenAuction(this.domainInfo.domain);
         } else {
           //加价/参与竞拍
@@ -328,11 +329,13 @@
      */
     processDomainState(domainInfo) {
       switch (domainInfo.state) {
-        case DomainState.Taken:
+        case DomainState.end1:
+        case DomainState.end2:
           this.loadingIcon = 'N_error';
           this.alert = '该域名已经被别人拥有啦';
           break;
-        case DomainState.Bidding:
+        case DomainState.fixed:
+        case DomainState.random:
           this.loadingIcon = 'N_avaliable';
           this.alert = '该域名正在进行竞拍';
           this.btn = {
@@ -340,7 +343,8 @@
             label: '参与竞拍'
           };
           break;
-        case DomainState.Avaliable:
+        case DomainState.open:
+        case DomainState.pass:
           this.loadingIcon = 'N_avaliable';
           this.alert = '该域名可以使用';
           this.btn = {
@@ -348,7 +352,7 @@
             label: '开拍'
           };
           break;
-        case DomainState.Invalid:
+        case DomainState.invalid:
           this.loadingIcon = 'N_error';
           this.alert = '该域名格式错误';
           break;
@@ -363,8 +367,6 @@
       let res = await Util.auction.wantbuy(domain);
       this.opening = false;
       this.$apply();
-      console.log('==========');
-      console.log(res);
       //交易发送成功
       if (res !== null && res !== '' && res !== 'failed') {
         //0x9a599518589cf5b5bd93a030e0157f4657757f676808294c3fd42859b6e209b6
@@ -372,7 +374,6 @@
           url: './nnsloading?txid=' + res + '&type=0'
         });
       }
-      console.log('==========');
     }
   }
 </script>

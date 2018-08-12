@@ -133,11 +133,6 @@ export class Result {
     info: any;
 }
 
-export enum AssetEnum {
-    NEO = '0xc56f33fc6ecfcd0c225c4ab356fee59390af8560be0e930faebe74a6daff7c9b',
-    GAS = '0x602c79718b16e442de58778e148d0b1084e3b2dffd5de6b7b16cee7969282de7',
-}
-
 export class NeoAsset {
     neo: number;
     gas: number;
@@ -264,14 +259,44 @@ export class MyAuction {
 }
 
 export class DomainInfo {
-    status: DomainState = null;     // 域名状态
-    address?: string = null;
-    domain?: string = null;
-    owner?: Neo.Uint160 = null;      // 所有者
-    register?: Neo.Uint256 = null;   // 注册器
-    resolver?: Neo.Uint256 = null;   // 解析器
-    ttl?: string = null;             // 到期时间
+    owner: Neo.Uint160//所有者
+    register: Neo.Uint160//注册器
+    resolver: Neo.Uint160//解析器
+    ttl: string//到期时间
+    address: string;
+    state: DomainState;
 }
+
+
+/**
+ * 竞拍合约域名
+ * @param startBlockSelling 开始竞标高度
+ * @param endBlock 拍卖结束
+ * @param lastBlock 最后出价高度
+ * @param maxPrice 最大出价
+ * @param maxBuyer 最大出价者(地址)
+ */
+export class SellDomainInfo extends DomainInfo {
+    domain: string;
+    id: Neo.Uint256;
+    startBlockSelling: Neo.BigInteger;
+    endBlock: Neo.BigInteger;
+    maxPrice: Neo.BigInteger;
+    lastBlock: Neo.BigInteger;
+    maxBuyer: Neo.Uint160;
+    balanceOf: Neo.BigInteger;
+    balanceOfSelling: Neo.BigInteger;
+    constructor() {
+        super();
+    }
+    copyDomainInfoToThis(info: DomainInfo) {
+        this.owner = info.owner;
+        this.ttl = info.ttl;
+        this.register = info.register;
+        this.resolver = info.resolver;
+    }
+}
+
 
 /**
  * 域名状态
@@ -320,21 +345,7 @@ export class DomainStatus {
     await_resolver: boolean;
 
     static setStatus(domain: DomainStatus) {
-        // var arr = {};
-        // if (str) {
-        //     arr = JSON.parse(str);
-        //     let msg = arr[domain.domainname] as DomainStatus;
-        //     msg ? msg : msg = new DomainStatus();
-        //     domain.await_mapping ? msg["await_mapping"] = domain.await_mapping : "";
-        //     domain.await_register ? msg["await_register"] = domain.await_register : "";
-        //     domain.await_resolver ? msg["await_resolver"] = domain.await_resolver : "";
-        //     domain.mapping ? msg["mapping"] = domain.mapping : "";
-        //     domain.resolver ? msg["resolver"] = domain.resolver.replace("0x", "") : "";
-        //     arr[domain.domainname] = msg;
-        // } else {
-        //     arr[domain.domainname] = domain;
-        // }
-        // sessionStorage.setItem("domain-status", JSON.stringify(arr));
+
     }
     static getStatus() {
         // let str = sessionStorage.getItem("domain-status");
@@ -433,13 +444,15 @@ export class DataType {
  * @param end 结束
  */
 export enum DomainState {
-    open, // 可用
-    fixed, // 固定期
-    random,// 随机期
-    end1,   // 第三天无人出价则直接结束 无人出价，直接结束
-    end2, //  正常结束
-    expire,  // 过期
-    pass, // 流拍
+    invalid = '格式错误',
+    // taken='已',
+    open = '可用', // 可用
+    fixed = '固定期', // 固定期
+    random = '随机期',// 随机期
+    end1 = '直接结束',   // 第三天无人出价则直接结束 无人出价，直接结束
+    end2 = '竞拍结束', //  正常结束
+    expire = '过期',  // 过期
+    pass = '流拍', // 流拍
 }
 
 export class ResultItem {
@@ -511,36 +524,6 @@ export class ResultItem {
 export class NNSResult {
     public textInfo: string;
     public value: any; //不管什么类型统一转byte[]
-}
-
-/**
- * 竞拍合约域名
- * @param startBlockSelling 开始竞标高度
- * @param endBlock 拍卖结束
- * @param lastBlock 最后出价高度
- * @param maxPrice 最大出价
- * @param maxBuyer 最大出价者(地址)
- */
-export class SellDomainInfo extends DomainInfo {
-    state: DomainState;
-    domain: string;
-    id: Neo.Uint256;
-    startBlockSelling: Neo.BigInteger;
-    endBlock: Neo.BigInteger;
-    maxPrice: Neo.BigInteger;
-    lastBlock: Neo.BigInteger;
-    maxBuyer: Neo.Uint160;
-    balanceOf: Neo.BigInteger;
-    balanceOfSelling: Neo.BigInteger;
-    constructor() {
-        super();
-    }
-    copyDomainInfoToThis(info: DomainInfo) {
-        this.owner = info.owner;
-        this.ttl = info.ttl;
-        this.register = info.register;
-        this.resolver = info.resolver;
-    }
 }
 
 export class WatchOnly {

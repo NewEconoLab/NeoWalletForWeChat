@@ -9,10 +9,10 @@ export default class Common {
     constructor() { }
 
     static buildScript(appCall: Neo.Uint160, method: string, param: string[]): Uint8Array {
-       console.log('buildScript')
-       console.log(appCall.toString())
-       console.log(method)
-       console.log(param)
+        console.log('buildScript')
+        console.log(appCall.toString())
+        console.log(method)
+        console.log(param)
         var sb = new ThinNeo.ScriptBuilder();
         sb.EmitParamJson(param);//第二个参数是个数组
         sb.EmitPushString(method);
@@ -175,7 +175,7 @@ export default class Common {
 
         var msg = tran.GetMessage();
         let randomStr = await getSecureRandom(256);
-        const prikey =await Wallet.getPrikey();
+        const prikey = await Wallet.getPrikey();
         var signdata = Helper.Account.Sign(msg, Helper.hexToBytes(prikey), randomStr);
         tran.AddWitness(signdata, Helper.hexToBytes(Wallet.account.publickey), Wallet.account.address);
         var data: Uint8Array = tran.GetRawData();
@@ -186,6 +186,39 @@ export default class Common {
             return result["txid"];
         } else {
             throw "Transaction send failure";
+        }
+    }
+
+
+    static isDomain(domain): boolean {
+        //check domain valid
+        var reg = /^([a-zA-Z0-9]{2,32})(.+\.)(test|TEST|[a-z][a-z])$/;
+        if (!reg.test(domain) && !Common.isNeoDomain(domain)) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    static isAddress(addr): boolean {
+        var reg = /^[a-zA-Z0-9]{34,34}$/
+        if (!reg.test(addr)) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    static isNeoDomain(domain) {
+        //check domain valid
+        var reg = /^([a-zA-Z0-9]{2,32})(.+\.)(neo|Neo)$/;
+        if (!reg.test(domain)) {
+            return false;
+        }
+        else {
+            return true;
         }
     }
 

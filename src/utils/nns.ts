@@ -14,40 +14,6 @@ export default class NNS {
     static root: RootDomainInfo = null;
 
     /**
-     * 域名查询及校验
-     * @param domain 二级域名
-     */
-    static async  verifyDomain(domain: string): Promise<DomainInfo> {
-        if (domain.includes('.neo')) {
-            domain = domain.substring(0, domain.length - 4);
-        }
-        console.log(domain);
-        domain = domain.toLowerCase().trim();
-        let verify = /^[a-zA-Z0-9]{1,32}$/;
-        if (verify.test(domain)) {
-            console.log(domain + '.' + DOMAIN_ROOT)
-            let doamininfo: DomainInfo = await NNS.queryDomainInfo(domain + '.' + DOMAIN_ROOT);
-            console.log(doamininfo)
-
-            if (doamininfo.register !== null && doamininfo.ttl !== null) {
-                var timestamp = new Date().getTime();
-                let copare = new Neo.BigInteger(timestamp).compareTo(new Neo.BigInteger(doamininfo.ttl).multiply(1000));
-                if (copare < 0) {
-                    // console.log('域名已到期');
-                    doamininfo.status = DomainState.Avaliable;
-                } else {
-                    doamininfo.status = DomainState.Taken;
-                }
-            } else {
-                doamininfo.status = DomainState.Avaliable;
-            }
-            return doamininfo;
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * @method 初始化根域名信息
      */
     static async initRootDomain() {
@@ -71,17 +37,54 @@ export default class NNS {
         }
         return NNS.root;
     }
+
+        /**
+     * 域名查询及校验
+     * @param domain 二级域名
+     */
+    static async  verifyDomain(domain: string): Promise<DomainInfo> {
+        if (domain.includes('.neo')) {
+            domain = domain.substring(0, domain.length - 4);
+        }
+        console.log(domain);
+        domain = domain.toLowerCase().trim();
+        let verify = /^[a-zA-Z0-9]{1,32}$/;
+        if (verify.test(domain)) {
+            console.log(domain + '.' + DOMAIN_ROOT)
+            let doamininfo: DomainInfo = await NNS.queryDomainInfo(domain + '.' + DOMAIN_ROOT);
+            console.log(doamininfo)
+
+            if (doamininfo.register !== null && doamininfo.ttl !== null) {
+                var timestamp = new Date().getTime();
+                let copare = new Neo.BigInteger(timestamp).compareTo(new Neo.BigInteger(doamininfo.ttl).multiply(1000));
+                if (copare < 0) {
+                    // console.log('域名已到期');
+                    doamininfo.state = DomainState.open;
+                } else {
+                    doamininfo.state = DomainState.end1;
+                }
+            } else {
+                doamininfo.state = DomainState.open;
+            }
+            return doamininfo;
+        } else {
+            return null;
+        }
+    }
+
+
+
     /**
      * 注册域名
      * @param domain 域名
      */
-    static async nnsRegister(domain: string, prikey: string) {
+    static async nnsRegister(domain: string) {
         // NNS.verifyDomain(domain);
         if (domain) {
             try {
-                let res = await NNS.registerDomain(domain, prikey);
-                if (res.err) {
-                    console.error(res.info);
+                let res = await NNS.registerDomain(domain);
+                if (res === null) {
+                    return null
                 } else {
                     let state = new DomainStatus();
                     state.await_register = true;
@@ -90,8 +93,9 @@ export default class NNS {
                     NNS.getDomainsByAddr();
                 }
             } catch (error) {
-                // console.log(error);
+                console.log(error);
                 // mui.alert(error.message);
+                return null
             }
         }
     }
@@ -101,11 +105,23 @@ export default class NNS {
      */
     static async getDomainsByAddr() {
         // console.log(Wallet.account.address);
-
         let res = await Https.getnnsinfo(Wallet.account.address);
-
     }
 
+    /**
+     * 根据域名获取地址信息
+     * @param domain 域名 没有后缀的
+     */
+    static async addrByDomain(domain) {
+        const dm: string = domain + '.' + DOMAIN_ROOT;
+        if (!Common.isDomain(dm)){
+            let dmInfo = new DomainInfo();
+            // dmInfo.auctionState =
+            // return null;
+        }
+           
+        return await Https.api_getdomaininfo(dm) as DomainInfo;
+    }
     /**
      * @method 查询域名信息
      * @param doamin 域名字符串
@@ -157,7 +173,7 @@ export default class NNS {
      * 注册域名
      * @param doamin 域名字符串
      */
-    static async registerDomain(doamin: string, prikey: string) {
+    static async registerDomain(doamin: string) {
         var nnshash: Neo.Uint256 = Common.nameHash(NNS.root.rootname);
         var address = Wallet.account.address;
         var sb = new ThinNeo.ScriptBuilder();
@@ -169,9 +185,6 @@ export default class NNS {
         sb.EmitAppCall(scriptaddress);
         var data = sb.ToArray();
         var res = await Transfer.contractInvoke_attributes(data);
-        if (!res.err) {
-            // WWW.setnnsinfo(address,doamin,);
-        }
         return res;
     }
 
