@@ -39,17 +39,19 @@ export class Context {
 
     static notity() {
         //注册监听事件
-        Emitter.register(TaskType.asset, (observer) => {
+        Emitter.register(TaskType.asset, (observer: Function, address: string = null) => {
+            console.log('Emitter asset update')
+            console.log(address)
             // 获取资产之后立即进行价格的更新
-            Context.OnGetAssets(observer);
+            Context.OnGetAssets(observer, address);
         }, this);
 
         Emitter.register(TaskType.tx, (task: Task) => {
             TaskManager.addTask(task);
         }, this);
 
-        Emitter.register(TaskType.history, (observer) => {
-            Context.OnGetTXs(observer);
+        Emitter.register(TaskType.history, (observer, address: string = null) => {
+            Context.OnGetTXs(observer,address);
         }, this);
 
         Emitter.register(TaskType.claim, (observer) => {
@@ -111,14 +113,15 @@ export class Context {
     /**
      * 获取账户资产信息 UTXO
      */
-    static async OnGetAssets(observer: Function) {
+    static async OnGetAssets(observer: Function, address = null) {
         let that = this;
         //加锁，避免多个网络请求导致的刷新竞争
         if (this.lock === true) return;
         //加锁
         this.lock = true;
         try {
-            let nep5s = await Https.api_getnep5Balance(Context.getAccount().address);
+            //如果传入的数据有地址，则使用传入的地址来加载
+            let nep5s = await Https.api_getnep5Balance(address ? address : Context.getAccount().address);
 
             for (let key in Context.Assets) {
                 (Context.Assets[key] as Asset).amount = '0.00';
@@ -142,7 +145,7 @@ export class Context {
         }
 
         try {
-            var utxos = await Https.api_getUTXO(Context.getAccount().address);
+            var utxos = await Https.api_getUTXO(address ? address : Context.getAccount().address);
             console.log('============================================')
             console.log(utxos)
             for (var i in utxos) {
@@ -205,8 +208,8 @@ export class Context {
     /**
      * 获取历史交易
      */
-    static async OnGetTXs(observer:Function) {
-        await Transfer.history();
+    static async OnGetTXs(observer: Function, address: string = null) {
+        await Transfer.history(address);
         observer(Transfer.TXs);
         return Transfer.TXs;
     }

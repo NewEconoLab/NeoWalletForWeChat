@@ -217,7 +217,7 @@ export default class Transfer {
     if (needSign)
       return await Transfer.signAndSend(tran);
     else
-      return await Transfer.sign(tran);
+      return (await Transfer.sign(tran)as ThinNeo.Transaction).GetRawData();
   }
 
   /**
@@ -249,9 +249,9 @@ export default class Transfer {
   /**
    * 交易历史
    */
-  static async history() {
+  static async history(address=null) {
 
-    var currentAddress = Wallet.account.address;
+    var currentAddress = address?address:Wallet.account.address;
     var res = await Https.gettransbyaddress(currentAddress, 20, 1);
     if (res !== null && res.length > 0) {
       this.TXs = [];

@@ -215,7 +215,7 @@ export default class NNSSell {
     sb.EmitPushString("setmoneyin");
     sb.EmitAppCall(root.register);
     let script = sb.ToArray();
-    return await Transfer.contractInvoke_attributes(script,false) as ThinNeo.Transaction;
+    return await Transfer.contractInvoke_attributes(script,false) as Uint8Array;
   }
 
   /**

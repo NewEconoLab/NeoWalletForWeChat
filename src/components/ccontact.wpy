@@ -216,7 +216,9 @@
       },
       OnSelect(tag) {
         //编辑状态下禁止点击事件//或者直接作为观察账户使用也可以
-        if (this.needEdit) {} else {
+        if (this.needEdit) {
+          wepy.navigateTo({url: './watch?account='+JSON.stringify(this.msgList[tag])})
+        } else {
           Util.set.setAddr(this.msgList[tag]);
           wepy.navigateBack();
         }

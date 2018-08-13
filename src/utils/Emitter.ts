@@ -54,13 +54,13 @@ export default class Emitter {
      * 发送事件
      * @param name 事件名称
      */
-    public static fire(name: string, watcher: Function|{}) {
+    public static fire(name: string, watcher: Function|{},address=null) {
         let observers: Observer[] = Emitter.listeners[name];
         if (!observers) return;
         let length = observers.length;
         for (let i = 0; i < length; i++) {
             let observer = observers[i];
-            observer.notify(watcher);
+            observer.notify(watcher,address);
         }
     }
 }
@@ -84,9 +84,9 @@ class Observer {
      * 发送通知
      * @param args 不定参数
      */
-    notify(watcher: Function|{}): void {
+    notify(watcher: Function|{},address=null): void {
         let self = this;
-        self.callback.call(self.context, watcher);
+        self.callback.call(self.context, watcher,address);
     }
     /**
      * 上下文比较
