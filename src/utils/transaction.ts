@@ -21,21 +21,8 @@ export default class Transfer {
    * @param {string} randomStr
    */
   static async signAndSend(tran: ThinNeo.Transaction): Promise<string> {
-    let prikey = await Wallet.getPrikey() as string;
-    const key = Helper.hexToBytes(prikey);
-    const pubkey = Helper.hexToBytes(Wallet.account.publickey);
-
-    if (tran.witnesses === null)
-      tran.witnesses = [];
-
-    Tips.loading('获取交易哈希');
+    tran = await Transfer.sign(tran);
     let txid = Helper.toHexString(Helper.clone(tran.GetHash()).reverse())
-    var msg = tran.GetMessage();
-    let randomStr = await getSecureRandom(256);
-    Tips.loading('签名中');
-    var signdata = Helper.Account.Sign(msg, key, randomStr);
-    tran.AddWitness(signdata, pubkey, Wallet.account.address);
-
     Tips.loading('交易发送中');
     const res = await Https.rpc_postRawTransaction(tran.GetRawData());
     Tips.loaded();
@@ -44,6 +31,32 @@ export default class Transfer {
     return res ? txid : null;
   }
 
+  /**
+   * 签名
+   * @param tran 
+   */
+  static async sign(tran: ThinNeo.Transaction): Promise<ThinNeo.Transaction> {
+    let prikey = await Wallet.getPrikey() as string;
+    const key = Helper.hexToBytes(prikey);
+    const pubkey = Helper.hexToBytes(Wallet.account.publickey);
+
+    if (tran.witnesses === null)
+      tran.witnesses = [];
+
+    Tips.loading('获取交易哈希');
+    var msg = tran.GetMessage();
+    let randomStr = await getSecureRandom(256);
+    Tips.loading('签名中');
+    var signdata = Helper.Account.Sign(msg, key, randomStr);
+    tran.AddWitness(signdata, pubkey, Wallet.account.address);
+    return tran;
+  }
+  /**
+   * 发起交易 合约交易/nep5交易
+   * @param targetaddr 
+   * @param asset 
+   * @param sendcount 
+   */
   static async contactTransaction(targetaddr: string, asset: Asset, sendcount: number) {
     if (asset.isnep5)
       return await Transfer.nep5Transaction(targetaddr, asset, sendcount + '');
@@ -59,7 +72,7 @@ export default class Transfer {
    * @param asset 资产对象
    * @param sendcount 转账金额
    */
-  static  makeTran(targetaddr, asset: Asset, sendcount: number) {
+  static makeTran(targetaddr, asset: Asset, sendcount: number) {
     //新建交易对象
     var tran = new ThinNeo.Transaction();
     //交易类型为合约交易
@@ -187,7 +200,7 @@ export default class Transfer {
    * invokeTrans 方式调用合约塞入attributes
    * @param script 合约的script
    */
-  static contractInvoke_attributes(script: Uint8Array) {
+  static async contractInvoke_attributes(script: Uint8Array, needSign: boolean = true) {
     var addr = Wallet.account.address;
     var tran: ThinNeo.Transaction = new ThinNeo.Transaction();
     //合约类型
@@ -201,7 +214,10 @@ export default class Transfer {
     tran.attributes[0] = new ThinNeo.Attribute();
     tran.attributes[0].usage = ThinNeo.TransactionAttributeUsage.Script;
     tran.attributes[0].data = Helper.Account.GetPublicKeyScriptHash_FromAddress(addr);
-    return Transfer.signAndSend(tran);
+    if (needSign)
+      return await Transfer.signAndSend(tran);
+    else
+      return await Transfer.sign(tran);
   }
 
   /**
