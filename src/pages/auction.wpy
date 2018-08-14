@@ -155,7 +155,7 @@
     computed = {};
     methods = {
       onBid() {
-        // 密码处理逻辑，如果需要输入密码则弹出输入框 如果不需要则直接回调diciphered
+        // 加价弹框
         this.$invoke('cbid', 'Show');
       },
       deciphered(e) {

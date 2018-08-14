@@ -88,7 +88,7 @@
       align-content: flex-start;
       width: 100%;
       border-top: thin solid #dddddd;
-      padding:0 30rpx 0 30rpx;
+      padding: 0 30rpx 0 30rpx;
       text {
         font-family: PingFangSC-Regular;
         font-size: 12px;
@@ -110,7 +110,7 @@
       <form bindsubmit="confirm" class="form" report-submit="true">
         <view class="price">
           <text style="width:150rpx;">本次加价：</text>
-          <input placeholder='最小 0.1 sgas' name="amount" value='' />
+          <input placeholder='最小 0.1 sgas' type='digit' name="amount" value='{{amount}}' />
           <text>SGAS</text>
         </view>
         <view class="total">
@@ -135,7 +135,8 @@
     data = {
       animation: {},
       label: '',
-      show: false
+      show: false,
+      amount: ''
     };
     methods = {
       async Show() {
@@ -143,17 +144,30 @@
         this.passAnimation();
       },
       async confirm(event) {
+        let amount = this.amount;
+        console.log(amount)
+        console.log(parseFloat(amount))
+        try {
+          if (amount === null || amount.length < 1 || parseFloat(amount) < 0.1) {
+            Util.show.error('小于最小竞拍金额')
+            return
+          }
+        } catch (err) {
+          Util.show.error('小于最小竞拍金额')
+          return
+        }
+        // 输入金额之后的确认，这里需要判断下输入数据的格式是否正确
         console.log('confirm')
-        let amount = event.detail.value.amount;
         await this.returnValue(amount)
       },
-      OnClose(){
+      OnClose() {
+        // 直接关闭
         this.passAnimation(300);
       }
     };
     async returnValue(amount) {
       this.passAnimation(300);
-      amount = parseFloat(amounut + '')
+      amount = parseFloat(amount + '')
       if (amount !== null && amount > 0)
         this.$emit('bid', {
           'amount': prikey
