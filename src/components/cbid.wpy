@@ -12,9 +12,9 @@
   }
   .price-frame {
     position: absolute;
-    bottom: -150px;
+    bottom: -300px;
     width: 100%;
-    height: 150px;
+    height: 300px;
     background: white;
     display: flex;
     flex-direction: column;
@@ -24,7 +24,7 @@
       flex-direction: column;
       align-items: center;
       width: 100%;
-      height: 57px;
+      margin-top: 10px;
       .title {
         font-family: PingFangSC-Medium;
         font-size: 16px;
@@ -38,20 +38,22 @@
         height: 48rpx;
         position: absolute;
         right: 30rpx;
+        top: 6px;
       }
     }
     .price {
       display: flex;
       flex-direction: row;
-      align-items: flex-start;
+      align-items: center;
       width: 100%;
       margin-top: 51px;
-      .text {
+      text {
         font-family: PingFangSC-Medium;
         font-size: 14px;
         color: #333333;
         letter-spacing: 0;
         line-height: 14px;
+        margin-left: 30rpx;
       }
       input {
         font-family: PingFangSC-Medium;
@@ -59,12 +61,9 @@
         color: #333333;
         letter-spacing: 0;
         line-height: 14px;
-        width: 690rpx;
+        width: 400rpx;
         border-bottom: thin solid #a9a9a9;
-        margin-left: 30rpx;
-        margin-top: 50rpx;
         padding-left: 10rpx;
-        margin-bottom: 30rpx;
       }
     }
     .total {
@@ -72,10 +71,9 @@
       flex-direction: row;
       align-items: flex-start;
       width: 100%;
-      margin-top: 5px;
-      margin-left: 100rpx;
-      margin-bottom: 30px;
-      border-bottom: thin solid #cccccc;
+      margin-top: 10px;
+      margin-left: 170rpx;
+      margin-bottom: 30px; // border-bottom: thin solid #cccccc;
       text {
         font-family: PingFangSC-Regular;
         font-size: 12px;
@@ -87,10 +85,10 @@
     .tip {
       display: flex;
       flex-direction: row;
-      align-items: flex-start;
+      align-content: flex-start;
       width: 100%;
-      margin-top: 15px;
-      margin-left: 100rpx;
+      border-top: thin solid #dddddd;
+      padding:0 30rpx 0 30rpx;
       text {
         font-family: PingFangSC-Regular;
         font-size: 12px;
@@ -107,12 +105,12 @@
     <view class="price-frame" @tap.stop="click" animation="{{animation}}">
       <view class="title-area">
         <text class="title">竞拍出价</text>
-        <image class="close" src="../images/biderror.png" />
+        <image class="close" src="../images/biderror.png" @tap="OnClose()" />
       </view>
       <form bindsubmit="confirm" class="form" report-submit="true">
         <view class="price">
-          <text>本次加价：</text>
-          <input placeholder='请输入密码' name="amount" value='10' />
+          <text style="width:150rpx;">本次加价：</text>
+          <input placeholder='最小 0.1 sgas' name="amount" value='' />
           <text>SGAS</text>
         </view>
         <view class="total">
@@ -121,9 +119,7 @@
           <text>SGAS</text>
         </view>
         <view class="tip">
-          <text>Tips:每次加价最小单位为</text>
-          <text style="color:#22A4FF;">0.1</text>
-          <text>SGas，当出价总和小于该域名的当前最高价时，本次出价不成功。</text>
+          <text style="margin-top: 15px; margin-right:30rpx;">Tips: 每次加价最小单位为 0.1 SGas，当出价总和小于 该域名的当前最高价时，本次出价不成功。</text>
         </view>
         <button form-type="submit" loading="{{opening}}" class="bottom-btn">确定</button>
       </form>
@@ -150,6 +146,9 @@
         console.log('confirm')
         let amount = event.detail.value.amount;
         await this.returnValue(amount)
+      },
+      OnClose(){
+        this.passAnimation(300);
       }
     };
     async returnValue(amount) {
