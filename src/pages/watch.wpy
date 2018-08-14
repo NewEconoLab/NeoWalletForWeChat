@@ -91,13 +91,13 @@
           </view>
           <view wx:else>
             <view class="manage-btn">
-              <button type="primary" style="background-color:#69c0fd;width: 660rpx;" @tap="manage('normal')">正常登陆模式</button>
+              <button type="primary" style="background-color:#69c0fd;width: 660rpx;" @tap="manage('normal')">返回首页</button>
             </view>
             <view class="manage-btn">
-              <button type="primary" style="background-color:#69c0fd;width: 660rpx;" @tap="manage('switch')">切换观察账户</button>
+              <button type="primary" style="background-color:#69c0fd;width: 660rpx;" @tap="manage('switch')">切换账户</button>
             </view>
             <view class="manage-btn">
-              <button type="primary" style="background-color:#f67581;width: 660rpx;" @tap="manage('delete')">删除当前账户</button>
+              <button type="primary" style="background-color:#f67581;width: 660rpx;" @tap="manage('delete')">删除账户</button>
             </view>
           </view>
         </view>
@@ -146,7 +146,7 @@
         switch (param) {
           case 'normal':
             wepy.reLaunch({
-              url: '/pages/index?switch=' + 0
+              url: '/pages/home'
             });
             break;
           case 'switch':
@@ -175,7 +175,6 @@
         switch (param) {
           case 'account':
             that.selected = 0;
-            Util.delegate.tx = null;
             break;
           case 'history':
             that.selected = 1;
@@ -209,7 +208,7 @@
       if (this.isLoading) return;
       this.isLoading = true;
       this.$apply();
-      this.TXs = await Util.get.TXs(1);
+      this.TXs = await Util.get.TXs();
       this.isLoading = false;
       this.$apply();
       wx.hideNavigationBarLoading(); //完成停止加载
