@@ -110,7 +110,7 @@
       <form bindsubmit="confirm" class="form" report-submit="true">
         <view class="price">
           <text style="width:150rpx;">本次加价：</text>
-          <input placeholder='最小 0.1 sgas' type='digit' name="amount" value='{{amount}}' />
+          <input placeholder='最小 0.1 sgas' type='digit' name="amount" />
           <text>SGAS</text>
         </view>
         <view class="total">
@@ -144,7 +144,8 @@
         this.passAnimation();
       },
       async confirm(event) {
-        let amount = this.amount;
+        let amount = event.detail.value.amount
+  
         console.log(amount)
         console.log(parseFloat(amount))
         try {
@@ -167,15 +168,9 @@
     };
     async returnValue(amount) {
       this.passAnimation(300);
-      amount = parseFloat(amount + '')
-      if (amount !== null && amount > 0)
-        this.$emit('bid', {
-          'amount': prikey
-        });
-      else
-        this.$emit('bid', {
-          'amount': -1
-        });
+      this.$emit('bid', {
+        'amount': amount
+      });
     }
     onLoad() {};
     passAnimation(distance = -300, duration = 500) {

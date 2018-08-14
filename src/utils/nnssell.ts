@@ -254,7 +254,7 @@ export default class NNSSell {
    * 竞标加价
    * @param domain 域名
    */
-  static async addprice(domain: string, amount: number, prikey: string) {
+  static async addprice(domain: string, amount: number) {
     const root = await NNS.getRoot() as RootDomainInfo
     let info = await this.getSellingStateByDomain(domain);
     let who = new Neo.Uint160(

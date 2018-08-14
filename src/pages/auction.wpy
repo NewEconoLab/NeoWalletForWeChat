@@ -167,15 +167,17 @@
           return;
         }
         // 加价
+
+        
       },
       addPrice(e) {
-         this.$invoke('cpassphase', 'Show');
+        this.$invoke('cpassphase', 'Show');
       }
     };
     events = {};
     async onLoad(option) {
-      this.bidInfo = await Util.get.bidInfo('kkkkkk.neo') //(option.domain);
-      this.domain = 'kkkkkk.neo' //option.domain;
+      this.bidInfo = await Util.get.bidInfo('kkk.neo') //(option.domain);
+      this.domain = 'kkk.neo' //option.domain;
       this.$apply();
       console.log('auction.wpy')
       console.log(this.bidInfo);
