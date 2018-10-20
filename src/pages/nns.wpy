@@ -22,6 +22,11 @@
     width: 100%;
     margin-top: 20rpx;
     background-color: white;
+    .value-cgas {
+      height: 160rpx;
+      width: 100%;
+      margin-left: 30rpx;
+    }
     .search {
       display: flex;
       flex-direction: column;
@@ -108,7 +113,8 @@
       <view class="inner">
         <view class="area-function">
           <view class="function-title">
-            <text class="text">功能</text>
+            <text class="text">常用功能</text>
+            <text class="text" style="color:#22A4FF;" @tap="OnInstruction()">竞拍教程</text>
           </view>
           <view class="nav">
             <cnnsfunctiona />
@@ -120,6 +126,9 @@
           </view>
         </view>
         <view class="area-bid">
+          <clbidaccount @onEmit.user="handleEmit" />
+          <view class="value-cgas">
+          </view>
           <view class="function-title">
             <text class="text">NNS域名拍卖</text>
           </view>
@@ -145,13 +154,13 @@
           </view>
           <view class="description">
             <text class="text">
-                        · 竞拍域名所需CGAS资产，该资产由NeoGas以1:1的比例互相兑换。
-                        · 如果有用户在确定期最后一天进行出价，则进入两天的随机期，随机期可能会在两天中的任意一个时间点结束，因此用户还是需要尽早地竞拍而避免因靠后出价使自己的竞拍无效。
-                        · 域名竞拍注册时对域名进行出价，出价使用CGAS，最小出价0.1CGAS,出价最高者获得域名，支付的CGAS会进入奖池，竞拍失败的参与者会收取5%的手续费进入奖池。
-                        · 竞拍成功的用户需要在 “我的竞拍” 页手动领取您的域名；竞拍失败的用户也请在该页面手动领取去除了手续费的竞拍金额。
-                        · 竞拍到的域名具有1年的有效期，在距离过期3个月之前，我们会发出消息通知您，您可以在“我的NNS”页面点击新出现的续约按钮进行续约，我们会为您延续1年的有效期。
-                        · 所有奖池收入会按NNC持有量重新分配给持币人，NNC持有人不需要锁仓，奖励是累积的，您可以在“我的分红”页面领取分红。
-                              </text>
+                                    · 竞拍域名所需CGAS资产，该资产由NeoGas以1:1的比例互相兑换。
+                                    · 如果有用户在确定期最后一天进行出价，则进入两天的随机期，随机期可能会在两天中的任意一个时间点结束，因此用户还是需要尽早地竞拍而避免因靠后出价使自己的竞拍无效。
+                                    · 域名竞拍注册时对域名进行出价，出价使用CGAS，最小出价0.1CGAS,出价最高者获得域名，支付的CGAS会进入奖池，竞拍失败的参与者会收取5%的手续费进入奖池。
+                                    · 竞拍成功的用户需要在 “我的竞拍” 页手动领取您的域名；竞拍失败的用户也请在该页面手动领取去除了手续费的竞拍金额。
+                                    · 竞拍到的域名具有1年的有效期，在距离过期3个月之前，我们会发出消息通知您，您可以在“我的NNS”页面点击新出现的续约按钮进行续约，我们会为您延续1年的有效期。
+                                    · 所有奖池收入会按NNC持有量重新分配给持币人，NNC持有人不需要锁仓，奖励是累积的，您可以在“我的分红”页面领取分红。
+                                          </text>
           </view>
         </view>
       </view>
@@ -168,12 +177,14 @@
   } from '../utils/entity';
   import CPassphase from '../components/cpassphase';
   import CNNSFunction from '../components/nns/cnnsfunction';
+  import CLabel from '../components/clabel';
   export default class NNS extends wepy.page {
     config = {
       navigationBarTitleText: 'NNS'
     };
     components = {
       cpassphase: CPassphase,
+      clbidaccount: CLabel,
       cnnsfunctiona: CNNSFunction,
       cnnsfunctionb: CNNSFunction,
       cnnsfunctionc: CNNSFunction,
@@ -270,6 +281,24 @@
             url: './auction?domain=' + this.domainInfo.domain
           });
         }
+      },
+      OnInstruction() {
+        // Go to the instruction page
+        console.log('This button should go to the instruction page. To do')
+      },
+      handleEmit(param) {
+        let that = this;
+        // console.log(param);
+        switch (param) {
+          case 'refund':
+            that.OnScan();
+            break;
+          case 'recharge':
+            that.OnScan();
+            break;
+          default:
+            break;
+        }
       }
     };
     events = {};
@@ -361,14 +390,24 @@
         });
       }
     }
-    LoadFunction(){
+    LoadFunction() {
       this.$invoke('cnnsfunctiona', 'Show', JSON.stringify(this.functions[0]));
       this.$invoke('cnnsfunctionb', 'Show', JSON.stringify(this.functions[1]));
       this.$invoke('cnnsfunctionc', 'Show', JSON.stringify(this.functions[2]));
       this.$invoke('cnnsfunctiond', 'Show', JSON.stringify(this.functions[3]));
       this.$invoke('cnnsfunctione', 'Show', JSON.stringify(this.functions[4]));
       this.$invoke('cnnsfunctionf', 'Show', JSON.stringify(this.functions[5]));
-
+      this.$invoke(
+        'clbidaccount',
+        'Show',
+        JSON.stringify({
+          title: '竞拍账户',
+          show: {
+            refund: 1,
+            recharge: 1
+          }
+        })
+      );
     }
   }
 </script>

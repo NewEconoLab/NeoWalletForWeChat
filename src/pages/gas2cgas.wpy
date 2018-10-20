@@ -82,6 +82,7 @@
       }
     }
   }
+  
   .area-amount {
     display: flex;
     flex-direction: column;

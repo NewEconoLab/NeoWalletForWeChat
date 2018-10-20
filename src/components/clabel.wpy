@@ -59,6 +59,9 @@
         <image wx:if="{{show.contact==1}}" class="icon" src="../images/L_contact.png" @tap="onEmit(contact)"/>
         <image wx:if="{{show.scan==1}}" class="icon" src="../images/L_scan.png" @tap="onEmit(scan)"/>
         <view class="button" wx:if="{{show.button==1}}" @tap="onEmit(btn)"><text>提取</text></view>
+        <view class="hollow-border-button" wx:if="{{show.refund==1}}" @tap="onEmit(refund)"><text>提取</text></view>
+        <view class="solid-button" wx:if="{{show.recharge==1}}" @tap="onEmit(recharge)"><text>充值</text></view>
+        
     </view>
 </view>
 </template>
@@ -83,13 +86,17 @@ export default class CLabel extends wepy.component {
       let contact = json.show.contact || 0; //通讯录按钮是否显示
       let button = json.show.button || 0; //按钮是否显示
       let add = json.show.add || 0; //添加按钮是否显示
+      let refund = json.show.refund||0; // 提取按钮是否显示 用于NNS首页 竞拍账户部分
+      let recharge = json.show.recharge||0; // 充值按钮是否显示，用于NNS首页 竞拍账户部分
       let title = json.title;
       const show = {
         scan: scan,
         contact: contact,
         button: button,
         add: add,
-        title: title
+        title: title,
+        refund:refund,
+        recharge:recharge
       };
       this.show = show;
 
