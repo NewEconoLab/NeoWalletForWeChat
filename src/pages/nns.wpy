@@ -1,4 +1,15 @@
 <style lang="less">
+
+    .value-cgas {
+      height: 160rpx;
+      width: 100%;
+      padding-left: 60rpx;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      background-color:white;
+    }
+
   .area-function {
     display: flex;
     flex-direction: column;
@@ -22,11 +33,7 @@
     width: 100%;
     margin-top: 20rpx;
     background-color: white;
-    .value-cgas {
-      height: 160rpx;
-      width: 100%;
-      margin-left: 30rpx;
-    }
+
     .search {
       display: flex;
       flex-direction: column;
@@ -80,29 +87,6 @@
       }
     }
   }
-  .area-description {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 750rpx;
-    margin-top: 20rpx;
-    .description {
-      background-color: white;
-      margin-top: 1rpx;
-      width: 100%;
-      display: flex;
-      flex-direction: row;
-      align-items: flex-start;
-      .text {
-        padding: 0 30rpx 10rpx 30rpx;
-        font-family: PingFangSC-Regular;
-        font-size: 14px;
-        color: #333333;
-        letter-spacing: 0;
-        text-align: justify;
-      }
-    }
-  }
   .btn::after {
     border: none;
   }
@@ -111,7 +95,7 @@
   <view class="container">
     <scroll-view scroll-y class="scroll">
       <view class="inner">
-        <view class="area-function">
+        <view class="area-function" style="margin-bottom:20rpx;">
           <view class="function-title">
             <text class="text">常用功能</text>
             <text class="text" style="color:#22A4FF;" @tap="OnInstruction()">竞拍教程</text>
@@ -125,11 +109,12 @@
             <cnnsfunctionf />
           </view>
         </view>
+        <clbidaccount @onEmit.user="handleEmit" />
+        <view class="value-cgas">
+         CGAS {{cgasValue}}
+        </view>
         <view class="area-bid">
-          <clbidaccount @onEmit.user="handleEmit" />
-          <view class="value-cgas">
-          </view>
-          <view class="function-title">
+          <view class="function-title" >
             <text class="text">NNS域名拍卖</text>
           </view>
           <form bindsubmit="confirm">
@@ -146,21 +131,6 @@
           </form>
           <view class="foot-button" style='margin-top:30rpx;margin-bottom:50rpx;' wx:if="{{btn.show}}">
             <button type="primary" form-type="submit" @tap="startAuction" loading="{{opening}}" hover-class='btn_hover'>{{btn.label}}</button>
-          </view>
-        </view>
-        <view class="area-description">
-          <view class="function-title">
-            <text class="text">NNS域名拍卖说明</text>
-          </view>
-          <view class="description">
-            <text class="text">
-                                    · 竞拍域名所需CGAS资产，该资产由NeoGas以1:1的比例互相兑换。
-                                    · 如果有用户在确定期最后一天进行出价，则进入两天的随机期，随机期可能会在两天中的任意一个时间点结束，因此用户还是需要尽早地竞拍而避免因靠后出价使自己的竞拍无效。
-                                    · 域名竞拍注册时对域名进行出价，出价使用CGAS，最小出价0.1CGAS,出价最高者获得域名，支付的CGAS会进入奖池，竞拍失败的参与者会收取5%的手续费进入奖池。
-                                    · 竞拍成功的用户需要在 “我的竞拍” 页手动领取您的域名；竞拍失败的用户也请在该页面手动领取去除了手续费的竞拍金额。
-                                    · 竞拍到的域名具有1年的有效期，在距离过期3个月之前，我们会发出消息通知您，您可以在“我的NNS”页面点击新出现的续约按钮进行续约，我们会为您延续1年的有效期。
-                                    · 所有奖池收入会按NNC持有量重新分配给持币人，NNC持有人不需要锁仓，奖励是累积的，您可以在“我的分红”页面领取分红。
-                                          </text>
           </view>
         </view>
       </view>
@@ -196,6 +166,7 @@
       animationData: {},
       domainInfo: {},
       root: 'neo',
+      cgasValue: '0.0000000',
       // domain: ''
       btn: {
         show: false,
