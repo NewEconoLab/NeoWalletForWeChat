@@ -116,12 +116,12 @@
             <view class="content">
               <text class="upper" decode>当前最高价:</text>
               <text class="upper" style="color:red;">9</text>
-              <text class="upper" decode>SGAS</text>
+              <text class="upper" decode>CGAS</text>
             </view>
             <view class="content">
               <text class="lower" decode>我的当前出价总和:</text>
               <text class="lower" style="color:red;"> 8 </text>
-              <text class="lower" decode>SGAS</text>
+              <text class="lower" decode>CGAS</text>
             </view>
           </view>
         </view>

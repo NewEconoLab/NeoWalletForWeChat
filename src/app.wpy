@@ -135,7 +135,7 @@
         'pages/watchonly',
         'pages/watch',
         'pages/registerwatch',
-        'pages/gas2sgas',
+        'pages/gas2cgas',
         'pages/startbidding',
         'pages/assets',
         'pages/contact',

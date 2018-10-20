@@ -1,0 +1,79 @@
+<style lang="less">
+  .item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 40rpx;
+    margin-bottom: 20rpx;
+    .icon {
+      width: 60rpx;
+      height: 60rpx;
+    }
+    .message {
+      height: 32rpx;
+      border-radius: 50%;
+      background-color: #ff6161;
+      position: absolute;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      right: 30rpx;
+      text {
+        margin-left: 10rpx;
+        margin-right: 13rpx;
+        font-family: PingFangSC-Medium;
+        font-size: 10px;
+        color: #ffffff;
+        letter-spacing: 0;
+        line-height: 10px;
+      }
+    }
+    .content {
+      font-family: PingFangSC-Medium;
+      font-size: 10px;
+      color: #333333;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 10px;
+      margin-top: 20rpx;
+    }
+  }
+</style>
+
+<template>
+  <view>
+    <navigator class="item" url="{{show.url}}">
+      <image class="icon" src="{{show.img}}" />
+      <text class="content">{{show.label}}</text>
+    </navigator>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy';
+  export default class CNNSFunction extends wepy.component {
+    props = {
+      show:{
+         type: String,
+        default: 'null'
+      }
+    };
+    components = {};
+    data = {};
+    methods = {
+      Show(param) {
+        const json = JSON.parse(param);
+        let url = json.show.url
+        let img = json.show.img 
+        let label = json.show.label;
+        const show = {
+          url: url,
+          img: img,
+          label: label
+        };
+        this.show = show;
+        this.$apply();
+      }
+    };
+    async onLoad() {}
+  }
+</script>

@@ -6,37 +6,37 @@ import Wallet from './wallet';
 import Common from './common';
 import Https from './Https';
 import { getSecureRandom } from './random'
-export default class SGAS {
+export default class CGAS {
 
     constructor() { }
 
     /**
-     * gas兑换sgas
+     * gas兑换CGAS
      * @param asset gas
      * @param amount 兑换额度
      */
     public static async mintTokens(asset: Asset, amount: number) {
-        let script = Common.buildScript(Const.DAPP_SGAS, 'mintTokens', ['(str)mintTokens']);
-        let sgasAddr = Helper.Account.GetAddressFromScriptHash(Const.DAPP_SGAS);
-        return await Transfer.contractInvokeTrans(sgasAddr, script, asset, amount);
+        let script = Common.buildScript(Const.DAPP_CGAS, 'mintTokens', ['(str)mintTokens']);
+        let CGASAddr = Helper.Account.GetAddressFromScriptHash(Const.DAPP_CGAS);
+        return await Transfer.contractInvokeTrans(CGASAddr, script, asset, amount);
     }
 
 
 
 
     /**
-     * sgas -> gas
+     * CGAS -> gas
      * @param transcount 兑换数量
      */
     static async makeRefundTransaction(prikey: string, transcount: number) {
 
-        let utxos = await SGAS.getsgasAssets();
+        let utxos = await CGAS.getCGASAssets();
         let gas = new Asset('GAS', Const.id_GAS)
         //接口等待提供
-        //检查sgas地址拥有的gas的utxo是否有被标记过
+        //检查CGAS地址拥有的gas的utxo是否有被标记过
         for (var i = utxos.length - 1; i >= 0; i--) {
 
-            let script = Common.buildScript(Const.DAPP_SGAS, "getRefundTarget", ["(hex256)" + utxos[i].txid.toString()]);
+            let script = Common.buildScript(Const.DAPP_CGAS, "getRefundTarget", ["(hex256)" + utxos[i].txid.toString()]);
             var r = await Https.rpc_getInvokescript(script);
             if (r) {
                 var stack = r['stack'];
@@ -47,18 +47,18 @@ export default class SGAS {
             }
         }
 
-        //sgas 自己给自己转账   用来生成一个utxo  合约会把这个utxo标记给发起的地址使用
-        let nepAddress = Helper.Account.GetAddressFromScriptHash(Const.DAPP_SGAS);
+        //CGAS 自己给自己转账   用来生成一个utxo  合约会把这个utxo标记给发起的地址使用
+        let nepAddress = Helper.Account.GetAddressFromScriptHash(Const.DAPP_CGAS);
         let tran: ThinNeo.Transaction = Transfer.makeTran(nepAddress, gas, transcount);
 
-        var r = await Https.api_getcontractstate(Const.DAPP_SGAS.toString())
+        var r = await Https.api_getcontractstate(Const.DAPP_CGAS.toString())
         if (r && r['script']) {
-            var sgasScript = r['script'].hexToBytes();
+            var CGASScript = r['script'].hexToBytes();
             var scriptHash = Helper.Account.GetPublicKeyScriptHash_FromAddress(Wallet.account.address)
 
             tran.type = ThinNeo.TransactionType.InvocationTransaction;
             tran.extdata = new ThinNeo.InvokeTransData();
-            (tran.extdata as ThinNeo.InvokeTransData).script = Common.buildScript(Const.DAPP_SGAS, "refund", ["(bytes)" + Helper.toHexString(scriptHash)]);
+            (tran.extdata as ThinNeo.InvokeTransData).script = Common.buildScript(Const.DAPP_CGAS, "refund", ["(bytes)" + Helper.toHexString(scriptHash)]);
 
             //附加鉴证
             tran.attributes = new Array<ThinNeo.Attribute>(1);
@@ -69,7 +69,7 @@ export default class SGAS {
             let sb = new ThinNeo.ScriptBuilder();
             sb.EmitPushString("whatever")
             sb.EmitPushNumber(new Neo.BigInteger(250));
-            tran.AddWitnessScript(sgasScript, sb.ToArray());
+            tran.AddWitnessScript(CGASScript, sb.ToArray());
 
             //做提款人的签名
             let randomStr = await getSecureRandom(256);
@@ -113,12 +113,12 @@ export default class SGAS {
         var r = await Https.api_getcontractstate(Const.id_GAS.toString())
 
         if (r && r['script']) {
-            var sgasScript = r['script'].hexToBytes();
+            var CGASScript = r['script'].hexToBytes();
 
             var sb = new ThinNeo.ScriptBuilder();
             sb.EmitPushNumber(new Neo.BigInteger(0));
             sb.EmitPushNumber(new Neo.BigInteger(0));
-            tran.AddWitnessScript(sgasScript, sb.ToArray());
+            tran.AddWitnessScript(CGASScript, sb.ToArray());
             var trandata = tran.GetRawData();
 
             // 发送转换请求
@@ -128,7 +128,7 @@ export default class SGAS {
                 let list = ''
                 let tranlist = localStorage.getItem('exchangelist');
                 tranlist = tranlist.replace('[', '').replace(']', '');
-                let tranObj = JSON.stringify({ 'trancount': transcount, 'txid': r.txid, 'trantype': 'SGas' });
+                let tranObj = JSON.stringify({ 'trancount': transcount, 'txid': r.txid, 'trantype': 'CGAS' });
                 list = '[' + tranlist + ',' + tranObj + ']';
                 localStorage.setItem('exchangelist', list);
             }
@@ -175,12 +175,12 @@ export default class SGAS {
 
 
     /**
-     * @method 获得Sgas账户下的utxo
+     * @method 获得CGAS账户下的utxo
      */
-    static async getsgasAssets(): Promise<Utxo[]> {
+    static async getCGASAssets(): Promise<Utxo[]> {
         //获得高度
         var height = await Https.api_getHeight();
-        var scriptHash = Helper.Account.GetAddressFromScriptHash(Const.DAPP_SGAS);
+        var scriptHash = Helper.Account.GetAddressFromScriptHash(Const.DAPP_CGAS);
         var utxos = await Https.api_getUTXO(scriptHash);   //获得utxo
         let res = [];
         for (var i in utxos) {

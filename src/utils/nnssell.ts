@@ -4,7 +4,7 @@ import Common from "./common";
 import NNS from './nns'
 import Https from "./Https";
 import Wallet from "./wallet";
-import { DAPP_SGAS, DAPP_NNS, id_GAS } from "./const";
+import { DAPP_CGAS, DAPP_NNS, id_GAS } from "./const";
 import Transfer from "./transaction";
 import { formatTime } from './time'
 import Emitter from "./Emitter";
@@ -163,12 +163,12 @@ export default class NNSSell {
   }
 
   static async gasToRecharge(transcount: number, asset: Asset) {
-    let script = Common.buildScript(DAPP_SGAS, "mintTokens", []);
+    let script = Common.buildScript(DAPP_CGAS, "mintTokens", []);
 
-    //获得sgas的合约地址
-    var sgasaddr = Helper.Account.GetAddressFromScriptHash(DAPP_SGAS);
+    //获得CGAS的合约地址
+    var CGASaddr = Helper.Account.GetAddressFromScriptHash(DAPP_CGAS);
     try {
-      let data1 = await Common.buildInvokeTransData(script, sgasaddr, asset, transcount);
+      let data1 = await Common.buildInvokeTransData(script, CGASaddr, asset, transcount);
       let data2 = await NNSSell.rechargeReg(transcount.toFixed(8));
       let res = await Https.rechargeandtransfer(data1.data, data2);
       if (res['errCode'] == '0000') {
@@ -202,7 +202,7 @@ export default class NNSSell {
       "(int)" + intv//value
     ]);//参数倒序入
     sb.EmitPushString("transfer");//参数倒序入
-    sb.EmitAppCall(DAPP_SGAS);//nep5脚本
+    sb.EmitAppCall(DAPP_CGAS);//nep5脚本
 
     ////这个方法是为了在同一笔交易中转账并充值
     ////当然你也可以分为两笔交易
@@ -363,7 +363,7 @@ export default class NNSSell {
   }
 
   /**
-   * 取回存储器下的sgas
+   * 取回存储器下的CGAS
    */
   static async getMoneyBack(amount: number) {
     const root = await NNS.getRoot() as RootDomainInfo

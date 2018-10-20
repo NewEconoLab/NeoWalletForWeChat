@@ -93,11 +93,11 @@ export default {
         test: () => {
             // // console.log('[[[[[[[[[[[[[[[[[[[[[[[');
 
-            // // console.log(Helper.hexToBytes(Const.DAPP_SGAS.toString()));
+            // // console.log(Helper.hexToBytes(Const.DAPP_CGAS.toString()));
 
-            // // console.log(Const.DAPP_SGAS.toString());
-            // // console.log(new Uint8Array(Const.DAPP_SGAS.bits.buffer))
-            // // console.log(Const.DAPP_SGAS.toArray());
+            // // console.log(Const.DAPP_CGAS.toString());
+            // // console.log(new Uint8Array(Const.DAPP_CGAS.bits.buffer))
+            // // console.log(Const.DAPP_CGAS.toArray());
 
             // // console.log('[[[[[[[[[[[[[[[[[[[[[[[[');
 

@@ -30,7 +30,7 @@
     events = {};
     onLoad(option) {
       const txid = option.txid;
-      const type = type; // 0:开标 1:加价 2:兑换sgas 3:兑换gas
+      const type = type; // 0:开标 1:加价 2:兑换CGAS 3:兑换gas
       if (type === '0') {
         this.OnLoading();
         this.notice = '开标';

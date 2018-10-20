@@ -8,7 +8,7 @@ import Transfer from './transaction';
 import NNS from './nns';
 import User from './user';
 import Emitter from './Emitter';
-import { DAPP_SGAS, DAPP_NNC, id_NEO, id_GAS } from './const';
+import { DAPP_CGAS, DAPP_NNC, id_NEO, id_GAS } from './const';
 /**
  * 记录当前系统运行状态
  * 包括 当前账户 刷新等等
@@ -65,12 +65,12 @@ export class Context {
         // 提前注册好重要的资产，避免测试网络或者主网里出现同名的
         let neo = new Asset('NEO', id_NEO);
         let gas = new Asset('GAS', id_GAS);
-        let sgas = new Asset('SGAS', DAPP_SGAS.toString(), 0);
+        let CGAS = new Asset('CGAS', DAPP_CGAS.toString(), 0);
         let nnc = new Asset('NNC', DAPP_NNC.toString(), 0);
 
         Context.Assets['NEO'] = neo;
         Context.Assets['GAS'] = gas;
-        Context.Assets['SGAS'] = sgas;
+        Context.Assets['CGAS'] = CGAS;
         Context.Assets['NNC'] = nnc;
         console.log(Context.Assets)
 

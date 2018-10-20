@@ -110,16 +110,16 @@
       <form bindsubmit="confirm" class="form" report-submit="true">
         <view class="price">
           <text style="width:150rpx;">本次加价：</text>
-          <input placeholder='最小 0.1 sgas' type='digit' name="amount" />
-          <text>SGAS</text>
+          <input placeholder='最小 0.1 CGAS' type='digit' name="amount" />
+          <text>CGAS</text>
         </view>
         <view class="total">
           <text>我的出价总和：</text>
           <text style="color:#22A4FF;">17</text>
-          <text>SGAS</text>
+          <text>CGAS</text>
         </view>
         <view class="tip">
-          <text style="margin-top: 15px; margin-right:30rpx;">Tips: 每次加价最小单位为 0.1 SGas，当出价总和小于 该域名的当前最高价时，本次出价不成功。</text>
+          <text style="margin-top: 15px; margin-right:30rpx;">Tips: 每次加价最小单位为 0.1 CGAS，当出价总和小于 该域名的当前最高价时，本次出价不成功。</text>
         </view>
         <button form-type="submit" loading="{{opening}}" class="bottom-btn">确定</button>
       </form>

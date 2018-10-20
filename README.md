@@ -14,13 +14,9 @@ This project is developed with the help and support from [NEL](https://github.co
 </p>
 
 ## Developing Plan
-- 小程序设计为直接私钥登陆（如需要nep2之后再加），不再尝试兼容nep6
-- UI风格主题模仿NEM小程序，特色部分学习O3，界面细节后期与设计讨论
-- 删除各个登陆场景的界面，直接在index界面处理
+- 全新UI画风
 - 功能抽象及封装，将模块中重耦合部分分层
 - 代码瘦身，将SDK中与node库重复的功能模块删除减小项目大小 当前大小：500k 预计瘦身后大小 400k
-- 完全重写界面：receive，send，mine，loginWIF，home
-- 删除界面： loginNep2,loginLocal
 
 ## ScreenCapture
 ### New Version
