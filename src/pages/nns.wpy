@@ -1,15 +1,13 @@
 <style lang="less">
-
-    .value-cgas {
-      height: 160rpx;
-      width: 100%;
-      padding-left: 60rpx;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      background-color:white;
-    }
-
+  .value-cgas {
+    height: 160rpx;
+    width: 100%;
+    padding-left: 60rpx;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: white;
+  }
   .area-function {
     display: flex;
     flex-direction: column;
@@ -33,7 +31,6 @@
     width: 100%;
     margin-top: 20rpx;
     background-color: white;
-
     .search {
       display: flex;
       flex-direction: column;
@@ -93,6 +90,7 @@
 </style>
 <template>
   <view class="container">
+    <cnnspopup @OnClose.user="OnClosePopUp" wx:if="{{isPopUp}}" />
     <scroll-view scroll-y class="scroll">
       <view class="inner">
         <view class="area-function" style="margin-bottom:20rpx;">
@@ -111,10 +109,10 @@
         </view>
         <clbidaccount @onEmit.user="handleEmit" />
         <view class="value-cgas">
-         CGAS {{cgasValue}}
+          CGAS {{cgasValue}}
         </view>
         <view class="area-bid">
-          <view class="function-title" >
+          <view class="function-title">
             <text class="text">NNS域名拍卖</text>
           </view>
           <form bindsubmit="confirm">
@@ -148,6 +146,7 @@
   import CPassphase from '../components/cpassphase';
   import CNNSFunction from '../components/nns/cnnsfunction';
   import CLabel from '../components/clabel';
+  import CNNSPopup from '../components/nns/cnnspopup';
   export default class NNS extends wepy.page {
     config = {
       navigationBarTitleText: 'NNS'
@@ -155,6 +154,7 @@
     components = {
       cpassphase: CPassphase,
       clbidaccount: CLabel,
+      cnnspopup: CNNSPopup,
       cnnsfunctiona: CNNSFunction,
       cnnsfunctionb: CNNSFunction,
       cnnsfunctionc: CNNSFunction,
@@ -175,7 +175,8 @@
       nnsloading: false,
       alert: '', //域名状态提示语句
       loadingIcon: 'Loading', //检查域名状态图标
-      opening: false, //开标等按钮加载
+      opening: false, //开标等按钮加载,
+      isPopUp:true,
       functions: [{
           url: './gas2cgas',
           img: '../images/N_G2S.png',
@@ -256,6 +257,12 @@
       OnInstruction() {
         // Go to the instruction page
         console.log('This button should go to the instruction page. To do')
+      },
+      OnClosePopUp() {
+        // OnClose the pop up
+        console.log('On close the pop up')
+        this.isPopUp = false;
+        this.$apply();
       },
       handleEmit(param) {
         let that = this;
