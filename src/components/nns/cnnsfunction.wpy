@@ -3,11 +3,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 40rpx;
-    margin-bottom: 20rpx;
+    width:250rpx;
+    height:170rpx;
     .icon {
       width: 60rpx;
       height: 60rpx;
+      margin-top:32rpx;
     }
     .message {
       height: 32rpx;
@@ -52,19 +53,16 @@
   import wepy from 'wepy';
   export default class CNNSFunction extends wepy.component {
     props = {
-      show:{
-         type: String,
-        default: 'null'
-      }
+      show:Object
     };
     components = {};
     data = {};
     methods = {
       Show(param) {
         const json = JSON.parse(param);
-        let url = json.show.url
-        let img = json.show.img 
-        let label = json.show.label;
+        let url = json['url']
+        let img = json['img']
+        let label = json['label'];
         const show = {
           url: url,
           img: img,
@@ -74,6 +72,7 @@
         this.$apply();
       }
     };
-    async onLoad() {}
+    async onLoad() {
+    }
   }
 </script>

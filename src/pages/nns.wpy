@@ -111,12 +111,12 @@
             <text class="text">功能</text>
           </view>
           <view class="nav">
-            <cnnsfunctiona :show.sync="{{functions}}" />
-            <cnnsfunctionb :show.sync="{{functions1}}" />
-            <cnnsfunctionc :show.sync="{{functions2}}" />
-            <cnnsfunctiond :show.sync="{{functions3}}" />
-            <cnnsfunctione :show.sync="{{functions4}}" />
-            <cnnsfunctionf :show.sync="{{functions5}}" />
+            <cnnsfunctiona />
+            <cnnsfunctionb />
+            <cnnsfunctionc />
+            <cnnsfunctiond />
+            <cnnsfunctione />
+            <cnnsfunctionf />
           </view>
         </view>
         <view class="area-bid">
@@ -145,13 +145,13 @@
           </view>
           <view class="description">
             <text class="text">
-              · 竞拍域名所需CGAS资产，该资产由NeoGas以1:1的比例互相兑换。
-              · 如果有用户在确定期最后一天进行出价，则进入两天的随机期，随机期可能会在两天中的任意一个时间点结束，因此用户还是需要尽早地竞拍而避免因靠后出价使自己的竞拍无效。
-              · 域名竞拍注册时对域名进行出价，出价使用CGAS，最小出价0.1CGAS,出价最高者获得域名，支付的CGAS会进入奖池，竞拍失败的参与者会收取5%的手续费进入奖池。
-              · 竞拍成功的用户需要在 “我的竞拍” 页手动领取您的域名；竞拍失败的用户也请在该页面手动领取去除了手续费的竞拍金额。
-              · 竞拍到的域名具有1年的有效期，在距离过期3个月之前，我们会发出消息通知您，您可以在“我的NNS”页面点击新出现的续约按钮进行续约，我们会为您延续1年的有效期。
-              · 所有奖池收入会按NNC持有量重新分配给持币人，NNC持有人不需要锁仓，奖励是累积的，您可以在“我的分红”页面领取分红。
-                    </text>
+                        · 竞拍域名所需CGAS资产，该资产由NeoGas以1:1的比例互相兑换。
+                        · 如果有用户在确定期最后一天进行出价，则进入两天的随机期，随机期可能会在两天中的任意一个时间点结束，因此用户还是需要尽早地竞拍而避免因靠后出价使自己的竞拍无效。
+                        · 域名竞拍注册时对域名进行出价，出价使用CGAS，最小出价0.1CGAS,出价最高者获得域名，支付的CGAS会进入奖池，竞拍失败的参与者会收取5%的手续费进入奖池。
+                        · 竞拍成功的用户需要在 “我的竞拍” 页手动领取您的域名；竞拍失败的用户也请在该页面手动领取去除了手续费的竞拍金额。
+                        · 竞拍到的域名具有1年的有效期，在距离过期3个月之前，我们会发出消息通知您，您可以在“我的NNS”页面点击新出现的续约按钮进行续约，我们会为您延续1年的有效期。
+                        · 所有奖池收入会按NNC持有量重新分配给持币人，NNC持有人不需要锁仓，奖励是累积的，您可以在“我的分红”页面领取分红。
+                              </text>
           </view>
         </view>
       </view>
@@ -194,24 +194,37 @@
       alert: '', //域名状态提示语句
       loadingIcon: 'Loading', //检查域名状态图标
       opening: false, //开标等按钮加载
-      functions: ["url: '/pages/gas2CGAS',\
-            img: ''../images/N_G2S.png',\
-            label: '兑换CGAS'",
-      functions1: "url: '/pages/gas2CGAS',\
-            img: '../images/N_bid.png',\
-            label: '我的竞拍'",
-      functions2: "url: '/pages/gas2CGAS',\
-            img: '../images/N_domain.png',\
-            label: '域名管理'",
-      functions3: "url: '/pages/gas2CGAS',\
-          img: '../images/N_bonus.png',\
-          label: '我的分红'",
-      functions4: "url: '/pages/gas2CGAS',\
-          img: '../images/N_record.png',\
-          label: '操作记录'",
-      functions5: "  url: '/pages/gas2CGAS',\
-          img: ''.. / images / N_message.png ',\
-          label: '竞拍消息'"]
+      functions: [{
+          url: './gas2cgas',
+          img: '../images/N_G2S.png',
+          label: '兑换CGAS'
+        },
+        {
+          url: './gas2cgas',
+          img: '../images/N_bid.png',
+          label: '我的竞拍'
+        },
+        {
+          url: './gas2cgas',
+          img: '../images/N_domain.png',
+          label: '域名管理'
+        },
+        {
+          url: './gas2CGAS',
+          img: '../images/N_bonus.png',
+          label: '我的分红'
+        },
+        {
+          url: './gas2CGAS',
+          img: '../images/N_record.png',
+          label: '操作记录'
+        },
+        {
+          url: './gas2CGAS',
+          img: '../images/N_message.png',
+          label: '竞拍消息'
+        }
+      ]
     };
     computed = {};
     methods = {
@@ -265,7 +278,9 @@
       this.OnLoading();
       this.$apply();
     }
-    async onShow() {}
+    async onShow() {
+      this.LoadFunction();
+    }
     // 页面渲染完成
     async onReady() {}
     onShareAppMessage() {
@@ -345,6 +360,15 @@
           url: './nnsloading?txid=' + res + '&type=0'
         });
       }
+    }
+    LoadFunction(){
+      this.$invoke('cnnsfunctiona', 'Show', JSON.stringify(this.functions[0]));
+      this.$invoke('cnnsfunctionb', 'Show', JSON.stringify(this.functions[1]));
+      this.$invoke('cnnsfunctionc', 'Show', JSON.stringify(this.functions[2]));
+      this.$invoke('cnnsfunctiond', 'Show', JSON.stringify(this.functions[3]));
+      this.$invoke('cnnsfunctione', 'Show', JSON.stringify(this.functions[4]));
+      this.$invoke('cnnsfunctionf', 'Show', JSON.stringify(this.functions[5]));
+
     }
   }
 </script>
