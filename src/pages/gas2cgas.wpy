@@ -55,16 +55,14 @@
         .icon {
           width: 56rpx;
           height: 56rpx;
-          border-radius: 50rpx;
           display: flex;
           flex-direction: row;
           align-items: center;
           justify-content: space-around;
-          border: thin solid #f5f5f5;
           image {
             display: block;
-            width: 40rpx;
-            height: 40rpx;
+            width: 56rpx;
+            height: 56rpx;
           }
         }
         .label {
@@ -77,12 +75,11 @@
         }
       }
       .arrow {
-        width: 60rpx;
-        height: 60rpx;
+        width: 120rpx;
+        height: 48rpx;
       }
     }
   }
-  
   .area-amount {
     display: flex;
     flex-direction: column;
@@ -174,7 +171,9 @@
             <text class="description">所需{{config.from.name}}数量： {{amount}}；当前{{config.from.name}}拥有量： {{config.to.amount}}</text>
           </view>
         </view>
-        <button class="btn" @tap="onExchange">兑换</button>
+        <view class="foot-button" style='margin-top:266rpx;margin-bottom:50rpx;'>
+          <button type="primary" form-type="submit" @tap="onExchange" loading="{{isExchanging}}" hover-class='btn_hover'>兑换</button>
+        </view>
       </view>
     </scroll-view>
   </view>
@@ -193,7 +192,7 @@
       this.config = {
         from: {
           name: 'GAS',
-          icon: 'neo',
+          icon: 'GAS',
           amount: assets.gas || 0
         },
         to: {
@@ -210,18 +209,21 @@
     data = {
       config: {},
       CGASSelected: 0,
-      amount: 0
+      amount: 0,
+      isExchanging: false
     }; // 页面所需数据均需在这里声明，可用于模板数据绑定
     components = {}; // 声明页面中所引用的组件，或声明组件中所引用的子组件
     mixins = []; // 声明页面所引用的Mixin实例
     computed = {}; // 声明计算属性（详见后文介绍）
     watch = {}; // 声明数据watcher（详见后文介绍）
     methods = {
-      onExchange() {
+      onExchange(option) {
         //此处调用 GAS兑换CGAS接口
-        if (option === 0) {
+        if (this.config.from.name === 'GAS') {
+          console.log('exchange cgas')
         } else {
           //此处调用CGAS兑换GAS接口
+          console.log('exchange gas')
         }
         //跳转到等待结果界面
       },
@@ -240,7 +242,7 @@
           this.config = {
             from: {
               name: 'GAS',
-              icon: 'neo',
+              icon: 'GAS',
               amount: assets.gas
             },
             to: {
@@ -258,7 +260,7 @@
             },
             to: {
               name: 'GAS',
-              icon: 'neo',
+              icon: 'GAS',
               amount: assets.CGAS
             }
           };
